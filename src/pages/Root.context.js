@@ -21,6 +21,15 @@ export default class RootContext extends PureComponent {
   static Consumer = Context.Consumer;
   static Provider = RootContext;
 
+  static defaultProps = {
+    defaultContext: {
+      api,
+      bitbucket: new BitbucketApi(),
+      github: new GithubApi(),
+      gitlab: new GitlabApi(),
+    },
+  };
+
   static propTypes = {
     Router: PropTypes.func,
     children: PropTypes.node,
@@ -30,10 +39,10 @@ export default class RootContext extends PureComponent {
   // Save API object in state, otherwise it causes unneeded re-renders.
   // https://reactjs.org/docs/context.html#caveats
   state = {
-    api,
-    bitbucket: new BitbucketApi(),
-    github: new GithubApi(),
-    gitlab: new GitlabApi(),
+    api: this.props.defaultContext.api,
+    bitbucket: this.props.defaultContext.bitbucket,
+    github: this.props.defaultContext.github,
+    gitlab: this.props.defaultContext.gitlab,
   };
 
   render() {
