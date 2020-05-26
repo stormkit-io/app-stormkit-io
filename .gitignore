@@ -1,0 +1,13 @@
+yarn-error.log
+.env 
+
+# Build folders
+build/
+dist/
+
+# Node modules
+node_modules/
+
+# IDE related  stuff
+.webpack.ide.js
+.DS_Store

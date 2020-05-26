@@ -1,0 +1,6 @@
+@screen sm {
+  .auth-box {
+    min-width: 28rem;
+    max-width: 28rem;
+  }
+}

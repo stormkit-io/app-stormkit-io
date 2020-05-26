@@ -1,0 +1,13 @@
+{
+  "extends": ["react-app", "prettier"],
+  "globals": {
+    "require": true,
+    "process": true,
+    "firebase": true
+  },
+  "plugins": ["react-hooks"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
