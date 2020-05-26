@@ -15,5 +15,6 @@ module.exports = {
   coverageReporters: ["html", "lcov"],
   testURL: "http://localhost",
   testMatch: ["**/?(*.)+(spec).[jt]s?(x)"],
+  setupFilesAfterEnv: ["<rootDir>/src/testing/setup.js"],
   rootDir: "../",
 };

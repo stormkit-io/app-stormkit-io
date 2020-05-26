@@ -5,10 +5,6 @@ import { Router, withRouter } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import RootContext from "~/pages/Root.context";
 
-beforeEach(() => {
-  document.body.innerHTML = "";
-});
-
 const RouteHelper = withRouter(({ location }) => {
   return (
     <>
