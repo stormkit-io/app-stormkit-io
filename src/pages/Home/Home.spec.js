@@ -33,7 +33,7 @@ describe("pages/Home", () => {
     });
 
     test("should have a button to create a new app", () => {
-      const button = wrapper.getByText("New App");
+      const button = wrapper.getAllByText("New App")[1];
       expect(button).toBeTruthy();
     });
   });
