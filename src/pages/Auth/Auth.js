@@ -22,7 +22,7 @@ const Auth = ({ user, location }) => {
       </div>
       <div className="flex flex-col-reverse sm:flex-row px-6">
         <div className="flex flex-col text-white sm:max-w-sm sm:mr-16 pt-12 mb-4 sm:mb-0">
-          <p className="leading-loose">
+          <p className="leading-loose text-lg">
             /def/ <span className="text-pink-50">Noun.</span>
             <br />
             1. Serverless CI Platform.
@@ -30,7 +30,7 @@ const Auth = ({ user, location }) => {
             2. A set of tools built to save dev-ops time for your Javascript
             application.
           </p>
-          <ul className="p-4 bg-white-o-05 mt-4 rounded leading-loose">
+          <ul className="p-4 bg-white-o-05 mt-8 rounded leading-loose">
             <li>
               <i className="fas fa-undo-alt mr-4" /> Environments with instant
               rollbacks
@@ -46,7 +46,9 @@ const Auth = ({ user, location }) => {
         </div>
         <div className="auth-box bg-white rounded-lg p-6 sm:p-12">
           <h1 className="text-pink-50 font-bold text-2xl">Authentication</h1>
-          <p className="mt-4 mb-12">Log in with your favorite provider</p>
+          <p className="mt-4 mb-12 text-base">
+            Log in with your favorite provider
+          </p>
           <OauthLogin />
         </div>
       </div>

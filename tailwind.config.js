@@ -5,6 +5,7 @@ module.exports = {
       none: "0",
       sm: "3px",
       lg: "13px",
+      xl: "30px",
       full: "100%",
       default: "6px",
     },

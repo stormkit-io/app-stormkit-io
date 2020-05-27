@@ -18,7 +18,7 @@ const OauthLogin = ({ loginOauth, error }) => (
       <Form
         handleSubmit={loginOauth(login.id)}
         key={login.id}
-        className={`mb-${i === logins.length - 1 ? "0" : "4"}`}
+        className={`mb-${i === logins.length - 1 ? "0" : "8"}`}
       >
         <Button
           className={[
@@ -29,6 +29,7 @@ const OauthLogin = ({ loginOauth, error }) => (
             `text-${login.id}`,
             `hover:bg-${login.id}`,
             "hover:text-white",
+            "rounded-xl",
           ]}
         >
           {login.id === "bitbucket" && (
