@@ -1,16 +1,7 @@
 import React from "react";
 import cn from "classnames";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import Logo from "~/components/Logo";
-
-const Header = () => (
-  <header className="w-full py-6">
-    <Link to="/">
-      <Logo iconSize={8} />
-    </Link>
-  </header>
-);
+import Header from "./_components/Header";
 
 const DefaultLayout = ({ children, header, left, right }) => {
   if (typeof header === "undefined") {
