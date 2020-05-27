@@ -2,14 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Browser } from "react-kawaii";
 import { formattedDate } from "~/utils/helpers/deployments";
+import Button from "~/components/Button";
 
-const Row = (props) => {
-  const { repo, id, deployedAt, displayName } = props;
+const Row = (app) => {
+  const { repo, id, deployedAt, displayName } = app;
 
   return (
-    <div
-      to={`/app/${id}`}
-      className="flex items-center p-4 hover:bg-gray-75 rounded-lg cursor-pointer"
+    <Button
+      as="div"
+      href={`/app/${id}`}
+      styled={false}
+      className="flex w-full items-center p-4 hover:bg-gray-75 rounded-lg cursor-pointer"
     >
       <div className="mr-4">
         <Browser mood="happy" size={50} color="#BCBED0" />
@@ -24,7 +27,7 @@ const Row = (props) => {
         <div className="pt-2 text-xs text-gray-50">{displayName}</div>
       </div>
       <span className="fas fa-chevron-right" />
-    </div>
+    </Button>
   );
 };
 

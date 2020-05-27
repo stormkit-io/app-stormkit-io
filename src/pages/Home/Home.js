@@ -7,6 +7,7 @@ import DefaultLayout from "~/layouts/DefaultLayout";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
+import Link from "~/components/Link";
 import ExplanationBox from "~/components/ExplanationBox";
 import { useFetchAppList } from "./actions";
 import AppRow from "./_components/AppRow";
@@ -20,7 +21,7 @@ export const Home = ({ api }) => {
 
   return (
     <DefaultLayout>
-      <section className="flex flex-col w-full">
+      <section className="flex flex-col w-full mb-4">
         <div className="font-bold">
           <h1 className="text-lg text-pink-50 mb-2">My Apps</h1>
           <h2 className="text-2xl text-white mb-6">Overview</h2>
@@ -40,8 +41,10 @@ export const Home = ({ api }) => {
                 ))}
                 <div className="mt-4">
                   Want some extra features for free?{" "}
-                  <a href="/user/referral">Invite friends</a> and earn up to 3
-                  months of Pro.
+                  <Link to="/user/referral" secondary>
+                    Invite friends
+                  </Link>{" "}
+                  and earn up to 3 months of Pro.
                 </div>
               </>
             )}
