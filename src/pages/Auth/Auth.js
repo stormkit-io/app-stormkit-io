@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 import { connect } from "~/utils/context";
-import CenterLayout from "~/layout/CenterLayout";
+import CenterLayout from "~/layouts/CenterLayout";
 import Logo from "~/components/Logo";
 import AuthContext from "./Auth.context";
 import OauthLogin from "./_components/OauthLogin";
