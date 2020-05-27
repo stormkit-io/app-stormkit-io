@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import { connect } from "~/utils/context";
 import RootContext from "~/pages/Root.context";
-import DefaultLayout from "~/layout/DefaultLayout";
+import DefaultLayout from "~/layouts/DefaultLayout";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
