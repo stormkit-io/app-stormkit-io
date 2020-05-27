@@ -64,6 +64,7 @@ class AuthContext extends PureComponent {
       api.removeAuthToken();
       LocalStorage.del(LS_USER);
       this.setState({ user: null });
+      window.location.href = "/";
     },
 
     loginOauth: (provider) => () => {
