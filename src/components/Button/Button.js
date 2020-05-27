@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
 import Spinner from "~/components/Spinner";
+import Link from "~/components/Link";
 import "./Button.css";
 
 const Button = ({
@@ -14,23 +15,30 @@ const Button = ({
   disabled,
   href,
   as,
+  styled,
   ...rest
 }) => {
-  const classes = [
-    "inline-flex",
-    "p-4",
-    "items-center",
-    "justify-center",
-    "rounded-lg",
-    "button",
-    "relative",
-  ];
+  const linkRef = useRef(null);
+  const classes = ["relative"];
 
-  if (primary) {
-    classes.push("bg-pink-50", "text-white");
-  } else if (secondary) {
-    classes.push("bg-blue-20", "text-secondary");
-  } else if (tertiary) {
+  if (styled) {
+    classes.push(
+      ...[
+        "inline-flex",
+        "p-4",
+        "items-center",
+        "justify-center",
+        "rounded-lg",
+        "button",
+      ]
+    );
+
+    if (primary) {
+      classes.push("bg-pink-50", "text-white");
+    } else if (secondary) {
+      classes.push("bg-blue-20", "text-secondary");
+    } else if (tertiary) {
+    }
   }
 
   const props = {
@@ -42,17 +50,36 @@ const Button = ({
   const content = (
     <>
       <span
-        className={cn("inline-flex", "items-center", { invisible: loading })}
+        className={cn(
+          "inline-flex",
+          "items-center",
+          "w-full",
+          "justify-center",
+          {
+            invisible: loading,
+          }
+        )}
       >
         {children}
       </span>
       {loading && <Spinner width={6} height={6} className="button-spinner" />}
+      {href && <Link to={href} className="hidden" ref={linkRef} />}
     </>
   );
 
-  if (href) {
-    as = "a";
-    props.href = href;
+  if (href && as !== "a") {
+    if (as !== "button") {
+      props.tabIndex = 0;
+      props.role = "button";
+    }
+
+    props.onClick = () => {
+      linkRef.current.click();
+    };
+
+    props.onKeyDown = (e) => {
+      (e.key === "Enter" || e.key === " ") && linkRef.current.click();
+    };
   }
 
   return React.createElement(as, props, content);
@@ -60,6 +87,7 @@ const Button = ({
 
 Button.defaultProps = {
   as: "button",
+  styled: true,
 };
 
 Button.propTypes = {
@@ -70,6 +98,7 @@ Button.propTypes = {
   secondary: PropTypes.bool,
   tertiary: PropTypes.bool,
   href: PropTypes.string,
+  styled: PropTypes.bool,
   as: PropTypes.string,
 };
 
