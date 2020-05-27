@@ -13,4 +13,8 @@ export default [
     path: "/auth",
     component: Async(() => import("~/pages/Auth")),
   },
+  {
+    path: "/logout",
+    component: Async(() => import("~/pages/Logout")),
+  },
 ];
