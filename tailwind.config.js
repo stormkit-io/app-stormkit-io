@@ -3,14 +3,16 @@ module.exports = {
   theme: {
     borderRadius: {
       none: "0",
-      sm: "6px",
+      sm: "3px",
       lg: "13px",
       full: "100%",
+      default: "6px",
     },
     extend: {
       colors: {
         primary: "#262525",
-        secondary: "#BCBED0",
+        secondary: "#bcbed0",
+        tertiary: "#4f4f4f",
 
         white: "#ffffff",
         "white-o-05": "rgba(255, 255, 255, 0.05)",

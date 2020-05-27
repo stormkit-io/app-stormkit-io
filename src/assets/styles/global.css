@@ -120,7 +120,7 @@ html {
 
 body {
   @apply bg-blue-50;
-  @apply text-gray-40;
+  @apply text-tertiary;
   @apply min-h-screen;
   line-height: 1;
   font-family: "Merriweather Sans", sans-serif;
@@ -156,11 +156,11 @@ table {
 }
 
 a {
-  @apply text-pink-50;
-  text-decoration: none;
+  @apply text-secondary;
 }
 
 a:hover {
+  @apply text-pink-50;
   text-decoration: none;
 }
 

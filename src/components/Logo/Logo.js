@@ -12,7 +12,9 @@ const Logo = ({ iconOnly, className, iconSize = 16, ...rest }) => {
         className={`inline-block mr-4 w-${iconSize}`}
       />
       {!iconOnly && (
-        <span className="font-bold text-lg text-white">Stormkit</span>
+        <span className="font-bold text-lg text-secondary hover:text-white">
+          Stormkit
+        </span>
       )}
     </span>
   );
