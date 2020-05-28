@@ -1,8 +1,8 @@
-import { wait } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import { renderWithContext } from "~/testing/helpers";
-import Home from "./Home";
+import Apps from "./Apps";
 
-describe("pages/Home", () => {
+describe("pages/Apps", () => {
   let wrapper;
 
   const apps = [
@@ -15,7 +15,7 @@ describe("pages/Home", () => {
 
     beforeEach(() => {
       fetchSpy = jest.fn().mockImplementation(() => Promise.resolve({ apps }));
-      wrapper = renderWithContext(Home, {
+      wrapper = renderWithContext(Apps, {
         context: {
           api: {
             fetch: fetchSpy,
@@ -27,7 +27,7 @@ describe("pages/Home", () => {
     test("should fetch the list of apps", async () => {
       expect(fetchSpy).toHaveBeenCalledWith("/apps");
 
-      await wait(() => {
+      await waitFor(() => {
         expect(wrapper.getByText("My-App")).toBeTruthy();
       });
     });

@@ -7,7 +7,7 @@ export default [
   {
     path: "/",
     exact: true,
-    component: Async(() => import("~/pages/Home")),
+    component: Async(() => import("~/pages/Apps")),
   },
   {
     path: "/auth",
@@ -16,5 +16,15 @@ export default [
   {
     path: "/logout",
     component: Async(() => import("~/pages/Logout")),
+  },
+  {
+    path: "/apps/new",
+    exact: true,
+    component: Async(() => import("~/pages/Apps/New")),
+  },
+  {
+    path: "/apps/new/:provider",
+    exact: true,
+    component: Async(() => import("~/pages/Apps/New/:provider")),
   },
 ];

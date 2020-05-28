@@ -10,7 +10,7 @@ import Spinner from "~/components/Spinner";
 import Link from "~/components/Link";
 import ExplanationBox from "~/components/ExplanationBox";
 import { useFetchAppList } from "./actions";
-import AppRow from "./_components/AppRow";
+import { AppRow, Title } from "./_components";
 
 export const Home = ({ api }) => {
   const { apps, loading, error } = useFetchAppList({ api });
@@ -22,12 +22,12 @@ export const Home = ({ api }) => {
   return (
     <DefaultLayout>
       <section className="flex flex-col w-full mb-4">
-        <div className="font-bold">
-          <h1 className="text-lg text-pink-50 mb-2">My Apps</h1>
-          <h2 className="text-2xl text-white mb-6">Overview</h2>
-        </div>
+        <Title>
+          <Title.Main>My apps</Title.Main>
+          <Title.Sub>Overview</Title.Sub>
+        </Title>
         <div className="flex flex-auto">
-          <div className="bg-white rounded-lg p-6 mr-6 flex-auto">
+          <div className="page-section mr-6">
             {!loading && error && <InfoBox error>{error}</InfoBox>}
             {loading && (
               <div className="flex w-full items-center justify-center">
