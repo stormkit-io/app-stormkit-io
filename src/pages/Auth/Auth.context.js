@@ -18,7 +18,53 @@ class AuthContext extends PureComponent {
       loading: true,
       user: null,
       error: null,
-      logout: async (e) => {
+    },
+  };
+
+  static propTypes = {
+    location: PropTypes.object,
+    api: PropTypes.object,
+    gitlab: PropTypes.object,
+    github: PropTypes.object,
+    bitbucket: PropTypes.object,
+    defaultContext: PropTypes.object,
+  };
+
+  // This is important: we need to default to initial props
+  // in order to be able to provide a default context and test behaviour.
+  state = {
+    loading: this.props.defaultContext.loading || true,
+    user: this.props.defaultContext.user || null,
+    error: this.props.defaultContext.error || null,
+  };
+
+  async componentDidMount() {
+    const { api } = this.props;
+
+    try {
+      const token = api.getAuthToken();
+
+      if (token) {
+        api.setAuthToken(token);
+        const { user, ok } = await api.fetch("/user");
+
+        if (ok) {
+          return this.persistUser(user);
+        }
+      }
+
+      throw new Error("Something went wrong, log in again.");
+    } catch (e) {
+      this.setState({ loading: false });
+    }
+  }
+
+  getContext = () => ({
+    ...this.state,
+
+    logout:
+      this.props.defaultContext.logout ||
+      (async (e) => {
         e && e.preventDefault();
         const { api } = this.props;
 
@@ -26,8 +72,11 @@ class AuthContext extends PureComponent {
         LocalStorage.del(LS_USER);
         this.setState({ user: null });
         window.location.href = "/";
-      },
-      loginOauth: (provider) => () => {
+      }),
+
+    loginOauth:
+      this.props.defaultContext.loginOauth ||
+      ((provider) => () => {
         return new Promise((resolve) => {
           const { api } = this.props;
           const url = api.baseurl + `/auth/${provider}`;
@@ -66,51 +115,7 @@ class AuthContext extends PureComponent {
 
           openPopup({ url, title, onClose });
         });
-      },
-    },
-  };
-
-  static propTypes = {
-    location: PropTypes.object,
-    api: PropTypes.object,
-    gitlab: PropTypes.object,
-    github: PropTypes.object,
-    bitbucket: PropTypes.object,
-    defaultContext: PropTypes.object,
-  };
-
-  // This is important: we need to default to initial props
-  // in order to be able to provide a default context and test behaviour.
-  state = {
-    loading: this.props.defaultContext.loading || false,
-    user: this.props.defaultContext.user || null,
-    error: this.props.defaultContext.error || null,
-  };
-
-  async componentDidMount() {
-    const { api } = this.props;
-
-    try {
-      const token = api.getAuthToken();
-
-      if (token) {
-        api.setAuthToken(token);
-        const { user, ok } = await api.fetch("/user");
-
-        if (ok) {
-          return this.persistUser(user);
-        }
-      }
-
-      throw new Error("Something went wrong, log in again.");
-    } catch (e) {
-      this.setState({ loading: false });
-    }
-  }
-
-  getContext = () => ({
-    ...this.state,
-    ...this.props.defaultContext,
+      }),
   });
 
   persistUser = (user) => {
