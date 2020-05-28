@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.page-section {
+  @apply bg-white;
+  @apply rounded-lg;
+  @apply p-6;
+  @apply flex-auto;
+}
+
+.content-placeholder {
+  @apply inline-block;
+  @apply bg-blue-20;
+  @apply rounded;
+}

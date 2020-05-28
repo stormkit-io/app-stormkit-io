@@ -16,6 +16,8 @@ const Link = forwardRef(
       props.rel = "noreferrer noopener";
       props.target = "_blank";
       isExternal = true;
+    } else if (to.indexOf("mailto:") === 0) {
+      isExternal = true;
     }
 
     if (isExternal) {
