@@ -56,7 +56,7 @@ export default class RootContext extends PureComponent {
           render={() => (
             <Context.Provider value={this.state}>
               <AuthContext.Provider
-                {...defaultContext}
+                defaultContext={defaultContext}
                 api={this.state.api}
                 bitbucket={this.state.bitbucket}
                 github={this.state.github}

@@ -16,7 +16,7 @@ export const Home = ({ api }) => {
   const { apps, loading, error } = useFetchAppList({ api });
 
   if (apps.length === 0 && !loading) {
-    return <Redirect to="/new-app" />;
+    return <Redirect to="/apps/new" />;
   }
 
   return (
@@ -58,7 +58,7 @@ export const Home = ({ api }) => {
                 Whenever you push, we build it!
               </p>
             </ExplanationBox>
-            <Button href="/new-app" className="w-full mt-6" primary>
+            <Button href="/apps/new" className="w-full mt-6" primary>
               New App
             </Button>
           </div>

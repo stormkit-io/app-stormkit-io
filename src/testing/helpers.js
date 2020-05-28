@@ -16,7 +16,7 @@ const RouteHelper = withRouter(({ location }) => {
 
 export const renderWithContext = (
   Component,
-  { props, context, history = createMemoryHistory() } = {}
+  { props, context, routeHelpers = true, history = createMemoryHistory() } = {}
 ) => {
   const MockRouter = ({ children }) => children;
 
@@ -24,7 +24,7 @@ export const renderWithContext = (
     <Router history={history}>
       <RootContext Router={MockRouter} defaultContext={context}>
         <Component {...props} />
-        <RouteHelper />
+        {routeHelpers && <RouteHelper />}
       </RootContext>
     </Router>
   );

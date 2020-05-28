@@ -4,7 +4,9 @@ import AuthContext from "~/pages/Auth/Auth.context";
 import { connect } from "~/utils/context";
 
 const Logout = ({ logout }) => {
-  useEffect(logout, []);
+  useEffect(() => {
+    logout();
+  }, [logout]);
   return null;
 };
 

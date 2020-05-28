@@ -14,7 +14,60 @@ const LS_USER = "skit_user";
  */
 class AuthContext extends PureComponent {
   static defaultProps = {
-    loading: true,
+    defaultContext: {
+      loading: true,
+      user: null,
+      error: null,
+      logout: async (e) => {
+        e && e.preventDefault();
+        const { api } = this.props;
+
+        api.removeAuthToken();
+        LocalStorage.del(LS_USER);
+        this.setState({ user: null });
+        window.location.href = "/";
+      },
+      loginOauth: (provider) => () => {
+        return new Promise((resolve) => {
+          const { api } = this.props;
+          const url = api.baseurl + `/auth/${provider}`;
+          const title = "oauthWindow";
+          const onClose = (data) => {
+            if (data.sessionToken) {
+              api.setAuthToken(data.sessionToken); // adds it to local storage
+              this.persistUser(data.user);
+
+              // Persist it for this session
+              this.props.bitbucket.accessToken = data.accessToken;
+              this.props.github.accessToken = data.accessToken;
+              this.props.gitlab.accessToken = data.accessToken;
+
+              resolve({
+                user: data.user,
+                sessionToken: data.sessionToken,
+                accessToken: data.accessToken,
+              });
+            }
+
+            if (data.success === false) {
+              if (data.email === false) {
+                this.setState({
+                  error:
+                    "We could not fetch your primary verified email from the provider. Make sure your email is verified.",
+                });
+              } else {
+                this.setState({
+                  error:
+                    "An error occurred while authenticating. Please retry.",
+                });
+              }
+            }
+          };
+
+          openPopup({ url, title, onClose });
+        });
+      },
+    },
   };
 
   static propTypes = {
@@ -23,14 +76,15 @@ class AuthContext extends PureComponent {
     gitlab: PropTypes.object,
     github: PropTypes.object,
     bitbucket: PropTypes.object,
+    defaultContext: PropTypes.object,
   };
 
   // This is important: we need to default to initial props
   // in order to be able to provide a default context and test behaviour.
   state = {
-    user: this.props.user,
-    loading: this.props.loading,
-    error: this.props.error,
+    loading: this.props.defaultContext.loading || false,
+    user: this.props.defaultContext.user || null,
+    error: this.props.defaultContext.error || null,
   };
 
   async componentDidMount() {
@@ -56,56 +110,7 @@ class AuthContext extends PureComponent {
 
   getContext = () => ({
     ...this.state,
-
-    logout: async (e) => {
-      e && e.preventDefault();
-      const { api } = this.props;
-
-      api.removeAuthToken();
-      LocalStorage.del(LS_USER);
-      this.setState({ user: null });
-      window.location.href = "/";
-    },
-
-    loginOauth: (provider) => () => {
-      return new Promise((resolve) => {
-        const { api } = this.props;
-        const url = api.baseurl + `/auth/${provider}`;
-        const title = "oauthWindow";
-        const onClose = (data) => {
-          if (data.sessionToken) {
-            api.setAuthToken(data.sessionToken); // adds it to local storage
-            this.persistUser(data.user);
-
-            // Persist it for this session
-            this.props.bitbucket.accessToken = data.accessToken;
-            this.props.github.accessToken = data.accessToken;
-            this.props.gitlab.accessToken = data.accessToken;
-
-            resolve({
-              user: data.user,
-              sessionToken: data.sessionToken,
-              accessToken: data.accessToken,
-            });
-          }
-
-          if (data.success === false) {
-            if (data.email === false) {
-              this.setState({
-                error:
-                  "We could not fetch your primary verified email from the provider. Make sure your email is verified.",
-              });
-            } else {
-              this.setState({
-                error: "An error occurred while authenticating. Please retry.",
-              });
-            }
-          }
-        };
-
-        openPopup({ url, title, onClose });
-      });
-    },
+    ...this.props.defaultContext,
   });
 
   persistUser = (user) => {
