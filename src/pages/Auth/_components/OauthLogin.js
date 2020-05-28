@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "~/utils/context";
-import Button from "~/components/Button";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
+import ProviderButton from "~/components/Buttons/_components/ProviderButton";
 import AuthContext from "../Auth.context";
 
 const logins = [
@@ -20,24 +20,11 @@ const OauthLogin = ({ loginOauth, error }) => (
         key={login.id}
         className={`mb-${i === logins.length - 1 ? "0" : "8"}`}
       >
-        <Button
-          className={[
-            "w-full",
-            "border",
-            "border-blue-50",
-            "items-center",
-            `text-${login.id}`,
-            `hover:bg-${login.id}`,
-            "hover:text-white",
-            "rounded-xl",
-          ]}
-        >
+        <ProviderButton provider={login.id} text={login.text}>
           {login.id === "bitbucket" && (
             <span className="inline-block w-4">&nbsp;</span>
           )}
-          <span className={`text-xl mr-3 fab fa-${login.id}`} />
-          <span>{login.text}</span>
-        </Button>
+        </ProviderButton>
       </Form>
     ))}
     {error && <InfoBox className="mt-4">{error}</InfoBox>}
