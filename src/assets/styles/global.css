@@ -119,12 +119,12 @@ html {
 }
 
 body {
-  @apply bg-blue-50;
+  @apply bg-blue-10;
   @apply text-tertiary;
   @apply min-h-screen;
-  line-height: 1;
+  line-height: 1.3;
   font-family: "Merriweather Sans", sans-serif;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 #root {

@@ -13,7 +13,9 @@ const DefaultLayout = ({ children, header, left, right }) => {
       {header}
       <div className="flex flex-auto mt-12 w-full">
         {left && <div className="flex-auto">{left}</div>}
-        <div className={cn("flex-auto", { "ml-8": !!left, "mr-8": !!right })}>
+        <div
+          className={cn("flex flex-auto", { "ml-8": !!left, "mr-8": !!right })}
+        >
           {children}
         </div>
         {right && <div className="flex-auto">{right}</div>}

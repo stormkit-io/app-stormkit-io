@@ -67,6 +67,11 @@ const Button = ({
     </>
   );
 
+  if (rest.onClick && as !== "a" && as !== "button") {
+    props.tabIndex = 0;
+    props.role = "button";
+  }
+
   if (href && as !== "a") {
     if (as !== "button") {
       props.tabIndex = 0;

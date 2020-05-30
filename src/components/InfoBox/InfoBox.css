@@ -1,0 +1,21 @@
+.infobox-toaster {
+  @apply z-50;
+  @apply max-w-screen-sm;
+  position: fixed;
+  width: 100%;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  left: 50%;
+  top: 2rem;
+  transform: translateX(-50%);
+  animation: fromTop 0.25s ease-in-out;
+}
+
+@keyframes fromTop {
+  0% {
+    transform: translate(-50%, -10rem);
+  }
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
