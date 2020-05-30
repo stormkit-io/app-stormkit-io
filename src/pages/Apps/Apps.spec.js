@@ -4,6 +4,7 @@ import Apps from "./Apps";
 
 describe("pages/Apps", () => {
   let wrapper;
+  let fetchSpy;
 
   const apps = [
     { id: "12315151", displayName: "My-App" },
@@ -11,11 +12,12 @@ describe("pages/Apps", () => {
   ];
 
   describe("when user has already created apps", () => {
-    let fetchSpy;
-
     beforeEach(() => {
       fetchSpy = jest.fn().mockImplementation(() => Promise.resolve({ apps }));
       wrapper = renderWithContext(Apps, {
+        props: {
+          location: {},
+        },
         context: {
           api: {
             fetch: fetchSpy,
@@ -35,6 +37,34 @@ describe("pages/Apps", () => {
     test("should have a button to create a new app", () => {
       const button = wrapper.getAllByText("New App")[1];
       expect(button).toBeTruthy();
+    });
+  });
+
+  describe("when the user has just created an app", () => {
+    beforeEach(() => {
+      fetchSpy = jest.fn().mockImplementation(() => Promise.resolve({ apps }));
+      wrapper = renderWithContext(Apps, {
+        props: {
+          location: {
+            state: {
+              repoInsert: true,
+            },
+          },
+        },
+        context: {
+          api: {
+            fetch: fetchSpy,
+          },
+        },
+      });
+    });
+
+    test("should display a success message", () => {
+      expect(
+        wrapper.getByText(
+          "Great, your app has been created! You can now start deploying."
+        )
+      ).toBeTruthy();
     });
   });
 });

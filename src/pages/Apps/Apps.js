@@ -12,7 +12,7 @@ import ExplanationBox from "~/components/ExplanationBox";
 import { useFetchAppList } from "./actions";
 import { AppRow, Title } from "./_components";
 
-export const Home = ({ api }) => {
+export const Home = ({ api, location }) => {
   const { apps, loading, error } = useFetchAppList({ api });
 
   if (apps.length === 0 && !loading) {
@@ -21,13 +21,20 @@ export const Home = ({ api }) => {
 
   return (
     <DefaultLayout>
+      {location.state?.repoInsert && (
+        <InfoBox type={InfoBox.SUCCESS} toaster dismissable>
+          <p className="flex-auto">
+            Great, your app has been created! You can now start deploying.
+          </p>
+        </InfoBox>
+      )}
       <section className="flex flex-col w-full mb-4">
         <Title>
           <Title.Main>My apps</Title.Main>
           <Title.Sub>Overview</Title.Sub>
         </Title>
         <div className="flex flex-auto">
-          <div className="page-section mr-6">
+          <div className="page-section mr-6 flex flex-col">
             {!loading && error && <InfoBox error>{error}</InfoBox>}
             {loading && (
               <div className="flex w-full items-center justify-center">
@@ -36,9 +43,11 @@ export const Home = ({ api }) => {
             )}
             {!loading && !error && (
               <>
-                {apps.map((app) => (
-                  <AppRow key={app.id} {...app} />
-                ))}
+                <div className="flex-auto">
+                  {apps.map((app) => (
+                    <AppRow key={app.id} {...app} />
+                  ))}
+                </div>
                 <div className="mt-4">
                   Want some extra features for free?{" "}
                   <Link to="/user/referral" secondary>
@@ -70,6 +79,7 @@ export const Home = ({ api }) => {
 
 Home.propTypes = {
   api: PropTypes.object,
+  location: PropTypes.object,
 };
 
 export default connect(Home, [{ Context: RootContext, props: ["api"] }]);
