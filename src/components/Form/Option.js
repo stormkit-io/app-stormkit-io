@@ -1,34 +1,25 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import StyledOption from "./Option.styles";
+import cn from "classnames";
 
-export default class Option extends PureComponent {
-  static propTypes = {
-    /**
-     * The text value of this option.
-     */
-    text: PropTypes.string,
+const Option = React.forwardRef(({ children, className, ...rest }, ref) => {
+  return (
+    <div
+      className={cn(
+        "cursor-pointer hover:bg-gray-90 border-b border-solid border-gray-80",
+        className
+      )}
+      {...rest}
+      ref={ref}
+    >
+      <div className="flex p-4 items-center">{children}</div>
+    </div>
+  );
+});
 
-    /**
-     * In case more complex structures are needed, it's also possible
-     * to provide children.
-     */
-    children: PropTypes.node,
+Option.propTypes = {
+  children: PropTypes.node,
+  className: PropTypes.any,
+};
 
-    /**
-     * The value of this option.
-     */
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  };
-
-  render() {
-    const { value, text, children, ...props } = this.props;
-    const content = text || children;
-
-    return (
-      <StyledOption {...props} data-highlighted={props.highlighted}>
-        {content}
-      </StyledOption>
-    );
-  }
-}
+export default Option;

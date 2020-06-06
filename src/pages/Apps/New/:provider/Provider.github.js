@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import g from "lodash.get";
-import Form from "~/components/Form";
 import Spinner from "~/components/Spinner";
 import Button from "~/components/Button";
 import { GithubButton } from "~/components/Buttons";
@@ -9,6 +8,7 @@ import openPopup from "~/utils/helpers/popup";
 import { login as loginUser } from "./actions";
 import LoginScreen from "./_components/LoginScreen";
 import RepoList from "./_components/RepoList";
+import Accounts from "./_components/Accounts";
 
 const URL = {
   production: "https://github.com/apps/stormkit-io/installations/new",
@@ -132,8 +132,7 @@ export default class GithubRepos extends PureComponent {
     });
   };
 
-  onAccountChange = (val) => {
-    const login = val && val[0];
+  onAccountChange = (login) => {
     const selectedAccount = this.state.accounts.filter(
       (a) => a.login === login
     )[0];
@@ -181,28 +180,12 @@ export default class GithubRepos extends PureComponent {
     return (
       <>
         <div className="mt-12 mb-4 w-full">
-          {accounts.length > 0 ? (
-            <Form>
-              <Form.Select
-                name="accounts"
-                onChange={this.onAccountChange}
-                selected={login}
-              >
-                {accounts &&
-                  accounts.map((account) => (
-                    <Form.Option key={account.login} value={account.login}>
-                      <img
-                        src={account.avatar}
-                        alt={account.login}
-                        className="w-8 h-8 mr-4 rounded-full"
-                      />{" "}
-                      {account.login}
-                    </Form.Option>
-                  ))}
-              </Form.Select>
-            </Form>
-          ) : (
-            ""
+          {accounts.length > 0 && (
+            <Accounts
+              selected={login}
+              onAccountChange={this.onAccountChange}
+              accounts={accounts}
+            />
           )}
         </div>
 
