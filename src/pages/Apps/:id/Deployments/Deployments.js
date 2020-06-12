@@ -11,7 +11,7 @@ import { useFetchDeployments } from "./actions";
 import Deployment from "./_components/Deployment";
 // import Filters from "./_components/Filters";
 
-const Deployments = ({ app, api, location, history }) => {
+const Deployments = ({ app, api, location }) => {
   const [from, setFrom] = useState(0);
   const envs = useFetchEnvironments({ api, app });
   const depls = useFetchDeployments({ app, api, location, from });
@@ -76,7 +76,6 @@ Deployments.propTypes = {
   app: PropTypes.object,
   api: PropTypes.object,
   location: PropTypes.object,
-  history: PropTypes.object,
 };
 
 export default connect(Deployments, [

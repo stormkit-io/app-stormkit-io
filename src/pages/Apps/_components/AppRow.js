@@ -10,7 +10,7 @@ const Row = (app) => {
   return (
     <Button
       as="div"
-      href={`/app/${id}`}
+      href={`/apps/${id}`}
       styled={false}
       className="flex w-full items-center p-4 hover:bg-gray-75 rounded-lg cursor-pointer"
     >
