@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { Route, Switch } from "react-router-dom";
 import routes from "./routes";
 
-const Root = ({ Router, Context }) => (
-  <Context.Provider Router={Router}>
+const Root = ({ Router, Context, defaultContext }) => (
+  <Context.Provider Router={Router} defaultContext={defaultContext}>
     <Switch>
       {routes.map((route) => (
         <Route {...route} key={route.path} />
@@ -14,6 +14,7 @@ const Root = ({ Router, Context }) => (
 );
 
 Root.propTypes = {
+  defaultContext: PropTypes.object,
   Router: PropTypes.func,
   Context: PropTypes.func,
 };

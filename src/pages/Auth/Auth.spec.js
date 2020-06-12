@@ -1,64 +1,56 @@
-import { renderWithContext } from "~/testing/helpers";
-import Auth from "./Auth";
+import { renderWithContext, withUserContext } from "~/testing/helpers";
+import { waitFor } from "@testing-library/react";
 
 describe("pages/Auth", () => {
   let wrapper;
 
   describe("when user is logged in and redirect is provided", () => {
     beforeEach(() => {
-      wrapper = renderWithContext(Auth, {
-        props: {
-          location: { search: "?redirect=/user/home" },
-        },
-        context: {
-          user: { id: "123" },
-          loginOauth: jest.fn(),
-        },
+      wrapper = withUserContext({
+        path: "/auth?redirect=/apps",
       });
     });
 
-    test("redirects user to the home page", async () => {
-      expect(wrapper.getByTestId("location-display-path").innerHTML).toBe(
-        "/user/home"
-      );
+    test("redirects user to the given page", async () => {
+      await waitFor(() => {
+        expect(wrapper.history.location.pathname).toBe("/apps");
+      });
     });
   });
 
   describe("when user is logged in and redirect is not provided", () => {
     beforeEach(() => {
-      wrapper = renderWithContext(Auth, {
-        props: { location: { search: "" } },
-        context: {
-          user: { id: "123" },
-          loginOauth: jest.fn(),
-        },
+      wrapper = withUserContext({
+        path: "/auth",
       });
     });
 
     test("redirects user to the home page", async () => {
-      expect(wrapper.getByTestId("location-display-path").innerHTML).toBe("/");
+      await waitFor(() => {
+        expect(wrapper.history.location.pathname).toBe("/");
+      });
     });
   });
 
   describe("when user is not logged in", () => {
     beforeEach(() => {
-      wrapper = renderWithContext(Auth, {
-        context: {
-          loginOauth: jest.fn(),
-        },
+      wrapper = renderWithContext({});
+    });
+
+    test("displays some text", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText(/SSL/)).toBeTruthy();
+        expect(wrapper.getByText(/Serverless CI Platform/)).toBeTruthy();
+        expect(wrapper.getByText(/dev-ops/)).toBeTruthy();
       });
     });
 
-    test("displays some text", () => {
-      expect(wrapper.getByText(/SSL/)).toBeTruthy();
-      expect(wrapper.getByText(/Serverless CI Platform/)).toBeTruthy();
-      expect(wrapper.getByText(/dev-ops/)).toBeTruthy();
-    });
-
-    test("displays three buttons", () => {
-      expect(wrapper.getByText("GitHub")).toBeTruthy();
-      expect(wrapper.getByText("Bitbucket")).toBeTruthy();
-      expect(wrapper.getByText("GitLab")).toBeTruthy();
+    test("displays three buttons", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("GitHub")).toBeTruthy();
+        expect(wrapper.getByText("Bitbucket")).toBeTruthy();
+        expect(wrapper.getByText("GitLab")).toBeTruthy();
+      });
     });
   });
 });

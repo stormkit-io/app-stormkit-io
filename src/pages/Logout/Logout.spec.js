@@ -1,14 +1,17 @@
-import { renderWithContext } from "~/testing/helpers";
-import Logout from "./Logout";
+import { waitFor } from "@testing-library/react";
+import { withUserContext } from "~/testing/helpers";
+import { LocalStorage } from "~/utils/storage";
 
 describe("pages/Logout", () => {
-  test("should trigger the logout function on mount", () => {
-    const logout = jest.fn();
-    const wrapper = renderWithContext(Logout, {
-      context: { logout },
-      routeHelpers: false,
+  test("should trigger the logout function on mount", async () => {
+    LocalStorage.set("skit_token", "abc");
+
+    withUserContext({
+      path: "/logout",
     });
-    expect(wrapper.container.innerHTML).toBe("");
-    expect(logout).toHaveBeenCalled();
+
+    await waitFor(() => {
+      expect(LocalStorage.get("skit_token")).toBe(null);
+    });
   });
 });

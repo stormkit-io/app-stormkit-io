@@ -28,7 +28,7 @@ export default class GitlabRepositories extends PureComponent {
 
   init = async () => {
     if (!this.props.gitlab.accessToken) {
-      return this.setState({ requiresLogin: true });
+      return this.updateState({ requiresLogin: true });
     }
 
     try {
@@ -36,9 +36,9 @@ export default class GitlabRepositories extends PureComponent {
       await this.repositories();
     } catch (res) {
       if (res.message === "unauthorized") {
-        this.setState({ requiresLogin: true });
+        this.updateState({ requiresLogin: true });
       } else {
-        this.setState({ error: "Something unexpected occurred." });
+        this.updateState({ error: "Something unexpected occurred." });
       }
     }
   };
@@ -56,7 +56,7 @@ export default class GitlabRepositories extends PureComponent {
       selected: true,
     };
 
-    this.setState({ accounts: [user] });
+    this.updateState({ accounts: [user] });
     return user;
   };
 
@@ -66,18 +66,28 @@ export default class GitlabRepositories extends PureComponent {
    * @memberof GithubRepositories
    */
   repositories = async (page) => {
-    this.setState({ loading: true });
+    this.updateState({ loading: true });
 
     const api = this.props.gitlab;
     const { repositories } = this.state;
     const { repos, nextPage } = await api.repositories({ page });
 
-    this.setState({
+    this.updateState({
       repositories: [...repositories, ...repos],
       loading: false,
       nextPage,
     });
   };
+
+  updateState = (...args) => {
+    if (this.unmounted !== true) {
+      this.setState(...args);
+    }
+  };
+
+  componentWillUnmount() {
+    this.unmounted = true;
+  }
 
   render() {
     const { loginOauth, api, history } = this.props;
@@ -95,7 +105,7 @@ export default class GitlabRepositories extends PureComponent {
           <GitlabButton
             onClick={loginUser({
               loginOauth,
-              setState: (...args) => this.setState(...args),
+              updateState: (...args) => this.updateState(...args),
               init: () => this.init(),
             })}
           />

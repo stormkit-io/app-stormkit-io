@@ -1,5 +1,6 @@
-import { fireEvent } from "@testing-library/react";
-import { renderWithContext } from "~/testing/helpers";
+import React from "react";
+import { fireEvent, render } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import DefaultLayout from "./DefaultLayout";
 
 describe("layouts/DefaultLayout", () => {
@@ -11,7 +12,11 @@ describe("layouts/DefaultLayout", () => {
   const findMadeWith = () => wrapper.getByText("Made with");
 
   beforeEach(() => {
-    wrapper = renderWithContext(DefaultLayout);
+    wrapper = render(
+      <MemoryRouter>
+        <DefaultLayout />
+      </MemoryRouter>
+    );
   });
 
   test("should contain the logo", () => {

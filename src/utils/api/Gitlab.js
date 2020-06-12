@@ -1,11 +1,11 @@
 import { prepareHeaders, errTokenExpired } from "./helpers";
 import qs from "query-string";
 
-export default class Github {
-  // This value will be üp-dated by Auth.context.
-  accessToken = null;
-
+export default class Gitlab {
   baseurl = "https://gitlab.com/api/v4";
+
+  // This value will be üp-dated by Auth.context.
+  accessToken = global.GITLAB_ACCESS_TOKEN;
 
   /**
    * User returns the currently logged in user.
@@ -20,12 +20,12 @@ export default class Github {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(`${this.baseurl}/user`, { headers });
 
-      return fetch(request).then(res => {
+      return fetch(request).then((res) => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
 
-        return res.json().then(user => {
+        return res.json().then((user) => {
           resolve(user);
         });
       });
@@ -45,22 +45,22 @@ export default class Github {
         membership: "true",
         order_by: "id",
         per_page: size,
-        page
+        page,
       };
 
       const request = new Request(
         `${this.baseurl}/projects?${qs.stringify(params)}`,
         {
-          headers
+          headers,
         }
       );
 
-      return fetch(request).then(res => {
+      return fetch(request).then((res) => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
 
-        return res.json().then(json => {
+        return res.json().then((json) => {
           resolve({ repos: json, nextPage: res.headers.get("X-Next-Page") });
         });
       });

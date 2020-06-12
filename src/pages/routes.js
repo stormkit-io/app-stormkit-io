@@ -27,4 +27,13 @@ export default [
     exact: true,
     component: Async(() => import("~/pages/Apps/New/:provider")),
   },
+  {
+    path: "/app/:id",
+    exact: true,
+    component: Async(() => import("~/pages/App/:id")),
+  },
+  {
+    path: "/apps/:id",
+    component: Async(() => import("~/pages/Apps/Apps.router")),
+  },
 ];

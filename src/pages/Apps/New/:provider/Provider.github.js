@@ -43,17 +43,17 @@ export default class GithubRepos extends PureComponent {
       const { github } = this.props;
 
       if (!github.accessToken) {
-        return this.setState({ requiresLogin: true });
+        return this.updateState({ requiresLogin: true });
       }
 
       const { accounts, selectedAccount } = await this.getInstallations();
-      this.setState({ accounts, selectedAccount, loading: true });
+      this.updateState({ accounts, selectedAccount, loading: true });
       this.getRepositories(selectedAccount);
     } catch (e) {
       if (e.message === "unauthorized") {
-        this.setState({ requiresLogin: true });
+        this.updateState({ requiresLogin: true });
       } else {
-        this.setState({ errors: e, loading: false });
+        this.updateState({ errors: e, loading: false });
       }
     }
   };
@@ -63,7 +63,7 @@ export default class GithubRepos extends PureComponent {
     const insts = await api.installations();
 
     if (insts.total_count === 0) {
-      this.setState({ repositories: [], loading: false });
+      this.updateState({ repositories: [], loading: false });
       return {};
     }
 
@@ -110,7 +110,7 @@ export default class GithubRepos extends PureComponent {
       width: 1000,
       onClose: async () => {
         const { accounts, selectedAccount } = await this.getInstallations();
-        this.setState({ accounts, selectedAccount, loading: true });
+        this.updateState({ accounts, selectedAccount, loading: true });
         this.getRepositories(selectedAccount);
       },
     });
@@ -118,14 +118,14 @@ export default class GithubRepos extends PureComponent {
 
   getRepositories = async (account) => {
     if (!account) {
-      return this.setState({ loading: false });
+      return this.updateState({ loading: false });
     }
 
     const installationId = account.installationId;
     const api = this.props.github;
     const res = await api.repositories({ installationId });
 
-    this.setState({
+    this.updateState({
       selectedAccount: account,
       repositories: res.repositories,
       loading: false,
@@ -138,10 +138,20 @@ export default class GithubRepos extends PureComponent {
     )[0];
 
     if (selectedAccount) {
-      this.setState({ repositories: [], selectedAccount, loading: true });
+      this.updateState({ repositories: [], selectedAccount, loading: true });
       this.getRepositories(selectedAccount);
     }
   };
+
+  updateState = (...args) => {
+    if (this.unmounted !== true) {
+      this.setState(...args);
+    }
+  };
+
+  componentWillUnmount() {
+    this.unmounted = true;
+  }
 
   render() {
     const { loginOauth, api, history } = this.props;
@@ -161,7 +171,7 @@ export default class GithubRepos extends PureComponent {
           <GithubButton
             onClick={loginUser({
               loginOauth,
-              setState: (...args) => this.setState(...args),
+              updateState: (...args) => this.updateState(...args),
               init: () => this.init(),
             })}
           />

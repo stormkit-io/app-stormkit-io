@@ -13,29 +13,18 @@ const LS_USER = "skit_user";
  * the setState function.
  */
 class AuthContext extends PureComponent {
-  static defaultProps = {
-    defaultContext: {
-      loading: true,
-      user: null,
-      error: null,
-    },
-  };
-
   static propTypes = {
     location: PropTypes.object,
     api: PropTypes.object,
     gitlab: PropTypes.object,
     github: PropTypes.object,
     bitbucket: PropTypes.object,
-    defaultContext: PropTypes.object,
   };
 
-  // This is important: we need to default to initial props
-  // in order to be able to provide a default context and test behaviour.
   state = {
-    loading: this.props.defaultContext.loading || true,
-    user: this.props.defaultContext.user || null,
-    error: this.props.defaultContext.error || null,
+    loading: true,
+    user: null,
+    error: null,
   };
 
   async componentDidMount() {
@@ -55,73 +44,78 @@ class AuthContext extends PureComponent {
 
       throw new Error("Something went wrong, log in again.");
     } catch (e) {
-      this.setState({ loading: false });
+      this.updateState({ loading: false });
     }
   }
 
   getContext = () => ({
     ...this.state,
 
-    logout:
-      this.props.defaultContext.logout ||
-      (async (e) => {
-        e && e.preventDefault();
+    logout: async (e) => {
+      e && e.preventDefault();
+      const { api } = this.props;
+
+      api.removeAuthToken();
+      LocalStorage.del(LS_USER);
+      this.updateState({ user: null });
+      window.location.href = "/";
+    },
+
+    loginOauth: (provider) => () => {
+      return new Promise((resolve) => {
         const { api } = this.props;
+        const url = api.baseurl + `/auth/${provider}`;
+        const title = "oauthWindow";
+        const onClose = (data) => {
+          if (data.sessionToken) {
+            api.setAuthToken(data.sessionToken); // adds it to local storage
+            this.persistUser(data.user);
 
-        api.removeAuthToken();
-        LocalStorage.del(LS_USER);
-        this.setState({ user: null });
-        window.location.href = "/";
-      }),
+            // Persist it for this session
+            this.props.bitbucket.accessToken = data.accessToken;
+            this.props.github.accessToken = data.accessToken;
+            this.props.gitlab.accessToken = data.accessToken;
 
-    loginOauth:
-      this.props.defaultContext.loginOauth ||
-      ((provider) => () => {
-        return new Promise((resolve) => {
-          const { api } = this.props;
-          const url = api.baseurl + `/auth/${provider}`;
-          const title = "oauthWindow";
-          const onClose = (data) => {
-            if (data.sessionToken) {
-              api.setAuthToken(data.sessionToken); // adds it to local storage
-              this.persistUser(data.user);
+            resolve({
+              user: data.user,
+              sessionToken: data.sessionToken,
+              accessToken: data.accessToken,
+            });
+          }
 
-              // Persist it for this session
-              this.props.bitbucket.accessToken = data.accessToken;
-              this.props.github.accessToken = data.accessToken;
-              this.props.gitlab.accessToken = data.accessToken;
-
-              resolve({
-                user: data.user,
-                sessionToken: data.sessionToken,
-                accessToken: data.accessToken,
+          if (data.success === false) {
+            if (data.email === false) {
+              this.updateState({
+                error:
+                  "We could not fetch your primary verified email from the provider. Make sure your email is verified.",
+              });
+            } else {
+              this.updateState({
+                error: "An error occurred while authenticating. Please retry.",
               });
             }
+          }
+        };
 
-            if (data.success === false) {
-              if (data.email === false) {
-                this.setState({
-                  error:
-                    "We could not fetch your primary verified email from the provider. Make sure your email is verified.",
-                });
-              } else {
-                this.setState({
-                  error:
-                    "An error occurred while authenticating. Please retry.",
-                });
-              }
-            }
-          };
-
-          openPopup({ url, title, onClose });
-        });
-      }),
+        openPopup({ url, title, onClose });
+      });
+    },
   });
 
   persistUser = (user) => {
-    this.setState({ user, loading: false });
+    this.updateState({ user, loading: false });
     LocalStorage.set(LS_USER, user);
   };
+
+  updateState(...args) {
+    if (this.unmounted !== true) {
+      this.setState(...args);
+    }
+  }
+
+  componentWillUnmount() {
+    this.unmounted = true;
+  }
 
   render() {
     const { user, loading } = this.state;

@@ -30,7 +30,7 @@ export default class BitbucketRepositories extends PureComponent {
 
   init = async () => {
     if (!this.props.bitbucket.accessToken) {
-      return this.setState({ requiresLogin: true });
+      return this.updateState({ requiresLogin: true });
     }
 
     try {
@@ -39,10 +39,9 @@ export default class BitbucketRepositories extends PureComponent {
       await this.repositories();
     } catch (res) {
       if (res.message === "unauthorized") {
-        this.setState({ requiresLogin: true });
+        this.updateState({ requiresLogin: true });
       } else {
-        console.log(res.message);
-        this.setState({ error: "Something unexpected occurred." });
+        this.updateState({ error: "Something unexpected occurred." });
       }
     }
   };
@@ -59,7 +58,7 @@ export default class BitbucketRepositories extends PureComponent {
       selected: true,
     };
 
-    this.setState({ accounts: [user] });
+    this.updateState({ accounts: [user] });
     return user;
   };
 
@@ -68,7 +67,7 @@ export default class BitbucketRepositories extends PureComponent {
     const teams = await api.teams();
 
     if (teams.size === 0) {
-      return this.setState({ loading: false });
+      return this.updateState({ loading: false });
     }
 
     const accounts = this.state.accounts.concat(
@@ -81,7 +80,7 @@ export default class BitbucketRepositories extends PureComponent {
     );
 
     return new Promise((resolve) => {
-      this.setState({ accounts }, () => resolve(accounts));
+      this.updateState({ accounts }, () => resolve(accounts));
     });
   };
 
@@ -96,7 +95,7 @@ export default class BitbucketRepositories extends PureComponent {
     this.repositories = this.repositories || {};
 
     if (this.repositories[account.login]) {
-      return this.setState(this.repositories[account.login]);
+      return this.updateState(this.repositories[account.login]);
     }
 
     const api = this.props.bitbucket;
@@ -113,7 +112,7 @@ export default class BitbucketRepositories extends PureComponent {
       loading: false,
     };
 
-    this.setState(this.repositories[account.login]);
+    this.updateState(this.repositories[account.login]);
   };
 
   onAccountChange = (login) => {
@@ -122,11 +121,21 @@ export default class BitbucketRepositories extends PureComponent {
       selected: a.login === login,
     }));
 
-    this.setState(
+    this.updateState(
       { accounts, loading: true, repositories: [] },
       this.repositories
     );
   };
+
+  updateState = (...args) => {
+    if (this.unmounted !== true) {
+      this.setState(...args);
+    }
+  };
+
+  componentWillUnmount() {
+    this.unmounted = true;
+  }
 
   render() {
     const { loginOauth, history, api } = this.props;
@@ -139,7 +148,7 @@ export default class BitbucketRepositories extends PureComponent {
           <BitbucketButton
             onClick={loginUser({
               loginOauth,
-              setState: (...args) => this.setState(...args),
+              updateState: (...args) => this.updateState(...args),
               init: () => this.init(),
             })}
           />

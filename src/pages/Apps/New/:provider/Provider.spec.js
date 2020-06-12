@@ -1,6 +1,6 @@
+import nock from "nock";
 import { waitFor } from "@testing-library/react";
-import { renderWithContext } from "~/testing/helpers";
-import Provider from "./Provider";
+import { withUserContext } from "~/testing/helpers";
 
 describe("pages/Apps/New/:provider", () => {
   let wrapper;
@@ -13,22 +13,19 @@ describe("pages/Apps/New/:provider", () => {
   `("when user is not authenticated", ({ provider }) => {
     describe(provider, () => {
       beforeEach(() => {
-        wrapper = renderWithContext(Provider, {
-          props: { match: { params: { provider } } },
-          context: {
-            bitbucket: {},
-            github: {},
-            gitlab: {},
-          },
+        wrapper = withUserContext({
+          path: `/apps/new/${provider}`,
         });
       });
 
-      test("should show a login screen", () => {
-        expect(
-          wrapper.getByText(
-            "Seems like we lack your access token. Please authenticate using the button below in order to continue."
-          )
-        ).toBeTruthy();
+      test("should show a login screen", async () => {
+        await waitFor(() => {
+          expect(
+            wrapper.getByText(
+              "Seems like we lack your access token. Please authenticate using the button below in order to continue."
+            )
+          ).toBeTruthy();
+        });
       });
     });
   });
@@ -36,239 +33,275 @@ describe("pages/Apps/New/:provider", () => {
   describe("github", () => {
     const provider = "github";
 
+    beforeEach(() => {
+      global.GITHUB_ACCESS_TOKEN = "access-token";
+
+      nock("https://api.github.com")
+        .get("/user")
+        .reply(200, {
+          username: "stormkit-dev",
+          avatar_url: "http://localhost/my-avatar.jpg",
+          id: "151851",
+        });
+    });
+
+    afterEach(() => {
+      delete global.GITHUB_ACCESS_TOKEN;
+    });
+
     describe("when user is authenticated and has no repos", () => {
       beforeEach(() => {
-        wrapper = renderWithContext(Provider, {
-          props: { match: { params: { provider } } },
-          context: {
-            github: {
-              accessToken: "access-token",
-              installations: jest.fn().mockReturnValue({ total_count: 0 }),
-            },
-          },
+        nock("https://api.github.com")
+          .get("/user/installations?page=1&per_page=25")
+          .reply(200, []);
+
+        wrapper = withUserContext({
+          path: `/apps/new/${provider}`,
         });
       });
 
-      test("should show an error when no repo is found", () => {
-        expect(
-          wrapper.getByText(
-            /We could not fetch any repository. Please make sure Stormkit has the necessary permissions granted/
-          )
-        ).toBeTruthy();
+      test("should show an error when no repo is found", async () => {
+        await waitFor(() => {
+          expect(
+            wrapper.getByText(
+              /We could not fetch any repository. Please make sure Stormkit has the necessary permissions granted/
+            )
+          ).toBeTruthy();
+        });
       });
 
-      test("should display connect repositories", () => {
-        expect(wrapper.getByText("Connect repositories")).toBeTruthy();
+      test("should display connect repositories", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText("Connect repositories")).toBeTruthy();
+        });
       });
     });
 
     describe("when user is authenticated and has repos", () => {
-      let installations;
-      let repositories;
-
       beforeEach(() => {
-        installations = jest.fn().mockReturnValue({
-          total_count: 2,
-          installations: [
-            {
-              id: "1256156",
-              account: {
-                login: "stormkit-dev",
-                avatar_url: "http://localhost/my-image.jpg",
+        nock("https://api.github.com")
+          .get("/user/installations?page=1&per_page=25")
+          .reply(200, {
+            total_count: 2,
+            installations: [
+              {
+                id: "1256156",
+                account: {
+                  login: "stormkit-dev",
+                  avatar_url: "http://localhost/my-image.jpg",
+                },
               },
-            },
-            {
-              id: "1236717",
-              account: {
-                login: "stormkit-io",
-                avatar_url: "http://localhost/my-image-2.jpg",
+              {
+                id: "1236717",
+                account: {
+                  login: "stormkit-io",
+                  avatar_url: "http://localhost/my-image-2.jpg",
+                },
               },
-            },
-          ],
-        });
+            ],
+          });
 
-        repositories = jest.fn().mockReturnValue({
-          repositories: [
-            { name: "my-repo", full_name: "stormkit-dev/my-repo" },
-            { name: "my-other-repo", full_name: "stormkit-dev/my-other-repo" },
-          ],
-        });
+        nock("https://api.github.com")
+          .get("/user/installations/1256156/repositories?page=1&per_page=100")
+          .reply(200, {
+            repositories: [
+              { name: "my-repo", full_name: "stormkit-dev/my-repo" },
+              {
+                name: "my-other-repo",
+                full_name: "stormkit-dev/my-other-repo",
+              },
+            ],
+          });
 
-        wrapper = renderWithContext(Provider, {
-          props: { match: { params: { provider } } },
-          context: {
-            user: { displayName: "stormkit-dev" },
-            github: {
-              accessToken: "access-token",
-              installations,
-              repositories,
-            },
-          },
+        wrapper = withUserContext({
+          path: `/apps/new/${provider}`,
         });
       });
 
-      test("should display stormkit-dev as the selected account", () => {
-        expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
+      test("should display stormkit-dev as the selected account", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
+        });
       });
 
-      test("should display a list of repositories", () => {
-        expect(wrapper.getByText(/my-repo/)).toBeTruthy();
-        expect(wrapper.getByText(/my-other-repo/)).toBeTruthy();
+      test("should display a list of repositories", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText(/my-repo/)).toBeTruthy();
+          expect(wrapper.getByText(/my-other-repo/)).toBeTruthy();
+        });
       });
 
-      test("should display connect more repositories", () => {
-        expect(wrapper.getByText("Connect more repositories")).toBeTruthy();
+      test("should display connect more repositories", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText("Connect more repositories")).toBeTruthy();
+        });
       });
     });
   });
 
   describe("gitlab", () => {
     const provider = "gitlab";
-    const user = {
-      username: "stormkit-dev",
-      avatar_url: "http://localhost/my-avatar.jpg",
-      id: "151851",
-    };
+
+    beforeEach(() => {
+      global.GITLAB_ACCESS_TOKEN = "access-token";
+
+      nock("https://gitlab.com/api/v4")
+        .get("/user")
+        .reply(200, {
+          username: "stormkit-dev",
+          avatar_url: "http://localhost/my-avatar.jpg",
+          id: "151851",
+        });
+    });
+
+    afterEach(() => {
+      delete global.GITLAB_ACCESS_TOKEN;
+    });
 
     describe("when user is authenticated and has no repos", () => {
       beforeEach(() => {
-        wrapper = renderWithContext(Provider, {
-          props: { match: { params: { provider } } },
-          context: {
-            gitlab: {
-              accessToken: "access-token",
-              user: jest.fn().mockReturnValue(user),
-              repositories: jest
-                .fn()
-                .mockReturnValue({ repos: [], nextPage: false }),
-            },
-          },
+        nock("https://gitlab.com/api/v4")
+          .get("/projects?membership=true&order_by=id&per_page=20")
+          .reply(200, []);
+
+        global.GITLAB_ACCESS_TOKEN = "access-token";
+
+        wrapper = withUserContext({
+          path: `/apps/new/${provider}`,
         });
       });
 
-      test("should show an error when no repo is found", () => {
-        expect(
-          wrapper.getByText(
-            /We could not fetch any repository. Please make sure Stormkit has the necessary permissions granted/
-          )
-        ).toBeTruthy();
+      test("should show an error when no repo is found", async () => {
+        await waitFor(() => {
+          expect(
+            wrapper.getByText(
+              /We could not fetch any repository. Please make sure Stormkit has the necessary permissions granted/
+            )
+          ).toBeTruthy();
+        });
       });
     });
 
     describe("when user is authenticated and has repos", () => {
-      let repositories;
+      let repositories = [
+        { name: "my-repo", path_with_namespace: "stormkit-dev/my-repo" },
+        {
+          name: "my-other-repo",
+          path_with_namespace: "stormkit-dev/my-other-repo",
+        },
+      ];
 
       beforeEach(() => {
-        repositories = jest.fn().mockReturnValue({
-          nextPage: false,
-          repos: [
-            { name: "my-repo", path_with_namespace: "stormkit-dev/my-repo" },
-            {
-              name: "my-other-repo",
-              path_with_namespace: "stormkit-dev/my-other-repo",
-            },
-          ],
-        });
+        nock("https://gitlab.com/api/v4")
+          .get("/projects?membership=true&order_by=id&per_page=20")
+          .reply(200, repositories);
 
-        wrapper = renderWithContext(Provider, {
-          props: { match: { params: { provider } } },
-          context: {
-            user: { displayName: "stormkit-dev" },
-            gitlab: {
-              accessToken: "access-token",
-              user: jest.fn().mockReturnValue(user),
-              repositories,
-            },
-          },
+        wrapper = withUserContext({
+          path: `/apps/new/${provider}`,
         });
       });
 
-      test("should display stormkit-dev as the selected account", () => {
-        expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
+      test("should display stormkit-dev as the selected account", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
+        });
       });
 
-      test("should display a list of repositories", () => {
-        expect(wrapper.getByText(/my-repo/)).toBeTruthy();
-        expect(wrapper.getByText(/my-other-repo/)).toBeTruthy();
+      test("should display a list of repositories", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText(/my-repo/)).toBeTruthy();
+          expect(wrapper.getByText(/my-other-repo/)).toBeTruthy();
+        });
       });
 
-      test("should not display load more", () => {
-        expect(() => wrapper.getByText("Load more")).toThrow();
+      test("should not display load more", async () => {
+        await waitFor(() => {
+          expect(() => wrapper.getByText("Load more")).toThrow();
+        });
       });
     });
 
-    describe("when user is authenticated and has a lot of repos", () => {
-      let repositories;
+    describe("when user is authenticated and has a lot repos", () => {
+      let repositories = [
+        { name: "my-repo", path_with_namespace: "stormkit-dev/my-repo" },
+        {
+          name: "my-other-repo",
+          path_with_namespace: "stormkit-dev/my-other-repo",
+        },
+      ];
 
       beforeEach(() => {
-        repositories = jest.fn().mockReturnValue({
-          nextPage: true,
-          repos: [
-            { name: "my-repo", path_with_namespace: "stormkit-dev/my-repo" },
-            {
-              name: "my-other-repo",
-              path_with_namespace: "stormkit-dev/my-other-repo",
-            },
-          ],
-        });
+        nock("https://gitlab.com/api/v4")
+          .get("/projects?membership=true&order_by=id&per_page=20")
+          .reply(200, repositories, { "X-Next-Page": "true" });
 
-        wrapper = renderWithContext(Provider, {
-          props: { match: { params: { provider } } },
-          context: {
-            gitlab: {
-              accessToken: "access-token",
-              user: jest.fn().mockReturnValue(user),
-              repositories,
-            },
-          },
+        wrapper = withUserContext({
+          path: `/apps/new/${provider}`,
         });
       });
 
-      test("should display load more", () => {
-        expect(wrapper.getByText("Load more")).toBeTruthy();
+      test("should display load more", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText("Load more")).toBeTruthy();
+        });
       });
     });
   });
 
   describe("bitbucket", () => {
     const provider = "bitbucket";
-    const user = {
-      nickname: "stormkit-dev",
-      links: {
-        avatar: {
-          href: "http://localhost/my-avatar.jpg",
-        },
-      },
-    };
 
-    describe("when user is authenticated and has no repos", () => {
-      beforeEach(() => {
-        wrapper = renderWithContext(Provider, {
-          props: { match: { params: { provider } } },
-          context: {
-            bitbucket: {
-              accessToken: "access-token",
-              user: jest.fn().mockReturnValue(user),
-              repositories: jest.fn().mockReturnValue({ values: [] }),
-              teams: jest.fn().mockReturnValue({
-                values: [
-                  {
-                    username: "stormkit-io",
-                    links: {
-                      avatar: {
-                        href: "http://localhost/my-team-avatar.jpg",
-                      },
-                    },
-                  },
-                ],
-              }),
+    beforeEach(() => {
+      global.BITBUCKET_ACCESS_TOKEN = "access-token";
+
+      nock("https://api.bitbucket.org/2.0")
+        .get("/user")
+        .reply(200, {
+          nickname: "stormkit-dev",
+          links: {
+            avatar: {
+              href: "http://localhost/my-avatar.jpg",
             },
           },
         });
+
+      nock("https://api.bitbucket.org/2.0")
+        .get("/teams?role=admin")
+        .reply(200, {
+          values: [
+            {
+              username: "stormkit-io",
+              links: {
+                avatar: {
+                  href: "http://localhost/my-team-avatar.jpg",
+                },
+              },
+            },
+          ],
+        });
+    });
+
+    afterEach(() => {
+      delete global.BITBUCKET_ACCESS_TOKEN;
+    });
+
+    describe("when user is authenticated and has no repos", () => {
+      beforeEach(() => {
+        nock("https://api.bitbucket.org/2.0")
+          .get("/repositories?pagelen=100&role=admin")
+          .reply(200, {
+            values: [],
+          });
+
+        wrapper = withUserContext({
+          path: `/apps/new/${provider}`,
+        });
       });
 
-      test("should show the selected account", () => {
-        expect(wrapper.getByText("stormkit-dev")).toBeTruthy();
+      test("should show the selected account", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText("stormkit-dev")).toBeTruthy();
+        });
       });
 
       test("should show an error when no repo is found", async () => {
@@ -284,40 +317,27 @@ describe("pages/Apps/New/:provider", () => {
 
     describe("when user is authenticated and has repos", () => {
       beforeEach(() => {
-        wrapper = renderWithContext(Provider, {
-          props: { match: { params: { provider } } },
-          context: {
-            bitbucket: {
-              accessToken: "access-token",
-              user: jest.fn().mockReturnValue(user),
-              repositories: jest.fn().mockReturnValue({
-                values: [
-                  { name: "my-repo", full_name: "stormkit-dev/my-repo" },
-                  {
-                    name: "my-other-repo",
-                    full_name: "stormkit-dev/my-other-repo",
-                  },
-                ],
-              }),
-              teams: jest.fn().mockReturnValue({
-                values: [
-                  {
-                    username: "stormkit-io",
-                    links: {
-                      avatar: {
-                        href: "http://localhost/my-team-avatar.jpg",
-                      },
-                    },
-                  },
-                ],
-              }),
-            },
-          },
+        nock("https://api.bitbucket.org/2.0")
+          .get("/repositories?pagelen=100&role=admin")
+          .reply(200, {
+            values: [
+              { name: "my-repo", full_name: "stormkit-dev/my-repo" },
+              {
+                name: "my-other-repo",
+                full_name: "stormkit-dev/my-other-repo",
+              },
+            ],
+          });
+
+        wrapper = withUserContext({
+          path: `/apps/new/${provider}`,
         });
       });
 
-      test("should display stormkit-dev as the selected account", () => {
-        expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
+      test("should display stormkit-dev as the selected account", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
+        });
       });
 
       test("should display a list of repositories", async () => {

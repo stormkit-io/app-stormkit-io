@@ -11,11 +11,12 @@ const openPopup = ({ url, title, onClose, width = 600, height = 600 }) => {
     title,
     "toolbar=no,location=no,status=no,menubar=no," +
       `scrollbars=yes,resizable=yes,width=${width},height=${height},` +
-      "left=100,top=100"
+      "left=100,top=100",
+    onClose // This is forwarded for unit testing.
   );
 
   // The listener that will be triggered on postMessage
-  const listener = e => {
+  const listener = (e) => {
     if (typeof e.data.success !== "undefined") {
       // Show the status for longer for better UX
       setTimeout(() => {

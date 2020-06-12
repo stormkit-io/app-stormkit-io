@@ -1,14 +1,14 @@
 import { prepareHeaders, errTokenExpired } from "./helpers";
 
 export default class Github {
-  // This value will be üp-dated by Auth.context.
-  accessToken = null;
-
   baseurl = "https://api.github.com";
 
   // This is required to enable the preview api for github.
   // It only needs to be included in endpoints which are related to github apps.
   previewHeader = "application/vnd.github.machine-man-preview+json";
+
+  // This value will be üp-dated by Auth.context.
+  accessToken = global.GITHUB_ACCESS_TOKEN;
 
   /**
    * User returns the currently logged in user.
@@ -23,12 +23,12 @@ export default class Github {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(`${this.baseurl}/user`, { headers });
 
-      return fetch(request).then(res => {
+      return fetch(request).then((res) => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
 
-        return res.json().then(user => {
+        return res.json().then((user) => {
           resolve(user);
         });
       });
@@ -51,7 +51,7 @@ export default class Github {
         { headers }
       );
 
-      return fetch(request).then(res => {
+      return fetch(request).then((res) => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
@@ -77,18 +77,16 @@ export default class Github {
       headers.set("If-None-Match", ""); // https://github.com/octokit/rest.js/issues/890
 
       const request = new Request(
-        `${
-          this.baseurl
-        }/user/installations/${installationId}/repositories?page=${page}&per_page=100`,
+        `${this.baseurl}/user/installations/${installationId}/repositories?page=${page}&per_page=100`,
         { headers }
       );
 
-      return fetch(request).then(res => {
+      return fetch(request).then((res) => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
 
-        return res.json().then(repos => {
+        return res.json().then((repos) => {
           resolve(repos);
         });
       });

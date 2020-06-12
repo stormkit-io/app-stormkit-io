@@ -18,6 +18,7 @@ describe("pages/Apps/:id/Deployments", () => {
       wrapper = withAppContext({
         app: mockApp(),
         envs: mockEnvironments(),
+        path: "/apps/1/deployments",
       });
     });
 
@@ -41,6 +42,7 @@ describe("pages/Apps/:id/Deployments", () => {
       wrapper = withAppContext({
         app: mockApp(),
         envs: mockEnvironments(),
+        path: "/apps/1/deployments",
       });
     });
 

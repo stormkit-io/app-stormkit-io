@@ -1,14 +1,14 @@
 import {
   prepareHeaders,
   errTokenExpired,
-  errNotEnoughPermissions
+  errNotEnoughPermissions,
 } from "./helpers";
 
 export default class Bitbucket {
   baseurl = "https://api.bitbucket.org/2.0";
 
   // This value will be üp-dated by Auth.context.
-  accessToken = null;
+  accessToken = global.BITBUCKET_ACCESS_TOKEN;
 
   /**
    * User returns the currently logged in user object.
@@ -18,7 +18,7 @@ export default class Bitbucket {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(this.baseurl + "/user", { headers });
 
-      return fetch(request).then(res => {
+      return fetch(request).then((res) => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
@@ -43,7 +43,7 @@ export default class Bitbucket {
         { headers }
       );
 
-      return fetch(request).then(res => {
+      return fetch(request).then((res) => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
@@ -60,10 +60,10 @@ export default class Bitbucket {
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(this.baseurl + "/teams?role=admin", {
-        headers
+        headers,
       });
 
-      return fetch(request).then(res => {
+      return fetch(request).then((res) => {
         if (res.status === 401) {
           reject(errTokenExpired);
         }

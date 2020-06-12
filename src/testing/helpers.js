@@ -1,74 +1,65 @@
 import React from "react";
-import { XhrMock } from "@react-mock/xhr";
+import nock from "nock";
 import { render } from "@testing-library/react";
-import { Router, withRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
+import Api from "~/utils/api/Api";
+import Root from "~/pages/Root";
 import RootContext from "~/pages/Root.context";
+import { LocalStorage } from "~/utils/storage";
+import { mockUser } from "~/testing/data";
 
-const RouteHelper = withRouter(({ location }) => {
-  return (
-    <>
-      <div data-testid="location-display-search">{location.search}</div>
-      <div data-testid="location-display-path">{location.pathname}</div>
-    </>
-  );
-});
+export const withUserContext = ({ user = mockUser(), path, ...rest }) => {
+  LocalStorage.set(Api.STORAGE_TOKEN_KEY, "123-abc");
 
-export const renderWithContext = (
-  Component,
-  { props, context, routeHelpers = true, history = createMemoryHistory() } = {}
-) => {
+  nock("http://localhost")
+    .get("/user")
+    .reply(200, user);
+
+  if (!rest.history) {
+    rest.history = createMemoryHistory({
+      initialEntries: [path],
+      initialIndex: 0,
+    });
+  }
+
+  return renderWithContext({ ...rest });
+};
+
+export const withAppContext = ({
+  app,
+  envs,
+  path,
+  status = 200,
+  user = mockUser(),
+}) => {
+  withUserContext({ user });
+
+  nock("http://localhost")
+    .get(`/app/${app.id}`)
+    .reply(status, { app });
+
+  if (envs) {
+    nock("http://localhost")
+      .get(`/app/1/envs`)
+      .reply(status, envs);
+  }
+
+  return withUserContext({
+    history: createMemoryHistory({
+      initialEntries: [path],
+      initialIndex: 0,
+    }),
+  });
+};
+
+export const renderWithContext = ({ history = createMemoryHistory() } = {}) => {
   const MockRouter = ({ children }) => children;
-
-  return render(
+  const component = render(
     <Router history={history}>
-      <RootContext Router={MockRouter} defaultContext={context}>
-        <Component {...props} />
-        {routeHelpers && <RouteHelper />}
-      </RootContext>
+      <Root Router={MockRouter} Context={RootContext} />
     </Router>
   );
-};
-
-/**
- * Checks if we have a relative URL. If we do, it substitutes with our tutti api URL.
- *
- * @param {object} mock The mock object
- */
-const convertMockUrls = (mock) => {
-  // if it's regex, no need to instert anything, reutrn as it is
-  if (mock.url instanceof RegExp) {
-    return mock;
-  }
-
-  if (mock.noPrefix !== true) {
-    const pattern = /^https?:\/\//i;
-    // if it's not an absolute url, insert our tutti testing URL
-    if (!pattern.test(mock.url) && !(mock.url instanceof RegExp)) {
-      mock.url = `http://localhost/api/${mock.url}`;
-    }
-  }
-
-  return mock;
-};
-
-/**
- * Wrapper on top of XhrMock to add some standard mocks and handle the URLs to be mocked.
- *
- * @param {object} props
- */
-export const XHRMock = (props) => {
-  const { children, mocks = [], ...rest } = props;
-
-  if (!Array.isArray(mocks)) {
-    throw new Error("XHRMock only accepts an array of mocks.");
-  }
-
-  const normalizedMocks = mocks.map(convertMockUrls);
-
-  return (
-    <XhrMock mocks={normalizedMocks} {...rest}>
-      {children}
-    </XhrMock>
-  );
+  component.history = history;
+  return component;
 };

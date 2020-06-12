@@ -11,6 +11,10 @@ const AppLayout = ({ children, loading, app, error }) => {
     return <Spinner pageCenter secondary />;
   }
 
+  if (error) {
+    return <div>{error.message || error}</div>;
+  }
+
   return (
     <main className="flex min-h-screen m-auto items-center">
       <div className="w-64 fixed left-0 top-0 bottom-0">

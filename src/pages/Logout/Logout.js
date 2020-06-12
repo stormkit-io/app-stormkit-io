@@ -7,6 +7,7 @@ const Logout = ({ logout }) => {
   useEffect(() => {
     logout();
   }, [logout]);
+
   return null;
 };
 
