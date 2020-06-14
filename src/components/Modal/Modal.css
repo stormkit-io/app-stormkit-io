@@ -1,0 +1,27 @@
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalScaleIn {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.modal-overlay {
+  animation: modalFadeIn 0.2s ease-in;
+  transition: all 250ms ease-in;
+}
+
+.modal-content {
+  animation: modalScaleIn 0.2s ease-in;
+  transition: all 250ms ease-in;
+}
