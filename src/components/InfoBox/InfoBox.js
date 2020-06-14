@@ -28,7 +28,6 @@ const colors = {
   },
   [SUCCESS]: { text: "white", bg: "green-50", border: "green-50" },
   [WARNING]: {
-    text: "text-primary",
     bg: "yellow-80",
     border: "yellow-60",
     icon: "yellow-30",
