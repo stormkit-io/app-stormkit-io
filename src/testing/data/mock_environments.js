@@ -40,11 +40,7 @@ export default () => ({
       id: "863521234275",
       appId: "1",
       lastDeploy: { id: 3414609680676, createdAt: 1568463533, exit: 0 },
-      domain: {
-        name: "staging.stormkit.io",
-        verified: true,
-        cname: "staging-stormkit-io-cnw5lfl8u.hosting.stormkit.io.",
-      },
+      domain: {},
     },
   ],
 });

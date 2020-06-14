@@ -16,8 +16,19 @@ export const useFetchEnvironments = ({ api, app }) => {
       .fetch(`/app/${app.id}/envs`)
       .then((res) => {
         if (unmounted !== true) {
-          setEnvironments(res.envs);
           setHasNextPage(res.hasNextPage);
+          setEnvironments(
+            res.envs.map((e) => ({
+              ...e,
+              getDomainName: () => {
+                return e.domain?.name && e.domain?.verified
+                  ? e.domain.name
+                  : e.env === "production"
+                  ? `${app.displayName}.stormkit.dev`
+                  : `${app.displayName}--${e.env}.stormkit.dev`;
+              },
+            }))
+          );
         }
       })
       .finally(() => {
@@ -32,4 +43,47 @@ export const useFetchEnvironments = ({ api, app }) => {
   }, [api, app]);
 
   return { environments, error, loading, hasNextPage };
+};
+
+export const STATUS = {
+  OK: 200,
+  NOT_FOUND: 404,
+  NOT_CONFIGURED: "NOT_CONFIGURED",
+};
+
+export const useFetchStatus = ({ domain, lastDeploy }) => {
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const lastDeployId = lastDeploy?.id;
+
+  useEffect(() => {
+    let unmounted = false;
+
+    if (!lastDeployId) {
+      setStatus(STATUS.NOT_CONFIGURED);
+      return;
+    }
+
+    setLoading(true);
+
+    fetch(`https://cors-anywhere.herokuapp.com/https://${domain}`, {
+      method: "HEAD",
+    })
+      .then((res) => {
+        if (!unmounted) {
+          setStatus(res.status);
+        }
+      })
+      .finally(() => {
+        if (unmounted !== true) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      unmounted = true;
+    };
+  }, [domain, lastDeployId]);
+
+  return { status, loading };
 };
