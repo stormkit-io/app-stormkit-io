@@ -33,8 +33,6 @@ export const withAppContext = ({
   status = 200,
   user = mockUser(),
 }) => {
-  withUserContext({ user });
-
   nock("http://localhost")
     .get(`/app/${app.id}`)
     .reply(status, { app });
@@ -46,6 +44,7 @@ export const withAppContext = ({
   }
 
   return withUserContext({
+    user,
     history: createMemoryHistory({
       initialEntries: [path],
       initialIndex: 0,
