@@ -4,10 +4,15 @@ import cn from "classnames";
 import Link from "~/components/Link";
 import "./BackButton.css";
 
-const BackButton = ({ to, className, ...rest }) => (
+const BackButton = ({ to, className, size = 8, ...rest }) => (
   <Link
     className={cn(
-      "back-button text-3xl w-8 h-8 relative inline-block",
+      "back-button relative inline-block leading-none",
+      `w-${size} h-${size}`,
+      {
+        "text-3xl": size === 8,
+        "text-2xl": size === 6,
+      },
       className
     )}
     {...rest}
@@ -21,6 +26,7 @@ const BackButton = ({ to, className, ...rest }) => (
 BackButton.propTypes = {
   className: PropTypes.any,
   to: PropTypes.string,
+  size: PropTypes.number,
 };
 
 export default BackButton;
