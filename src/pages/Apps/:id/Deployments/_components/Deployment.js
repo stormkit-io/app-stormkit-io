@@ -48,7 +48,7 @@ const Deployment = ({
                 <span className="text-pink-50">Publish</span>
               </DotDotDot.Item>
               <DotDotDot.Item href={urls.preview}>
-                Preview <i className="fas fa-external-link-alt ml-2" />
+                Preview <i className="fas fa-external-link-square-alt ml-2" />
               </DotDotDot.Item>
               <DotDotDot.Item href={urls.deployment}>
                 View Details
@@ -72,9 +72,7 @@ const Deployment = ({
               </DotDotDot.Item>
             </DotDotDot>
           </div>
-          <div className="text-sm text-primary opacity-75">
-            {formattedDate(deployment.createdAt)}
-          </div>
+          <div className="text-sm">{formattedDate(deployment.createdAt)}</div>
         </div>
       </div>
       <PublishModal

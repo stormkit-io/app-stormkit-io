@@ -76,7 +76,7 @@ const UserMenu = () => {
                   <li key={link.text}>
                     <Link
                       to={link.to}
-                      className="text-tertiary mb-6 block uppercase text-xs font-bold"
+                      className="mb-6 block uppercase text-xs font-bold"
                     >
                       {link.text}
                     </Link>

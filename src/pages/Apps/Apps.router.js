@@ -9,6 +9,11 @@ Async.configure({ Loader: Spinner, props: { pageCenter: true } });
 
 const routes = [
   {
+    path: "/apps/:id",
+    exact: true,
+    component: Async(() => import("~/pages/Apps/:id")),
+  },
+  {
     path: "/apps/:id/environments",
     exact: true,
     component: Async(() => import("~/pages/Apps/:id/Environments")),

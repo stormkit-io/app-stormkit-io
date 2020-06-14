@@ -45,11 +45,9 @@ const PublishModal = ({
             <Form.Option value={env.id} key={env.id}>
               <span>
                 <span>{env.name || env.env}</span>{" "}
-                {env.domain?.name && env.domain?.verified && (
-                  <span className="text-xs opacity-75">
-                    ({env.domain.name})
-                  </span>
-                )}
+                <span className="text-xs opacity-75">
+                  ({env.getDomainName()})
+                </span>
               </span>
             </Form.Option>
           ))}

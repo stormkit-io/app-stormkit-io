@@ -4,12 +4,19 @@ import cn from "classnames";
 import { Link as OriginalLink } from "react-router-dom";
 
 const Link = forwardRef(
-  ({ to, children, secondary, className, ...props }, ref) => {
+  ({ to, children, secondary, tertiary, className, ...props }, ref) => {
     let isExternal = false;
     let classes = className;
 
     if (secondary) {
       classes = cn(className, "text-pink-50", "hover:text-secondary");
+    } else if (tertiary) {
+      classes = cn(
+        className,
+        "text-primary",
+        "font-bold",
+        "hover:text-pink-50"
+      );
     }
 
     if (to.indexOf("http") === 0 || to.indexOf("//") === 0) {
@@ -41,6 +48,7 @@ Link.propTypes = {
   children: PropTypes.node,
   className: PropTypes.any,
   secondary: PropTypes.bool,
+  tertiary: PropTypes.bool,
 };
 
 export default Link;
