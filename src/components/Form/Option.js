@@ -6,7 +6,11 @@ const Option = React.forwardRef(({ children, className, ...rest }, ref) => {
   return (
     <div
       className={cn(
-        "cursor-pointer hover:bg-gray-90 border-b border-solid border-gray-80",
+        "border-b border-solid border-gray-80",
+        {
+          "cursor-pointer hover:bg-gray-90": !rest.disabled,
+          "bg-gray-85 text-gray-60": rest.disabled,
+        },
         className
       )}
       {...rest}
