@@ -1,22 +1,22 @@
 import { waitFor } from "@testing-library/react";
 import nock from "nock";
 import { withAppContext } from "~/testing/helpers";
-import { mockEnvironments, mockApp } from "~/testing/data";
+import * as data from "~/testing/data";
 
 describe("pages/Apps/:id/Environments", () => {
   let wrapper;
-  const mockResponse = mockEnvironments();
+  const mockResponse = data.mockEnvironmentsResponse();
   const domains = ["app.stormkit.io", "app--development.stormkit.dev"];
 
   domains.forEach((domain) => {
-    nock("https://cors-anywhere.herokuapp.com")
-      .head(`/https://${domain}`)
-      .reply(200);
+    nock("http://localhost")
+      .post(`/app/proxy`, { appId: "1", url: `https://${domain}` })
+      .reply(200, { status: 200 });
   });
 
   beforeEach(() => {
     wrapper = withAppContext({
-      app: mockApp(),
+      app: data.mockAppResponse(),
       envs: mockResponse,
       path: "/apps/1/environments",
     });

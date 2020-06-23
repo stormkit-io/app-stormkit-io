@@ -51,7 +51,7 @@ export const STATUS = {
   NOT_CONFIGURED: "NOT_CONFIGURED",
 };
 
-export const useFetchStatus = ({ domain, lastDeploy }) => {
+export const useFetchStatus = ({ api, app, domain, lastDeploy }) => {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
   const lastDeployId = lastDeploy?.id;
@@ -66,16 +66,18 @@ export const useFetchStatus = ({ domain, lastDeploy }) => {
 
     setLoading(true);
 
-    fetch(`https://cors-anywhere.herokuapp.com/https://${domain}`, {
-      method: "HEAD",
-    })
+    api
+      .post("/app/proxy", {
+        url: `https://${domain}`,
+        appId: app.id,
+      })
       .then((res) => {
         if (!unmounted) {
           setStatus(res.status);
         }
       })
       .finally(() => {
-        if (unmounted !== true) {
+        if (!unmounted) {
           setLoading(false);
         }
       });
@@ -83,7 +85,7 @@ export const useFetchStatus = ({ domain, lastDeploy }) => {
     return () => {
       unmounted = true;
     };
-  }, [domain, lastDeployId]);
+  }, [domain, lastDeployId, app.id, api]);
 
   return { status, loading };
 };

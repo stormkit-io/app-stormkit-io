@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
+import RootContext from "~/pages/Root.context";
+import { connect } from "~/utils/context";
 import Link from "~/components/Link";
 import Spinner from "~/components/Spinner";
-import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import { useFetchStatus, STATUS } from "../actions";
 
@@ -11,18 +12,14 @@ const Status = ({ status }) => {
   return (
     <div className="flex items-center">
       <span
-        className={cn("fas fa-fw fa-globe mr-2", {
-          "text-green-50": status === STATUS.OK,
-          "text-red-50": status !== STATUS.OK,
-        })}
-      />
-      <span
         className={cn("text-sm", {
           "text-green-50": status === STATUS.OK,
           "text-red-50": status !== STATUS.OK,
         })}
       >
+        <span className={"fas fa-fw fa-globe mr-2"} />
         {status !== STATUS.NOT_CONFIGURED && status}
+        {status === STATUS.NOT_CONFIGURED && "Not yet deployed"}
       </span>
     </div>
   );
@@ -32,18 +29,24 @@ Status.propTypes = {
   status: PropTypes.any,
 };
 
-const Environment = ({ environment, app }) => {
+const Environment = ({
+  environment = {},
+  app,
+  api,
+  isClickable,
+  isEditable,
+}) => {
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
   const domain = environment.getDomainName();
   const environmentUrl = `/apps/${app.id}/environments/${environment.id}`;
 
-  const { status, loading } = useFetchStatus({ domain, lastDeploy });
+  const { status, loading } = useFetchStatus({ domain, lastDeploy, api, app });
 
   return (
     <div
       className={cn(
-        "flex flex-auto p-8 bg-white mb-4 rounded mr-4 border-l-8 border-solid",
+        "flex flex-auto p-8 bg-white rounded border-l-8 border-solid",
         {
           "border-yellow-50": status === STATUS.NOT_FOUND,
           "border-green-50": status === STATUS.OK,
@@ -51,16 +54,35 @@ const Environment = ({ environment, app }) => {
         }
       )}
     >
-      <div className="flex flex-col flex-auto mr-8">
-        <h2 className="text-xl font-bold mb-6">
-          <Link
-            to={environmentUrl}
-            className="text-primary hover:text-pink-50 font-bold"
-          >
-            {name}
-          </Link>
+      <div className="flex flex-col flex-auto">
+        <h2 className="flex items-center text-xl font-bold mb-6">
+          {isClickable ? (
+            <>
+              <Link
+                to={environmentUrl}
+                className="inline-flex items-center text-primary hover:text-pink-50 font-bold"
+              >
+                {name}
+                <span className="fas fa-chevron-right text-base ml-2" />
+              </Link>
+            </>
+          ) : (
+            name
+          )}
+          {isEditable && (
+            <Link
+              to={`${environmentUrl}/edit`}
+              className="text-xs flex-auto text-right"
+              tertiary
+            >
+              <span className="icon-bg bg-gray-90 mr-2">
+                <i className="fas fa-pen" />
+              </span>
+              <span className="font-normal">Edit</span>
+            </Link>
+          )}
         </h2>
-        <div className="text-sm">
+        <div className="text-sm bg-gray-90 p-4 rounded-sm">
           <div className="flex mb-6">
             <div className="w-32">Endpoint</div>
             <div className="flex items-center">
@@ -96,7 +118,7 @@ const Environment = ({ environment, app }) => {
           >
             <span className="opacity-50 fas fa-lightbulb mr-4" />
             <div>
-              This may happen when the distributed folder does not contain an{" "}
+              The 404 may happen when the distributed folder does not contain an{" "}
               <b>index.html</b>.{" "}
               <Link to={`https://www.stormkit.io/docs/deployments`} secondary>
                 Learn more
@@ -106,14 +128,6 @@ const Environment = ({ environment, app }) => {
           </InfoBox>
         )}
       </div>
-      <Button
-        as="div"
-        styled={false}
-        href={environmentUrl}
-        className="flex items-center bg-gray-90 hover:bg-gray-75 px-4 rounded"
-      >
-        <span className="opacity-50 fas fa-chevron-right text-xl" />
-      </Button>
     </div>
   );
 };
@@ -121,6 +135,9 @@ const Environment = ({ environment, app }) => {
 Environment.propTypes = {
   environment: PropTypes.object,
   app: PropTypes.object,
+  api: PropTypes.object,
+  isClickable: PropTypes.bool,
+  isEditable: PropTypes.bool,
 };
 
-export default Environment;
+export default connect(Environment, [{ Context: RootContext, props: ["api"] }]);

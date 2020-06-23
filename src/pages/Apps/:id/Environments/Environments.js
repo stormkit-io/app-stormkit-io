@@ -1,36 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
-import RootContext from "~/pages/Root.context";
 import AppContext from "~/pages/Apps/Apps.context";
-import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
+import EnvironmentsContext from "./Environments.context";
 import Environment from "./_components/Environment";
 import { connect } from "~/utils/context";
-import { useFetchEnvironments } from "./actions";
 
-const Environments = ({ app, api }) => {
-  const { environments, loading, error } = useFetchEnvironments({ api, app });
-
-  if (error) {
-    return <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>;
-  }
-
+const Environments = ({ app, environments }) => {
   return (
-    <div className="flex flex-col w-full flex-wrap">
-      {loading && <Spinner primary />}
-      {environments.map((env) => (
-        <Environment environment={env} app={app} key={env.id} />
-      ))}
+    <div>
+      <h1 className="mb-8 flex items-center">
+        <span className="text-2xl text-white">Environments</span>
+      </h1>
+      <div className="flex flex-col w-full flex-wrap">
+        {environments.map((env) => (
+          <div className="mb-4" key={env.id}>
+            <Environment environment={env} app={app} isClickable />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
 Environments.propTypes = {
-  api: PropTypes.object,
+  environments: PropTypes.array,
   app: PropTypes.object,
 };
 
 export default connect(Environments, [
-  { Context: RootContext, props: ["api"] },
+  { Context: EnvironmentsContext, props: ["environments"] },
   { Context: AppContext, props: ["app"] },
 ]);
