@@ -7,9 +7,13 @@ import Api from "~/utils/api/Api";
 import Root from "~/pages/Root";
 import RootContext from "~/pages/Root.context";
 import { LocalStorage } from "~/utils/storage";
-import { mockUser } from "~/testing/data";
+import * as data from "~/testing/data";
 
-export const withUserContext = ({ user = mockUser(), path, ...rest }) => {
+export const withUserContext = ({
+  user = data.mockUserResponse(),
+  path,
+  ...rest
+}) => {
   LocalStorage.set(Api.STORAGE_TOKEN_KEY, "123-abc");
 
   nock("http://localhost")
@@ -26,13 +30,7 @@ export const withUserContext = ({ user = mockUser(), path, ...rest }) => {
   return renderWithContext({ ...rest });
 };
 
-export const withAppContext = ({
-  app,
-  envs,
-  path,
-  status = 200,
-  user = mockUser(),
-}) => {
+export const withAppContext = ({ app, envs, path, status = 200, user }) => {
   nock("http://localhost")
     .get(`/app/${app.id}`)
     .reply(status, { app });
