@@ -5,7 +5,7 @@ process.env.IP = process.env.IP || "localhost";
 
 const webpack = require("webpack");
 const devServer = require("webpack-dev-server");
-const config = require("../config/webpack.client");
+const config = require("../config/webpack.config");
 const devConfig = require("../config/webpack.dev-server");
 
 const host = process.env.LISTEN;

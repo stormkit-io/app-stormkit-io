@@ -5,6 +5,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserJSPlugin = require("terser-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const config = require("dotenv").config();
 
 // Helper variables
@@ -63,11 +65,12 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
-          { loader: "css-loader", options: { importLoaders: 1 } },
+          { loader: MiniCssExtractPlugin.loader, options: { hmr: isDev } },
+          { loader: "css-loader" },
           {
             loader: "postcss-loader",
             options: {
+              ident: "postcss",
               plugins: [require("tailwindcss"), require("autoprefixer")],
             },
           },
@@ -77,7 +80,10 @@ module.exports = {
   },
 
   plugins: [
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      ignoreOrder: false,
+    }),
+
     new CleanWebpackPlugin({
       dry: false,
       cleanOnceBeforeBuildPatterns: [path.join(root, "dist")],
@@ -103,30 +109,27 @@ module.exports = {
     ]),
 
     // The server will handle injecting files by itself.
-    new HtmlWebpackPlugin(
-      isDev
-        ? {
-            inject: true,
-            template: path.join(root, "src/public/index.html"),
-            publicFolder: process.env.PUBLIC_URL || "/",
-          }
-        : {
-            inject: true,
-            template: path.join(root, "src/public/index.html"),
-            publicFolder: process.env.PUBLIC_URL || "/",
-            minify: {
-              removeComments: true,
-              collapseWhitespace: true,
-              removeRedundantAttributes: true,
-              useShortDoctype: true,
-              removeEmptyAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              keepClosingSlash: true,
-              minifyJS: true,
-              minifyCSS: true,
-              minifyURLs: true,
-            },
-          }
-    ),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.join(root, "src/public/index.html"),
+      publicFolder: process.env.PUBLIC_URL || "/",
+      minify: !isDev,
+    }),
   ],
+
+  optimization: {
+    minimizer: !isDev
+      ? [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
+      : undefined,
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: "styles",
+          test: /\.css$/,
+          chunks: "all",
+          enforce: true,
+        },
+      },
+    },
+  },
 };
