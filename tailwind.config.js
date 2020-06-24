@@ -1,5 +1,8 @@
 module.exports = {
-  purge: [],
+  purge: {
+    enabled: process.env.NODE_ENV === "production",
+    content: ["src/index.js", "src/**/*.js"],
+  },
   theme: {
     borderRadius: {
       none: "0",
