@@ -2,6 +2,20 @@ module.exports = {
   purge: {
     enabled: process.env.NODE_ENV === "production",
     content: ["src/index.js", "src/**/*.js"],
+    options: {
+      whitelist: [
+        "hover:bg-github",
+        "hover:bg-gitlab",
+        "hover:bg-bitbucket",
+        "border-github",
+        "border-gitlab",
+        "border-bitbucket",
+        "text-github",
+        "text-gitlab",
+        "text-bitbucket",
+      ],
+      whitelistPatterns: [/^(w|h)-/],
+    },
   },
   theme: {
     borderRadius: {
