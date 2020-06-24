@@ -15,8 +15,9 @@ const routes = [
   },
   {
     path: "/apps/:id/environments",
-    exact: true,
-    component: Async(() => import("~/pages/Apps/:id/Environments")),
+    component: Async(() =>
+      import("~/pages/Apps/:id/Environments/Environments.context")
+    ),
   },
   {
     path: "/apps/:id/deployments",
