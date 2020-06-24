@@ -4,6 +4,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const config = require("dotenv").config();
 
 // Helper variables
@@ -62,7 +63,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          "style-loader",
+          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
           { loader: "css-loader", options: { importLoaders: 1 } },
           {
             loader: "postcss-loader",
@@ -76,6 +77,7 @@ module.exports = {
   },
 
   plugins: [
+    new MiniCssExtractPlugin(),
     new CleanWebpackPlugin({
       dry: false,
       cleanOnceBeforeBuildPatterns: [path.join(root, "dist")],
