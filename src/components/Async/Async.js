@@ -13,7 +13,7 @@ const Fader = styled.div`
   min-width: 100%;
 `;
 
-const Async = getComponent => {
+const Async = (getComponent) => {
   class AsyncComponent extends Component {
     static Component = null;
 
@@ -27,8 +27,16 @@ const Async = getComponent => {
 
     async componentDidMount() {
       if (!this.state.Component) {
-        this.setState({ Component: await AsyncComponent.Import() });
+        const Component = await AsyncComponent.Import();
+
+        if (this.unmounted !== true) {
+          this.setState({ Component });
+        }
       }
+    }
+
+    componentWillUnmount() {
+      this.unmounted = true;
     }
 
     render() {
@@ -51,5 +59,5 @@ const Async = getComponent => {
 };
 
 export default Object.assign(Async, {
-  configure: c => Object.assign(config, c)
+  configure: (c) => Object.assign(config, c),
 });
