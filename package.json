@@ -7,7 +7,7 @@
   "author": "Savas Vedova <savas@stormkit.io>",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode production --config config/webpack.client.js",
+    "build": "webpack --mode production --config config/webpack.config.js",
     "dev": "node scripts/dev.js",
     "dev:live": "API_PROXY_DOMAIN=https://api.stormkit.io NODE_ENV=production node scripts/dev.js",
     "test": "jest --notify --detectOpenHandles --config=config/jest.config.js"
