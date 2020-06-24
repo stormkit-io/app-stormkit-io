@@ -29,7 +29,10 @@ const Deployments = ({ app, api, location }) => {
   }
 
   return (
-    <>
+    <div>
+      <h1 className="mb-8 flex items-center">
+        <span className="text-2xl text-white">Deployments</span>
+      </h1>
       {/* <div className="flex flex-col justify-center bg-white rounded p-4 mb-4"><Filters /></div> */}
       {success && (
         <InfoBox type={InfoBox.SUCCESS} className="mb-4" dismissable>
@@ -68,7 +71,7 @@ const Deployments = ({ app, api, location }) => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

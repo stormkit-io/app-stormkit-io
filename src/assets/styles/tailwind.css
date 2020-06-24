@@ -4,7 +4,7 @@
 
 .page-section {
   @apply bg-white;
-  @apply rounded-lg;
+  @apply rounded;
   @apply p-6;
   @apply flex-auto;
 }
@@ -13,4 +13,22 @@
   @apply inline-block;
   @apply bg-blue-20;
   @apply rounded;
+}
+
+.icon-bg {
+  @apply inline-flex;
+  @apply w-10;
+  @apply h-10;
+  @apply items-center;
+  @apply justify-center;
+  @apply rounded-full;
+}
+
+label.MuiFormLabel-root,
+div.MuiInputBase-root {
+  @apply text-sm;
+}
+
+fieldset.MuiOutlinedInput-notchedOutline {
+  @apply border-gray-83;
 }

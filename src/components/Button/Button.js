@@ -54,23 +54,23 @@ const Button = forwardRef(
 
     const content = (
       <>
-        {as !== "button" ? (
-          children
-        ) : (
-          <span
-            className={cn(
-              "inline-flex",
-              "items-center",
-              "w-full",
-              "justify-center",
-              {
-                invisible: loading,
-              }
+        {as !== "button"
+          ? children
+          : children && (
+              <span
+                className={cn(
+                  "inline-flex",
+                  "items-center",
+                  "w-full",
+                  "justify-center",
+                  {
+                    invisible: loading,
+                  }
+                )}
+              >
+                {children}
+              </span>
             )}
-          >
-            {children}
-          </span>
-        )}
         {loading && <Spinner width={6} height={6} className="button-spinner" />}
         {href && <Link to={href} className="hidden" ref={linkRef} />}
       </>

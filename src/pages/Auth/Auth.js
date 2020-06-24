@@ -44,7 +44,7 @@ const Auth = ({ user, location }) => {
             </li>
           </ul>
         </div>
-        <div className="auth-box bg-white rounded-lg p-6 sm:p-12">
+        <div className="auth-box bg-white rounded p-6 sm:p-12">
           <h1 className="text-pink-50 font-bold text-2xl">Authentication</h1>
           <p className="mt-4 mb-12 text-base">
             Log in with your favorite provider

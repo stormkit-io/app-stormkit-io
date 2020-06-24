@@ -24,7 +24,7 @@ const AppMenu = ({ app }) => {
 
   return (
     <div className="flex flex-col h-full p-8 bg-black-o-05">
-      <div className="mb-24">
+      <div className="mb-40">
         <Logo iconSize={8} />
       </div>
       <ul className="flex-auto">
@@ -33,10 +33,9 @@ const AppMenu = ({ app }) => {
             <Link
               to={path.path}
               className={cn(
-                "inline-flex hover:bg-blue-20 rounded-lg py-2 px-4 items-center",
+                "inline-flex hover:bg-blue-20 hover:text-white rounded py-2 px-4 items-center",
                 {
-                  "hover:text-white": url !== path.path,
-                  "text-pink-50": url === path.path,
+                  "text-pink-50": url.indexOf(path.path) === 0,
                 }
               )}
             >

@@ -4,21 +4,21 @@ import cn from "classnames";
 import OutsideClick from "~/components/OutsideClick";
 import Button from "~/components/Button";
 
-const DotDotDot = ({ children, className }) => {
+const DotDotDot = ({ children, className, ...rest }) => {
   const [isOpen, toggleVisibility] = useState(false);
 
   return (
     <OutsideClick handler={() => toggleVisibility(false)}>
       <div className={cn("relative", className)}>
         <Button
-          as="span"
           styled={false}
           onClick={() => toggleVisibility(!isOpen)}
+          {...rest}
         >
           <i className="fas fa-ellipsis-h" />
         </Button>
         {isOpen && (
-          <div className="flex flex-col min-w-56 absolute right-0 rounded-lg shadow bg-white z-50 items-start mt-4">
+          <div className="flex flex-col min-w-56 absolute right-0 rounded shadow bg-white z-50 items-start mt-4">
             {React.Children.map(
               children,
               (child) => child && cloneElement(child, { toggleVisibility })
