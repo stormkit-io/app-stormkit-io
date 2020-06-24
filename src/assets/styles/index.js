@@ -1,5 +1,3 @@
-import "./globals";
-
 // Export tags
 export { H2, H4 } from "./tags/Hx";
 export { default as A } from "./tags/A";
