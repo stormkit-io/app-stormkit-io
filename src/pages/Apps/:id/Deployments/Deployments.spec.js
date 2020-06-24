@@ -1,14 +1,14 @@
 import { waitFor } from "@testing-library/react";
 import nock from "nock";
 import { withAppContext } from "~/testing/helpers";
-import { mockDeployments, mockEnvironments, mockApp } from "~/testing/data";
+import * as data from "~/testing/data";
 
 describe("pages/Apps/:id/Deployments", () => {
   let wrapper;
 
   describe("when hasNextPage is true", () => {
     beforeEach(() => {
-      const mockDeploymentsResponse = mockDeployments();
+      const mockDeploymentsResponse = data.mockDeploymentsResponse();
       mockDeploymentsResponse.hasNextPage = true;
 
       nock("http://localhost")
@@ -16,8 +16,8 @@ describe("pages/Apps/:id/Deployments", () => {
         .reply(200, mockDeploymentsResponse);
 
       wrapper = withAppContext({
-        app: mockApp(),
-        envs: mockEnvironments(),
+        app: data.mockAppResponse(),
+        envs: data.mockEnvironmentsResponse(),
         path: "/apps/1/deployments",
       });
     });
@@ -32,7 +32,7 @@ describe("pages/Apps/:id/Deployments", () => {
 
   describe("when hasNextPage is false", () => {
     beforeEach(() => {
-      const mockDeploymentsResponse = mockDeployments();
+      const mockDeploymentsResponse = data.mockDeploymentsResponse();
       mockDeploymentsResponse.hasNextPage = false;
 
       nock("http://localhost")
@@ -40,8 +40,8 @@ describe("pages/Apps/:id/Deployments", () => {
         .reply(200, mockDeploymentsResponse);
 
       wrapper = withAppContext({
-        app: mockApp(),
-        envs: mockEnvironments(),
+        app: data.mockAppResponse(),
+        envs: data.mockEnvironmentsResponse(),
         path: "/apps/1/deployments",
       });
     });
