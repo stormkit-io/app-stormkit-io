@@ -16,7 +16,7 @@ export const useFetchRemoteConfig = ({ api, app, env, location }) => {
       .fetch(`/app/${app.id}/envs/${env.env}/remote-config`)
       .then((res) => {
         if (unmounted !== true) {
-          setConfig(res.config);
+          setConfig(res.config || {});
         }
       })
       .catch((res) => {
