@@ -5,7 +5,7 @@
   <i>Stormkit is an infrastructure provider for modern javascript applications. It perfectly integrates with popular Git solutions.<br/>Try out Stormkit using our hosted version at <a href="https://app.stormkit.io">app.stormkit.io</a>.</i>
   <br/>
   <br/>
-  <img src="./assets/images/deployments-screenshot.png" alt="Stormkit" width="800" />
+  <img src="./src/assets/images/deployments-screenshot.png" alt="Stormkit" width="800" />
 </p>
 
 This repository contains code related to the application frontend. You're more than welcome to contribute.
