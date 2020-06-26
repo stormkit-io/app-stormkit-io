@@ -25,8 +25,9 @@ CommitMessage.propTypes = {
 
 const CommitInfo = ({ deployment, environments }) => {
   const commit = parseCommit(deployment);
+  const env = environments.filter((e) => e.env === deployment.config.env)[0];
   const urls = {
-    environment: `/apps/${deployment.appId}/environments/${deployment.config.env}`,
+    environment: `/apps/${deployment.appId}/environments/${env?.id}`,
     deployment: `/apps/${deployment.appId}/deployments/${deployment.id}`,
   };
 
