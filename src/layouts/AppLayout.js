@@ -1,18 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Spinner from "~/components/Spinner";
-import AppContext from "~/pages/Apps/Apps.context";
-import { connect } from "~/utils/context";
 import AppMenu from "./_components/AppMenu";
 import AppHeader from "./_components/AppHeader";
 
-const AppLayout = ({ children, loading, app, error }) => {
+const AppLayout = ({ children, loading, app, error, actions }) => {
   if (loading) {
     return <Spinner pageCenter secondary />;
   }
 
   if (error) {
     return <div>{error.message || error}</div>;
+  }
+
+  if (!app) {
+    return children;
   }
 
   return (
@@ -22,7 +24,7 @@ const AppLayout = ({ children, loading, app, error }) => {
       </div>
       <div className="flex flex-col flex-auto w-full ml-64 px-4 min-h-screen">
         <div className="flex flex-grow-0 max-w-screen-lg m-auto w-full mb-24">
-          <AppHeader app={app} />
+          <AppHeader app={app} actions={actions} />
         </div>
         <div className="flex flex-auto max-w-screen-lg m-auto w-full">
           {children}
@@ -37,8 +39,7 @@ AppLayout.propTypes = {
   app: PropTypes.object,
   loading: PropTypes.bool,
   error: PropTypes.any,
+  actions: PropTypes.node, // The header actions that will be displayed on top right.
 };
 
-export default connect(AppLayout, [
-  { Context: AppContext, props: ["app", "error", "loading"] },
-]);
+export default AppLayout;

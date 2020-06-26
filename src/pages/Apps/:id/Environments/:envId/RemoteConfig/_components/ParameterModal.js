@@ -30,7 +30,11 @@ const ParameterModal = ({
   const [targetings, setTargetings] = useState(parameter?.targetings || [{}]);
 
   return (
-    <Modal isOpen={isOpen} onClose={() => toggleModal(false)} margin="20%">
+    <Modal
+      isOpen={isOpen}
+      onClose={() => toggleModal(false)}
+      className="max-w-screen-lg"
+    >
       <h2 className="mb-8 text-xl font-bold">
         {parameter?.name ? "Edit parameter" : "Create parameter"}
       </h2>

@@ -4,7 +4,6 @@ import { Switch, Route } from "react-router";
 import { withRouter } from "react-router-dom";
 import { connect } from "~/utils/context";
 import AppsContext from "~/pages/Apps/Apps.context";
-import EnvironmentsContext from "~/pages/Apps/:id/Environments/Environments.context";
 import EnvironmentMenu from "./_components/EnvironmentMenu";
 import routes from "./routes";
 
@@ -38,8 +37,7 @@ EnvironmentContext.propTypes = {
 };
 
 const enhanced = connect(withRouter(EnvironmentContext), [
-  { Context: EnvironmentsContext, props: ["environments"] },
-  { Context: AppsContext, props: ["app"] },
+  { Context: AppsContext, props: ["app", "environments"] },
 ]);
 
 export default Object.assign(enhanced, {

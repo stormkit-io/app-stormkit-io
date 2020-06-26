@@ -4,30 +4,18 @@ import { Switch, Route } from "react-router";
 import { connect } from "~/utils/context";
 import RootContext from "~/pages/Root.context";
 import AppContext from "~/pages/Apps/Apps.context";
-import InfoBox from "~/components/InfoBox";
-import Spinner from "~/components/Spinner";
-import { useFetchEnvironments } from "./actions";
 import routes from "./routes";
 
 const Context = createContext();
 
-const EnvironmentsContext = ({ api, app }) => {
-  const { environments, loading, error } = useFetchEnvironments({ api, app });
-
-  if (error) {
-    return <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>;
-  }
-
+const EnvironmentsContext = ({ environments }) => {
   return (
     <Context.Provider value={{ environments }}>
-      {loading && <Spinner primary />}
-      {!loading && (
-        <Switch>
-          {routes.map((route) => (
-            <Route {...route} key={route.path} />
-          ))}
-        </Switch>
-      )}
+      <Switch>
+        {routes.map((route) => (
+          <Route {...route} key={route.path} />
+        ))}
+      </Switch>
     </Context.Provider>
   );
 };
@@ -35,11 +23,12 @@ const EnvironmentsContext = ({ api, app }) => {
 EnvironmentsContext.propTypes = {
   api: PropTypes.object,
   app: PropTypes.object,
+  environments: PropTypes.array,
 };
 
 const enhanced = connect(EnvironmentsContext, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
+  { Context: AppContext, props: ["app", "environments"] },
 ]);
 
 export default Object.assign(enhanced, {

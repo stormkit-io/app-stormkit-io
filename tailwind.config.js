@@ -4,6 +4,7 @@ module.exports = {
     content: ["src/index.js", "src/**/*.js"],
     options: {
       whitelist: [
+        // Provider related dynamic classes
         "hover:bg-github",
         "hover:bg-gitlab",
         "hover:bg-bitbucket",
@@ -13,6 +14,17 @@ module.exports = {
         "text-github",
         "text-gitlab",
         "text-bitbucket",
+
+        // InfoBox related dynamic classes
+        "text-blue-20",
+        "bg-yellow-80",
+        "bg-blue-90",
+        "bg-blue-80",
+        "bg-red-50",
+        "border-blue-80",
+        "border-yellow-60",
+        "border-green-50",
+        "border-red-50",
       ],
       whitelistPatterns: [/^(w|h)-/],
     },

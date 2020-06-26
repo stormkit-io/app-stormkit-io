@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import AppContext from "~/pages/Apps/Apps.context";
-import EnvironmentsContext from "./Environments.context";
+import AppsContext from "~/pages/Apps/Apps.context";
 import Environment from "./_components/Environment";
 import { connect } from "~/utils/context";
 
@@ -28,6 +27,5 @@ Environments.propTypes = {
 };
 
 export default connect(Environments, [
-  { Context: EnvironmentsContext, props: ["environments"] },
-  { Context: AppContext, props: ["app"] },
+  { Context: AppsContext, props: ["app", "environments"] },
 ]);
