@@ -2,7 +2,7 @@ import { waitFor, act, fireEvent } from "@testing-library/react";
 import nock from "nock";
 import { withAppContext } from "~/testing/helpers";
 import * as data from "~/testing/data";
-import { mockRemoteConfigResponse } from "../../../../../../testing/data";
+import * as nocks from "~/testing/nocks";
 
 describe("pages/Apps/:id/Environments", () => {
   let wrapper;
@@ -12,9 +12,7 @@ describe("pages/Apps/:id/Environments", () => {
   const env = envs.envs[0];
 
   beforeEach(() => {
-    nock("http://localhost")
-      .post(`/app/proxy`, { appId: app.id, url: `https://app.stormkit.io` })
-      .reply(200, { status: 200 });
+    nocks.appProxy({ app, envs: envs.envs });
 
     nock("http://localhost")
       .get(`/app/${app.id}/envs/${env.env}/remote-config`)
@@ -43,7 +41,7 @@ describe("pages/Apps/:id/Environments", () => {
   });
 
   test("should be able to delete the parameter", async () => {
-    const configToBeSent = { ...mockRemoteConfigResponse().config };
+    const configToBeSent = { ...data.mockRemoteConfigResponse().config };
     delete configToBeSent.bannerPromo;
 
     const scope = nock("http://localhost")

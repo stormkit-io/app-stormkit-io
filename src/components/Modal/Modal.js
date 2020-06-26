@@ -98,7 +98,7 @@ class Modal extends PureComponent {
         <div className="flex items-center w-full h-full">
           <div
             className={cn(
-              "modal-content flex-auto max-w-screen-lg sm:m-12 md:m-auto h-full sm:h-auto w-full sm:w-auto",
+              "modal-content flex-auto sm:m-12 md:m-auto h-full sm:h-auto w-full sm:w-auto",
               className
             )}
             onClick={(e) => e.stopPropagation()}

@@ -80,3 +80,46 @@ export const useFetchApp = ({ api, appId }) => {
 
   return { app, loading, error };
 };
+
+export const deploy = ({
+  api,
+  app,
+  setLoading,
+  setError,
+  toggleModal,
+  history,
+  environment,
+}) => ({ branch }) => {
+  if (!environment) {
+    return setError("Please select an environment.");
+  }
+
+  setLoading(true);
+
+  api
+    .post(`/app/deploy`, { env: environment.env, branch, appId: app.id })
+    .then((deploy) => {
+      toggleModal(false, () => {
+        if (deploy && deploy.id) {
+          history.push(`/apps/${app.id}/deployments/${deploy.id}`);
+        }
+      });
+    })
+    .catch((res) => {
+      if (res.status === 429) {
+        setError(
+          "You have exceeded the maximum number of concurrent builds " +
+            "allowed for your application. Please wait until your other " +
+            "deployments are completed. You can always upgrade your package " +
+            "if you need more concurrent builds."
+        );
+      } else {
+        setError(
+          "Something wrong happened here. Please contact us at hello@stormkit.io"
+        );
+      }
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+};

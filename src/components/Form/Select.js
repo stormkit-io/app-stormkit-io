@@ -1,14 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
-import FormWrapper from "./FormWrapper";
-import SelectUI from "@material-ui/core/Select";
+import SelectInput from "@material-ui/core/Select";
 
-const Select = ({ handler, className, variant = "filled", ...rest }) => {
+const Select = ({ onChange, className, variant = "filled", ...rest }) => {
   return (
-    <SelectUI
+    <SelectInput
       className={cn("w-full", className)}
-      onChange={(e) => handler(e.target.value)}
+      onChange={(e) => onChange && onChange(e.target.value)}
       variant={variant}
       SelectDisplayProps={{ className: "flex items-center p-4 w-full" }}
       {...rest}
@@ -17,9 +16,9 @@ const Select = ({ handler, className, variant = "filled", ...rest }) => {
 };
 
 Select.propTypes = {
-  handler: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
   variant: PropTypes.oneOf(["filled", "standard", "outlined"]),
   className: PropTypes.any,
 };
 
-export default FormWrapper(Select);
+export default Select;

@@ -1,24 +1,26 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import AppContext from "~/pages/Apps/Apps.context";
+import AppsContext from "~/pages/Apps/Apps.context";
 import RootContext from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
-import { useFetchEnvironments } from "../Environments/actions";
 import { useFetchDeployments } from "./actions";
 import Deployment from "./_components/Deployment";
 // import Filters from "./_components/Filters";
 
-const Deployments = ({ app, api, location }) => {
+const Deployments = ({ app, environments, api, location }) => {
   const [from, setFrom] = useState(0);
-  const envs = useFetchEnvironments({ api, app });
   const depls = useFetchDeployments({ app, api, location, from });
-  const loading = envs.loading || depls.loading;
-  const error = envs.error || depls.error;
-  const { environments } = envs;
-  const { deployments, success, hasNextPage, setDeployments } = depls;
+  const {
+    deployments,
+    success,
+    hasNextPage,
+    setDeployments,
+    loading,
+    error,
+  } = depls;
 
   if (error) {
     return (
@@ -83,5 +85,5 @@ Deployments.propTypes = {
 
 export default connect(Deployments, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
+  { Context: AppsContext, props: ["app", "environments"] },
 ]);

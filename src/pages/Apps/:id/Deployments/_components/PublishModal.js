@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import Modal from "~/components/Modal";
-import Form from "~/components/Form";
+import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
+import Form from "~/components/Form";
 import { connect } from "~/utils/context";
 import { useFetchDeployments, publishDeployments } from "../actions";
 import DeployTable from "./PublishModalDeployments";
@@ -26,32 +27,19 @@ const PublishModal = ({
   const { deployments, loading, error } = result;
 
   return (
-    <Modal isOpen={isOpen} onClose={() => toggleModal(false)} margin="20%">
+    <Modal
+      isOpen={isOpen}
+      onClose={() => toggleModal(false)}
+      className="max-w-screen-md"
+    >
       <h3 className="mb-8 text-xl font-bold">Publish deployment</h3>
-      <Form
-        handleSubmit={({ environment }) => setSelectedEnvironment(environment)}
-        className="mb-8"
-      >
-        <Form.Select
-          name="environment"
-          displayEmpty
-          selected={selectedEnvironment}
-          onChange={(v) => setSelectedEnvironment(v)}
-        >
-          <Form.Option disabled value="">
-            Select an environment to publish
-          </Form.Option>
-          {environments.map((env) => (
-            <Form.Option value={env.id} key={env.id}>
-              <span>
-                <span>{env.name || env.env}</span>{" "}
-                <span className="text-xs opacity-75">
-                  ({env.getDomainName()})
-                </span>
-              </span>
-            </Form.Option>
-          ))}
-        </Form.Select>
+      <Form>
+        <EnvironmentSelector
+          className="mb-8"
+          environments={environments}
+          placeholder="Select an environment to publish"
+          onSelect={(e) => setSelectedEnvironment(e.id)}
+        />
       </Form>
       <div>
         {publishError && (

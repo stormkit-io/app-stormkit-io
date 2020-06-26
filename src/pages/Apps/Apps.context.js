@@ -1,19 +1,55 @@
 import React, { createContext } from "react";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
+import AppLayout from "~/layouts/AppLayout";
 import { connect } from "~/utils/context";
 import RootContext from "~/pages/Root.context";
+import Spinner from "~/components/Spinner";
+import InfoBox from "~/components/InfoBox";
 import { useFetchApp } from "./actions";
+import routes from "./routes";
+import HeaderActions from "./_components/HeaderActions";
+import { useFetchEnvironments } from "./:id/Environments/actions";
 
 const Context = createContext();
 
-const AppContext = ({ api, match, children }) => {
+const AppContext = ({ api, match, history }) => {
   const { id } = match.params;
   const { app, error, loading } = useFetchApp({ api, appId: id });
+  const envs = useFetchEnvironments({ api, app });
+
+  if (loading || envs.loading) {
+    return <Spinner primary pageCenter />;
+  }
+
+  if (error || envs.error) {
+    return (
+      <InfoBox type={InfoBox.ERROR}>
+        {error ||
+          "Something went wrong on our side. Please try again. If the problem persists reach us out through Discord or email."}
+      </InfoBox>
+    );
+  }
 
   return (
-    <Context.Provider value={{ app, error, loading }}>
-      {children}
+    <Context.Provider value={{ app, environments: envs.environments }}>
+      <AppLayout
+        app={app}
+        actions={
+          <HeaderActions
+            app={app}
+            api={api}
+            history={history}
+            environments={envs.environments}
+          />
+        }
+      >
+        <Switch>
+          {routes.map((route) => (
+            <Route {...route} key={route.path} />
+          ))}
+        </Switch>
+      </AppLayout>
     </Context.Provider>
   );
 };
@@ -21,10 +57,9 @@ const AppContext = ({ api, match, children }) => {
 AppContext.propTypes = {
   api: PropTypes.object,
   match: PropTypes.object,
-  children: PropTypes.node,
 };
 
-const enhanced = connect(withRouter(AppContext), [
+const enhanced = connect(AppContext, [
   { Context: RootContext, props: ["api"] },
 ]);
 

@@ -9,6 +9,10 @@ export const useFetchEnvironments = ({ api, app }) => {
   useEffect(() => {
     let unmounted = false;
 
+    if (!app.id) {
+      return;
+    }
+
     setLoading(true);
     setError(null);
 

@@ -34,6 +34,6 @@ export default [
   },
   {
     path: "/apps/:id",
-    component: Async(() => import("~/pages/Apps/Apps.router")),
+    component: Async(() => import("~/pages/Apps/Apps.context")),
   },
 ];

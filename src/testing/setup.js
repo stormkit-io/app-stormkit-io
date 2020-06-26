@@ -1,5 +1,6 @@
 import "isomorphic-fetch";
 import nock from "nock";
+import { JSDOM } from "jsdom";
 
 global.BASEURL = "http://localhost";
 
@@ -24,7 +25,7 @@ global.BASEURL = "http://localhost";
 // });
 
 beforeEach(() => {
-  document.body.innerHTML = "";
+  global.document = new JSDOM(`<!DOCTYPE html><body></body>`);
 });
 
 afterEach(() => {

@@ -1,8 +1,8 @@
 import React from "react";
-import Button from "~/components/Button";
+import PropTypes from "prop-types";
 import { formattedDate } from "~/utils/helpers/deployments";
 
-const AppHeader = ({ app }) => {
+const AppHeader = ({ app, actions }) => {
   const provider = app.repo.split("/").shift();
 
   return (
@@ -21,15 +21,14 @@ const AppHeader = ({ app }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-auto items-center justify-end">
-        <div id="app-header-actions" />
-        <Button primary className="rounded-xl py-3 font-bold">
-          <span className="fas fa-rocket mr-4 text-lg" />
-          <span className="text-sm">Deploy now</span>
-        </Button>
-      </div>
+      <div className="flex flex-auto items-center justify-end">{actions}</div>
     </header>
   );
+};
+
+AppHeader.propTypes = {
+  app: PropTypes.object,
+  actions: PropTypes.node,
 };
 
 export default AppHeader;
