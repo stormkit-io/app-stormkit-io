@@ -8,6 +8,7 @@ import ExplanationBox from "~/components/ExplanationBox";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
+import { PlusButton } from "~/components/Buttons";
 import { useFetchRemoteConfig } from "./actions";
 import { sortConfigByKey } from "./helpers";
 import Parameter from "./_components/Parameter";
@@ -75,15 +76,10 @@ const RemoteConfig = ({
                 isLastRow={i === config.length - 1}
               />
             ))}
-            {
-              <Button
-                styled={false}
-                className="border-4 border-dotted border-gray-85 rounded-tl rounded-tr flex items-center w-full mt-4 p-8"
-                onClick={() => toggleModal(true)}
-              >
-                <span className="fas fa-plus text-6xl" />
-              </Button>
-            }
+            <PlusButton
+              onClick={() => toggleModal(true)}
+              className="mt-4 p-8"
+            />
             <ParameterModal config={config} />
           </div>
         )}

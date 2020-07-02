@@ -4,8 +4,10 @@ import cn from "classnames";
 import RootContext from "~/pages/Root.context";
 import { connect } from "~/utils/context";
 import Link from "~/components/Link";
+import Button from "~/components/Button";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
+import EnvironmentFormModal from "./EnvironmentFormModal";
 import { useFetchStatus, STATUS } from "../actions";
 
 const Status = ({ status }) => {
@@ -35,6 +37,7 @@ const Environment = ({
   api,
   isClickable,
   isEditable,
+  toggleModal,
 }) => {
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
@@ -56,8 +59,8 @@ const Environment = ({
     >
       <div className="flex flex-col flex-auto">
         <h2 className="flex items-center text-xl font-bold mb-6">
-          {isClickable ? (
-            <>
+          <span className="flex-auto">
+            {isClickable ? (
               <Link
                 to={environmentUrl}
                 className="inline-flex items-center text-primary hover:text-pink-50 font-bold"
@@ -65,21 +68,30 @@ const Environment = ({
                 {name}
                 <span className="fas fa-chevron-right text-base ml-2" />
               </Link>
-            </>
-          ) : (
-            name
-          )}
+            ) : (
+              name
+            )}
+          </span>
           {isEditable && (
-            <Link
-              to={`${environmentUrl}/edit`}
-              className="text-xs flex-auto text-right"
-              tertiary
-            >
-              <span className="icon-bg bg-gray-90 mr-2">
-                <i className="fas fa-pen" />
-              </span>
-              <span className="font-normal">Edit</span>
-            </Link>
+            <>
+              <Button
+                styled={false}
+                className="text-xs text-right"
+                onClick={() => toggleModal(true)}
+                aria-label="Update environment"
+                tertiary
+              >
+                <span className="icon-bg bg-gray-90 mr-2">
+                  <i className="fas fa-pen" />
+                </span>
+                <span className="font-normal">Edit</span>
+              </Button>
+              <EnvironmentFormModal
+                environment={environment}
+                app={app}
+                api={api}
+              />
+            </>
           )}
         </h2>
         <div className="text-sm bg-gray-90 p-4 rounded-sm">
@@ -138,6 +150,10 @@ Environment.propTypes = {
   api: PropTypes.object,
   isClickable: PropTypes.bool,
   isEditable: PropTypes.bool,
+  toggleModal: PropTypes.func,
 };
 
-export default connect(Environment, [{ Context: RootContext, props: ["api"] }]);
+export default connect(Environment, [
+  { Context: RootContext, props: ["api"] },
+  { Context: EnvironmentFormModal, props: ["toggleModal"] },
+]);

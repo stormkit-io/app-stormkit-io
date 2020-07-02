@@ -13,12 +13,12 @@ import { useFetchEnvironments } from "./:id/Environments/actions";
 
 const Context = createContext();
 
-const AppContext = ({ api, match, history }) => {
+const AppContext = ({ api, match, history, location }) => {
   const { id } = match.params;
   const { app, error, loading } = useFetchApp({ api, appId: id });
-  const envs = useFetchEnvironments({ api, app });
+  const envs = useFetchEnvironments({ api, app, location });
 
-  if (loading || envs.loading) {
+  if (loading) {
     return <Spinner primary pageCenter />;
   }
 
@@ -44,11 +44,14 @@ const AppContext = ({ api, match, history }) => {
           />
         }
       >
-        <Switch>
-          {routes.map((route) => (
-            <Route {...route} key={route.path} />
-          ))}
-        </Switch>
+        {envs.loading && <Spinner primary />}
+        {!envs.loading && (
+          <Switch>
+            {routes.map((route) => (
+              <Route {...route} key={route.path} />
+            ))}
+          </Switch>
+        )}
       </AppLayout>
     </Context.Provider>
   );
@@ -57,6 +60,8 @@ const AppContext = ({ api, match, history }) => {
 AppContext.propTypes = {
   api: PropTypes.object,
   match: PropTypes.object,
+  location: PropTypes.object,
+  history: PropTypes.object,
 };
 
 const enhanced = connect(AppContext, [

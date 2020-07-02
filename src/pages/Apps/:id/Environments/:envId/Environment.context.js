@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "~/utils/context";
 import AppsContext from "~/pages/Apps/Apps.context";
 import EnvironmentMenu from "./_components/EnvironmentMenu";
+import EnvironmentFormModal from "../_components/EnvironmentFormModal";
 import routes from "./routes";
 
 const Context = createContext();
@@ -19,14 +20,16 @@ const EnvironmentContext = ({ environments, match, app }) => {
 
   return (
     <Context.Provider value={{ environment, environments }}>
-      <EnvironmentMenu environment={environment} app={app} />
-      <div className="mb-4">
-        <Switch>
-          {routes.map((route) => (
-            <Route {...route} key={route.path} />
-          ))}
-        </Switch>
-      </div>
+      <EnvironmentFormModal.Provider>
+        <EnvironmentMenu environment={environment} app={app} />
+        <div className="mb-4">
+          <Switch>
+            {routes.map((route) => (
+              <Route {...route} key={route.path} />
+            ))}
+          </Switch>
+        </div>
+      </EnvironmentFormModal.Provider>
     </Context.Provider>
   );
 };

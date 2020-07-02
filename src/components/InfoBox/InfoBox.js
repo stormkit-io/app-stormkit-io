@@ -48,7 +48,7 @@ const InfoBox = ({
   const ref = useRef(null);
 
   useEffect(() => {
-    if (ref.current && scrollIntoView) {
+    if (ref.current?.scrollIntoView && scrollIntoView) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [ref, scrollIntoView]);

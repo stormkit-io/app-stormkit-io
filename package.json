@@ -10,7 +10,7 @@
     "build": "webpack --mode production --config config/webpack.config.js",
     "dev": "node scripts/dev.js",
     "dev:live": "API_PROXY_DOMAIN=https://api.stormkit.io NODE_ENV=production node scripts/dev.js",
-    "test": "jest --notify --detectOpenHandles --config=config/jest.config.js"
+    "test": "jest --notify --detectOpenHandles --runInBand --config=config/jest.config.js"
   },
   "husky": {
     "hooks": {
@@ -54,7 +54,9 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@react-mock/xhr": "^0.2.0",
+    "@testing-library/dom": "^7.19.0",
     "@testing-library/react": "^10.0.4",
+    "@testing-library/user-event": "^12.0.11",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "add": "^2.0.6",
