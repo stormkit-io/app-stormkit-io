@@ -290,7 +290,7 @@ const EnvironmentFormModal = ({
             </InfoBox>
           )}
           <div className="flex justify-between">
-            {isEdit && environment?.name !== "production" && (
+            {isEdit && environment?.env !== "production" && (
               <Button
                 secondary
                 type="button"
