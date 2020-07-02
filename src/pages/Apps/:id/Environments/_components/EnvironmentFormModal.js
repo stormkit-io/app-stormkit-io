@@ -264,6 +264,7 @@ const EnvironmentFormModal = ({
                   <Button
                     styled={false}
                     className="absolute right-0 -mr-6"
+                    type="button"
                     onClick={() => {
                       const copy = envVars.slice(0);
                       copy.splice(i, 1);
@@ -314,7 +315,11 @@ const EnvironmentFormModal = ({
               </Button>
             )}
             <div className="flex flex-auto justify-end">
-              <Button secondary onClick={() => toggleModal(false)}>
+              <Button
+                type="button"
+                secondary
+                onClick={() => toggleModal(false)}
+              >
                 Cancel
               </Button>
               <Button primary className="ml-4" loading={loading}>
