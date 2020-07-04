@@ -184,7 +184,6 @@ ParameterModal.propTypes = {
   environment: PropTypes.object,
   api: PropTypes.object,
   app: PropTypes.object,
-  setConfig: PropTypes.func,
   history: PropTypes.object,
 };
 

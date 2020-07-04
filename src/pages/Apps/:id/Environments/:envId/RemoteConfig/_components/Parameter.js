@@ -25,7 +25,7 @@ const Parameter = ({
 }) => {
   return (
     <div className={cn("text-xs", { "mb-4": !isLastRow })}>
-      <div className="p-4 border border-solid border-gray-85 rounded-tl rounded-tr flex items-center">
+      <div className="p-8 border border-solid border-gray-85 rounded-tl rounded-tr flex items-center bg-white">
         <div className="flex-auto">
           <h2 className="font-bold mb-1 text-base">{parameter.name}</h2>
           <h3 className="opacity-75">{parameter.desc}</h3>
@@ -67,7 +67,7 @@ const Parameter = ({
           </DotDotDot.Item>
         </DotDotDot>
       </div>
-      <div className="flex flex-wrap w-full bg-gray-90 border border-t-0 border-solid border-gray-85 rounded-br rounded-bl">
+      <div className="flex flex-wrap w-full bg-gray-90 border border-t-0 border-solid border-gray-85 rounded-br rounded-bl px-4">
         {parameter.targetings.map((targeting, i) => (
           <Targetings
             key={`t-${i}`}

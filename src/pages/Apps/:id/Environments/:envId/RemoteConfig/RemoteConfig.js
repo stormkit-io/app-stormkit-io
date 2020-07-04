@@ -27,28 +27,35 @@ const RemoteConfig = ({
   const sorted = sortConfigByKey(config);
 
   return (
-    <div className="flex mt-4">
-      <div className="flex flex-auto bg-white p-8 rounded">
+    <div className="flex flex-col mt-4">
+      <div className="bg-white rounded mb-4 p-8">
+        <h2 className="text-lg font-bold mb-1 flex">
+          Remote config
+          <Button
+            styled={false}
+            className="fas fa-question-circle ml-2"
+            onClick={() => setIsHover(!isHover)}
+          />
+        </h2>
+        <h3 className="text-xs">
+          <span className="opacity-50">
+            These parameters are sorted alphabetically
+          </span>
+          <span className="fas fa-sort-alpha-up ml-1" />
+        </h3>
+      </div>
+      <div className="flex flex-auto rounded">
         {loading && (
-          <div data-testid="remote-config-spinner">
+          <div
+            data-testid="remote-config-spinner"
+            className="p-8 flex items-center w-full bg-white rounded"
+          >
             <Spinner primary />
           </div>
         )}
         {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
         {!loading && (
           <div className="w-full relative">
-            <h2 className="text-lg font-bold mb-1 flex">
-              Remote config
-              <Button
-                styled={false}
-                className="fas fa-question-circle ml-2"
-                onClick={() => setIsHover(!isHover)}
-              />
-            </h2>
-            <h3 className="text-xs opacity-50 mb-8">
-              These parameters are sorted alphabetically
-              <span className="fas fa-sort-alpha-up ml-1" />
-            </h3>
             {isHover && (
               <ExplanationBox
                 title="Remote config"
@@ -78,7 +85,7 @@ const RemoteConfig = ({
             ))}
             <PlusButton
               onClick={() => toggleModal(true)}
-              className="mt-4 p-8"
+              className="mt-4 p-8 rounded bg-white"
             />
             <ParameterModal config={config} />
           </div>

@@ -49,7 +49,7 @@ const Environment = ({
   return (
     <div
       className={cn(
-        "flex flex-auto p-8 bg-white rounded border-l-8 border-solid",
+        "flex flex-auto py-8 bg-white rounded border-l-8 border-solid",
         {
           "border-yellow-50": status === STATUS.NOT_FOUND,
           "border-green-50": status === STATUS.OK,
@@ -58,7 +58,7 @@ const Environment = ({
       )}
     >
       <div className="flex flex-col flex-auto">
-        <h2 className="flex items-center text-xl font-bold mb-6">
+        <h2 className="flex items-center text-xl font-bold mb-6 px-8">
           <span className="flex-auto">
             {isClickable ? (
               <Link
@@ -94,7 +94,7 @@ const Environment = ({
             </>
           )}
         </h2>
-        <div className="text-sm bg-gray-90 p-4 rounded-sm">
+        <div className="flex-auto text-sm bg-gray-90 p-4 px-8">
           <div className="flex mb-6">
             <div className="w-32">Endpoint</div>
             <div className="flex items-center">

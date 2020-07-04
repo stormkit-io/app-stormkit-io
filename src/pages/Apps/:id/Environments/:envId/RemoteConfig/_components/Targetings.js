@@ -31,7 +31,7 @@ const Targetings = ({ targeting, index, maxIndex }) => {
           <span className="inline-block py-1 w-24">{keyToName[k]}:</span>
           <span
             className={cn("inline-block rounded py-1", {
-              "bg-red-20 text-white px-2": targeting[k],
+              "bg-gray-80 px-2": targeting[k],
             })}
           >
             {targeting[k] || "any"}
