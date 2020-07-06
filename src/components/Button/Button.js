@@ -79,6 +79,11 @@ const Button = forwardRef(
     if (rest.onClick && as !== "a" && as !== "button") {
       props.tabIndex = 0;
       props.role = "button";
+
+      if (!props.onKeyDown) {
+        props.onKeyDown = (e) =>
+          (e.key === "Enter" || e.key === " ") && props.onClick();
+      }
     }
 
     if (href && as !== "a") {
