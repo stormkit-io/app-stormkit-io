@@ -32,3 +32,12 @@ div.MuiInputBase-root {
 fieldset.MuiOutlinedInput-notchedOutline {
   @apply border-gray-83;
 }
+
+div.MuiTableContainer-root {
+  overflow-x: initial;
+}
+
+.MuiTableBody-root tr.MuiTableRow-root:last-child td,
+.MuiTableBody-root tr.MuiTableRow-root:last-child th {
+  border-bottom: none;
+}

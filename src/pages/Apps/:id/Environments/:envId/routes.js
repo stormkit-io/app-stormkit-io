@@ -18,4 +18,10 @@ export default [
       import("~/pages/Apps/:id/Environments/:envId/RemoteConfig")
     ),
   },
+  {
+    path: "/apps/:id/environments/:envId/snippets",
+    component: Async(() =>
+      import("~/pages/Apps/:id/Environments/:envId/Snippets")
+    ),
+  },
 ];
