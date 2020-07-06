@@ -297,16 +297,19 @@ const EnvironmentFormModal = ({
                 aria-label="Delete environment"
                 onClick={() =>
                   confirmModal(
-                    "This will completely the environment and all associated deployments.",
-                    (closeModal) => {
-                      closeModal(() =>
+                    "This will completely remove the environment and all associated deployments.",
+                    {
+                      onConfirm: ({ closeModal, setLoading, setError }) => {
                         deleteEnvironment({
                           api,
                           app,
                           environment,
                           history,
-                        })
-                      );
+                          setLoading,
+                          setError,
+                          closeModal,
+                        });
+                      },
                     }
                   )
                 }

@@ -132,12 +132,22 @@ export const useFetchRepoType = ({ app, api, env }) => {
   return { meta, loading };
 };
 
-export const deleteEnvironment = ({ api, app, environment, history }) => {
+export const deleteEnvironment = ({
+  api,
+  app,
+  environment,
+  history,
+  setLoading,
+  setError,
+  closeModal,
+}) => {
   const name = environment?.env;
 
   if (!name) {
     return;
   }
+
+  setLoading(true);
 
   return api
     .delete(`/app/env`, {
@@ -145,13 +155,22 @@ export const deleteEnvironment = ({ api, app, environment, history }) => {
       env: name,
     })
     .then(() => {
-      history.push({
-        pathname: `/apps/${app.id}/environments`,
-        state: {
-          envs: Date.now(),
-          message: "Environment has been removed successfully.",
-        },
+      setLoading(false);
+      closeModal(() => {
+        history.push({
+          pathname: `/apps/${app.id}/environments`,
+          state: {
+            envs: Date.now(),
+            message: "Environment has been removed successfully.",
+          },
+        });
       });
+    })
+    .catch(() => {
+      setLoading(false);
+      setError(
+        "Something went wrong while deleting the environment. Please try again, if the problem persists contact us from Discord or email."
+      );
     });
 };
 

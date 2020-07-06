@@ -150,7 +150,7 @@ export const deleteSnippet = ({
   confirmModal(
     `This will delete the snippet and it won't be injected anymore.`,
     {
-      onSuccess: ({ closeModal, setError, setLoading }) => {
+      onConfirm: ({ closeModal, setError, setLoading }) => {
         const clone = JSON.parse(JSON.stringify(snippets));
         clone[injectLocation].splice(index, 1);
 
@@ -183,7 +183,7 @@ export const enableOrDisable = ({
   confirmModal(
     `This will ${enableOrDisable} the snippet and the changes will be effective immediately.`,
     {
-      onSuccess: ({ closeModal, setError, setLoading }) => {
+      onConfirm: ({ closeModal, setError, setLoading }) => {
         upsertSnippets({
           ...rest,
           index,

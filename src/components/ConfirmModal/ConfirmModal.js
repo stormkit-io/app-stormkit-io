@@ -21,11 +21,36 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
   const [error, setError] = useState(null);
   const [content, setContent] = useState();
   const [options, setOptions] = useState({});
+  const closeModal = (...args) => toggleModal(false, ...args);
 
   const confirmModal = (content, callback, options = {}) => {
+    if (typeof callback !== "function") {
+      options = callback;
+      callback = undefined;
+    }
+
     setContent(content);
     setOptions({ ...options, callback });
     toggleModal(true);
+  };
+
+  const handleCancel = () => {
+    if (options.onCancel) {
+      options.onCancel(closeModal);
+    } else {
+      closeModal();
+    }
+  };
+
+  const handleSuccess = (e) => {
+    e.preventDefault();
+    const cb = options.callback || options.onConfirm;
+
+    if (cb) {
+      cb({ setLoading, closeModal, setError });
+    } else {
+      closeModal();
+    }
   };
 
   return (
@@ -33,7 +58,7 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
       {children}
       <Modal
         isOpen={isOpen}
-        onClose={() => toggleModal(false)}
+        onClose={handleCancel}
         className="sm:max-w-screen-sm"
       >
         <h2 className="font-bold text-2xl text-center mb-16">Confirm action</h2>
@@ -51,7 +76,7 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
             secondary
             type="button"
             className="py-2 mr-4"
-            onClick={() => toggleModal(false)}
+            onClick={handleCancel}
           >
             Cancel
           </Button>
@@ -59,26 +84,7 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
             primary
             className="py-2"
             loading={loading}
-            onClick={(e) => {
-              e.preventDefault();
-
-              if (options.callback) {
-                setLoading(true);
-                const result = options.callback((cb) => toggleModal(false, cb));
-
-                if (result?.then) {
-                  result
-                    .then(() => {
-                      setLoading(false);
-                    })
-                    .catch((e) => {
-                      setError(e.message || e);
-                    });
-                }
-              } else {
-                toggleModal(false);
-              }
-            }}
+            onClick={handleSuccess}
           >
             {options.confirmText || "Yes, continue"}
           </Button>
