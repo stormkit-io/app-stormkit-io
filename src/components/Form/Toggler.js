@@ -1,62 +1,61 @@
 import React, { Children, useState } from "react";
 import PropTypes from "prop-types";
-import FormWrapper from "./FormWrapper";
-import { Wrapper, Item } from "./Togger.styles";
+import cn from "classnames";
+import Button from "~/components/Button";
 
-/**
- * Component to display a form toggler. The children is used as the API.
- * If the child has a data-value property, then it that property is used
- * as the value. Otherwise the index is used.
- */
-const Toggler = ({ children, handler, selected, name }) => {
-  const [selectedState, setSelected] = useState(selected);
+const Toggler = ({ children, onSelect, defaultSelected, name, className }) => {
+  const [selectedValue, setSelectedValue] = useState(defaultSelected);
+  const childArray = Children.toArray(children);
 
   return (
-    <Wrapper>
-      <input type="hidden" value={selectedState} name={name} />
-      {Children.toArray(children).map((c, i) => {
+    <div
+      className={cn(
+        "flex border border-solid border-gray-83 rounded-lg text-sm",
+        className
+      )}
+    >
+      <input type="hidden" value={selectedValue} name={name} />
+      {childArray.map((c, i) => {
         const value =
           typeof c.props["data-value"] !== "undefined"
             ? c.props["data-value"]
             : i;
 
+        const isSelected = value === selectedValue;
+
         return (
-          <Item
+          <Button
+            as="div"
+            styled={false}
             key={value}
-            selected={value === selectedState}
+            className={cn("p-4", {
+              "bg-white": !isSelected,
+              "bg-pink-50": isSelected,
+              "text-white": isSelected,
+              "rounded-tl-lg": i === 0,
+              "rounded-bl-lg": i === 0,
+              "rounded-tr-lg": i === childArray.length - 1,
+              "rounded-br-lg": i === childArray.length - 1,
+            })}
             onClick={() => {
-              setSelected(value);
-              handler(value);
+              setSelectedValue(value);
+              onSelect && onSelect(value);
             }}
           >
             {c}
-          </Item>
+          </Button>
         );
       })}
-    </Wrapper>
+    </div>
   );
 };
 
 Toggler.propTypes = {
-  /**
-   * The callback handler when input value changes.
-   */
-  handler: PropTypes.func.isRequired,
-
-  /**
-   * The options of the toggler.
-   */
+  className: PropTypes.any,
   children: PropTypes.node,
-
-  /**
-   * The selected value.
-   */
-  selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
-  /**
-   * The input name.
-   */
-  name: PropTypes.string
+  defaultSelected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.string,
+  onSelect: PropTypes.func,
 };
 
-export default FormWrapper(Toggler);
+export default Toggler;

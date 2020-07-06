@@ -8,7 +8,6 @@ import Button from "./Button";
 import ButtonLink from "./ButtonLink";
 import Checkbox from "./Checkbox";
 import Radio from "./Radio";
-import Textarea from "./Textarea";
 import Select from "./Select";
 import Option from "./Option";
 import Toggler from "./Toggler";
@@ -67,7 +66,6 @@ export default class Form extends PureComponent {
   static Input = Input;
   static Checkbox = Checkbox;
   static Radio = Radio;
-  static Textarea = Textarea;
   static Select = Select;
   static Option = Option;
   static Toggler = Toggler;
