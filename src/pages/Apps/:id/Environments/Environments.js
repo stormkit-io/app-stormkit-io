@@ -10,21 +10,25 @@ import { connect } from "~/utils/context";
 const Environments = ({ app, api, environments, toggleModal }) => {
   return (
     <div>
-      <h1 className="mb-8 flex items-center">
-        <span className="text-2xl text-white">Environments</span>
-      </h1>
+      <div className="flex items-center mb-4">
+        <h1 className="flex flex-auto items-center">
+          <span className="text-2xl text-white">Environments</span>
+        </h1>
+        <div className="flex-shrink-0">
+          <PlusButton
+            onClick={() => toggleModal(true)}
+            className="text-white rounded"
+            size="small"
+            aria-label="Insert environment"
+          />
+        </div>
+      </div>
       <div className="flex flex-col w-full flex-wrap">
         {environments.map((env) => (
           <div className="mb-4" key={env.id}>
             <Environment environment={env} app={app} isClickable />
           </div>
         ))}
-        <PlusButton
-          onClick={() => toggleModal(true)}
-          className="text-white mb-8 rounded"
-          size="small"
-          aria-label="Insert environment"
-        />
         <EnvironmentFormModal app={app} api={api} />
       </div>
     </div>

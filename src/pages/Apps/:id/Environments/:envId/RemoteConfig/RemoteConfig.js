@@ -28,21 +28,30 @@ const RemoteConfig = ({
 
   return (
     <div className="flex flex-col mt-4">
-      <div className="bg-white rounded mb-4 p-8">
-        <h2 className="text-lg font-bold mb-1 flex">
-          Remote config
-          <Button
-            styled={false}
-            className="fas fa-question-circle ml-2"
-            onClick={() => setIsHover(!isHover)}
+      <div className="flex bg-white rounded mb-4 p-8">
+        <div className="flex-auto">
+          <h2 className="text-lg font-bold mb-1 flex">
+            Remote config
+            <Button
+              styled={false}
+              className="fas fa-question-circle ml-2"
+              onClick={() => setIsHover(!isHover)}
+            />
+          </h2>
+          <h3 className="text-xs">
+            <span className="opacity-50">
+              These parameters are sorted alphabetically
+            </span>
+            <span className="fas fa-sort-alpha-up ml-1" />
+          </h3>
+        </div>
+        <div className="flex-shrink-0">
+          <PlusButton
+            onClick={() => toggleModal(true)}
+            className="p-2 rounded"
+            size="small"
           />
-        </h2>
-        <h3 className="text-xs">
-          <span className="opacity-50">
-            These parameters are sorted alphabetically
-          </span>
-          <span className="fas fa-sort-alpha-up ml-1" />
-        </h3>
+        </div>
       </div>
       <div className="flex flex-auto rounded">
         {loading && (
@@ -83,10 +92,6 @@ const RemoteConfig = ({
                 isLastRow={i === config.length - 1}
               />
             ))}
-            <PlusButton
-              onClick={() => toggleModal(true)}
-              className="mt-4 p-8 rounded bg-white"
-            />
             <ParameterModal config={config} />
           </div>
         )}
