@@ -1,16 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Route, Switch } from "react-router-dom";
+import { StylesProvider } from "@material-ui/core/styles";
 import routes from "./routes";
 
 const Root = ({ Router, Context, defaultContext }) => (
-  <Context.Provider Router={Router} defaultContext={defaultContext}>
-    <Switch>
-      {routes.map((route) => (
-        <Route {...route} key={route.path} />
-      ))}
-    </Switch>
-  </Context.Provider>
+  <StylesProvider injectFirst>
+    <Context.Provider Router={Router} defaultContext={defaultContext}>
+      <Switch>
+        {routes.map((route) => (
+          <Route {...route} key={route.path} />
+        ))}
+      </Switch>
+    </Context.Provider>
+  </StylesProvider>
 );
 
 Root.propTypes = {
