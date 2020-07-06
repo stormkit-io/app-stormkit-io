@@ -18,7 +18,7 @@ const ExplanationBox = ({
         className
       )}
     >
-      {absolute && <div class="exp-arrow-up" style={arrowStyles} />}
+      {absolute && <div className="exp-arrow-up" style={arrowStyles} />}
       <h3 className="font-bold text-lg mb-4">{title}</h3>
       <div className="leading-6 text-sm">{children}</div>
     </section>
