@@ -21,7 +21,8 @@ const Environments = ({ app, api, environments, toggleModal }) => {
         ))}
         <PlusButton
           onClick={() => toggleModal(true)}
-          className="bg-white mb-8 rounded"
+          className="text-white mb-8 rounded"
+          size="small"
           aria-label="Insert environment"
         />
         <EnvironmentFormModal app={app} api={api} />
