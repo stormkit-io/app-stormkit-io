@@ -10,7 +10,7 @@ describe("pages/Apps", () => {
     beforeEach(() => {
       const app = data.mockAppResponse();
       const envs = data.mockEnvironmentsResponse();
-      nocks.appProxy({ app, envs: envs.envs });
+      nocks.mockAppProxy({ app, envs: envs.envs });
 
       act(() => {
         wrapper = withAppContext({

@@ -1,6 +1,6 @@
 import nock from "nock";
 
-export const appProxy = ({ app, status = 200, envs = [] }) => {
+export const mockAppProxy = ({ app, status = 200, envs = [] }) => {
   envs.forEach((env) => {
     const domain = env.domain?.verified
       ? env.domain.name
