@@ -8,7 +8,7 @@ export default class Api {
   }
 
   constructor(opts) {
-    this.baseurl = opts.baseurl || global.BASEURL;
+    this.baseurl = opts.baseurl;
     this.headers = {
       "Content-Type": "application/json",
     };

@@ -1,95 +1,23 @@
-import nock from "nock";
 import { waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { withAppContext } from "~/testing/helpers";
+import { withMockContext } from "~/testing/helpers";
 import * as data from "~/testing/data";
+import * as nocks from "~/testing/nocks";
 
 describe("pages/Apps/:id/Environments - EnvironmentFormModal", () => {
+  const path = "~/pages/Apps/:id/Environments/_components/EnvironmentFormModal";
   let wrapper;
 
-  const mockProxyCalls = (domains) => {
-    domains.forEach((domain) => {
-      nock("http://localhost")
-        .post(`/app/proxy`, { appId: "1", url: `https://${domain}` })
-        .reply(200, { status: 200 });
-    });
-  };
-
-  const mockEnvsCall = () =>
-    nock("http://localhost")
-      .get(`/app/1/envs`)
-      .reply(200, data.mockEnvironmentsResponse());
-
-  const mockEnvironmentInsertionCall = () =>
-    nock("http://localhost")
-      .post(`/app/env`, {
-        appId: "1",
-        env: "staging",
-        branch: "my-branch",
-        build: {
-          cmd: "npm run build",
-          entry: "",
-          distFolder: "",
-          vars: { NODE_ENV: "development" },
-        },
-        autoPublish: true,
-      })
-      .reply(200, { status: 200 });
-
-  const mockEnvironmentUpdateCall = () =>
-    nock("http://localhost")
-      .put(`/app/env`, {
-        appId: "1",
-        env: "production",
-        branch: "master-new",
-        build: {
-          cmd: "yarn test && yarn run build:console",
-          entry: "packages/console/server/renderer.js",
-          distFolder: "packages/console/dist",
-          vars: {
-            BABEL_ENV: "production",
-            NODE_ENV: "production",
-          },
-        },
-        autoPublish: true,
-      })
-      .reply(200, { ok: true });
-
-  const mockEnvironmentDeleteCall = () =>
-    nock("http://localhost")
-      .delete(`/app/env`, {
-        appId: "1",
-        env: "development",
-      })
-      .reply(200, { ok: true });
-
-  describe("when on environments page", () => {
-    const domains = ["app.stormkit.io", "app--development.stormkit.dev"];
-    let scope;
-
+  describe("when environment object is empty", () => {
     beforeEach(() => {
-      mockProxyCalls(domains);
-
-      wrapper = withAppContext({
-        app: data.mockAppResponse(),
-        envs: data.mockEnvironmentsResponse(),
-        path: "/apps/1/environments",
+      wrapper = withMockContext(path, {
+        app: { id: "1" },
+        toggleModal: jest.fn(),
       });
-
-      mockEnvironmentInsertionCall();
-      mockProxyCalls(domains);
-      scope = mockEnvsCall();
     });
 
-    test("should open the form modal in insert mode and send a post request upon submit", async () => {
-      await waitFor(() => {
-        fireEvent.click(wrapper.getByLabelText("Insert environment"));
-      });
-
-      await waitFor(() => {
-        expect(wrapper.getByText("Environment details"));
-      });
-
+    test("should submit the form properly", async () => {
+      const scope = nocks.mockEnvironmentInsertionCall();
       const envKey = wrapper.getByLabelText("Environment variable name 0");
       const envVal = wrapper.getByLabelText("Environment variable value 0");
       const buildCmd = wrapper.getByLabelText("Build command");
@@ -98,104 +26,69 @@ describe("pages/Apps/:id/Environments - EnvironmentFormModal", () => {
       userEvent.type(buildCmd, "npm run build");
       userEvent.type(envKey, "NODE_ENV");
       userEvent.type(envVal, "development");
-
       fireEvent.click(wrapper.getByText("Create environment"));
 
       await waitFor(() => {
+        expect(wrapper.injectedProps.toggleModal).toHaveBeenCalled();
         expect(scope.isDone()).toBe(true);
-      });
-
-      expect(() => wrapper.getByText("Environment details")).toThrow();
-
-      await waitFor(() => {
-        expect(wrapper.getByText(domains[1])).toBeTruthy();
       });
     });
   });
 
-  describe("when on a single environment page", () => {
-    const domains = ["app.stormkit.io"];
-    let scope;
-
+  describe("when production environment is provided", () => {
     beforeEach(() => {
-      mockProxyCalls(domains);
-
-      wrapper = withAppContext({
-        app: data.mockAppResponse(),
-        envs: data.mockEnvironmentsResponse(),
-        path: "/apps/1/environments/1429333243019",
+      wrapper = withMockContext(path, {
+        app: { id: "1" },
+        toggleModal: jest.fn(),
+        environment: data.mockEnvironmentsResponse().envs[0],
       });
-
-      mockEnvironmentUpdateCall();
-      mockProxyCalls(domains);
-      scope = mockEnvsCall();
     });
 
-    test("should open the form modal in edit mode and send a put request upon submit", async () => {
-      await waitFor(() => {
-        fireEvent.click(wrapper.getByLabelText("Update environment"));
-      });
-
-      await waitFor(() => {
-        expect(wrapper.getByText("Environment details"));
-      });
+    test("should submit the form properly", async () => {
+      const scope = nocks.mockEnvironmentUpdateCall();
 
       userEvent.type(wrapper.getByLabelText("Branch name"), "-new");
       fireEvent.click(wrapper.getByText("Update environment"));
 
       await waitFor(() => {
+        expect(wrapper.injectedProps.toggleModal).toHaveBeenCalled();
         expect(scope.isDone()).toBe(true);
       });
+    });
 
-      expect(() => wrapper.getByText("Environment details")).toThrow();
-
-      await waitFor(() => {
-        expect(wrapper.getByText(domains[0])).toBeTruthy();
-      });
+    test("delete button should not be available", () => {
+      expect(() => wrapper.getByText("Delete")).toThrow();
     });
   });
 
-  describe("when on a single non-production environment page", () => {
-    const domains = ["app--development.stormkit.dev"];
-    let scope;
+  describe("when a non-production environment is provided", () => {
+    let metaScope;
 
     beforeEach(() => {
-      mockProxyCalls(domains);
-
-      wrapper = withAppContext({
-        app: data.mockAppResponse(),
-        envs: data.mockEnvironmentsResponse(),
-        path: "/apps/1/environments/863521234275",
+      const environment = data.mockEnvironmentsResponse().envs[1];
+      metaScope = nocks.mockMetaCall({ appId: "1", name: environment.env });
+      wrapper = withMockContext(path, {
+        app: { id: "1" },
+        toggleModal: jest.fn(),
+        environment,
       });
-
-      mockEnvironmentDeleteCall();
-      mockProxyCalls(["app.stormkit.io", ...domains]); // This is because the mock env call still returns all environments but in reality they should be deleted.
-      scope = mockEnvsCall();
     });
 
-    test("should open the form modal in edit mode and send a delete request upon submit", async () => {
-      await waitFor(() => {
-        fireEvent.click(wrapper.getByLabelText("Update environment"));
-      });
+    test("should be deletable", async () => {
+      const scope = nocks.mockEnvironmentDeleteCall();
+      fireEvent.click(wrapper.getByText("Delete"));
+
+      expect(
+        wrapper.injectedProps.confirmModal
+      ).toHaveBeenCalledWith(
+        "This will completely remove the environment and all associated deployments.",
+        { onConfirm: expect.any(Function) }
+      );
 
       await waitFor(() => {
-        expect(wrapper.getByText("Environment details"));
-      });
-
-      fireEvent.click(wrapper.getByLabelText("Delete environment"));
-
-      await waitFor(() => {
-        expect(
-          wrapper.getByText(
-            "This will completely the environment and all associated deployments."
-          )
-        );
-      });
-
-      fireEvent.click(wrapper.getByText("Yes, continue"));
-
-      await waitFor(() => {
+        expect(metaScope.isDone()).toBe(true);
         expect(scope.isDone()).toBe(true);
+        expect(wrapper.getByText("Other")).toBeTruthy();
       });
     });
   });

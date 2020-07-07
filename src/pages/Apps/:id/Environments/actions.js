@@ -251,7 +251,7 @@ export const insertEnvironment = ({
         return Promise.reject();
       }
     })
-    .catch(() => {
+    .catch((e) => {
       setError(
         "Something went wrong while creating the environment. Please try again, if the problem persists reach us from Discord."
       );

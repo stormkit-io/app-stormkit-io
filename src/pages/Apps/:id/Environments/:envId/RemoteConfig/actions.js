@@ -47,9 +47,14 @@ export const deleteKeyFromConfig = ({
   config,
   environment,
   history,
+  setLoading,
+  setError,
+  closeModal,
 }) => (oldName) => {
   const newConfig = { ...config };
   delete newConfig[oldName];
+
+  setLoading(true);
 
   return api
     .put(`/app/env/remote-config`, {
@@ -58,11 +63,21 @@ export const deleteKeyFromConfig = ({
       config: newConfig,
     })
     .then(() => {
-      history.replace({
-        state: {
-          rc: Date.now(),
-        },
+      closeModal(() => {
+        history.replace({
+          state: {
+            rc: Date.now(),
+          },
+        });
       });
+    })
+    .catch(() => {
+      setError(
+        "Something went wrong while deleting the config. Please try again, if the problem persists contact us from Discord or email."
+      );
+    })
+    .finally(() => {
+      setLoading(false);
     });
 };
 

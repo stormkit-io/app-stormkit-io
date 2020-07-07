@@ -1,30 +1,33 @@
-import { waitFor, act, fireEvent } from "@testing-library/react";
+import { waitFor, fireEvent } from "@testing-library/react";
 import nock from "nock";
-import { withAppContext } from "~/testing/helpers";
+import { withMockContext } from "~/testing/helpers";
 import * as data from "~/testing/data";
-import * as nocks from "~/testing/nocks";
 
 describe("pages/Apps/:id/Environments", () => {
   let wrapper;
+  let toggleModal;
+
   const config = data.mockRemoteConfigResponse();
   const envs = data.mockEnvironmentsResponse();
   const app = data.mockAppResponse();
   const env = envs.envs[0];
 
   beforeEach(() => {
-    nocks.appProxy({ app, envs: envs.envs });
+    toggleModal = jest.fn();
 
     nock("http://localhost")
       .get(`/app/${app.id}/envs/${env.env}/remote-config`)
       .reply(200, config);
 
-    act(() => {
-      wrapper = withAppContext({
+    wrapper = withMockContext(
+      "~/pages/Apps/:id/Environments/:envId/RemoteConfig",
+      {
         app,
-        envs,
-        path: `/apps/${app.id}/environments/${env.id}/remote-config`,
-      });
-    });
+        environment: env,
+        toggleModal,
+        location: {},
+      }
+    );
   });
 
   test("should fetch the config with a loading state", async () => {
@@ -40,7 +43,7 @@ describe("pages/Apps/:id/Environments", () => {
     });
   });
 
-  test("should be able to delete the parameter", async () => {
+  test("should delete parameter when delete button is clicked", async () => {
     const configToBeSent = { ...data.mockRemoteConfigResponse().config };
     delete configToBeSent.bannerPromo;
 
@@ -59,10 +62,8 @@ describe("pages/Apps/:id/Environments", () => {
     fireEvent.click(wrapper.getAllByLabelText("Expand options")[0]);
     fireEvent.click(wrapper.getByLabelText("Delete parameter"));
 
-    expect(wrapper.getByText("Confirm action")).toBeDefined();
-    expect(wrapper.getByText("Yes, continue")).toBeDefined();
-
-    fireEvent.click(wrapper.getByText("Yes, continue"));
-    expect(scope.isDone()).toBe(true);
+    await waitFor(() => {
+      expect(scope.isDone()).toBe(true);
+    });
   });
 });

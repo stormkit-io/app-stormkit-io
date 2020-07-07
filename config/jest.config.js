@@ -17,4 +17,7 @@ module.exports = {
   testMatch: ["**/?(*.)+(spec).[jt]s?(x)"],
   setupFilesAfterEnv: ["<rootDir>/src/testing/setup.js"],
   rootDir: "../",
+  clearMocks: true,
+  restoreMocks: true,
+  resetMocks: true,
 };

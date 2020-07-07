@@ -48,16 +48,19 @@ const Parameter = ({
             onClick={() =>
               confirmModal(
                 "This will completely remove the parameter and it won't be available anymore to your source code.",
-                (closeModal) => {
-                  closeModal(
+                {
+                  onConfirm: ({ setLoading, setError, closeModal }) => {
                     deleteKeyFromConfig({
                       api,
                       app,
                       environment,
                       config,
                       history,
-                    }).call(null, parameter.name)
-                  );
+                      setLoading,
+                      setError,
+                      closeModal,
+                    })(parameter.name);
+                  },
                 }
               )
             }

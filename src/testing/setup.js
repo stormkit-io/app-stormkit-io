@@ -2,32 +2,15 @@ import "isomorphic-fetch";
 import nock from "nock";
 import { JSDOM } from "jsdom";
 
-global.BASEURL = "http://localhost";
-
-/**
- * Suppress React 16.8 act() warnings globally.
- * The react teams fix won't be out of alpha until 16.9.0.
- * @see https://github.com/facebook/react/issues/14769
- */
-// const consoleError = console.error;
-// beforeAll(() => {
-//   jest.spyOn(console, "error").mockImplementation((...args) => {
-//     if (
-//       args[0] &&
-//       args[0].includes &&
-//       !args[0].includes(
-//         "Warning: An update to %s inside a test was not wrapped in act"
-//       )
-//     ) {
-//       consoleError(...args);
-//     }
-//   });
-// });
+process.env.API_DOMAIN = "http://localhost";
 
 beforeEach(() => {
   global.document = new JSDOM(`<!DOCTYPE html><body></body>`);
 });
 
 afterEach(() => {
+  delete global.__MOCK_PROPS__;
+  jest.clearAllMocks();
+  jest.restoreAllMocks();
   nock.cleanAll();
 });
