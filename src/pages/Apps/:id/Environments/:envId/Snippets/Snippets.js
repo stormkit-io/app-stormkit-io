@@ -42,6 +42,7 @@ const Snippets = ({ api, app, environment: env, toggleModal, location }) => {
               toggleModal(true);
             }}
             className="p-2 rounded"
+            aria-label="Insert snippet"
           />
         </div>
       </div>

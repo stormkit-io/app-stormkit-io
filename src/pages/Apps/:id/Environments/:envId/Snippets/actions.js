@@ -34,7 +34,8 @@ const putSnippets = ({
       setSnippets(normalize(snippets));
       onSuccess && onSuccess();
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e);
       setError(
         "Something went wrong while updating snippets. Please try again, if the problem persists reach us from Discord or email."
       );
