@@ -18,7 +18,7 @@ const DotDotDot = ({ children, className, ...rest }) => {
           <i className="fas fa-ellipsis-h" />
         </Button>
         {isOpen && (
-          <div className="flex flex-col min-w-56 absolute right-0 rounded shadow bg-white z-50 items-start mt-4">
+          <div className="flex flex-col min-w-56 absolute right-0 rounded shadow bg-white z-50 items-start mt-4 text-left">
             {React.Children.map(
               children,
               (child) => child && cloneElement(child, { toggleVisibility })
