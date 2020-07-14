@@ -20,7 +20,8 @@ const Status = ({ status }) => {
         })}
       >
         <span className={"fas fa-fw fa-globe mr-2"} />
-        {status !== STATUS.NOT_CONFIGURED && status}
+        {status === null && "Unknown error"}
+        {status !== STATUS.NOT_CONFIGURED && status !== null && status}
         {status === STATUS.NOT_CONFIGURED && "Not yet deployed"}
       </span>
     </div>
@@ -131,7 +132,7 @@ const Environment = ({
             <span className="opacity-50 fas fa-lightbulb mr-4" />
             <div>
               The 404 may happen when the distributed folder does not contain an{" "}
-              <b>index.html</b>.{" "}
+              <b>index.html</b> or the environment has no published deployments.{" "}
               <Link to={`https://www.stormkit.io/docs/deployments`} secondary>
                 Learn more
               </Link>{" "}
