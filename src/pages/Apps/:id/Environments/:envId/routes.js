@@ -24,4 +24,10 @@ export default [
       import("~/pages/Apps/:id/Environments/:envId/Snippets")
     ),
   },
+  {
+    path: "/apps/:id/environments/:envId/domain",
+    component: Async(() =>
+      import("~/pages/Apps/:id/Environments/:envId/Domain")
+    ),
+  },
 ];
