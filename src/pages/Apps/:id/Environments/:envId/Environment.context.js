@@ -19,7 +19,7 @@ const EnvironmentContext = ({ environments, match, app }) => {
   }
 
   return (
-    <Context.Provider value={{ environment, environments }}>
+    <Context.Provider value={{ environment, environments, app }}>
       <EnvironmentFormModal.Provider>
         <EnvironmentMenu environment={environment} app={app} />
         <div className="mb-4">
