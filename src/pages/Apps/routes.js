@@ -17,4 +17,11 @@ export default [
     exact: true,
     component: Async(() => import("~/pages/Apps/:id/Deployments")),
   },
+  {
+    path: "/apps/:id/deployments/:deploymentId",
+    exact: true,
+    component: Async(() =>
+      import("~/pages/Apps/:id/Deployments/:deploymentId")
+    ),
+  },
 ];
