@@ -9,7 +9,7 @@ const Link = forwardRef(
     let classes = className;
 
     if (secondary) {
-      classes = cn(className, "text-pink-50", "hover:text-secondary");
+      classes = cn(className, "text-pink-50", "hover:text-red-50");
     } else if (tertiary) {
       classes = cn(
         className,
