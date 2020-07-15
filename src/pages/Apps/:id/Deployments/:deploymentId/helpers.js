@@ -36,8 +36,14 @@ export const prepareSettings = ({ deploy, commit }) => [
     ),
   },
   { text: "Configuration", value: deploy.config?.env },
-  { text: "Started", value: formattedDate(deploy.createdAt) },
-  { text: "Stopped", value: formattedDate(deploy.stoppedAt) },
+  {
+    text: "Started",
+    value: deploy.createdAt && formattedDate(deploy.createdAt),
+  },
+  {
+    text: "Stopped",
+    value: deploy.stoppedAt && formattedDate(deploy.stoppedAt),
+  },
   { text: "Build Status", value: <ExitStatus code={deploy.exit} /> },
   {
     text: "Endpoint",
