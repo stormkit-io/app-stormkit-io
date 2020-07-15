@@ -17,9 +17,11 @@ export const setDomain = ({
       env: environment.env,
     })
     .then(() => {
+      setLoading(false);
       history.replace({ state: { envs: Date.now() } });
     })
     .catch((res) => {
+      setLoading(false);
       setError(
         res.status === 400
           ? "Please provide a valid domain name."
@@ -27,9 +29,6 @@ export const setDomain = ({
           ? "You have issued too many requests. Please wait a while before retrying."
           : "Something went wrong while setting up the domain. Make sure it is a valid domain."
       );
-    })
-    .finally(() => {
-      setLoading(false);
     });
 };
 

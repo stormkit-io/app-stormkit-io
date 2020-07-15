@@ -46,9 +46,11 @@ const DomainModal = ({
             name="domain"
             label="Domain name"
             className="bg-white"
-            aria-label="Domain name"
             required
             fullWidth
+            inputProps={{
+              "aria-label": "Domain name",
+            }}
           />
           <p className="opacity-50 text-sm pt-2">
             Specify the domain you'd like to host on Stormkit.
