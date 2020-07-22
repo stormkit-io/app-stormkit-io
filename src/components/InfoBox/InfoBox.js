@@ -21,9 +21,9 @@ const icons = {
 const colors = {
   [ACTION_REQUIRED]: { text: "blue-20", bg: "blue-90" },
   [DEFAULT]: {
-    text: "blue-20",
+    text: "blue-30",
     bg: "blue-90",
-    border: "blue-80",
+    border: "transparent",
     icon: "blue-80",
   },
   [SUCCESS]: { text: "white", bg: "green-50", border: "green-50" },
@@ -59,6 +59,7 @@ const InfoBox = ({
     "py-2",
     "flex",
     "items-center",
+    "text-sm",
     `bg-${colors[type].bg}`,
     `text-${colors[type].text}`,
     "border",
