@@ -41,3 +41,8 @@ div.MuiTableContainer-root {
 .MuiTableBody-root tr.MuiTableRow-root:last-child th {
   border-bottom: none;
 }
+
+.MuiRadio-root {
+  padding: 0;
+  padding-right: 1rem;
+}
