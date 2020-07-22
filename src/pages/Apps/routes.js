@@ -24,4 +24,9 @@ export default [
       import("~/pages/Apps/:id/Deployments/:deploymentId")
     ),
   },
+  {
+    path: "/apps/:id/team",
+    exact: true,
+    component: Async(() => import("~/pages/Apps/:id/Team")),
+  },
 ];

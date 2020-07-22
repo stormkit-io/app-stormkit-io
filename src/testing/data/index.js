@@ -6,3 +6,4 @@ export { default as mockUserResponse } from "./mock_user_response";
 export { default as mockRemoteConfigResponse } from "./mock_remote_config_response";
 export { default as mockSnippetsResponse } from "./mock_snippets_response";
 export { default as mockDomainFetchResponse } from "./mock_domain_response";
+export { default as mockFetchMembersResponse } from "./mock_team_response";
