@@ -6,6 +6,7 @@ import Button from "~/components/Button";
 const ProviderButton = ({ provider, text, children, className, ...rest }) => {
   return (
     <Button
+      type="button"
       {...rest}
       className={cn(
         [
