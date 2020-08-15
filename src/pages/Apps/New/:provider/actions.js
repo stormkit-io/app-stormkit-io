@@ -1,11 +1,11 @@
 import React from "react";
 import Link from "~/components/Link";
 
-export const login = ({ loginOauth, setState, init }) => async () => {
+export const login = ({ loginOauth, updateState, init }) => async () => {
   const { accessToken } = await loginOauth();
 
   if (accessToken) {
-    setState({ requiresLogin: false });
+    updateState({ requiresLogin: false });
     init();
   }
 };

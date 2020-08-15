@@ -20,7 +20,7 @@ const OauthLogin = ({ loginOauth, error }) => (
         key={login.id}
         className={`mb-${i === logins.length - 1 ? "0" : "8"}`}
       >
-        <ProviderButton provider={login.id} text={login.text}>
+        <ProviderButton provider={login.id} text={login.text} type="submit">
           {login.id === "bitbucket" && (
             <span className="inline-block w-4">&nbsp;</span>
           )}

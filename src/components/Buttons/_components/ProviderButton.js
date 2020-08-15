@@ -3,11 +3,18 @@ import cn from "classnames";
 import PropTypes from "prop-types";
 import Button from "~/components/Button";
 
-const ProviderButton = ({ provider, text, children, className, ...rest }) => {
+const ProviderButton = ({
+  provider,
+  text,
+  type = "button",
+  children,
+  className,
+  ...rest
+}) => {
   return (
     <Button
-      type="button"
       {...rest}
+      type={type}
       className={cn(
         [
           `button-${provider}`,
@@ -33,6 +40,7 @@ const ProviderButton = ({ provider, text, children, className, ...rest }) => {
 ProviderButton.propTypes = {
   provider: PropTypes.oneOf(["github", "gitlab", "bitbucket"]),
   text: PropTypes.oneOf(["GitHub", "GitLab", "Bitbucket"]),
+  type: PropTypes.oneOf(["button", "submit"]),
   children: PropTypes.node,
   className: PropTypes.any,
 };

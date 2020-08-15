@@ -13,9 +13,8 @@ import { login as loginAction } from "./actions";
 
 const Start = ({ loginOauth, history, api, ...rest }) => {
   const { apps, loading } = useFetchAppList({ api });
-  const login = (provider) => {
-    return loginAction({ api: rest[provider], provider, history, loginOauth });
-  };
+  const login = (provider) =>
+    loginAction({ api: rest[provider], provider, history, loginOauth });
 
   return (
     <DefaultLayout>
