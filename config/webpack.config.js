@@ -101,12 +101,14 @@ module.exports = {
       }, {}),
     }),
 
-    new CopyWebpackPlugin([
-      {
-        from: path.join(root, "src/public/favicon.png"),
-        to: path.join(root, "dist/favicon.png"),
-      },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.join(root, "src/public/favicon.png"),
+          to: path.join(root, "dist/favicon.png"),
+        },
+      ],
+    }),
 
     // The server will handle injecting files by itself.
     new HtmlWebpackPlugin({
