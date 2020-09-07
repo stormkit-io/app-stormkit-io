@@ -35,19 +35,20 @@ export const useFetchAppList = ({ api }) => {
 
 const appCache = {};
 
-export const useFetchApp = ({ api, appId }) => {
+export const useFetchApp = ({ api, appId, location }) => {
   const [app, setApp] = useState(appCache[appId] || {});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const refresh = location?.state?.app;
 
   useEffect(() => {
     let unmounted = false;
 
-    if (appCache[appId]) {
+    if (appCache[appId] && !refresh) {
       return;
     }
 
-    setLoading(true);
+    !refresh && setLoading(true); // Do not refresh when updating app object.
     setError(false);
 
     api
@@ -76,7 +77,7 @@ export const useFetchApp = ({ api, appId }) => {
     return () => {
       unmounted = true;
     };
-  }, [api, appId]);
+  }, [api, appId, refresh]);
 
   return { app, loading, error };
 };

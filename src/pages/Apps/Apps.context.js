@@ -15,7 +15,7 @@ const Context = createContext();
 
 const AppContext = ({ api, match, history, location }) => {
   const { id } = match.params;
-  const { app, error, loading } = useFetchApp({ api, appId: id });
+  const { app, error, loading } = useFetchApp({ api, appId: id, location });
   const envs = useFetchEnvironments({ api, app, location });
 
   if (loading) {

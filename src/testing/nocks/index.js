@@ -3,3 +3,4 @@ export * from "./nock_snippets";
 export * from "./nock_domains";
 export * from "./nock_deployments";
 export * from "./nock_team";
+export * from "./nock_update_settings";

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import ReferralForm from "~/pages/User/Referrals/_components/ReferralForm";
 import Modal from "~/components/Modal";
-import Form from "~/components/Form";
+import CopyBox from "~/components/CopyBox";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
@@ -57,24 +57,7 @@ const NewMemberModal = ({ isOpen, toggleModal, api, app }) => {
             invitation is valid for 24 hours.
           </InfoBox>
           <div className="flex mb-4 p-4 rounded bg-gray-85">
-            <Form.Input
-              multiline
-              id="copy-token"
-              defaultValue={link}
-              className="flex-auto"
-              inputProps={{
-                "aria-label": "Copy token",
-              }}
-            />
-            <Button
-              onClick={() => {
-                document.querySelector("#copy-token").focus();
-                document.querySelector("#copy-token").select();
-                document.execCommand("copy");
-              }}
-            >
-              <span className="far fa-copy" />
-            </Button>
+            <CopyBox value={link} />
           </div>
           <div className="flex justify-end">
             <Button secondary onClick={() => setToken(null)}>

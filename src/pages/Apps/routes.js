@@ -29,4 +29,9 @@ export default [
     exact: true,
     component: Async(() => import("~/pages/Apps/:id/Team")),
   },
+  {
+    path: "/apps/:id/settings",
+    exact: true,
+    component: Async(() => import("~/pages/Apps/:id/Settings")),
+  },
 ];

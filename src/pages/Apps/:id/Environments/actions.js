@@ -46,7 +46,7 @@ export const useFetchEnvironments = ({ api, app, location }) => {
     return () => {
       unmounted = true;
     };
-  }, [api, app, refresh]);
+  }, [api, app.id, app.displayName, refresh]);
 
   return { environments, error, loading, hasNextPage };
 };

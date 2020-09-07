@@ -46,3 +46,22 @@ div.MuiTableContainer-root {
   padding: 0;
   padding-right: 1rem;
 }
+
+.MuiFilledInput-root {
+  @apply bg-gray-90;
+}
+
+.MuiFilledInput-underline:before {
+  @apply border-gray-83;
+}
+
+.MuiInputBase-root.Mui-disabled {
+  @apply bg-gray-80;
+}
+
+.MuiTypography-body1 {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
