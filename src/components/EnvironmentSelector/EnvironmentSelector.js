@@ -4,11 +4,12 @@ import Form from "~/components/Form";
 
 const EnvironmentSelector = ({
   environments,
+  defaultValue = "",
   onSelect,
   placeholder,
   ...rest
 }) => {
-  const [selectedEnvironment, setSelectedEnvironment] = useState("");
+  const [selectedEnvironment, setSelectedEnvironment] = useState(defaultValue);
 
   return (
     <div {...rest}>
@@ -50,6 +51,7 @@ EnvironmentSelector.propTypes = {
   environments: PropTypes.array,
   placeholder: PropTypes.string,
   onSelect: PropTypes.func,
+  defaultValue: PropTypes.string,
 };
 
 export default EnvironmentSelector;

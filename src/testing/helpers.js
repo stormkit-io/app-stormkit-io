@@ -23,17 +23,25 @@ export const withUserContext = ({
   if (!rest.history) {
     rest.history = createMemoryHistory({
       initialEntries: [path],
-      initialIndex: 0,
+      initialIndex: 0
     });
   }
 
   return renderWithContext({ ...rest });
 };
 
+/**
+ * Mounts the component in the given `path` with mocked context. This function
+ * mocks also required things such as the modal component and injects the api
+ * by default.
+ *
+ * @param {string} path       The import path to the component's file.
+ * @param {object} mockProps  The properties that will be directly injected to the component on mount.
+ */
 export const withMockContext = (path, mockProps = {}) => {
   jest.mock("~/components/Modal", () => {
     const mock = ({ children }) => children;
-    mock.Context = (i) => i;
+    mock.Context = i => i;
     return mock;
   });
 
@@ -41,21 +49,21 @@ export const withMockContext = (path, mockProps = {}) => {
   global.__MOCK_PROPS__ = mockProps;
 
   jest.mock("~/utils/context", () => ({
-    connect: (Component) => (props) => (
+    connect: Component => props => (
       <Component {...props} {...global.__MOCK_PROPS__} />
-    ),
+    )
   }));
 
   mockProps.confirmModal = jest.fn().mockImplementation((_, { onConfirm }) => {
     onConfirm({
       setLoading: jest.fn(),
       setError: jest.fn(),
-      closeModal: jest.fn(),
+      closeModal: jest.fn()
     });
   });
 
   mockProps.api = new Api({
-    baseurl: process.env.API_DOMAIN,
+    baseurl: process.env.API_DOMAIN
   });
 
   const Component = require(path).default;
@@ -68,7 +76,7 @@ export const withMockContext = (path, mockProps = {}) => {
 
   return Object.assign(wrapper, {
     history: memoryHistory,
-    injectedProps: mockProps,
+    injectedProps: mockProps
   });
 };
 
@@ -87,8 +95,8 @@ export const withAppContext = ({ app, envs, path, status = 200, user }) => {
     user,
     history: createMemoryHistory({
       initialEntries: [path],
-      initialIndex: 0,
-    }),
+      initialIndex: 0
+    })
   });
 };
 

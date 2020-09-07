@@ -72,7 +72,7 @@ export const ReferralForm = ({ onSubmit, loading, error }) => {
 
 ReferralForm.propTypes = {
   loading: PropTypes.bool,
-  error: PropTypes.string,
+  error: PropTypes.node,
   onSubmit: PropTypes.func,
 };
 

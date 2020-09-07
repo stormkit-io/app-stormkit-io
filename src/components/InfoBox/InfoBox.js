@@ -43,6 +43,7 @@ const InfoBox = ({
   type,
   toaster,
   dismissable,
+  onDismissed,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
   const ref = useRef(null);
@@ -90,12 +91,15 @@ const InfoBox = ({
           <span className={cn(icons[type], "text-2xl")} />
         </span>
       )}
-      {children}
+      <div className="flex-auto">{children}</div>
       {dismissable && (
         <Button
           className="ml-4"
           styled={false}
-          onClick={() => setIsOpen(false)}
+          onClick={() => {
+            setIsOpen(false);
+            onDismissed && onDismissed();
+          }}
         >
           <span className="fas fa-times font-bold text-xl" />
         </Button>
@@ -122,6 +126,7 @@ InfoBox.propTypes = {
   scrollIntoView: PropTypes.bool,
   toaster: PropTypes.bool,
   dismissable: PropTypes.bool,
+  onDismissed: PropTypes.func,
 };
 
 export default InfoBox;
