@@ -32,6 +32,8 @@ export default class GithubRepos extends PureComponent {
     errors: {},
     requiresLogin: false,
     loadingInsert: false,
+    hasNextPage: false,
+    pageQueryParams: {},
   };
 
   async componentDidMount() {
@@ -47,8 +49,8 @@ export default class GithubRepos extends PureComponent {
       }
 
       const { accounts, selectedAccount } = await this.getInstallations();
-      this.updateState({ accounts, selectedAccount, loading: true });
-      this.getRepositories(selectedAccount);
+      await this.updateState({ accounts, selectedAccount });
+      this.getRepositories();
     } catch (e) {
       if (e.message === "unauthorized") {
         this.updateState({ requiresLogin: true });
@@ -110,43 +112,89 @@ export default class GithubRepos extends PureComponent {
       width: 1000,
       onClose: async () => {
         const { accounts, selectedAccount } = await this.getInstallations();
-        this.updateState({ accounts, selectedAccount, loading: true });
-        this.getRepositories(selectedAccount);
+        this.updateState({ accounts, selectedAccount });
+        this.getRepositories();
       },
     });
   };
 
-  getRepositories = async (account) => {
-    if (!account) {
+  getRepositories = async () => {
+    // set loading to true to show a spinner until api requests are done
+    this.updateState({ loading: true });
+
+    // get the selected account
+    const { selectedAccount } = this.state;
+
+    if (!selectedAccount) {
       return this.updateState({ loading: false });
     }
 
-    const installationId = account.installationId;
     const api = this.props.github;
-    const res = await api.repositories({ installationId });
+
+    // get current pageIndex and items per page
+    const { repositories, pageQueryParams } = this.state;
+
+    // api params
+    const defaultParams = {
+      page: 1,
+      per_page: 100,
+    };
+    const params =
+      Object.keys(pageQueryParams).length > 0 ? pageQueryParams : defaultParams;
+
+    // fetch the repositories
+    const res = await api.repositories({
+      installationId: selectedAccount.installationId,
+      params,
+    });
+
+    // adds the current page to the repositories
+    const page = res.repositories;
+    repositories.push(...page);
+
+    // check if there is a next page with more repositories
+    const hasNextPage =
+      res.total_count > pageQueryParams.page * pageQueryParams.per_page;
+
+    // gather the params for the next page (if there is one) into an object for consecutive calls through `load more` button
+    const nextPageParams = hasNextPage
+      ? {
+          ...pageQueryParams,
+          page: pageQueryParams.page + 1,
+        }
+      : defaultParams;
 
     this.updateState({
-      selectedAccount: account,
-      repositories: res.repositories,
+      repositories: repositories,
       loading: false,
+      hasNextPage,
+      pageQueryParams: nextPageParams,
     });
   };
 
-  onAccountChange = (login) => {
-    const selectedAccount = this.state.accounts.filter(
-      (a) => a.login === login
-    )[0];
+  onAccountChange = async (login) => {
+    const selectedAccount = this.state.accounts.find((a) => a.login === login);
+    const accounts = this.state.accounts.map((a) => ({
+      ...a,
+      selected: a.login === login,
+    }));
 
     if (selectedAccount) {
-      this.updateState({ repositories: [], selectedAccount, loading: true });
-      this.getRepositories(selectedAccount);
+      await this.updateState({ repositories: [], accounts, selectedAccount });
+      this.getRepositories();
     }
   };
 
   updateState = (...args) => {
-    if (this.unmounted !== true) {
-      this.setState(...args);
-    }
+    // wait for the callback to be triggered to resolve the promise to avoid side effects (too) slowly mutating the state
+    return new Promise((resolve) => {
+      if (this.unmounted !== true) {
+        this.setState(...args, () => {
+          resolve(true);
+        });
+      }
+      resolve(true);
+    });
   };
 
   componentWillUnmount() {
@@ -161,6 +209,7 @@ export default class GithubRepos extends PureComponent {
       selectedAccount,
       loading,
       requiresLogin,
+      hasNextPage,
     } = this.state;
 
     const { login } = selectedAccount || {};
@@ -206,6 +255,8 @@ export default class GithubRepos extends PureComponent {
             repositories={repositories}
             provider="github"
             loading={loading}
+            onNextPageClick={this.getRepositories}
+            hasNextPage={hasNextPage}
           />
         </div>
 

@@ -70,14 +70,25 @@ export default class Github {
    * @param {Number} installationId The id of the installation we'd like to show the repositories.
    * @param {Number} page The page number.
    */
-  repositories({ installationId, page = 1 } = {}) {
+  repositories({ installationId, params = {} } = {}) {
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
       headers.set("Accept", this.previewHeader);
       headers.set("If-None-Match", ""); // https://github.com/octokit/rest.js/issues/890
 
+      // push default params if no params set yet
+      if (Object.keys(params).length === 0) {
+        params.page = 1;
+        params.per_page = 100;
+      }
+
+      // build query
+      const query = Object.entries(params)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
+
       const request = new Request(
-        `${this.baseurl}/user/installations/${installationId}/repositories?page=${page}&per_page=100`,
+        `${this.baseurl}/user/installations/${installationId}/repositories?${query}`,
         { headers }
       );
 
