@@ -22,6 +22,9 @@ export default class BitbucketRepositories extends PureComponent {
     repositories: [],
     loading: true,
     errors: {},
+    itemsPerPage: 100,
+    hasNextPage: false,
+    pageQueryParams: [],
   };
 
   componentDidMount() {
@@ -36,7 +39,7 @@ export default class BitbucketRepositories extends PureComponent {
     try {
       await this.user();
       await this.teams();
-      await this.repositories();
+      await this.getRepositories();
     } catch (res) {
       if (res.message === "unauthorized") {
         this.updateState({ requiresLogin: true });
@@ -84,35 +87,48 @@ export default class BitbucketRepositories extends PureComponent {
     });
   };
 
-  repositories = async () => {
+  getRepositories = async () => {
     const account = this.state.accounts.filter((a) => a.selected)[0];
 
     if (!account) {
-      return;
-    }
-
-    // Cache the stuff
-    this.repositories = this.repositories || {};
-
-    if (this.repositories[account.login]) {
-      return this.updateState(this.repositories[account.login]);
+      return this.updateState({ loading: false });
     }
 
     const api = this.props.bitbucket;
 
+    // get current pageIndex and items per page
+    const { itemsPerPage, repositories, pageQueryParams } = this.state;
+
     // If the account type is a team, we include it in the repo call
     // to filter the results.
-    const res = await api.repositories(
-      account.type === "team" ? account.login : undefined
-    );
+    const res = await api.repositories({
+      team: account.type === "team" ? account.login : undefined,
+      perPage: itemsPerPage,
+      params: pageQueryParams,
+    });
 
-    this.repositories[account.login] = {
+    // adds the current page to the repositories
+    const page = res.values;
+    repositories.push(...page);
+
+    // check if there is a next page with more repositories
+    const hasNextPage = !!res.next;
+
+    // gather the params for the next page (if there is one) into an array for consecutive calls through `load more` button
+    const nextPageParams = hasNextPage
+      ? res.next
+          .split("?")[1]
+          .split("&")
+          .map((p) => ({ name: p.split("=")[0], value: p.split("=")[1] }))
+      : [];
+
+    this.updateState({
       selectedAccount: account,
-      repositories: res.values,
+      repositories: repositories,
       loading: false,
-    };
-
-    this.updateState(this.repositories[account.login]);
+      hasNextPage,
+      pageQueryParams: nextPageParams,
+    });
   };
 
   onAccountChange = (login) => {
@@ -139,7 +155,13 @@ export default class BitbucketRepositories extends PureComponent {
 
   render() {
     const { loginOauth, history, api } = this.props;
-    const { accounts = [], loading, requiresLogin, repositories } = this.state;
+    const {
+      accounts = [],
+      loading,
+      requiresLogin,
+      repositories,
+      hasNextPage,
+    } = this.state;
     const { login } = accounts.filter((i) => i.selected)[0] || {};
 
     if (requiresLogin) {
@@ -182,6 +204,8 @@ export default class BitbucketRepositories extends PureComponent {
             repositories={repositories}
             provider="bitbucket"
             loading={loading}
+            onNextPageClick={this.getRepositories}
+            hasNextPage={hasNextPage}
           />
         </div>
       </>
