@@ -88,6 +88,10 @@ export default class BitbucketRepositories extends PureComponent {
   };
 
   getRepositories = async () => {
+    // set loading to true to show a spinner until api requests are done
+    this.updateState({ loading: true });
+
+    // get the selected account
     const account = this.state.accounts.filter((a) => a.selected)[0];
 
     if (!account) {
