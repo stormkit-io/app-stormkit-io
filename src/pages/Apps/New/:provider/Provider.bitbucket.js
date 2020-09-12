@@ -22,9 +22,8 @@ export default class BitbucketRepositories extends PureComponent {
     repositories: [],
     loading: true,
     errors: {},
-    itemsPerPage: 100,
     hasNextPage: false,
-    pageQueryParams: [],
+    pageQueryParams: {},
   };
 
   componentDidMount() {
@@ -33,12 +32,14 @@ export default class BitbucketRepositories extends PureComponent {
 
   init = async () => {
     if (!this.props.bitbucket.accessToken) {
-      return this.updateState({ requiresLogin: true });
+      return await this.updateState({ requiresLogin: true });
     }
 
     try {
       await this.user();
       await this.teams();
+      const selectedAccount = this.state.accounts.find((a) => a.selected);
+      await this.updateState({ selectedAccount });
       await this.getRepositories();
     } catch (res) {
       if (res.message === "unauthorized") {
@@ -61,7 +62,7 @@ export default class BitbucketRepositories extends PureComponent {
       selected: true,
     };
 
-    this.updateState({ accounts: [user] });
+    await this.updateState({ accounts: [user] });
     return user;
   };
 
@@ -70,7 +71,7 @@ export default class BitbucketRepositories extends PureComponent {
     const teams = await api.teams();
 
     if (teams.size === 0) {
-      return this.updateState({ loading: false });
+      return await this.updateState({ loading: false });
     }
 
     const accounts = this.state.accounts.concat(
@@ -82,9 +83,8 @@ export default class BitbucketRepositories extends PureComponent {
       }))
     );
 
-    return new Promise((resolve) => {
-      this.updateState({ accounts }, () => resolve(accounts));
-    });
+    await this.updateState({ accounts });
+    return accounts;
   };
 
   getRepositories = async () => {
@@ -92,23 +92,31 @@ export default class BitbucketRepositories extends PureComponent {
     this.updateState({ loading: true });
 
     // get the selected account
-    const account = this.state.accounts.filter((a) => a.selected)[0];
+    const { selectedAccount } = this.state;
 
-    if (!account) {
+    if (!selectedAccount) {
       return this.updateState({ loading: false });
     }
 
     const api = this.props.bitbucket;
 
     // get current pageIndex and items per page
-    const { itemsPerPage, repositories, pageQueryParams } = this.state;
+    const { repositories, pageQueryParams } = this.state;
 
+    // api params
+    const defaultParams = {
+      role: "admin",
+      pagelen: 100,
+    };
+    const params =
+      Object.keys(pageQueryParams).length > 0 ? pageQueryParams : defaultParams;
+
+    // fetch the repositories
     // If the account type is a team, we include it in the repo call
     // to filter the results.
     const res = await api.repositories({
-      team: account.type === "team" ? account.login : undefined,
-      perPage: itemsPerPage,
-      params: pageQueryParams,
+      team: selectedAccount.type === "team" ? selectedAccount.login : undefined,
+      params,
     });
 
     // adds the current page to the repositories
@@ -118,16 +126,20 @@ export default class BitbucketRepositories extends PureComponent {
     // check if there is a next page with more repositories
     const hasNextPage = !!res.next;
 
-    // gather the params for the next page (if there is one) into an array for consecutive calls through `load more` button
+    // gather the params for the next page (if there is one) into an object for consecutive calls through `load more` button
     const nextPageParams = hasNextPage
       ? res.next
           .split("?")[1]
           .split("&")
-          .map((p) => ({ name: p.split("=")[0], value: p.split("=")[1] }))
-      : [];
+          .reduce((params, param) => {
+            const key = param.split("=")[0];
+            const value = param.split("=")[1];
+            params[key] = value;
+            return params;
+          }, {})
+      : defaultParams;
 
     this.updateState({
-      selectedAccount: account,
       repositories: repositories,
       loading: false,
       hasNextPage,
@@ -135,22 +147,29 @@ export default class BitbucketRepositories extends PureComponent {
     });
   };
 
-  onAccountChange = (login) => {
+  onAccountChange = async (login) => {
+    const selectedAccount = this.state.accounts.find((a) => a.login === login);
     const accounts = this.state.accounts.map((a) => ({
       ...a,
       selected: a.login === login,
     }));
 
-    this.updateState(
-      { accounts, loading: true, repositories: [] },
-      this.repositories
-    );
+    if (selectedAccount) {
+      await this.updateState({ repositories: [], accounts, selectedAccount });
+      this.getRepositories();
+    }
   };
 
   updateState = (...args) => {
-    if (this.unmounted !== true) {
-      this.setState(...args);
-    }
+    // wait for the callback to be triggered to resolve the promise to avoid side effects (too) slowly mutating the state
+    return new Promise((resolve) => {
+      if (this.unmounted !== true) {
+        this.setState(...args, () => {
+          resolve(true);
+        });
+      }
+      resolve(true);
+    });
   };
 
   componentWillUnmount() {
@@ -205,7 +224,7 @@ export default class BitbucketRepositories extends PureComponent {
           <RepoList
             api={api}
             history={history}
-            repositories={repositories}
+            repositories={items}
             provider="bitbucket"
             loading={loading}
             onNextPageClick={this.getRepositories}

@@ -33,20 +33,22 @@ export default class Bitbucket {
    *
    * @param {String} team The name of the team.
    */
-  repositories({ team, perPage = 100, params = [] } = {}) {
+  repositories({ team, params = {} } = {}) {
     const url = team ? `/repositories/${team}` : "/repositories";
 
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
 
       // push default params if no params set yet
-      if (params.length === 0) {
-        params.push({ name: "role", value: "admin" });
-        params.push({ name: "pagelen", value: perPage });
+      if (Object.keys(params).length === 0) {
+        params.role = "admin";
+        params.pagelen = 100;
       }
 
       // build query
-      const query = params.map((p) => `${p.name}=${p.value}`).join("&");
+      const query = Object.entries(params)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
 
       const request = new Request(`${this.baseurl}${url}?${query}`, {
         headers,
