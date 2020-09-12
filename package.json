@@ -40,6 +40,7 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-stripe-elements": "^5.0.1",
+    "react-transition-group": "^4.4.1",
     "styled-components": "4.2.0",
     "tailwindcss": "^1.4.6"
   },
