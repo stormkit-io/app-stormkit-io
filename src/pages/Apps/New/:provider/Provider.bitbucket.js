@@ -224,7 +224,7 @@ export default class BitbucketRepositories extends PureComponent {
           <RepoList
             api={api}
             history={history}
-            repositories={items}
+            repositories={repositories}
             provider="bitbucket"
             loading={loading}
             onNextPageClick={this.getRepositories}
