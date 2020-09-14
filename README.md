@@ -41,6 +41,20 @@ $ npm install
 $ npm run dev:live
 ```
 
+Your project will be running at [https://localhost:3000](https://localhost:3000)
+
+You'll need a backend to work with. Currently the backend is not yet open-source. To speed up the process however,
+it's possible to create a proxy and point directly the live API which will allow local development. In order to do
+that simply create an `.env` file and specify the following environment variables:
+
+```
+ENV=dev
+PORT=8080
+API_DOMAIN=/api
+API_PROXY_DOMAIN=http://localhost:8080/
+STRIPE_API_KEY=sk_test_3XwgXeVENrPij4Xwc6ArJapW001ZNaYNCm
+```
+
 ## Open Source
 
 You can check the [LICENSE](/LICENSE) for more information.
