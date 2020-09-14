@@ -22,6 +22,7 @@
     "watch": true,
     "noUnusedLocals": true,
     "types": ["react", "node", "jest"],
+    "newLine": "LF",
     "paths": {
       "@components/*": ["components/*"],
       "@assets/*": ["assets/*"],
