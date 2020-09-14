@@ -1,0 +1,35 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noEmit": false,
+    "jsx": "react",
+    "sourceMap": true,
+    "isolatedModules": true,
+    "downlevelIteration": false,
+    "rootDir": "./",
+    "baseUrl": "src/",
+    "watch": true,
+    "noUnusedLocals": true,
+    "types": ["react", "node", "jest"],
+    "paths": {
+      "@components/*": ["components/*"],
+      "@assets/*": ["assets/*"],
+      "@layouts/*": ["layouts/*"],
+      "@pages/*": ["pages/*"],
+      "@utils/*": ["utils/*"]
+    },
+    "pretty": true
+  },
+  "esclude": ["node_modules"]
+}
