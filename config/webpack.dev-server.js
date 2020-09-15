@@ -19,10 +19,10 @@ const config = {
   // Enable https with a self-signed certificate.
   https: {
     key: fs.readFileSync(path.resolve(__dirname, "./certs/localhost.key")),
-    cert: fs.readFileSync(path.resolve(__dirname, "./certs/localhost.cert")),
+    cert: fs.readFileSync(path.resolve(__dirname, "./certs/localhost.cert"))
   },
 
-  proxy: {},
+  proxy: {}
 };
 
 config.proxy[process.env.API_DOMAIN] = {
@@ -31,8 +31,8 @@ config.proxy[process.env.API_DOMAIN] = {
   xfwd: true,
   cookieDomainRewrite: config.host,
   pathRewrite: {
-    "^/api": "/",
-  },
+    "^/api": "/"
+  }
 };
 
 module.exports = config;
