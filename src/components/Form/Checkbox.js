@@ -7,12 +7,12 @@ class Checkbox extends PureComponent {
   static displayName = "Checkbox";
 
   static defaultProps = {
-    checked: false,
+    checked: false
   };
 
   static propTypes = {
     checked: PropTypes.bool,
-    handler: PropTypes.func.isRequired,
+    handler: PropTypes.func.isRequired
   };
 
   handleOnChange = () => {
@@ -20,11 +20,10 @@ class Checkbox extends PureComponent {
   };
 
   render() {
-    const { handler, checked, ...props } = this.props;
+    // eslint-disable-next-line
+    const { handler, ...props } = this.props;
 
-    return (
-      <CheckboxUI {...props} checked={checked} onChange={this.handleOnChange} />
-    );
+    return <CheckboxUI {...props} onChange={this.handleOnChange} />;
   }
 }
 

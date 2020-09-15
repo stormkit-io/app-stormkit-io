@@ -34,7 +34,7 @@ const Button = forwardRef(
           "items-center",
           "justify-center",
           "rounded-lg",
-          "button",
+          "button"
         ]
       );
 
@@ -43,13 +43,14 @@ const Button = forwardRef(
       } else if (secondary) {
         classes.push("bg-blue-20", "text-secondary");
       } else if (tertiary) {
+        // TODO: Implement me
       }
     }
 
     const props = {
       className: cn(classes, className),
       disabled: disabled || loading ? "disabled" : undefined,
-      ...rest,
+      ...rest
     };
 
     const content = (
@@ -64,7 +65,7 @@ const Button = forwardRef(
                   "w-full",
                   "justify-center",
                   {
-                    invisible: loading,
+                    invisible: loading
                   }
                 )}
               >
@@ -81,7 +82,7 @@ const Button = forwardRef(
       props.role = "button";
 
       if (!props.onKeyDown) {
-        props.onKeyDown = (e) =>
+        props.onKeyDown = e =>
           (e.key === "Enter" || e.key === " ") && props.onClick();
       }
     }
@@ -96,7 +97,7 @@ const Button = forwardRef(
         linkRef.current.click();
       };
 
-      props.onKeyDown = (e) => {
+      props.onKeyDown = e => {
         (e.key === "Enter" || e.key === " ") && linkRef.current.click();
       };
     }
@@ -109,7 +110,7 @@ const Button = forwardRef(
 
 Button.defaultProps = {
   as: "button",
-  styled: true,
+  styled: true
 };
 
 Button.propTypes = {
@@ -121,7 +122,7 @@ Button.propTypes = {
   tertiary: PropTypes.bool,
   href: PropTypes.string,
   styled: PropTypes.bool,
-  as: PropTypes.string,
+  as: PropTypes.string
 };
 
 export default Button;

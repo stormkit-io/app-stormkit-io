@@ -1,4 +1,3 @@
-/* global describe, test, jest, expect, beforeEach */
 import SessionStorage, { fallbackStore } from "./SessionStorage";
 
 describe("SessionStorage", () => {

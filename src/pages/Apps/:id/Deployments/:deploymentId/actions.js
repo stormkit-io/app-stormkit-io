@@ -17,7 +17,7 @@ export const useFetchDeployment = ({ api, app, deployId }) => {
 
     api
       .fetch(`/app/${app.id}/deploy/${deployId}`)
-      .then((res) => {
+      .then(res => {
         if (unmounted !== true) {
           setDeploy(res.deploy);
           setLoading(false);
@@ -31,7 +31,7 @@ export const useFetchDeployment = ({ api, app, deployId }) => {
           }
         }, 5000);
       })
-      .catch((e) => {
+      .catch(() => {
         if (unmounted !== true) {
           setLoading(false);
           setError(

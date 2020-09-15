@@ -174,6 +174,7 @@ export default Wrapped => {
      * Event handler for label click.
      **/
     onLabelClick = () => {
+      // eslint-disable-next-line
       const input = ReactDOM.findDOMNode(this).querySelector("input");
 
       if (isCheckbox || isRadio) {
@@ -240,11 +241,12 @@ export default Wrapped => {
 
       return (
         <Label
-          children={label.text}
           fontSize={this.props.fontSize}
           onClick={this.onLabelClick}
           hasValue={!!this.props.placeholder || !!this.state.value}
-        />
+        >
+          {label.text}
+        </Label>
       );
     };
 
@@ -256,7 +258,7 @@ export default Wrapped => {
         <styled.Wrapper {...props}>
           <Wrapped {...props} value={this.state.value} />
           {this.renderLabel()}
-          {error && <styled.Error children={error || error.text} />}
+          {error && <styled.Error>{error || error.text}</styled.Error>}
         </styled.Wrapper>
       );
     }
