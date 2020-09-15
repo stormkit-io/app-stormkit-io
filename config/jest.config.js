@@ -3,13 +3,13 @@ module.exports = {
   moduleNameMapper: {
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|css)$":
       "<rootDir>/config/__mocks__/file-mock.js",
-    "~(.*)$": "<rootDir>/src/$1",
+    "~(.*)$": "<rootDir>/src/$1"
   },
   moduleDirectories: ["node_modules"],
   collectCoverageFrom: [
     "src/**/*.{js,jsx}",
     "!src/**/*.spec.{js,jsx}",
-    "!**/node_modules/**",
+    "!**/node_modules/**"
   ],
   coverageDirectory: "coverage/",
   coverageReporters: ["html", "lcov"],
@@ -19,5 +19,5 @@ module.exports = {
   rootDir: "../",
   clearMocks: true,
   restoreMocks: true,
-  resetMocks: true,
+  resetMocks: true
 };

@@ -11,7 +11,8 @@
     "dev": "node scripts/dev.js",
     "dev:live": "API_PROXY_DOMAIN=https://api.stormkit.io NODE_ENV=production node scripts/dev.js",
     "test": "jest --notify --detectOpenHandles --runInBand --config=config/jest.config.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prettier": "prettier **/*.js --write"
   },
   "husky": {
     "hooks": {
