@@ -74,8 +74,10 @@ export default class Api {
       if (json && json.jwt) {
         this.setAuthToken(json.jwt);
       }
+
+      return json;
     } catch (e) {
-      return;
+      console.error(e);
     }
   }
 
