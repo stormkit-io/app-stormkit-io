@@ -39,7 +39,13 @@
     {
       "files": ["**/*.ts", "**/*.tsx", "**/*.jsx"],
       "parser": "@typescript-eslint/parser",
-      "plugins": ["react-hooks", "react", "@typescript-eslint/eslint-plugin"]
+      "plugins": ["react-hooks", "react", "@typescript-eslint/eslint-plugin"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+      ]
     }
   ]
 }
