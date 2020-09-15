@@ -1,4 +1,3 @@
-/* global describe, test, jest, expect, beforeEach */
 import LocalStorage from "./LocalStorage";
 
 describe("LocalStorage", () => {

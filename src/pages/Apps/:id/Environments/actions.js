@@ -20,11 +20,11 @@ export const useFetchEnvironments = ({ api, app, location }) => {
 
     api
       .fetch(`/app/${app.id}/envs`)
-      .then((res) => {
+      .then(res => {
         if (unmounted !== true) {
           setHasNextPage(res.hasNextPage);
           setEnvironments(
-            res.envs.map((e) => ({
+            res.envs.map(e => ({
               ...e,
               getDomainName: () => {
                 return e.domain?.name && e.domain?.verified
@@ -32,7 +32,7 @@ export const useFetchEnvironments = ({ api, app, location }) => {
                   : e.env === "production"
                   ? `${app.displayName}.stormkit.dev`
                   : `${app.displayName}--${e.env}.stormkit.dev`;
-              },
+              }
             }))
           );
         }
@@ -54,7 +54,7 @@ export const useFetchEnvironments = ({ api, app, location }) => {
 export const STATUS = {
   OK: 200,
   NOT_FOUND: 404,
-  NOT_CONFIGURED: "NOT_CONFIGURED",
+  NOT_CONFIGURED: "NOT_CONFIGURED"
 };
 
 export const useFetchStatus = ({ api, app, domain, lastDeploy }) => {
@@ -75,9 +75,9 @@ export const useFetchStatus = ({ api, app, domain, lastDeploy }) => {
     api
       .post("/app/proxy", {
         url: `https://${domain}`,
-        appId: app.id,
+        appId: app.id
       })
-      .then((res) => {
+      .then(res => {
         if (!unmounted) {
           setStatus(res.status);
         }
@@ -108,7 +108,7 @@ export const useFetchRepoType = ({ app, api, env }) => {
 
     api
       .fetch(`/app/${app.id}/envs/${name}/meta`)
-      .then((res) => {
+      .then(res => {
         if (unmounted !== true) {
           setMeta(res);
         }
@@ -139,7 +139,7 @@ export const deleteEnvironment = ({
   history,
   setLoading,
   setError,
-  closeModal,
+  closeModal
 }) => {
   const name = environment?.env;
 
@@ -152,7 +152,7 @@ export const deleteEnvironment = ({
   return api
     .delete(`/app/env`, {
       appId: app.id,
-      env: name,
+      env: name
     })
     .then(() => {
       setLoading(false);
@@ -161,8 +161,8 @@ export const deleteEnvironment = ({
           pathname: `/apps/${app.id}/environments`,
           state: {
             envs: Date.now(),
-            message: "Environment has been removed successfully.",
-          },
+            message: "Environment has been removed successfully."
+          }
         });
       });
     })
@@ -188,7 +188,7 @@ const prepareBuildObject = (values, isServerless) => {
     cmd: values["build.cmd"],
     entry: values["build.entry"] || "",
     distFolder: values["build.distFolder"] || "",
-    vars,
+    vars
   };
 
   if (!build.cmd) {
@@ -210,8 +210,8 @@ export const insertEnvironment = ({
   isAutoPublish,
   toggleModal,
   setError,
-  setLoading,
-}) => (values) => {
+  setLoading
+}) => values => {
   const { name, branch } = values;
   const build = prepareBuildObject(values, isServerless);
 
@@ -227,7 +227,7 @@ export const insertEnvironment = ({
       env: name,
       branch,
       build,
-      autoPublish: isAutoPublish,
+      autoPublish: isAutoPublish
     })
     .then(() => {
       setLoading(false);
@@ -236,12 +236,12 @@ export const insertEnvironment = ({
           state: {
             envs: Date.now(),
             message:
-              "Environment has been created successfully. You can now deploy with your new configuration.",
-          },
+              "Environment has been created successfully. You can now deploy with your new configuration."
+          }
         });
       });
     })
-    .catch(async (res) => {
+    .catch(async res => {
       setLoading(false);
       const data = await res.json();
 
@@ -251,7 +251,7 @@ export const insertEnvironment = ({
         return Promise.reject();
       }
     })
-    .catch((e) => {
+    .catch(() => {
       setError(
         "Something went wrong while creating the environment. Please try again, if the problem persists reach us from Discord."
       );
@@ -267,8 +267,8 @@ export const editEnvironment = ({
   environmentId,
   toggleModal,
   setError,
-  setLoading,
-}) => (values) => {
+  setLoading
+}) => values => {
   const { name, branch } = values;
   const build = prepareBuildObject(values, isServerless);
 
@@ -285,7 +285,7 @@ export const editEnvironment = ({
       env: name,
       branch,
       build,
-      autoPublish: isAutoPublish,
+      autoPublish: isAutoPublish
     })
     .then(() => {
       setLoading(false);
@@ -294,12 +294,12 @@ export const editEnvironment = ({
           state: {
             envs: Date.now(),
             message:
-              "Environment has been updated successfully. You can now deploy with your new configuration.",
-          },
+              "Environment has been updated successfully. You can now deploy with your new configuration."
+          }
         });
       });
     })
-    .catch(async (res) => {
+    .catch(async res => {
       console.log(res);
       const data = await res.json();
 
@@ -309,7 +309,7 @@ export const editEnvironment = ({
         message =
           "You can't have duplicate environments or branch names for the same application.";
       } else if (res.status === 400 && data.errors) {
-        message = Object.keys(data.errors).map((k) => (
+        message = Object.keys(data.errors).map(k => (
           <div key={k}>{data.errors[k]}</div>
         ));
       }

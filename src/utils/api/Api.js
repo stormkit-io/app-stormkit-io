@@ -10,7 +10,7 @@ export default class Api {
   constructor(opts) {
     this.baseurl = opts.baseurl;
     this.headers = {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     };
 
     const token = LocalStorage.get(Api.STORAGE_TOKEN_KEY);
@@ -37,11 +37,11 @@ export default class Api {
   getHeaders(additional = {}) {
     const headers = new Headers();
 
-    Object.keys(this.headers).forEach((k) => {
+    Object.keys(this.headers).forEach(k => {
       headers.append(k, this.headers[k]);
     });
 
-    Object.keys(additional).forEach((k) => {
+    Object.keys(additional).forEach(k => {
       headers.append(k, additional[k]);
     });
 
@@ -68,17 +68,15 @@ export default class Api {
       throw resp;
     }
 
-    let json;
-
     try {
-      json = await resp.json();
-    } catch (e) {}
+      const json = await resp.json();
 
-    if (json && json.jwt) {
-      this.setAuthToken(json.jwt);
+      if (json && json.jwt) {
+        this.setAuthToken(json.jwt);
+      }
+    } catch (e) {
+      return;
     }
-
-    return json;
   }
 
   // Helper method for sending post requests.
