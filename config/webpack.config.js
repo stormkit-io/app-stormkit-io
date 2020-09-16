@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserJSPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const config = require("dotenv").config();
 
 // Helper variables
@@ -37,7 +38,13 @@ module.exports = {
   resolve: {
     alias: {
       "~": path.join(root, "src")
-    }
+    },
+    extensions: [".tsx", ".js"],
+    plugins: [
+      new TsConfigPathsPlugin({
+        configFile: path.resolve(__dirname, "./tsconfig.json")
+      })
+    ]
   },
 
   // @see https://webpack.js.org/configuration/module/
@@ -75,6 +82,14 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: "awesome-typescript-loader",
+        options: {
+          presets: ["@babel/preset-typescript", "@babel/preset-react"]
+        }
       }
     ]
   },
