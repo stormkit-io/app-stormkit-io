@@ -1,7 +1,8 @@
+import qs from "query-string";
 import {
   prepareHeaders,
   errTokenExpired,
-  errNotEnoughPermissions,
+  errNotEnoughPermissions
 } from "./helpers";
 
 export default class Bitbucket {
@@ -18,7 +19,7 @@ export default class Bitbucket {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(this.baseurl + "/user", { headers });
 
-      return fetch(request).then((res) => {
+      return fetch(request).then(res => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
@@ -46,15 +47,13 @@ export default class Bitbucket {
       }
 
       // build query
-      const query = Object.entries(params)
-        .map(([key, value]) => `${key}=${value}`)
-        .join("&");
+      const query = qs.stringify(params);
 
       const request = new Request(`${this.baseurl}${url}?${query}`, {
-        headers,
+        headers
       });
 
-      return fetch(request).then((res) => {
+      return fetch(request).then(res => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
@@ -71,10 +70,10 @@ export default class Bitbucket {
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(this.baseurl + "/teams?role=admin", {
-        headers,
+        headers
       });
 
-      return fetch(request).then((res) => {
+      return fetch(request).then(res => {
         if (res.status === 401) {
           reject(errTokenExpired);
         }
