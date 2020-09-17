@@ -23,14 +23,7 @@
     "noUnusedLocals": true,
     "types": ["react", "node", "jest"],
     "newLine": "LF",
-    "paths": {
-      "@components/*": ["components/*"],
-      "@assets/*": ["assets/*"],
-      "@layouts/*": ["layouts/*"],
-      "@pages/*": ["pages/*"],
-      "@utils/*": ["utils/*"]
-    },
-    "pretty": true
+    "pretty": true,
   },
   "esclude": ["node_modules"]
 }
