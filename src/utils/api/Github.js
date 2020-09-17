@@ -1,3 +1,4 @@
+import qs from "query-string";
 import { prepareHeaders, errTokenExpired } from "./helpers";
 
 export default class Github {
@@ -23,12 +24,12 @@ export default class Github {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(`${this.baseurl}/user`, { headers });
 
-      return fetch(request).then((res) => {
+      return fetch(request).then(res => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
 
-        return res.json().then((user) => {
+        return res.json().then(user => {
           resolve(user);
         });
       });
@@ -51,7 +52,7 @@ export default class Github {
         { headers }
       );
 
-      return fetch(request).then((res) => {
+      return fetch(request).then(res => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
@@ -83,21 +84,19 @@ export default class Github {
       }
 
       // build query
-      const query = Object.entries(params)
-        .map(([key, value]) => `${key}=${value}`)
-        .join("&");
+      const query = qs.stringify(params);
 
       const request = new Request(
         `${this.baseurl}/user/installations/${installationId}/repositories?${query}`,
         { headers }
       );
 
-      return fetch(request).then((res) => {
+      return fetch(request).then(res => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
 
-        return res.json().then((repos) => {
+        return res.json().then(repos => {
           resolve(repos);
         });
       });
