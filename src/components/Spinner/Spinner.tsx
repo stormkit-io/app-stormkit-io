@@ -5,9 +5,9 @@ import "./Spinner.css";
 interface Props {
   width: number,
   height: number,
-  pageCenter: boolean, // Whether to center in the middle of the page or not.
-  primary: boolean,
-  secondary: boolean,
+  pageCenter?: boolean, // Whether to center in the middle of the page or not.
+  primary?: boolean,
+  secondary?: boolean,
   className: string,
 }
 
