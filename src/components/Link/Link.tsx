@@ -1,12 +1,21 @@
-import React, { forwardRef } from "react";
-import PropTypes from "prop-types";
+import React, { forwardRef, FC, ReactElement } from "react";
 import cn from "classnames";
 import { Link as OriginalLink } from "react-router-dom";
 
-const Link = forwardRef(
-  ({ to, children, secondary, tertiary, className, ...props }, ref) => {
+interface Props {
+  to: string,
+  children: HTMLElement,
+  className: string,
+  secondary: boolean,
+  tertiary: boolean,
+  rel?: string,
+  target?: string
+}
+
+const Link: FC<Props> = forwardRef<HTMLAnchorElement, Props>(
+  ({ to, children, secondary, tertiary, className, ...props }: Props, ref): ReactElement => {
     let isExternal = false;
-    let classes = className;
+    let classes: string = className;
 
     if (secondary) {
       classes = cn(className, "text-pink-50", "hover:text-red-50");
@@ -42,13 +51,5 @@ const Link = forwardRef(
     );
   }
 );
-
-Link.propTypes = {
-  to: PropTypes.string,
-  children: PropTypes.node,
-  className: PropTypes.any,
-  secondary: PropTypes.bool,
-  tertiary: PropTypes.bool,
-};
 
 export default Link;
