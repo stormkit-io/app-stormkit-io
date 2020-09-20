@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
-import Link from "~/components/Link";
+import Link from "../Link";
 import "./BackButton.css";
 
 const BackButton = ({ to, className, size = 8, ...rest }) => (
@@ -11,7 +11,7 @@ const BackButton = ({ to, className, size = 8, ...rest }) => (
       `w-${size} h-${size}`,
       {
         "text-3xl": size === 8,
-        "text-2xl": size === 6,
+        "text-2xl": size === 6
       },
       className
     )}
@@ -26,7 +26,7 @@ const BackButton = ({ to, className, size = 8, ...rest }) => (
 BackButton.propTypes = {
   className: PropTypes.any,
   to: PropTypes.string,
-  size: PropTypes.number,
+  size: PropTypes.number
 };
 
 export default BackButton;
