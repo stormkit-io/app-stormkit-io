@@ -1,29 +1,26 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es6",
-    "lib": ["dom", "dom.iterable", "es6"],
-    "allowJs": true,
+    "target": "ESNext",
+    "outDir": "./dist",
+    "baseUrl": "./src",
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "noEmit": false,
-    "jsx": "react",
+    "allowJs": true,
+    "watch": true,
     "sourceMap": true,
     "isolatedModules": true,
-    "downlevelIteration": false,
-    "rootDir": "./",
-    "baseUrl": "src/",
-    "watch": true,
     "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "moduleResolution": "Node",
+    "newLine": "lf",
+    "jsx": "react",
     "types": ["react", "node", "jest"],
-    "newLine": "LF",
-    "pretty": true,
+    "paths": {
+      "~/*": ["./*"]
+    }
   },
-  "esclude": ["node_modules"]
+  "exclude": ["node_modules"]
 }
