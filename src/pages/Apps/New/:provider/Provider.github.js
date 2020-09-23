@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import g from "lodash.get";
 import Spinner from "~/components/Spinner";
-import Button from "~/components/Button";
+import Link from "~/components/Link";
 import { GithubButton } from "~/components/Buttons";
 import openPopup from "~/utils/helpers/popup";
 import { login as loginUser } from "./actions";
@@ -12,8 +12,14 @@ import Accounts from "./_components/Accounts";
 
 const URL = {
   production: "https://github.com/apps/stormkit-io/installations/new",
-  development: "https://github.com/apps/stormkit-io-dev/installations/new"
+  development: "https://github.com/apps/stormkit-io-dev/installations/new",
+  test: "https://github.com/apps/stormkit-io-dev/installations/new"
 }[process.env.NODE_ENV];
+
+const defaultPageQueryParams = {
+  page: 1,
+  per_page: 25
+};
 
 export default class GithubRepos extends PureComponent {
   static propTypes = {
@@ -33,7 +39,7 @@ export default class GithubRepos extends PureComponent {
     requiresLogin: false,
     loadingInsert: false,
     hasNextPage: false,
-    pageQueryParams: {}
+    pageQueryParams: defaultPageQueryParams
   };
 
   async componentDidMount() {
@@ -119,50 +125,33 @@ export default class GithubRepos extends PureComponent {
   };
 
   getRepositories = async () => {
-    // set loading to true to show a spinner until api requests are done
-    this.updateState({ loading: true });
-
     // get the selected account
     const { selectedAccount } = this.state;
 
     if (!selectedAccount) {
-      return this.updateState({ loading: false });
+      return;
     }
 
     const api = this.props.github;
-
-    // get current pageIndex and items per page
     const { repositories, pageQueryParams } = this.state;
 
-    // api params
-    const defaultParams = {
-      page: 1,
-      per_page: 100
-    };
+    this.updateState({ loading: true });
 
-    // fetch the repositories
     const res = await api.repositories({
       installationId: selectedAccount.installationId,
-      params: { ...defaultParams, ...pageQueryParams }
+      params: pageQueryParams
     });
 
-    // check if there is a next page with more repositories
     const hasNextPage =
       res.total_count > pageQueryParams.page * pageQueryParams.per_page;
-
-    // gather the params for the next page (if there is one) into an object for consecutive calls through `load more` button
-    const nextPageParams = hasNextPage
-      ? {
-          ...pageQueryParams,
-          page: pageQueryParams.page + 1
-        }
-      : defaultParams;
 
     this.updateState({
       repositories: [...repositories, ...res.repositories],
       loading: false,
       hasNextPage,
-      pageQueryParams: nextPageParams
+      pageQueryParams: hasNextPage
+        ? { ...pageQueryParams, page: pageQueryParams.page + 1 }
+        : pageQueryParams
     });
   };
 
@@ -174,6 +163,7 @@ export default class GithubRepos extends PureComponent {
     }));
 
     if (selectedAccount) {
+      this.updateState({ pageQueryParams: defaultPageQueryParams });
       await this.updateState({ repositories: [], accounts, selectedAccount });
       this.getRepositories();
     }
@@ -256,11 +246,13 @@ export default class GithubRepos extends PureComponent {
         </div>
 
         <div className="w-full text-center mt-12">
-          <Button href={URL} onClick={this.connectRepo} secondary>
+          Can't see what you're looking for?{" "}
+          <Link to={URL} onClick={this.connectRepo} secondary>
             {repositories.length
               ? "Connect more repositories"
               : "Connect repositories"}
-          </Button>
+          </Link>
+          .
         </div>
       </>
     );
