@@ -18,21 +18,22 @@ const Deployment = ({
   api,
   app,
   toggleModal,
-  setDeployments,
+  setDeployments
 }) => {
   const [loading, setLoading] = useState(false);
 
   const urls = {
     environment: `/apps/${deployment.appId}/environments/${deployment.config.env}`,
     deployment: `/apps/${deployment.appId}/deployments/${deployment.id}`,
-    preview: deployment.preview,
+    preview: deployment.preview
   };
 
+  const isDisabled = deployment.exit !== 0;
   return (
     <>
       <div
         className={cn("flex w-full px-4 py-6 rounded", {
-          "bg-gray-83": index % 2 === 1,
+          "bg-gray-83": index % 2 === 1
         })}
       >
         <div className="flex flex-grow-0 items-start mr-4 pt-1">
@@ -44,16 +45,20 @@ const Deployment = ({
         <div className="flex flex-col">
           <div className="flex flex-auto justify-end">
             <DotDotDot>
-              <DotDotDot.Item onClick={() => toggleModal(true)}>
+              <DotDotDot.Item
+                onClick={() => toggleModal(true)}
+                disabled={isDisabled}
+              >
                 <span className="text-pink-50">Publish</span>
               </DotDotDot.Item>
-              <DotDotDot.Item href={urls.preview}>
+              <DotDotDot.Item href={urls.preview} disabled={isDisabled}>
                 Preview <i className="fas fa-external-link-square-alt ml-2" />
               </DotDotDot.Item>
               <DotDotDot.Item href={urls.deployment}>
                 View Details
               </DotDotDot.Item>
               <DotDotDot.Item
+                disabled={deployment.isRunning}
                 onClick={() => {
                   deleteForever({
                     api,
@@ -62,7 +67,7 @@ const Deployment = ({
                     setLoading,
                     setDeployments,
                     deployments,
-                    index,
+                    index
                   });
 
                   return false;
@@ -94,9 +99,9 @@ Deployment.propTypes = {
   index: PropTypes.number,
   api: PropTypes.object,
   app: PropTypes.object,
-  history: PropTypes.object,
+  history: PropTypes.object
 };
 
 export default connect(Deployment, [
-  { Context: PublishModal, props: ["toggleModal"], wrap: true },
+  { Context: PublishModal, props: ["toggleModal"], wrap: true }
 ]);
