@@ -21,7 +21,12 @@ const DotDotDot = ({ children, className, ...rest }) => {
           <div className="flex flex-col min-w-56 absolute right-0 rounded shadow bg-white z-50 items-start mt-4 text-left">
             {React.Children.map(
               children,
-              (child) => child && cloneElement(child, { toggleVisibility })
+              (child, index) =>
+                child &&
+                cloneElement(child, {
+                  toggleVisibility,
+                  isLast: children.length - 1 === index
+                })
             )}
           </div>
         )}
@@ -32,7 +37,7 @@ const DotDotDot = ({ children, className, ...rest }) => {
 
 DotDotDot.propTypes = {
   children: PropTypes.node,
-  className: PropTypes.any,
+  className: PropTypes.any
 };
 
 DotDotDot.Item = ({
@@ -40,19 +45,34 @@ DotDotDot.Item = ({
   children,
   onClick,
   toggleVisibility,
+  isLast,
   className,
+  disabled,
   ...rest
 }) => (
   <Button
     as="div"
     className={cn(
-      "border-b border-solid border-gray-80 p-4 w-full hover:bg-gray-90 hover:text-pink-50",
+      "border-solid border-gray-80 p-4 w-full",
+      {
+        "hover:bg-gray-90": !disabled,
+        "hover:text-pink-50": !disabled,
+        "opacity-50": disabled,
+        "cursor-not-allowed": disabled,
+        "border-b": !isLast
+      },
       className
     )}
+    disabled={disabled}
     styled={false}
     {...rest}
-    onClick={(e) => {
+    onClick={e => {
       e.preventDefault();
+
+      if (disabled) {
+        return;
+      }
+
       let shouldClose = true;
 
       if (typeof onClick === "function") {
@@ -72,8 +92,10 @@ DotDotDot.Item = ({
 DotDotDot.Item.prototypes = {
   icon: PropTypes.string,
   toggleVisibility: PropTypes.func,
+  isLast: PropTypes.bool,
   children: PropTypes.node,
   className: PropTypes.any,
+  disabled: PropTypes.bool
 };
 
 export default DotDotDot;

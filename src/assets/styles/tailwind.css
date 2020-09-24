@@ -65,3 +65,13 @@ div.MuiTableContainer-root {
   font-weight: inherit;
   letter-spacing: inherit;
 }
+
+.MuiTooltip-tooltip {
+  @apply bg-black;
+  @apply text-sm;
+  @apply p-4;
+}
+
+.MuiTooltip-arrow {
+  @apply text-black;
+}

@@ -1,14 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
+import Tooltip from "@material-ui/core/Tooltip";
 import RootContext from "~/pages/Root.context";
 import { connect } from "~/utils/context";
 import Link from "~/components/Link";
 import Button from "~/components/Button";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
 import EnvironmentFormModal from "./EnvironmentFormModal";
 import { useFetchStatus, STATUS } from "../actions";
+
+const InfoMessage404 = () => (
+  <>
+    The 404 may happen when the distributed folder does not contain an{" "}
+    <b>index.html</b> or the environment has no published deployments.
+  </>
+);
 
 const Status = ({ status }) => {
   return (
@@ -16,20 +23,25 @@ const Status = ({ status }) => {
       <span
         className={cn("text-sm", {
           "text-green-50": status === STATUS.OK,
-          "text-red-50": status !== STATUS.OK,
+          "text-red-50": status !== STATUS.OK
         })}
       >
         <span className={"fas fa-fw fa-globe mr-2"} />
         {status === null && "Unknown error"}
         {status !== STATUS.NOT_CONFIGURED && status !== null && status}
         {status === STATUS.NOT_CONFIGURED && "Not yet deployed"}
+        {status === STATUS.NOT_FOUND && (
+          <Tooltip title={<InfoMessage404 />} placement="top" arrow>
+            <span className="opacity-50 fas fa-question-circle ml-2 cursor-pointer" />
+          </Tooltip>
+        )}
       </span>
     </div>
   );
 };
 
 Status.propTypes = {
-  status: PropTypes.any,
+  status: PropTypes.any
 };
 
 const Environment = ({
@@ -38,7 +50,7 @@ const Environment = ({
   api,
   isClickable,
   isEditable,
-  toggleModal,
+  toggleModal
 }) => {
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
@@ -54,7 +66,7 @@ const Environment = ({
         {
           "border-yellow-50": status === STATUS.NOT_FOUND,
           "border-green-50": status === STATUS.OK,
-          "border-red-50": (status || "").toString()[0] === "5",
+          "border-red-50": (status || "").toString()[0] === "5"
         }
       )}
     >
@@ -123,23 +135,6 @@ const Environment = ({
             </div>
           </div>
         </div>
-        {status === STATUS.NOT_FOUND && (
-          <InfoBox
-            type={InfoBox.WARNING}
-            className="mt-4 text-sm leading-relaxed"
-            showIcon={false}
-          >
-            <span className="opacity-50 fas fa-lightbulb mr-4" />
-            <div>
-              The 404 may happen when the distributed folder does not contain an{" "}
-              <b>index.html</b> or the environment has no published deployments.{" "}
-              <Link to={`https://www.stormkit.io/docs/deployments`} secondary>
-                Learn more
-              </Link>{" "}
-              on deployments.
-            </div>
-          </InfoBox>
-        )}
       </div>
     </div>
   );
@@ -151,10 +146,10 @@ Environment.propTypes = {
   api: PropTypes.object,
   isClickable: PropTypes.bool,
   isEditable: PropTypes.bool,
-  toggleModal: PropTypes.func,
+  toggleModal: PropTypes.func
 };
 
 export default connect(Environment, [
   { Context: RootContext, props: ["api"] },
-  { Context: EnvironmentFormModal, props: ["toggleModal"] },
+  { Context: EnvironmentFormModal, props: ["toggleModal"] }
 ]);
