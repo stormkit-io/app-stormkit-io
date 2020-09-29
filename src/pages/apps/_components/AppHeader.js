@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import UserMenu from "~/layouts/_components/UserMenu";
 import { formattedDate } from "~/utils/helpers/deployments";
 import AppHeaderActions from "./AppHeaderActions";
 
@@ -29,6 +30,7 @@ const AppHeader = ({ app, envs, api, history }) => {
           history={history}
           environments={envs}
         />
+        <UserMenu />
       </div>
     </header>
   );

@@ -6,7 +6,7 @@ import DeployModal from "./DeployModal";
 
 const HeaderActions = ({ api, app, history, environments, toggleModal }) => {
   return (
-    <>
+    <div className="mr-6">
       <Button
         primary
         className="rounded-xl py-3 font-bold"
@@ -21,7 +21,7 @@ const HeaderActions = ({ api, app, history, environments, toggleModal }) => {
         history={history}
         environments={environments}
       />
-    </>
+    </div>
   );
 };
 
