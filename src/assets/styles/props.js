@@ -22,7 +22,7 @@ export const sizes = {
   l: "1.5rem",
   xl: "1.75rem",
   xxl: "2.25rem",
-  xxxl: "3rem",
+  xxxl: "3rem"
 };
 
 export default {
@@ -104,5 +104,5 @@ export default {
   containerWidth: bp.get("container"),
 
   sizes,
-  breakpoints,
+  breakpoints
 };

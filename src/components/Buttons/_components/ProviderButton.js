@@ -25,7 +25,7 @@ const ProviderButton = ({
           `text-${provider}`,
           `hover:bg-${provider}`,
           "hover:text-white",
-          "rounded-xl",
+          "rounded-xl"
         ],
         className
       )}
@@ -42,7 +42,7 @@ ProviderButton.propTypes = {
   text: PropTypes.oneOf(["GitHub", "GitLab", "Bitbucket"]),
   type: PropTypes.oneOf(["button", "submit"]),
   children: PropTypes.node,
-  className: PropTypes.any,
+  className: PropTypes.any
 };
 
 export default ProviderButton;

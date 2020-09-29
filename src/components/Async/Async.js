@@ -13,7 +13,7 @@ const Fader = styled.div`
   min-width: 100%;
 `;
 
-const Async = (getComponent) => {
+const Async = getComponent => {
   class AsyncComponent extends Component {
     static Component = null;
 
@@ -59,5 +59,5 @@ const Async = (getComponent) => {
 };
 
 export default Object.assign(Async, {
-  configure: (c) => Object.assign(config, c),
+  configure: c => Object.assign(config, c)
 });

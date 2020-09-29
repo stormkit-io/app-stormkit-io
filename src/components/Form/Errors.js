@@ -26,7 +26,7 @@ const Errors = ({ errors, ...props }) => {
   return (
     <StyledInfoBox {...props} error>
       <UL>
-        {Object.keys(errors).map((err) => (
+        {Object.keys(errors).map(err => (
           <li key={err}>{errors[err]}</li>
         ))}
       </UL>
@@ -38,7 +38,7 @@ Errors.propTypes = {
   /**
    * An object of errors.
    */
-  errors: PropTypes.object,
+  errors: PropTypes.object
 };
 
 export default Errors;

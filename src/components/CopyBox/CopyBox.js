@@ -12,7 +12,7 @@ const CopyBox = ({ value }) => {
         defaultValue={value}
         className="flex-auto"
         inputProps={{
-          "aria-label": "Copy token",
+          "aria-label": "Copy token"
         }}
       />
       <Button
@@ -30,7 +30,7 @@ const CopyBox = ({ value }) => {
 };
 
 CopyBox.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.string
 };
 
 export default CopyBox;

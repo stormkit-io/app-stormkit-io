@@ -17,18 +17,18 @@ const EnvironmentSelector = ({
         name="envId"
         displayEmpty
         value={selectedEnvironment}
-        onChange={(id) => {
+        onChange={id => {
           setSelectedEnvironment(id);
 
           if (typeof onSelect === "function") {
-            onSelect(environments.filter((e) => e.id === id)[0]);
+            onSelect(environments.filter(e => e.id === id)[0]);
           }
         }}
       >
         <Form.Option disabled value="">
           {placeholder}
         </Form.Option>
-        {environments.map((env) => (
+        {environments.map(env => (
           <Form.Option value={env.id} key={env.id}>
             <span>
               <span>{env.name || env.env}</span>{" "}
@@ -44,14 +44,14 @@ const EnvironmentSelector = ({
 };
 
 EnvironmentSelector.defaultProps = {
-  placeholder: "Select an environment",
+  placeholder: "Select an environment"
 };
 
 EnvironmentSelector.propTypes = {
   environments: PropTypes.array,
   placeholder: PropTypes.string,
   onSelect: PropTypes.func,
-  defaultValue: PropTypes.string,
+  defaultValue: PropTypes.string
 };
 
 export default EnvironmentSelector;

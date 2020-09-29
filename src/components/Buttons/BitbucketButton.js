@@ -1,7 +1,7 @@
 import React from "react";
 import ProviderButton from "./_components/ProviderButton";
 
-const BitbucketButton = (props) => {
+const BitbucketButton = props => {
   return <ProviderButton {...props} provider="bitbucket" text="Bitbucket" />;
 };
 

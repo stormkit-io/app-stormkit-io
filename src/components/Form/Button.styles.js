@@ -12,16 +12,16 @@ export const ButtonSpinner = styled(Spinner)`
 `;
 
 export const StyledText = styled.span`
-  visibility: ${(p) => (p.loading ? "hidden" : "")};
+  visibility: ${p => (p.loading ? "hidden" : "")};
 `;
 
 const Button = styled.button.attrs({
-  theme: (p) => themes.get(p.theme),
+  theme: p => themes.get(p.theme)
 })`
   position: relative;
   padding: ${props.sizes.m};
-  background: ${(p) => p.theme.background};
-  color: ${(p) => p.theme.color};
+  background: ${p => p.theme.background};
+  color: ${p => p.theme.color};
   border: none;
   border-radius: ${props.borderRadiusS};
   cursor: pointer;
@@ -33,8 +33,8 @@ const Button = styled.button.attrs({
   font-size: 0.8rem;
 
   &:hover {
-    background: ${(p) => p.theme.hoverBackground};
-    color: ${(p) => p.theme.hoverColor};
+    background: ${p => p.theme.hoverBackground};
+    color: ${p => p.theme.hoverColor};
   }
 
   &:active {
@@ -53,7 +53,7 @@ Button.defaultProps = {
   secondary: false,
   tertiary: false,
   height: "52px",
-  padding: `0 ${props.sizes.m}`,
+  padding: `0 ${props.sizes.m}`
 };
 
 export default Button;

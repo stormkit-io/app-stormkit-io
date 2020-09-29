@@ -6,7 +6,7 @@ import g from "lodash.get";
  *
  * @param {*} ts
  */
-export const formattedDate = (ts) => {
+export const formattedDate = ts => {
   const date = new Date(ts * 1000);
   const now = new Date();
 
@@ -17,13 +17,13 @@ export const formattedDate = (ts) => {
   ) {
     return `Today at ${date.toLocaleString("de-CH", {
       hour: "2-digit",
-      minute: "2-digit",
+      minute: "2-digit"
     })}`;
   }
 
   return date.toLocaleDateString("de-CH", {
     hour: "2-digit",
-    minute: "2-digit",
+    minute: "2-digit"
   });
 };
 
@@ -32,7 +32,7 @@ export const formattedDate = (ts) => {
  *
  * @param {object} deployment
  */
-export const parseCommit = (deployment) => {
+export const parseCommit = deployment => {
   const logs = g(deployment, "logs", []);
 
   if (logs) {
@@ -58,7 +58,7 @@ export const parseCommit = (deployment) => {
           <br /> Mostly this happens when Stormkit cannot checkout your
           repository.
         </div>
-      ),
+      )
     };
   }
 
@@ -70,7 +70,7 @@ export const parseCommit = (deployment) => {
         Your deployment is queued up
         <br /> We will process it immediately as soon as we have available slots
       </div>
-    ),
+    )
   };
 };
 
@@ -78,4 +78,4 @@ export const parseCommit = (deployment) => {
  * Converts bytes to MB
  * @param {number} byte
  */
-export const bytesToMB = (byte) => `${(+byte / 1000000).toFixed(2)}MB`;
+export const bytesToMB = byte => `${(+byte / 1000000).toFixed(2)}MB`;

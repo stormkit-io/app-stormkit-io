@@ -22,13 +22,13 @@ export default () => {
 
     return (
       <context.Provider value={{ isOpen, toggleModal: toggleModalWrapper }}>
-        {Children.map(children, (child) => cloneElement(child, rest))}
+        {Children.map(children, child => cloneElement(child, rest))}
       </context.Provider>
     );
   };
 
   return {
     Provider,
-    Consumer: context.Consumer,
+    Consumer: context.Consumer
   };
 };

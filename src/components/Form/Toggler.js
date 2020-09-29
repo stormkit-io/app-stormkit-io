@@ -35,7 +35,7 @@ const Toggler = ({ children, onSelect, defaultSelected, name, className }) => {
               "rounded-tl-lg": i === 0,
               "rounded-bl-lg": i === 0,
               "rounded-tr-lg": i === childArray.length - 1,
-              "rounded-br-lg": i === childArray.length - 1,
+              "rounded-br-lg": i === childArray.length - 1
             })}
             onClick={() => {
               setSelectedValue(value);
@@ -55,7 +55,7 @@ Toggler.propTypes = {
   children: PropTypes.node,
   defaultSelected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   name: PropTypes.string,
-  onSelect: PropTypes.func,
+  onSelect: PropTypes.func
 };
 
 export default Toggler;

@@ -20,12 +20,12 @@ export default class Gitlab {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(`${this.baseurl}/user`, { headers });
 
-      return fetch(request).then((res) => {
+      return fetch(request).then(res => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
 
-        return res.json().then((user) => {
+        return res.json().then(user => {
           resolve(user);
         });
       });
@@ -45,22 +45,22 @@ export default class Gitlab {
         membership: "true",
         order_by: "id",
         per_page: size,
-        page,
+        page
       };
 
       const request = new Request(
         `${this.baseurl}/projects?${qs.stringify(params)}`,
         {
-          headers,
+          headers
         }
       );
 
-      return fetch(request).then((res) => {
+      return fetch(request).then(res => {
         if (res.status === 401) {
           return reject(errTokenExpired);
         }
 
-        return res.json().then((json) => {
+        return res.json().then(json => {
           resolve({ repos: json, nextPage: res.headers.get("X-Next-Page") });
         });
       });

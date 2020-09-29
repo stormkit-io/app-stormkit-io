@@ -23,7 +23,7 @@ Success.propTypes = {
   /**
    * The success message.
    */
-  message: PropTypes.string,
+  message: PropTypes.string
 };
 
 export default Success;

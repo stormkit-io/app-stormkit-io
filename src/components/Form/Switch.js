@@ -17,7 +17,7 @@ const Switch = ({ checked = false, confirm, ...rest }) => {
     <SwitchUI
       {...rest}
       checked={isChecked}
-      onChange={(val) => {
+      onChange={val => {
         if (typeof confirm === "function") {
           confirm(setChecked);
         } else {
@@ -41,7 +41,7 @@ Switch.propTypes = {
    * value as an argument. It's used to set the checked state
    * after the confirm action.
    */
-  confirm: PropTypes.func,
+  confirm: PropTypes.func
 };
 
 export default Switch;

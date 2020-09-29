@@ -1,7 +1,7 @@
 import nock from "nock";
 
 export const mockAppProxy = ({ app, status = 200, envs = [] }) => {
-  envs.forEach((env) => {
+  envs.forEach(env => {
     const domain = env.domain?.verified
       ? env.domain.name
       : `${app.displayName}--${env.env}.stormkit.dev`;
@@ -27,9 +27,9 @@ export const mockEnvironmentInsertionCall = () =>
         cmd: "npm run build",
         entry: "",
         distFolder: "",
-        vars: { NODE_ENV: "development" },
+        vars: { NODE_ENV: "development" }
       },
-      autoPublish: true,
+      autoPublish: true
     })
     .reply(200, { status: 200 });
 
@@ -45,10 +45,10 @@ export const mockEnvironmentUpdateCall = () =>
         distFolder: "packages/console/dist",
         vars: {
           BABEL_ENV: "production",
-          NODE_ENV: "production",
-        },
+          NODE_ENV: "production"
+        }
       },
-      autoPublish: true,
+      autoPublish: true
     })
     .reply(200, { ok: true });
 
@@ -56,6 +56,6 @@ export const mockEnvironmentDeleteCall = () =>
   nock(process.env.API_DOMAIN)
     .delete(`/app/env`, {
       appId: "1",
-      env: "development",
+      env: "development"
     })
     .reply(200, { ok: true });

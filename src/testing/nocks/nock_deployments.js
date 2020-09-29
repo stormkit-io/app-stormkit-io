@@ -5,7 +5,7 @@ export const mockFetchDeploymentsCall = ({
   app,
   deploy,
   status = 200,
-  response = data.mockDeploymentResponse(),
+  response = data.mockDeploymentResponse()
 }) =>
   nock(process.env.API_DOMAIN)
     .get(`/app/${app.id}/deploy/${deploy.id}`)

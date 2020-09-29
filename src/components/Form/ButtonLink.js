@@ -25,7 +25,7 @@ StyledButton.defaultProps = {
   secondary: false,
   tertiary: false,
   height: "52px",
-  width: "30%",
+  width: "30%"
 };
 
 class ButtonComponent extends PureComponent {
@@ -35,7 +35,7 @@ class ButtonComponent extends PureComponent {
     /**
      * Whether the form is loading or not.
      */
-    loading: PropTypes.bool,
+    loading: PropTypes.bool
   };
 
   render() {
@@ -50,7 +50,7 @@ class ButtonComponent extends PureComponent {
   }
 }
 
-export default (props) => (
+export default props => (
   <FormContext.Consumer>
     {({ loading }) => <ButtonComponent {...props} loading={loading} />}
   </FormContext.Consumer>
