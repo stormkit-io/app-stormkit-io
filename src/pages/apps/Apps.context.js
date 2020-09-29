@@ -1,19 +1,20 @@
 import React, { createContext } from "react";
 import PropTypes from "prop-types";
 import { Switch, Route } from "react-router-dom";
-import AppLayout from "~/layouts/AppLayout";
 import { connect } from "~/utils/context";
+import MenuLayout from "~/layouts/MenuLayout";
 import RootContext from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
+import AppHeader from "./_components/AppHeader";
+import AppMenu from "./_components/AppMenu";
 import { useFetchApp } from "./actions";
-import routes from "./routes";
-import HeaderActions from "./_components/HeaderActions";
 import { useFetchEnvironments } from "./[id]/environments/actions";
+import routes from "./routes";
 
 const Context = createContext();
 
-const AppContext = ({ api, match, history, location }) => {
+const AppContext = ({ api, match, location, history }) => {
   const { id } = match.params;
   const { app, error, loading } = useFetchApp({ api, appId: id, location });
   const envs = useFetchEnvironments({ api, app, location });
@@ -33,26 +34,26 @@ const AppContext = ({ api, match, history, location }) => {
 
   return (
     <Context.Provider value={{ app, environments: envs.environments }}>
-      <AppLayout
-        app={app}
-        actions={
-          <HeaderActions
+      <MenuLayout menu={<AppMenu app={app} />}>
+        <div className="flex flex-grow-0 max-w-screen-lg m-auto w-full mb-24">
+          <AppHeader
             app={app}
             api={api}
+            envs={envs.environments}
             history={history}
-            environments={envs.environments}
           />
-        }
-      >
-        {envs.loading && <Spinner primary />}
-        {!envs.loading && (
-          <Switch>
-            {routes.map(route => (
-              <Route {...route} key={route.path} />
-            ))}
-          </Switch>
-        )}
-      </AppLayout>
+        </div>
+        <div className="flex flex-auto max-w-screen-lg m-auto w-full">
+          {envs.loading && <Spinner primary />}
+          {!envs.loading && (
+            <Switch>
+              {routes.map(route => (
+                <Route {...route} key={route.path} />
+              ))}
+            </Switch>
+          )}
+        </div>
+      </MenuLayout>
     </Context.Provider>
   );
 };

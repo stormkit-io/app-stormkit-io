@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { formattedDate } from "~/utils/helpers/deployments";
+import AppHeaderActions from "./AppHeaderActions";
 
-const AppHeader = ({ app, actions }) => {
+const AppHeader = ({ app, envs, api, history }) => {
   const provider = app.repo.split("/").shift();
 
   return (
@@ -21,14 +22,24 @@ const AppHeader = ({ app, actions }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-auto items-center justify-end">{actions}</div>
+      <div className="flex flex-auto items-center justify-end">
+        <AppHeaderActions
+          app={app}
+          api={api}
+          history={history}
+          environments={envs}
+        />
+      </div>
     </header>
   );
 };
 
 AppHeader.propTypes = {
+  api: PropTypes.object,
   app: PropTypes.object,
-  actions: PropTypes.node
+  envs: PropTypes.array,
+  actions: PropTypes.node,
+  history: PropTypes.object
 };
 
 export default AppHeader;
