@@ -9,7 +9,7 @@ const Option = React.forwardRef(({ children, className, ...rest }, ref) => {
         "border-b border-solid border-gray-80",
         {
           "cursor-pointer hover:bg-gray-90": !rest.disabled,
-          "bg-gray-85 text-gray-60": rest.disabled,
+          "bg-gray-85 text-gray-60": rest.disabled
         },
         className
       )}
@@ -23,7 +23,7 @@ const Option = React.forwardRef(({ children, className, ...rest }, ref) => {
 
 Option.propTypes = {
   children: PropTypes.node,
-  className: PropTypes.any,
+  className: PropTypes.any
 };
 
 export default Option;

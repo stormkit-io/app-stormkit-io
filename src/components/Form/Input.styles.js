@@ -27,13 +27,13 @@ export const Icon = styled.span`
   transform: translateY(-50%);
   font-size: ${props.sizes.l};
   color: ${props.gray70};
-  left: ${(p) => (p.position === "left" ? props.sizes.xl : "auto")};
-  right: ${(p) => (p.position === "right" ? props.sizes.xl : "auto")};
-  cursor: ${(p) => (p.clickable ? "pointer" : "")};
+  left: ${p => (p.position === "left" ? props.sizes.xl : "auto")};
+  right: ${p => (p.position === "right" ? props.sizes.xl : "auto")};
+  cursor: ${p => (p.clickable ? "pointer" : "")};
 `;
 
 Icon.defaultProps = {
-  position: "right",
+  position: "right"
 };
 
 export default styled.input`

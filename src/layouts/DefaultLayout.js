@@ -19,7 +19,7 @@ const DefaultLayout = ({ children, header }) => {
 
 DefaultLayout.propTypes = {
   children: PropTypes.node,
-  header: PropTypes.node,
+  header: PropTypes.node
 };
 
 export default DefaultLayout;

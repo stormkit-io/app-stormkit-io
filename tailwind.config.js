@@ -24,10 +24,10 @@ module.exports = {
         "border-blue-80",
         "border-yellow-60",
         "border-green-50",
-        "border-red-50",
+        "border-red-50"
       ],
-      whitelistPatterns: [/^(w|h)-/],
-    },
+      whitelistPatterns: [/^(w|h)-/]
+    }
   },
   theme: {
     borderRadius: {
@@ -36,7 +36,7 @@ module.exports = {
       lg: "13px",
       xl: "30px",
       full: "100%",
-      default: "6px",
+      default: "6px"
     },
     maxWidth: {
       "0": "0",
@@ -61,7 +61,7 @@ module.exports = {
       72: "20rem",
       128: "32rem",
       none: "none",
-      full: "100%",
+      full: "100%"
     },
     minWidth: {
       "0": "0",
@@ -78,7 +78,7 @@ module.exports = {
       64: "16rem",
       72: "20rem",
       128: "32rem",
-      full: "100%",
+      full: "100%"
     },
     extend: {
       colors: {
@@ -153,12 +153,12 @@ module.exports = {
         "yellow-40": "#ffeb3b",
         "yellow-30": "#fdd835",
         "yellow-20": "#fbc02d",
-        "yellow-10": "#f9a825",
-      },
-    },
+        "yellow-10": "#f9a825"
+      }
+    }
   },
   variants: {
-    visibility: ["responsive", "hover", "focus", "group-hover"],
+    visibility: ["responsive", "hover", "focus", "group-hover"]
   },
-  plugins: [],
+  plugins: []
 };

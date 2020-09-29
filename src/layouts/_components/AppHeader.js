@@ -28,7 +28,7 @@ const AppHeader = ({ app, actions }) => {
 
 AppHeader.propTypes = {
   app: PropTypes.object,
-  actions: PropTypes.node,
+  actions: PropTypes.node
 };
 
 export default AppHeader;

@@ -42,7 +42,7 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
     }
   };
 
-  const handleSuccess = (e) => {
+  const handleSuccess = e => {
     e.preventDefault();
     const cb = options.callback || options.onConfirm;
 
@@ -97,14 +97,14 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
 ConfirmModal.propTypes = {
   isOpen: PropTypes.bool, // Whether the modal is open or not
   toggleModal: PropTypes.func,
-  children: PropTypes.any,
+  children: PropTypes.any
 };
 
 const enhanced = connect(ConfirmModal, [
-  { Context: ModalContext, props: ["toggleModal", "isOpen"], wrap: true },
+  { Context: ModalContext, props: ["toggleModal", "isOpen"], wrap: true }
 ]);
 
 export default Object.assign(enhanced, {
   Consumer: context.Consumer,
-  Provider: enhanced,
+  Provider: enhanced
 });

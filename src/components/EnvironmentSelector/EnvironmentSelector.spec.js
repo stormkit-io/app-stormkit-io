@@ -10,12 +10,12 @@ describe("EnvironmentsSelector component", () => {
   const placeholder = "Select environment";
 
   const findSelector = () => wrapper.getByLabelText(placeholder);
-  const findOption = (text) => getByText(document.body, text);
+  const findOption = text => getByText(document.body, text);
 
   beforeEach(() => {
     onSelect = jest.fn();
     environments = data.mockEnvironmentsResponse().envs;
-    environments.forEach((e) => {
+    environments.forEach(e => {
       e.getDomainName = () =>
         e.domain.name || "https://mock-domain.stormkit.dev";
     });

@@ -32,7 +32,7 @@ const AppLayout = ({ children, app, error, actions }) => {
 AppLayout.propTypes = {
   children: PropTypes.node,
   app: PropTypes.object,
-  actions: PropTypes.node, // The header actions that will be displayed on top right.
+  actions: PropTypes.node // The header actions that will be displayed on top right.
 };
 
 export default AppLayout;

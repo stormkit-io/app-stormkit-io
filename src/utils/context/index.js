@@ -7,7 +7,7 @@ const GlobalContext = createContext({
   /**
    * The request object.
    */
-  request: null,
+  request: null
 });
 
 export const Context = {
@@ -24,13 +24,13 @@ export const Context = {
    */
   Provider: ({ value, children }) => (
     <GlobalContext.Consumer>
-      {(context) => (
+      {context => (
         <GlobalContext.Provider value={{ ...context, ...value }}>
           {children}
         </GlobalContext.Provider>
       )}
     </GlobalContext.Consumer>
-  ),
+  )
 };
 
 /**
@@ -39,9 +39,9 @@ export const Context = {
  * @param WrappedComponent
  * @return {function(*): *}
  */
-export default (WrappedComponent) => (props) => (
+export default WrappedComponent => props => (
   <Context.Consumer>
-    {(context) => <WrappedComponent {...props} {...context} />}
+    {context => <WrappedComponent {...props} {...context} />}
   </Context.Consumer>
 );
 
@@ -81,7 +81,7 @@ export const connect = (Component, Contexts = []) => {
     return (
       <Provider>
         <Consumer>
-          {(p) => {
+          {p => {
             // Get only the required props
             const filtered = filterProps(p, Current.props);
             // Merge them with previous props (initial + props from each step in consumer loop)
@@ -94,7 +94,7 @@ export const connect = (Component, Contexts = []) => {
     );
   }
 
-  return (initialProps) => loopContexts(Component, Contexts, initialProps);
+  return initialProps => loopContexts(Component, Contexts, initialProps);
 };
 
 /**
@@ -106,7 +106,7 @@ const filterProps = (props, values) => {
   const filtered = {};
   const propKeys = Object.keys(props || {});
 
-  values.forEach((propKey) => {
+  values.forEach(propKey => {
     let desiredPropKey = propKey;
 
     // This allows importing props as exportedPropName:desiredInjectedPropName.

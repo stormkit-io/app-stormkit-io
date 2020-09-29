@@ -17,7 +17,7 @@ class Modal extends PureComponent {
     children: PropTypes.node,
     isOpen: PropTypes.bool,
     onClose: PropTypes.func,
-    fullScreen: PropTypes.bool,
+    fullScreen: PropTypes.bool
   };
 
   // Initially we assume the state is always that it is closed gracefully.
@@ -30,7 +30,7 @@ class Modal extends PureComponent {
       this.isClosedGracefully = false;
       this.isMouseClicked = false;
 
-      this.onEscape = (e) => {
+      this.onEscape = e => {
         if (e.key === "Escape") {
           this.isMouseClicked = true;
           this.gracefulClose();
@@ -57,7 +57,7 @@ class Modal extends PureComponent {
     window.removeEventListener("keyup", this.onEscape);
   }
 
-  gracefulClose = (e) => {
+  gracefulClose = e => {
     if (this.isMouseClicked !== true) {
       return;
     }
@@ -88,7 +88,7 @@ class Modal extends PureComponent {
     return createPortal(
       <div
         className={cn("modal-overlay fixed inset-0 bg-black-o-75 z-50", {
-          "opacity-0": this.isAboutToClose,
+          "opacity-0": this.isAboutToClose
         })}
         onMouseUp={this.gracefulClose}
         onMouseDown={() => {
@@ -101,8 +101,8 @@ class Modal extends PureComponent {
               "modal-content flex-auto sm:m-12 md:m-auto h-full sm:h-auto w-full sm:w-auto",
               className
             )}
-            onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}
           >
             <Button
               styled={false}

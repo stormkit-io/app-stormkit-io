@@ -8,5 +8,5 @@ export default () => ({
   id: "1",
   userId: "1",
   autoDeploy: "pull_request",
-  commitPrefix: "[app]",
+  commitPrefix: "[app]"
 });

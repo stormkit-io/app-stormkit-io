@@ -9,8 +9,8 @@ export default () => ({
         memberSince: 1551184200,
         isAdmin: true,
         id: "1644802351",
-        fullName: "Foo Bar",
-      },
+        fullName: "Foo Bar"
+      }
     },
     {
       isOwner: false,
@@ -21,8 +21,8 @@ export default () => ({
         memberSince: 1551184200,
         isAdmin: true,
         id: "16448021321",
-        fullName: "Voo Bar",
-      },
-    },
-  ],
+        fullName: "Voo Bar"
+      }
+    }
+  ]
 });

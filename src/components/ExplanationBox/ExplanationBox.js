@@ -8,7 +8,7 @@ const ExplanationBox = ({
   children,
   className,
   absolute,
-  arrowStyles,
+  arrowStyles
 }) => {
   return (
     <section
@@ -28,8 +28,8 @@ const ExplanationBox = ({
 ExplanationBox.defaultProps = {
   arrowStyles: {
     left: "50%",
-    transform: "translateX(-50%)",
-  },
+    transform: "translateX(-50%)"
+  }
 };
 
 ExplanationBox.propTypes = {
@@ -37,7 +37,7 @@ ExplanationBox.propTypes = {
   children: PropTypes.node,
   className: PropTypes.any,
   absolute: PropTypes.bool,
-  arrowStyles: PropTypes.object,
+  arrowStyles: PropTypes.object
 };
 
 export default ExplanationBox;

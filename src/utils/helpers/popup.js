@@ -16,7 +16,7 @@ const openPopup = ({ url, title, onClose, width = 600, height = 600 }) => {
   );
 
   // The listener that will be triggered on postMessage
-  const listener = (e) => {
+  const listener = e => {
     if (typeof e.data.success !== "undefined") {
       // Show the status for longer for better UX
       setTimeout(() => {

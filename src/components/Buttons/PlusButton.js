@@ -18,7 +18,7 @@ const PlusButton = ({ className, size, text, ...props }) => (
       <span
         className={cn({
           "text-2xl": size === "medium",
-          "text-xl": size === "small",
+          "text-xl": size === "small"
         })}
       >
         <span className="fas fa-plus-circle mr-2 text-lg" /> {text}
@@ -29,13 +29,13 @@ const PlusButton = ({ className, size, text, ...props }) => (
 
 PlusButton.defaultProps = {
   size: "medium",
-  text: "New",
+  text: "New"
 };
 
 PlusButton.propTypes = {
   className: PropTypes.any,
   text: PropTypes.string,
-  size: PropTypes.oneOf(["small", "medium"]),
+  size: PropTypes.oneOf(["small", "medium"])
 };
 
 export default PlusButton;

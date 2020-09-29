@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 export default class OutsideClick extends PureComponent {
   static propTypes = {
-    handler: PropTypes.func.isRequired,
+    handler: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -17,7 +17,7 @@ export default class OutsideClick extends PureComponent {
     }
   }
 
-  handleClick = (event) => {
+  handleClick = event => {
     const root = ReactDOM.findDOMNode(this);
     const { handler } = this.props;
 

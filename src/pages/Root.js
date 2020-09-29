@@ -8,7 +8,7 @@ const Root = ({ Router, Context, defaultContext }) => (
   <StylesProvider injectFirst>
     <Context.Provider Router={Router} defaultContext={defaultContext}>
       <Switch>
-        {routes.map((route) => (
+        {routes.map(route => (
           <Route {...route} key={route.path} />
         ))}
       </Switch>
@@ -19,7 +19,7 @@ const Root = ({ Router, Context, defaultContext }) => (
 Root.propTypes = {
   defaultContext: PropTypes.object,
   Router: PropTypes.func,
-  Context: PropTypes.func,
+  Context: PropTypes.func
 };
 
 export default Root;

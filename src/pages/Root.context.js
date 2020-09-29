@@ -5,12 +5,12 @@ import Api from "~/utils/api/Api";
 import BitbucketApi from "~/utils/api/Bitbucket";
 import GithubApi from "~/utils/api/Github";
 import GitlabApi from "~/utils/api/Gitlab";
-import { AuthContext } from "./Auth";
+import { AuthContext } from "./auth";
 
 const Context = createContext();
 
 const api = new Api({
-  baseurl: process.env.API_DOMAIN,
+  baseurl: process.env.API_DOMAIN
 });
 
 /**
@@ -23,7 +23,7 @@ export default class RootContext extends PureComponent {
 
   static propTypes = {
     Router: PropTypes.func,
-    children: PropTypes.node,
+    children: PropTypes.node
   };
 
   constructor(props) {
@@ -33,7 +33,7 @@ export default class RootContext extends PureComponent {
       api,
       bitbucket: new BitbucketApi(),
       github: new GithubApi(),
-      gitlab: new GitlabApi(),
+      gitlab: new GitlabApi()
     };
   }
 

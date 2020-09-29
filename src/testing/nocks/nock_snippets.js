@@ -5,7 +5,7 @@ export const mockSnippetsResponse = ({
   app,
   env,
   status = 200,
-  response = data.mockSnippetsResponse(),
+  response = data.mockSnippetsResponse()
 }) =>
   nock(process.env.API_DOMAIN)
     .get(`/app/${app.id}/envs/${env.env}/snippets`)

@@ -15,7 +15,7 @@ const icons = {
   [SUCCESS]: "fas fa-check",
   [WARNING]: "fas fa-radiation",
   [ERROR]: "fas fa-exclamation-triangle",
-  [DEFAULT]: "fas fa-info",
+  [DEFAULT]: "fas fa-info"
 };
 
 const colors = {
@@ -24,15 +24,15 @@ const colors = {
     text: "blue-30",
     bg: "blue-90",
     border: "transparent",
-    icon: "blue-80",
+    icon: "blue-80"
   },
   [SUCCESS]: { text: "white", bg: "green-50", border: "green-50" },
   [WARNING]: {
     bg: "yellow-80",
     border: "yellow-60",
-    icon: "yellow-30",
+    icon: "yellow-30"
   },
-  [ERROR]: { text: "white", bg: "red-50", border: "red-50" },
+  [ERROR]: { text: "white", bg: "red-50", border: "red-50" }
 };
 
 const InfoBox = ({
@@ -43,7 +43,7 @@ const InfoBox = ({
   type,
   toaster,
   dismissable,
-  onDismissed,
+  onDismissed
 }) => {
   const [isOpen, setIsOpen] = useState(true);
   const ref = useRef(null);
@@ -65,7 +65,7 @@ const InfoBox = ({
     `text-${colors[type].text}`,
     "border",
     "border-solid",
-    `border-${colors[type].border}`,
+    `border-${colors[type].border}`
   ];
 
   if (isOpen === false) {
@@ -78,7 +78,7 @@ const InfoBox = ({
       className={cn(classes, className, {
         shadow: toaster,
         "infobox-toaster": toaster,
-        "w-full": !toaster,
+        "w-full": !toaster
       })}
     >
       {showIcon && (
@@ -115,7 +115,7 @@ InfoBox.ERROR = ERROR;
 
 InfoBox.defaultProps = {
   type: DEFAULT,
-  showIcon: true,
+  showIcon: true
 };
 
 InfoBox.propTypes = {
@@ -126,7 +126,7 @@ InfoBox.propTypes = {
   scrollIntoView: PropTypes.bool,
   toaster: PropTypes.bool,
   dismissable: PropTypes.bool,
-  onDismissed: PropTypes.func,
+  onDismissed: PropTypes.func
 };
 
 export default InfoBox;
