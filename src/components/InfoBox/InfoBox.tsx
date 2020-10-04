@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
+import React, { FC, ReactElement, useEffect, useRef, useState } from "react";
 import cn from "classnames";
 import Button from "~/components/Button";
 import "./InfoBox.css";
+import { props } from "assets/styles";
 
 const ACTION_REQUIRED = "action-required";
 const SUCCESS = "success";
@@ -19,23 +19,57 @@ const icons = {
 };
 
 const colors = {
-  [ACTION_REQUIRED]: { text: "blue-20", bg: "blue-90" },
+  [ACTION_REQUIRED]: {
+    text: "blue-20",
+    bg: "blue-90",
+    border: "",
+    icon: ""
+  },
   [DEFAULT]: {
     text: "blue-30",
     bg: "blue-90",
     border: "transparent",
     icon: "blue-80"
   },
-  [SUCCESS]: { text: "white", bg: "green-50", border: "green-50" },
+  [SUCCESS]: {
+    text: "white",
+    bg: "green-50",
+    border: "green-50",
+    icon: ""
+  },
   [WARNING]: {
+    text: "",
     bg: "yellow-80",
     border: "yellow-60",
     icon: "yellow-30"
   },
-  [ERROR]: { text: "white", bg: "red-50", border: "red-50" }
+  [ERROR]: {
+    text: "white",
+    bg: "red-50",
+    border: "red-50",
+    icon: ""
+  },
 };
 
-const InfoBox = ({
+type StateClass =
+  typeof ACTION_REQUIRED |
+  typeof SUCCESS |
+  typeof WARNING |
+  typeof ERROR |
+  typeof DEFAULT;
+
+interface Props {
+  children: HTMLElement,
+  className: string,
+  type: StateClass,
+  showIcon: boolean,
+  scrollIntoView: boolean,
+  toaster: boolean,
+  dismissable: boolean,
+  onDismissed: () => void,
+}
+
+const InfoBox: FC<Props> = ({
   children,
   className,
   scrollIntoView,
@@ -44,9 +78,9 @@ const InfoBox = ({
   toaster,
   dismissable,
   onDismissed
-}) => {
-  const [isOpen, setIsOpen] = useState(true);
-  const ref = useRef(null);
+}: Props): ReactElement => {
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (ref.current?.scrollIntoView && scrollIntoView) {
@@ -54,7 +88,7 @@ const InfoBox = ({
     }
   }, [ref, scrollIntoView]);
 
-  const classes = [
+  const classes: Array<string> = [
     "rounded",
     "px-4",
     "py-2",
@@ -69,7 +103,7 @@ const InfoBox = ({
   ];
 
   if (isOpen === false) {
-    return null;
+    return <></>;
   }
 
   return (
@@ -108,25 +142,14 @@ const InfoBox = ({
   );
 };
 
-InfoBox.ACTION_REQUIRED = ACTION_REQUIRED;
-InfoBox.SUCCESS = SUCCESS;
-InfoBox.WARNING = WARNING;
-InfoBox.ERROR = ERROR;
+props.type.ACTION_REQUIRED = ACTION_REQUIRED;
+props.type.SUCCESS = SUCCESS;
+props.type.WARNING = WARNING;
+props.type.ERROR = ERROR;
 
 InfoBox.defaultProps = {
   type: DEFAULT,
-  showIcon: true
-};
-
-InfoBox.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.any,
-  type: PropTypes.oneOf([ACTION_REQUIRED, SUCCESS, WARNING, ERROR, DEFAULT]),
-  showIcon: PropTypes.bool,
-  scrollIntoView: PropTypes.bool,
-  toaster: PropTypes.bool,
-  dismissable: PropTypes.bool,
-  onDismissed: PropTypes.func
-};
+  showIcon: true,
+} as Partial<Props>;
 
 export default InfoBox;
