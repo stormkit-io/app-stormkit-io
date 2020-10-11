@@ -39,7 +39,7 @@ module.exports = {
     alias: {
       "~": path.join(root, "src")
     },
-    extensions: [".tsx", ".js"],
+    extensions: [".tsx", ".ts", ".js"],
     plugins: [
       new TsConfigPathsPlugin({
         configFile: path.resolve(__dirname, "./tsconfig.json")
