@@ -58,7 +58,7 @@ type StateClass =
   typeof ERROR |
   typeof DEFAULT;
 
-interface Props {
+type Props = {
   children: HTMLElement,
   className: string,
   type: StateClass,
