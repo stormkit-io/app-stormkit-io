@@ -44,7 +44,7 @@ div.MuiTableContainer-root {
 
 .MuiRadio-root {
   padding: 0;
-  padding-right: 1rem;
+  margin-right: 1rem;
 }
 
 .MuiFilledInput-root {

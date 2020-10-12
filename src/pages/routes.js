@@ -35,5 +35,9 @@ export default [
   {
     path: "/apps/:id",
     component: Async(() => import("~/pages/apps/Apps.context"))
+  },
+  {
+    path: "/user",
+    component: Async(() => import("~/pages/user"))
   }
 ];
