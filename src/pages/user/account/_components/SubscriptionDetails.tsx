@@ -29,7 +29,7 @@ const SubscriptionDetails: FC<Props> = ({ api, user }: Props): ReactElement => {
       <h1 className="mb-4 text-2xl text-white">Subscription details</h1>
       <div className="rounded bg-white p-8 mb-8">
         {loading && <Spinner width={6} height={6} primary />}
-        {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
+        {!loading && error && <InfoBox type="error">{error}</InfoBox>}
         {!loading && !error && (
           <div className="flex">
             <Form className="w-full">
