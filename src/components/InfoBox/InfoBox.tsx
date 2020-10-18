@@ -1,8 +1,7 @@
-import React, { FC, ReactElement, useEffect, useRef, useState } from "react";
+import React, { FC, ReactElement, useEffect, useRef, useState, ReactNode } from "react";
 import cn from "classnames";
 import Button from "~/components/Button";
 import "./InfoBox.css";
-import { props } from "assets/styles";
 
 const ACTION_REQUIRED = "action-required";
 const SUCCESS = "success";
@@ -59,14 +58,14 @@ type StateClass =
   typeof DEFAULT;
 
 type Props = {
-  children: HTMLElement,
-  className: string,
+  children: ReactNode,
+  className?: string,
   type: StateClass,
-  showIcon: boolean,
-  scrollIntoView: boolean,
-  toaster: boolean,
-  dismissable: boolean,
-  onDismissed: () => void,
+  showIcon?: boolean,
+  scrollIntoView?: boolean,
+  toaster?: boolean,
+  dismissable?: boolean,
+  onDismissed?: () => void,
 }
 
 const InfoBox: FC<Props> = ({
@@ -141,11 +140,6 @@ const InfoBox: FC<Props> = ({
     </div>
   );
 };
-
-props.type.ACTION_REQUIRED = ACTION_REQUIRED;
-props.type.SUCCESS = SUCCESS;
-props.type.WARNING = WARNING;
-props.type.ERROR = ERROR;
 
 InfoBox.defaultProps = {
   type: DEFAULT,
