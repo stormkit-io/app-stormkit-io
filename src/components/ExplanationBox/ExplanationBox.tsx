@@ -1,15 +1,22 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { ReactNode, FC, ReactElement, CSSProperties } from "react";
 import cn from "classnames";
 import "./ExplanationBox.css";
 
-const ExplanationBox = ({
+type Props = {
+  title: string;
+  children: ReactNode;
+  className: string;
+  absolute?: boolean;
+  arrowStyles?: CSSProperties;
+};
+
+const ExplanationBox: FC<Props> = ({
   title,
   children,
   className,
   absolute,
   arrowStyles
-}) => {
+}: Props): ReactElement => {
   return (
     <section
       className={cn(
@@ -30,14 +37,6 @@ ExplanationBox.defaultProps = {
     left: "50%",
     transform: "translateX(-50%)"
   }
-};
-
-ExplanationBox.propTypes = {
-  title: PropTypes.string,
-  children: PropTypes.node,
-  className: PropTypes.any,
-  absolute: PropTypes.bool,
-  arrowStyles: PropTypes.object
-};
+} as Partial<Props>;
 
 export default ExplanationBox;
