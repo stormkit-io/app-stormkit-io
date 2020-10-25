@@ -1,12 +1,11 @@
-import { PureComponent } from "react";
+import { ReactNode, PureComponent } from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 
-export default class OutsideClick extends PureComponent {
-  static propTypes = {
-    handler: PropTypes.func.isRequired
-  };
+type Props = {
+  handler: (arg0: any) => void;
+};
 
+class OutsideClick extends PureComponent<Props, any> {
   componentDidMount() {
     document.addEventListener("click", this.handleClick);
   }
@@ -17,7 +16,7 @@ export default class OutsideClick extends PureComponent {
     }
   }
 
-  handleClick = event => {
+  handleClick = (event: any) => {
     const root = ReactDOM.findDOMNode(this);
     const { handler } = this.props;
 
@@ -26,7 +25,9 @@ export default class OutsideClick extends PureComponent {
     }
   };
 
-  render() {
+  render(): ReactNode {
     return this.props.children;
   }
 }
+
+export default OutsideClick;
