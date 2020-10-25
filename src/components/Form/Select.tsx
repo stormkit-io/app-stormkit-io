@@ -1,9 +1,19 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { ReactElement, FC } from "react";
 import cn from "classnames";
 import SelectInput from "@material-ui/core/Select";
 
-const Select = ({ onChange, className, variant = "filled", ...rest }) => {
+type Props = {
+  onChange: (arg0: any) => void;
+  variant: "filled" | "standard" | "outlined";
+  className?: string;
+};
+
+const Select: FC<Props> = ({
+  onChange,
+  className,
+  variant = "filled",
+  ...rest
+}: Props): ReactElement => {
   return (
     <SelectInput
       className={cn("w-full", className)}
@@ -13,12 +23,6 @@ const Select = ({ onChange, className, variant = "filled", ...rest }) => {
       {...rest}
     />
   );
-};
-
-Select.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  variant: PropTypes.oneOf(["filled", "standard", "outlined"]),
-  className: PropTypes.any
 };
 
 export default Select;
