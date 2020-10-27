@@ -41,7 +41,7 @@ const DomainUsageStatus = ({ domain, onVerify }) => {
                     <TableCell>Issued at</TableCell>
                     <TableCell>
                       {new Date(cert.startDate * 1000).toLocaleDateString(
-                        "en-CH",
+                        "en",
                         {
                           year: "numeric",
                           month: "long",
@@ -53,14 +53,11 @@ const DomainUsageStatus = ({ domain, onVerify }) => {
                   <TableRow>
                     <TableCell>Valid until</TableCell>
                     <TableCell>
-                      {new Date(cert.endDate * 1000).toLocaleDateString(
-                        "en-CH",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "2-digit",
-                        }
-                      )}
+                      {new Date(cert.endDate * 1000).toLocaleDateString("en", {
+                        year: "numeric",
+                        month: "long",
+                        day: "2-digit",
+                      })}
                     </TableCell>
                   </TableRow>
                   <TableRow>

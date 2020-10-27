@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import AppsContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import RootContext from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
@@ -85,5 +85,5 @@ Deployments.propTypes = {
 
 export default connect(Deployments, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppsContext, props: ["app", "environments"] },
+  { Context: AppContext, props: ["app", "environments"] },
 ]);

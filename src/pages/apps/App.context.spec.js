@@ -3,7 +3,7 @@ import { withAppContext } from "~/testing/helpers";
 import * as data from "~/testing/data";
 import * as nocks from "~/testing/nocks";
 
-describe("pages/apps", () => {
+describe("pages/app", () => {
   let wrapper;
 
   describe("when an app is found", () => {

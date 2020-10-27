@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Switch, Route } from "react-router";
 import { connect } from "~/utils/context";
 import RootContext from "~/pages/Root.context";
-import AppContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import routes from "./routes";
 
 const Context = createContext();

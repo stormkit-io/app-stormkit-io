@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Tooltip from "@material-ui/core/Tooltip";
 import { connect } from "~/utils/context";
 import RootContext from "~/pages/Root.context";
-import AppsContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
@@ -97,7 +97,7 @@ Snippets.propTypes = {
 
 export default connect(Snippets, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppsContext, props: ["app"] },
+  { Context: AppContext, props: ["app"] },
   { Context: EnvironmentContext, props: ["environment"] },
   { Context: SnippetModal, props: ["toggleModal"], wrap: true },
 ]);

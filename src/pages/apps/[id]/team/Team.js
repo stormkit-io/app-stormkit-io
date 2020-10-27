@@ -7,7 +7,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableContainer from "@material-ui/core/TableContainer";
 import RootContext from "~/pages/Root.context";
-import AppsContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import AuthContext from "~/pages/auth/Auth.context";
 import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
@@ -136,7 +136,7 @@ Team.propTypes = {
 
 export default connect(Team, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppsContext, props: ["app"] },
+  { Context: AppContext, props: ["app"] },
   { Context: AuthContext, props: ["user"] },
   { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
   { Context: NewMemberModal, props: ["toggleModal"], wrap: true },
