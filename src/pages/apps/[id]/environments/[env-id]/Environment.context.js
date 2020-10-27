@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Switch, Route } from "react-router";
 import { withRouter } from "react-router-dom";
 import { connect } from "~/utils/context";
-import AppsContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import EnvironmentMenu from "./_components/EnvironmentMenu";
 import EnvironmentFormModal from "../_components/EnvironmentFormModal";
 import routes from "./routes";
@@ -40,7 +40,7 @@ EnvironmentContext.propTypes = {
 };
 
 const enhanced = connect(withRouter(EnvironmentContext), [
-  { Context: AppsContext, props: ["app", "environments"] },
+  { Context: AppContext, props: ["app", "environments"] },
 ]);
 
 export default Object.assign(enhanced, {

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import AppsContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import RootContext from "~/pages/Root.context";
 import { PlusButton } from "~/components/Buttons";
 import Environment from "./_components/Environment";
@@ -44,6 +44,6 @@ Environments.propTypes = {
 
 export default connect(Environments, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppsContext, props: ["app", "environments"] },
+  { Context: AppContext, props: ["app", "environments"] },
   { Context: EnvironmentFormModal, props: ["toggleModal"], wrap: true },
 ]);

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "~/utils/context";
 import RootContext from "~/pages/Root.context";
-import AppsContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import AuthContext from "~/pages/auth/Auth.context";
 import Spinner from "~/components/Spinner";
 import FormAppSettings from "./_components/FormAppSettings";
@@ -79,6 +79,6 @@ Settings.propTypes = {
 
 export default connect(Settings, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppsContext, props: ["app", "environments"] },
+  { Context: AppContext, props: ["app", "environments"] },
   { Context: AuthContext, props: ["user"] },
 ]);

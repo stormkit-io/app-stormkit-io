@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import RootContext from "~/pages/Root.context";
-import AppContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
 import { connect } from "~/utils/context";

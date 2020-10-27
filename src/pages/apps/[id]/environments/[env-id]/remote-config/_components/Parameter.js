@@ -4,7 +4,7 @@ import cn from "classnames";
 import { withRouter } from "react-router-dom";
 import { connect } from "~/utils/context";
 import RootContext from "~/pages/Root.context";
-import AppsContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
 import DotDotDot from "~/components/DotDotDot";
 import ConfirmModal from "~/components/ConfirmModal";
@@ -102,6 +102,6 @@ export default connect(withRouter(Parameter), [
   { Context: ParameterModal, props: ["toggleModal"], wrap: true },
   { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
   { Context: RootContext, props: ["api"] },
-  { Context: AppsContext, props: ["app"] },
+  { Context: AppContext, props: ["app"] },
   { Context: EnvironmentContext, props: ["environment"] },
 ]);

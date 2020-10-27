@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
 import RootContext from "~/pages/Root.context";
-import AppsContext from "~/pages/apps/Apps.context";
+import AppContext from "~/pages/apps/App.context";
 import Spinner from "~/components/Spinner";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
@@ -114,5 +114,5 @@ Deployment.propTypes = {
 
 export default connect(Deployment, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppsContext, props: ["app"] },
+  { Context: AppContext, props: ["app"] },
 ]);
