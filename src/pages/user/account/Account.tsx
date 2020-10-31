@@ -5,6 +5,7 @@ import { User } from "~/types/user";
 import AuthContext from "~/pages/auth/Auth.context";
 import RootContext from "~/pages/Root.context";
 import SubscriptionDetails from "./_components/SubscriptionDetails";
+import PaymentDetails from "./_components/PaymentDetails";
 
 type Props = {
   api: Api;
@@ -28,6 +29,7 @@ const Account = ({ api, user }: Props): ReactElement => {
         </h1>
       </div>
       <SubscriptionDetails api={api} user={user} />
+      <PaymentDetails api={api} />
     </div>
   );
 };

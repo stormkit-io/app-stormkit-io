@@ -101,6 +101,7 @@ module.exports = {
         bitbucket: "#004fd3",
         gitlab: "#6b4fbb",
         github: "#22292e",
+        stripe: "#32325d",
 
         "gray-100": "#ffffff",
         "gray-90": "#f9f9f9",

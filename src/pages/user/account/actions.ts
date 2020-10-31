@@ -104,26 +104,6 @@ export const useFetchSubscription = ({
 // };
 
 // /**
-//  * This method loads stripe on demand. It will call the callback
-//  * provided when the loading is completed.
-//  */
-// export const useLoadStripe = ({ setStripeLoaded }) => () => {
-//   const id = "stripe-js";
-
-//   // Ignore if stripe is already loaded.
-//   if (document.querySelector(`#${id}`)) {
-//     return setStripeLoaded(true);
-//   }
-
-//   const script = document.createElement("script");
-//   script.id = id;
-//   script.src = "https://js.stripe.com/v3/";
-//   script.onload = () => setStripeLoaded(true);
-
-//   document.body.appendChild(script);
-// };
-
-// /**
 //  * Adds a new payment method, and makes an API call with to obtained token
 //  * to attach the payment method to the customer.
 //  */
@@ -239,21 +219,65 @@ export const useFetchSubscription = ({
 //     });
 // };
 
-// /**
-//  * Fetches list of cards.
-//  */
-// export const useFetchCards = ({ api, cards, setCards }) => () => {
-//   setCards({ ...cards, loading: true });
+export type Card = {
+  amount: number;
+  id: string;
+  status: "pending";
+  currency: "usd";
+};
 
-//   api
-//     .fetch("/user/subscription/cards")
-//     .then((res) => {
-//       setCards({ ...cards, list: res.cards, loading: false });
-//     })
-//     .catch((res) => {
-//       setCards({ ...cards, loading: false });
-//     });
-// };
+export type Cards = Array<unknown>;
+
+type FetchCardsReturnValue = {
+  cards: Cards;
+  error: string | null;
+  loading: boolean;
+};
+
+type FetchCardsProps = {
+  api: Api;
+};
+
+export const useFetchCards = ({
+  api,
+}: FetchCardsProps): FetchCardsReturnValue => {
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let unmounted = false;
+
+    setLoading(true);
+    setError(null);
+
+    api
+      .fetch("/user/subscription/cards")
+      .then((res) => {
+        if (unmounted !== true) {
+          setLoading(false);
+          setCards(res.cards);
+        }
+      })
+      .catch((res) => {
+        if (unmounted !== true) {
+          setLoading(false);
+
+          if (res.status !== 404) {
+            setError(
+              "Something went wrong while fetching the cards. Please try again, if the problem persists contact us from Discord or email."
+            );
+          }
+        }
+      });
+
+    return () => {
+      unmounted = true;
+    };
+  }, [api]);
+
+  return { cards, loading, error };
+};
 
 // /**
 //  * Helper function to remove a card.
