@@ -52,7 +52,7 @@ ENV=dev
 PORT=8080
 API_DOMAIN=/api
 API_PROXY_DOMAIN=http://localhost:8080/
-STRIPE_API_KEY=sk_test_3XwgXeVENrPij4Xwc6ArJapW001ZNaYNCm
+STRIPE_API_KEY=pk_test_BeWmmZ8Sd6tdYHNOtmThjYXm00QZbiTJYt
 ```
 
 ## Open Source
