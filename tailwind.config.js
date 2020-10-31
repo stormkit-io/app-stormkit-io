@@ -1,7 +1,7 @@
 module.exports = {
   purge: {
     enabled: process.env.NODE_ENV === "production",
-    content: ["src/index.js", "src/**/*.js"],
+    content: ["src/index.js", "src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
     options: {
       whitelist: [
         // Provider related dynamic classes
