@@ -4,9 +4,9 @@ import Link from "../Link";
 import "./BackButton.css";
 
 type Props = {
-  className: string;
+  className?: string;
   to: string;
-  size: number;
+  size?: number;
 };
 
 const BackButton: FC<Props> = ({
