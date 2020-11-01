@@ -6,9 +6,9 @@ const SMALL = 'small';
 const MEDIUM = 'medium';
 
 type Props = {
-  className: string;
+  className?: string;
   text: string;
-  size: typeof SMALL | typeof MEDIUM;
+  size?: typeof SMALL | typeof MEDIUM;
 }
 
 const PlusButton: FC<Props> = ({
