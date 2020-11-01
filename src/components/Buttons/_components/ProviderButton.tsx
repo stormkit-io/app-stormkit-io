@@ -1,16 +1,23 @@
-import React from "react";
+import React, { FC, ReactElement, ReactNode } from "react";
 import cn from "classnames";
-import PropTypes from "prop-types";
 import Button from "~/components/Button";
 
-const ProviderButton = ({
+type Props = {
+  provider: "github" | "gitlab" | "bitbucket";
+  text: "GitHub" | "GitLab" | "Bitbucket";
+  type: "button" | "submit";
+  children: ReactNode;
+  className: string;
+}
+
+const ProviderButton: FC<Props> = ({
   provider,
   text,
   type = "button",
   children,
   className,
   ...rest
-}) => {
+}: Props): ReactElement => {
   return (
     <Button
       {...rest}
@@ -35,14 +42,6 @@ const ProviderButton = ({
       <span>{text}</span>
     </Button>
   );
-};
-
-ProviderButton.propTypes = {
-  provider: PropTypes.oneOf(["github", "gitlab", "bitbucket"]),
-  text: PropTypes.oneOf(["GitHub", "GitLab", "Bitbucket"]),
-  type: PropTypes.oneOf(["button", "submit"]),
-  children: PropTypes.node,
-  className: PropTypes.any
 };
 
 export default ProviderButton;
