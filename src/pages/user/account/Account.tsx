@@ -1,4 +1,5 @@
 import React, { ReactElement } from "react";
+import { RouteChildrenProps } from "react-router-dom";
 import { connect } from "~/utils/context";
 import Api from "~/utils/api/Api";
 import { User } from "~/types/user";
@@ -10,9 +11,9 @@ import PaymentDetails from "./_components/PaymentDetails";
 type Props = {
   api: Api;
   user: User;
-};
+} & RouteChildrenProps;
 
-const Account = ({ api, user }: Props): ReactElement => {
+const Account = ({ api, user, history, location }: Props): ReactElement => {
   return (
     <div>
       <h1 className="mb-4 text-2xl text-white">Account settings</h1>
@@ -29,7 +30,7 @@ const Account = ({ api, user }: Props): ReactElement => {
         </h1>
       </div>
       <SubscriptionDetails api={api} user={user} />
-      <PaymentDetails api={api} />
+      <PaymentDetails api={api} history={history} location={location} />
     </div>
   );
 };

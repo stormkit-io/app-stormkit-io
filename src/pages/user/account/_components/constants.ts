@@ -1,3 +1,4 @@
+import { loadStripe } from "@stripe/stripe-js";
 import { Subscription } from "../actions";
 
 type Package = {
@@ -59,4 +60,19 @@ export const features: Features = {
     "Unlimited apps",
     "Unlimited team seats",
   ],
+};
+
+export const stripePromise = loadStripe(process.env.STRIPE_API_KEY || "");
+export const stripeStyles = {
+  base: {
+    fontSize: "16px",
+    color: "#32325d",
+    "::placeholder": {
+      color: "#b2b2b2",
+    },
+  },
+  invalid: {
+    color: "#fa755a",
+    iconColor: "#fa755a",
+  },
 };
