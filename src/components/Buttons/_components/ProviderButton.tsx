@@ -5,9 +5,9 @@ import Button from "~/components/Button";
 type Props = {
   provider: "github" | "gitlab" | "bitbucket";
   text: "GitHub" | "GitLab" | "Bitbucket";
-  type: "button" | "submit";
+  type?: "button" | "submit";
   children: ReactNode;
-  className: string;
+  className?: string;
 }
 
 const ProviderButton: FC<Props> = ({
