@@ -1,10 +1,23 @@
-import React, { Children, useState } from "react";
-import PropTypes from "prop-types";
+import React, { FC, ReactNode, Children, useState, ReactElement } from "react";
 import cn from "classnames";
 import Button from "~/components/Button";
 
-const Toggler = ({ children, onSelect, defaultSelected, name, className }) => {
-  const [selectedValue, setSelectedValue] = useState(defaultSelected);
+type Props = {
+  className?: string;
+  children: ReactNode;
+  defaultSelected: string | number;
+  name: string;
+  onSelect: (arg0: any) => void;
+}
+
+const Toggler: FC<Props> = ({
+  children,
+  onSelect,
+  defaultSelected,
+  name,
+  className
+}: Props): ReactElement => {
+  const [selectedValue, setSelectedValue] = useState<string | number>(defaultSelected);
   const childArray = Children.toArray(children);
 
   return (
@@ -15,7 +28,7 @@ const Toggler = ({ children, onSelect, defaultSelected, name, className }) => {
       )}
     >
       <input type="hidden" value={selectedValue} name={name} />
-      {childArray.map((c, i) => {
+      {childArray.map((c: any, i: number) => {
         const value =
           typeof c.props["data-value"] !== "undefined"
             ? c.props["data-value"]
@@ -48,14 +61,6 @@ const Toggler = ({ children, onSelect, defaultSelected, name, className }) => {
       })}
     </div>
   );
-};
-
-Toggler.propTypes = {
-  className: PropTypes.any,
-  children: PropTypes.node,
-  defaultSelected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  name: PropTypes.string,
-  onSelect: PropTypes.func
 };
 
 export default Toggler;
