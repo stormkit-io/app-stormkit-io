@@ -1,12 +1,39 @@
-import React, { useState, createContext } from "react";
-import PropTypes from "prop-types";
+import React, { useState, createContext, ReactChildren } from "react";
 import Modal from "~/components/Modal";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import { connect } from "~/utils/context";
 
 const ModalContext = Modal.Context();
-const context = createContext();
+const context = createContext({});
+
+type Props = {
+  isOpen: boolean;
+  toggleModal: (onOrOff: boolean, ...rest: [unknown?]) => void;
+  children: ReactChildren;
+};
+
+type ConfirmModalCallback = ({
+  setLoading,
+  closeModal,
+  setError,
+}: {
+  setLoading: (value: boolean) => void;
+  closeModal: () => void;
+  setError: (err: string | null) => void;
+}) => void;
+
+type ConfirmModalOptions = {
+  callback?: ConfirmModalCallback;
+  onCancel?: (closeModal: () => void) => void;
+  onConfirm?: ConfirmModalCallback;
+  confirmText?: string;
+};
+
+export type ConfirmModalFunction = (
+  content: string,
+  options: ConfirmModalOptions
+) => void;
 
 /**
  * Usage:
@@ -16,21 +43,16 @@ const context = createContext();
  * 3. A property called `confirmModal` is exported. Call that
  *    to display the modal. Signature is below.
  */
-const ConfirmModal = ({ isOpen, toggleModal, children }) => {
+const ConfirmModal = ({ isOpen, toggleModal, children }: Props) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [content, setContent] = useState();
-  const [options, setOptions] = useState({});
-  const closeModal = (...args) => toggleModal(false, ...args);
+  const [error, setError] = useState<string | null>(null);
+  const [content, setContent] = useState<string>("");
+  const [options, setOptions] = useState<ConfirmModalOptions>({});
+  const closeModal = (...args: [unknown?]) => toggleModal(false, ...args);
 
-  const confirmModal = (content, callback, options = {}) => {
-    if (typeof callback !== "function") {
-      options = callback;
-      callback = undefined;
-    }
-
+  const confirmModal: ConfirmModalFunction = (content, options = {}) => {
     setContent(content);
-    setOptions({ ...options, callback });
+    setOptions(options);
     toggleModal(true);
   };
 
@@ -42,12 +64,9 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
     }
   };
 
-  const handleSuccess = e => {
-    e.preventDefault();
-    const cb = options.callback || options.onConfirm;
-
-    if (cb) {
-      cb({ setLoading, closeModal, setError });
+  const handleSuccess = () => {
+    if (options.onConfirm) {
+      options.onConfirm({ setLoading, closeModal, setError });
     } else {
       closeModal();
     }
@@ -67,7 +86,7 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
           <p>Are you sure you want to continue?</p>
         </div>
         {error && (
-          <InfoBox className="mt-8" type={InfoBox.ERROR}>
+          <InfoBox className="mt-8" type="error">
             {error}
           </InfoBox>
         )}
@@ -94,17 +113,11 @@ const ConfirmModal = ({ isOpen, toggleModal, children }) => {
   );
 };
 
-ConfirmModal.propTypes = {
-  isOpen: PropTypes.bool, // Whether the modal is open or not
-  toggleModal: PropTypes.func,
-  children: PropTypes.any
-};
-
 const enhanced = connect(ConfirmModal, [
-  { Context: ModalContext, props: ["toggleModal", "isOpen"], wrap: true }
+  { Context: ModalContext, props: ["toggleModal", "isOpen"], wrap: true },
 ]);
 
 export default Object.assign(enhanced, {
   Consumer: context.Consumer,
-  Provider: enhanced
+  Provider: enhanced,
 });
