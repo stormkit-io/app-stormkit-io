@@ -59,7 +59,7 @@ export const useFetchCards = ({
       .then((res) => {
         if (unmounted !== true) {
           setLoading(false);
-          setCards(res.cards);
+          setCards(res.cards.filter((c: Card) => c.TypeData.last4));
         }
       })
       .catch((res) => {
@@ -70,6 +70,8 @@ export const useFetchCards = ({
             setError(
               "Something went wrong while fetching the cards. Please try again, if the problem persists contact us from Discord or email."
             );
+          } else {
+            setCards([]);
           }
         }
       });

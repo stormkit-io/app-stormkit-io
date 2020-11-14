@@ -72,9 +72,8 @@ export const handleUpdatePaymentMethod = (
       }
     );
 
-    setLoading(false);
-
     if (!source?.id) {
+      setLoading(false);
       return handleStripeError({ error, setError });
     }
 
@@ -84,10 +83,12 @@ export const handleUpdatePaymentMethod = (
       });
 
       if (customerId) {
+        setLoading(false);
         return history.push({ state: { cards: Date.now() } });
       }
     }
 
+    setLoading(false);
     return setError(
       "Your card seems not to be chargeable. Please try using a different card."
     );

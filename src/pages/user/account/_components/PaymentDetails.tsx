@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState } from "react";
+import React, { FC, ReactElement, useState, useEffect } from "react";
 import { History, Location } from "history";
 import * as stripejs from "@stripe/react-stripe-js";
 import Api from "~/utils/api/Api";
@@ -7,14 +7,22 @@ import InfoBox from "~/components/InfoBox";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
-import { useFetchCards, handleUpdatePaymentMethod } from "../actions";
+import { TConfirmModal } from "~/components/ConfirmModal";
+import * as actions from "../actions";
 import { stripePromise, stripeStyles } from "./constants";
 import stripeLogoSvg from "~/assets/images/stripe-logo-white.svg";
+
+const {
+  useFetchCards,
+  handleUpdatePaymentMethod,
+  handleRemovePaymentMethod,
+} = actions;
 
 type Props = {
   api: Api;
   history: History;
   location: Location;
+  confirmModal: TConfirmModal;
 };
 
 const {
@@ -30,6 +38,7 @@ const PaymentDetails: FC<Props> = ({
   api,
   history,
   location,
+  confirmModal,
 }: Props): ReactElement => {
   const [showForm, setShowForm] = useState(false);
   const [formError, setError] = useState<string | null>(null);
@@ -40,7 +49,9 @@ const PaymentDetails: FC<Props> = ({
   const errorMsg = error || formError;
   const isLoading = loading || !stripe || !elements;
 
-  console.log(cards, formError, formLoading);
+  useEffect(() => {
+    setShowForm(false);
+  }, [cards]);
 
   return (
     <div>
@@ -49,7 +60,7 @@ const PaymentDetails: FC<Props> = ({
         {isLoading && <Spinner width={6} height={6} primary />}
         {!isLoading && (
           <>
-            {cards.length && (
+            {cards.length ? (
               <div className="mb-4">
                 {cards.map((card) => (
                   <div
@@ -78,6 +89,27 @@ const PaymentDetails: FC<Props> = ({
                       <Button
                         styled={false}
                         className="hover:text-pink-50 px-2"
+                        onClick={() =>
+                          confirmModal(
+                            "You are going to remove your credit card details forever. If you have a subscription, you'll have to downgrade in order to continue.",
+                            {
+                              onConfirm: ({
+                                setLoading,
+                                setError,
+                                closeModal,
+                              }) => {
+                                handleRemovePaymentMethod({
+                                  api,
+                                  cardId: card.id,
+                                  setLoading,
+                                  setError,
+                                  history,
+                                  closeModal,
+                                });
+                              },
+                            }
+                          )
+                        }
                       >
                         Delete
                       </Button>
@@ -85,6 +117,8 @@ const PaymentDetails: FC<Props> = ({
                   </div>
                 ))}
               </div>
+            ) : (
+              ""
             )}
             {(showForm || cards.length === 0) && (
               <Form
