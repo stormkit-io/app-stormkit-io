@@ -5,7 +5,7 @@ import RootContext from "~/pages/Root.context";
 import AppContext from "~/pages/apps/App.context";
 import Spinner from "~/components/Spinner";
 import Button from "~/components/Button";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR, WARNING } from "~/components/InfoBox";
 import { BackButton } from "~/components/Buttons";
 import { connect } from "~/utils/context";
 import { parseCommit } from "~/utils/helpers/deployments";
@@ -34,7 +34,7 @@ const Deployment = ({ api, app, match }) => {
         </div>
       ) : error ? (
         <div className="flex justify-center bg-white rounded p-4">
-          <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
+          <InfoBox type={ERROR}>{error}</InfoBox>
         </div>
       ) : (
         <div className="flex flex-col justify-center bg-white rounded p-8 mb-4">
@@ -89,7 +89,7 @@ const Deployment = ({ api, app, match }) => {
             )}
             {!deploy.isRunning && deploy.tip && (
               <div className="mt-4" ref={spinnerRef}>
-                <InfoBox type={InfoBox.WARNING}>{deploy.tip}</InfoBox>
+                <InfoBox type={WARNING}>{deploy.tip}</InfoBox>
               </div>
             )}
             {!deploy.isRunning && deploy.exit === 0 && (

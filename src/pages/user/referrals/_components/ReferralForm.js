@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import * as buttons from "~/components/Buttons";
 import Form from "~/components/Form";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR } from "~/components/InfoBox";
 import Button from "~/components/Button";
 
 const { GithubButton, GitlabButton, BitbucketButton } = buttons;
@@ -57,7 +57,7 @@ export const ReferralForm = ({ onSubmit, loading, error }) => {
         </p>
       </div>
       {error && (
-        <InfoBox type={InfoBox.ERROR} className="mt-4">
+        <InfoBox type={ERROR} className="mt-4">
           {error}
         </InfoBox>
       )}

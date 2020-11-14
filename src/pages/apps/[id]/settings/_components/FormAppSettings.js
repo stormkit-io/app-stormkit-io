@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Form from "~/components/Form";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { SUCCESS, ERROR } from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
@@ -12,7 +12,7 @@ const FormAppSettings = ({
   environments,
   additionalSettings,
   history,
-  location
+  location,
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +35,7 @@ const FormAppSettings = ({
         api,
         setLoading,
         setError,
-        history
+        history,
       })}
     >
       <Form.Section label="Display name">
@@ -46,7 +46,7 @@ const FormAppSettings = ({
           defaultValue={app.displayName}
           fullWidth
           inputProps={{
-            "aria-label": "Display name"
+            "aria-label": "Display name",
           }}
         />
         <Form.Description>
@@ -65,7 +65,7 @@ const FormAppSettings = ({
           defaultValue={toRepoAddr(app.repo)}
           fullWidth
           inputProps={{
-            "aria-label": "Repository"
+            "aria-label": "Repository",
           }}
         />
         <Form.Description>
@@ -78,9 +78,9 @@ const FormAppSettings = ({
           name="runtime"
           displayEmpty
           value={runtime}
-          onChange={v => setRuntime(v)}
+          onChange={(v) => setRuntime(v)}
           inputProps={{
-            "aria-label": "Runtime"
+            "aria-label": "Runtime",
           }}
         >
           <Form.Option value="nodejs10.x">NodeJS 10.x</Form.Option>
@@ -101,9 +101,9 @@ const FormAppSettings = ({
           name="autoDeploy"
           displayEmpty
           value={autoDeploy}
-          onChange={v => setAutoDeploy(v)}
+          onChange={(v) => setAutoDeploy(v)}
           inputProps={{
-            "aria-label": "Auto deploy"
+            "aria-label": "Auto deploy",
           }}
         >
           <Form.Option value="disabled">Disabled</Form.Option>
@@ -120,7 +120,7 @@ const FormAppSettings = ({
               label="Default environment"
               displayEmpty
               value={defaultEnv}
-              onChange={v => setDefaultEnv(v)}
+              onChange={(v) => setDefaultEnv(v)}
             >
               {environments.map(({ env }) => (
                 <Form.Option value={env} key={env}>
@@ -144,7 +144,7 @@ const FormAppSettings = ({
               defaultValue={app.commitPrefix}
               fullWidth
               inputProps={{
-                "aria-label": "Match prefix"
+                "aria-label": "Match prefix",
               }}
             />
             <Form.Description>
@@ -161,15 +161,15 @@ const FormAppSettings = ({
           Update
         </Button>
       </div>
-      {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
+      {error && <InfoBox type={ERROR}>{error}</InfoBox>}
       {successMessage && (
         <InfoBox
-          type={InfoBox.SUCCESS}
+          type={SUCCESS}
           toaster
           dismissable
           onDismissed={() =>
             history.replace({
-              state: { app: location?.state?.app, settingsSuccess: null }
+              state: { app: location?.state?.app, settingsSuccess: null },
             })
           }
         >
@@ -186,7 +186,7 @@ FormAppSettings.propTypes = {
   environments: PropTypes.array,
   additionalSettings: PropTypes.object,
   location: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
 };
 
 export default FormAppSettings;

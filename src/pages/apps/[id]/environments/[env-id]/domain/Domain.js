@@ -5,7 +5,7 @@ import RootContext from "~/pages/Root.context";
 import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
 import ConfirmModal from "~/components/ConfirmModal";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR } from "~/components/InfoBox";
 import { PlusButton } from "~/components/Buttons";
 import { useDomainLookup, deleteDomain, fetchDomainsInfo } from "./actions";
 import DomainModal from "./_components/DomainModal";
@@ -88,7 +88,7 @@ const Domain = ({
       )}
       {error && (
         <div className="p-8 flex items-center w-full bg-white rounded">
-          <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
+          <InfoBox type={ERROR}>{error}</InfoBox>
         </div>
       )}
       {domainsInfo.map((domain, i) => (

@@ -3,11 +3,11 @@ import cn from "classnames";
 import Button from "~/components/Button";
 import "./InfoBox.css";
 
-const ACTION_REQUIRED = "action-required";
-const SUCCESS = "success";
-const WARNING = "warning";
-const ERROR = "error";
-const DEFAULT = "default";
+export const ACTION_REQUIRED = "action-required";
+export const SUCCESS = "success";
+export const WARNING = "warning";
+export const ERROR = "error";
+export const DEFAULT = "default";
 
 const icons = {
   [ACTION_REQUIRED]: "fas fa-briefcase",

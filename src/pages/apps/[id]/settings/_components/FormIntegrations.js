@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Form from "~/components/Form";
 import Link from "~/components/Link";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR, SUCCESS } from "~/components/InfoBox";
 import Button from "~/components/Button";
 import slackPng from "../_assets/slack.png";
 import { updateHooks } from "../actions";
@@ -14,7 +14,7 @@ const FormIntegrations = ({
   app,
   additionalSettings: settings,
   history,
-  location
+  location,
 }) => {
   const slackHookOnStart = settings.hooks?.slack?.onStart || false;
   const slackHookOnEnd = settings.hooks?.slack?.onEnd || false;
@@ -33,7 +33,7 @@ const FormIntegrations = ({
         api,
         setLoading,
         setError,
-        history
+        history,
       })}
     >
       <Form.Section
@@ -51,7 +51,7 @@ const FormIntegrations = ({
           placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
           defaultValue={settings.hooks?.slack?.webhook}
           inputProps={{
-            "aria-label": "Webhook URL"
+            "aria-label": "Webhook URL",
           }}
           required
           fullWidth
@@ -71,7 +71,7 @@ const FormIntegrations = ({
             settings.hooks?.slack?.channel
           )}
           inputProps={{
-            "aria-label": "Channel name"
+            "aria-label": "Channel name",
           }}
           required
           fullWidth
@@ -87,7 +87,7 @@ const FormIntegrations = ({
                 name="slack.onStart"
                 value
                 checked={onStart}
-                onChange={e => {
+                onChange={(e) => {
                   setOnStart(e.target.checked);
                 }}
               />
@@ -101,7 +101,7 @@ const FormIntegrations = ({
                 name="slack.onEnd"
                 value
                 checked={onEnd}
-                onChange={e => {
+                onChange={(e) => {
                   setOnEnd(e.target.checked);
                 }}
               />
@@ -115,7 +115,7 @@ const FormIntegrations = ({
                 name="slack.onPublish"
                 value
                 checked={onPublish}
-                onChange={e => {
+                onChange={(e) => {
                   setOnPublish(e.target.checked);
                 }}
               />
@@ -129,18 +129,18 @@ const FormIntegrations = ({
         </Button>
       </div>
       {error && (
-        <InfoBox type={InfoBox.ERROR} toaster dismissable>
+        <InfoBox type={ERROR} toaster dismissable>
           {error}
         </InfoBox>
       )}
       {successMessage && (
         <InfoBox
-          type={InfoBox.SUCCESS}
+          type={SUCCESS}
           toaster
           dismissable
           onDismissed={() =>
             history.push({
-              state: { app: location?.state?.app, integrationsSuccess: null }
+              state: { app: location?.state?.app, integrationsSuccess: null },
             })
           }
         >
@@ -157,7 +157,7 @@ FormIntegrations.propTypes = {
   environments: PropTypes.array,
   additionalSettings: PropTypes.object,
   location: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
 };
 
 export default FormIntegrations;

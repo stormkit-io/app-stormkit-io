@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import AppContext from "~/pages/apps/App.context";
 import RootContext from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR, SUCCESS } from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { useFetchDeployments } from "./actions";
@@ -25,7 +25,7 @@ const Deployments = ({ app, environments, api, location }) => {
   if (error) {
     return (
       <div className="flex justify-center bg-white rounded p-4">
-        <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
+        <InfoBox type={ERROR}>{error}</InfoBox>
       </div>
     );
   }
@@ -37,7 +37,7 @@ const Deployments = ({ app, environments, api, location }) => {
       </h1>
       {/* <div className="flex flex-col justify-center bg-white rounded p-4 mb-4"><Filters /></div> */}
       {success && (
-        <InfoBox type={InfoBox.SUCCESS} className="mb-4" dismissable>
+        <InfoBox type={SUCCESS} className="mb-4" dismissable>
           <div className="flex-auto">{success}</div>
         </InfoBox>
       )}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR } from "~/components/InfoBox";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
@@ -69,7 +69,7 @@ const DeployModal = ({
           </InfoBox>
         )}
         {error && (
-          <InfoBox type={InfoBox.ERROR} className="mt-4">
+          <InfoBox type={ERROR} className="mt-4">
             {error}
           </InfoBox>
         )}

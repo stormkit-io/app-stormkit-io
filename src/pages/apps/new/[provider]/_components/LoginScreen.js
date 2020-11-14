@@ -5,7 +5,7 @@ import InfoBox from "~/components/InfoBox";
 const LoginScreen = ({ children }) => {
   return (
     <div className="mt-12">
-      <InfoBox type={InfoBox.INFO} className="mb-12">
+      <InfoBox className="mb-12">
         Seems like we lack your access token. Please authenticate using the
         button below in order to continue.
       </InfoBox>
