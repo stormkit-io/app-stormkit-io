@@ -5,7 +5,7 @@ import { connect } from "~/utils/context";
 import MenuLayout from "~/layouts/MenuLayout";
 import RootContext from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR } from "~/components/InfoBox";
 import AppHeader from "./_components/AppHeader";
 import AppMenu from "./_components/AppMenu";
 import { useFetchApp } from "./actions";
@@ -25,7 +25,7 @@ const AppContext = ({ api, match, location, history }) => {
 
   if (error || envs.error) {
     return (
-      <InfoBox type={InfoBox.ERROR}>
+      <InfoBox type={ERROR}>
         {error ||
           "Something went wrong on our side. Please try again. If the problem persists reach us out through Discord or email."}
       </InfoBox>

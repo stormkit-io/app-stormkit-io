@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import cn from "classnames";
 import Slider from "@material-ui/core/Slider";
 import Form from "~/components/Form";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR } from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
 import Button from "~/components/Button";
 import CommitInfo from "./CommitInfo";
@@ -160,7 +160,7 @@ const PublishModalDeploymentTable = ({
         </div>
       )}
       {error && (
-        <InfoBox type={InfoBox.ERROR}>
+        <InfoBox type={ERROR}>
           <div>{error}</div>
         </InfoBox>
       )}
@@ -180,7 +180,7 @@ const PublishModalDeploymentTable = ({
             />
           ))
         ) : (
-          <InfoBox type={InfoBox.DEFAULT}>
+          <InfoBox>
             <div>You have no deployments published here.</div>
           </InfoBox>
         ))}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR } from "~/components/InfoBox";
 import Button from "~/components/Button";
 import Spinner from "~/components/Spinner";
 import { insertRepo } from "../actions";
@@ -29,7 +29,7 @@ const RepoList = ({
   return (
     <>
       {state.error && (
-        <InfoBox type={InfoBox.ERROR} toaster dismissable>
+        <InfoBox type={ERROR} toaster dismissable>
           {state.error}
         </InfoBox>
       )}
@@ -84,7 +84,7 @@ const RepoList = ({
         </TransitionGroup>
       ) : (
         <div>
-          <InfoBox type={InfoBox.ERROR} className="mb-12">
+          <InfoBox type={ERROR} className="mb-12">
             We could not fetch any repository. Please make sure Stormkit has the
             necessary permissions granted.
           </InfoBox>

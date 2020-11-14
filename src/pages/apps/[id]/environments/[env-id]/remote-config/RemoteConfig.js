@@ -6,7 +6,7 @@ import RootContext from "~/pages/Root.context";
 import AppContext from "~/pages/apps/App.context";
 import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
+import InfoBox, { ERROR } from "~/components/InfoBox";
 import { PlusButton } from "~/components/Buttons";
 import { useFetchRemoteConfig } from "./actions";
 import { sortConfigByKey } from "./helpers";
@@ -71,7 +71,7 @@ const RemoteConfig = ({
             <Spinner primary />
           </div>
         )}
-        {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
+        {!loading && error && <InfoBox type={ERROR}>{error}</InfoBox>}
         {!loading && (
           <div className="w-full relative">
             {Object.keys(sorted).map((name, i) => (
