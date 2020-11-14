@@ -5,15 +5,23 @@ import Api from "~/utils/api/Api";
 import { User } from "~/types/user";
 import AuthContext from "~/pages/auth/Auth.context";
 import RootContext from "~/pages/Root.context";
+import ConfirmModal, { TConfirmModal } from "~/components/ConfirmModal";
 import SubscriptionDetails from "./_components/SubscriptionDetails";
 import PaymentDetails from "./_components/PaymentDetails";
 
 type Props = {
   api: Api;
   user: User;
+  confirmModal: TConfirmModal;
 } & RouteChildrenProps;
 
-const Account = ({ api, user, history, location }: Props): ReactElement => {
+const Account = ({
+  api,
+  user,
+  history,
+  location,
+  confirmModal,
+}: Props): ReactElement => {
   return (
     <div>
       <h1 className="mb-4 text-2xl text-white">Account settings</h1>
@@ -30,7 +38,12 @@ const Account = ({ api, user, history, location }: Props): ReactElement => {
         </h1>
       </div>
       <SubscriptionDetails api={api} user={user} />
-      <PaymentDetails api={api} history={history} location={location} />
+      <PaymentDetails
+        api={api}
+        history={history}
+        location={location}
+        confirmModal={confirmModal}
+      />
     </div>
   );
 };
@@ -38,4 +51,5 @@ const Account = ({ api, user, history, location }: Props): ReactElement => {
 export default connect(Account, [
   { Context: RootContext, props: ["api"] },
   { Context: AuthContext, props: ["user"] },
+  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
 ]);

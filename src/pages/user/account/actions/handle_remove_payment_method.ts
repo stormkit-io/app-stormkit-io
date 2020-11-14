@@ -7,18 +7,23 @@ type RemoveCardProps = {
   cardId: string;
   setError: (value: string | null) => void;
   setLoading: (value: boolean) => void;
+  closeModal: () => void;
 };
 
-export const removeCard = async ({
+export const handleRemovePaymentMethod = async ({
   api,
   history,
   cardId,
   setError,
   setLoading,
+  closeModal,
 }: RemoveCardProps): Promise<void> => {
+  setLoading(true);
+
   try {
     await api.delete("/user/subscription/card", { cardId });
     setLoading(false);
+    closeModal();
     history.push({ state: { cards: Date.now() } });
   } catch (e) {
     setLoading(false);
