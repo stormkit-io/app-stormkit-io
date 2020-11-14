@@ -38,16 +38,18 @@ const Domain = ({
   const handleDelete = (domainName) => {
     return confirmModal(
       "This will completely remove the domain and it won't be reachable anymore.",
-      ({ setLoading, setError, closeModal }) => {
-        deleteDomain({
-          api,
-          app,
-          environment,
-          domainName,
-          setLoading,
-          setError,
-          history,
-        }).then(closeModal);
+      {
+        onConfirm: ({ setLoading, setError, closeModal }) => {
+          deleteDomain({
+            api,
+            app,
+            environment,
+            domainName,
+            setLoading,
+            setError,
+            history,
+          }).then(closeModal);
+        },
       }
     );
   };
