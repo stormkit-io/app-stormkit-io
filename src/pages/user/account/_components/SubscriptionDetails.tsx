@@ -1,28 +1,65 @@
 import React, { FC, ReactElement, useEffect, useState } from "react";
+import { History, Location } from "history";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import Link from "~/components/Link";
-import Api from "~/utils/api/Api";
 import Form from "~/components/Form";
-import { User } from "~/types/user";
-import { useFetchSubscription } from "../actions";
+import { TConfirmModal } from "~/components/ConfirmModal";
+import Api from "~/utils/api/Api";
+import { useFetchSubscription, handleUpdateSubscriptionPlan } from "../actions";
+import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
 import { packages, features } from "./constants";
 
 type Props = {
   api: Api;
-  user: User;
+  location: Location;
+  history: History;
+  confirmModal: TConfirmModal;
 };
 
-const SubscriptionDetails: FC<Props> = ({ api, user }: Props): ReactElement => {
-  const { loading, error, subscription } = useFetchSubscription({ api });
-  const [selected, setSelected] = useState(subscription?.name);
+type SubscriptionDowngradePros = {
+  activePlan: ActivePlan;
+};
+
+const SubscriptionDowngrade: FC<SubscriptionDowngradePros> = ({
+  activePlan,
+}) => {
+  return (
+    <InfoBox type="default" className="mb-4">
+      Your current subscription will end on{" "}
+      {new Date(activePlan.trial_end * 1000).toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+      })}
+      . After that you'll be downgraded to <b>{activePlan.plan.nickname}</b>{" "}
+      package.
+    </InfoBox>
+  );
+};
+
+const SubscriptionDetails: FC<Props> = ({
+  api,
+  confirmModal,
+  history,
+  location,
+}: Props): ReactElement => {
+  const { loading, error, subscription } = useFetchSubscription({
+    api,
+    location,
+  });
+
+  const [selected, setSelected] = useState<SubscriptionName | undefined>(
+    subscription?.name
+  );
 
   useEffect(() => {
     setSelected(subscription?.name);
-  }, [subscription?.name]);
+  }, [subscription?.name, loading]);
 
   const pckg = packages.find((i) => i.name === subscription?.name);
+  const activePlan = subscription?.activePlans?.[0];
 
   return (
     <div>
@@ -31,8 +68,34 @@ const SubscriptionDetails: FC<Props> = ({ api, user }: Props): ReactElement => {
         {loading && <Spinner width={6} height={6} primary />}
         {!loading && error && <InfoBox type="error">{error}</InfoBox>}
         {!loading && !error && (
-          <div className="flex">
-            <Form className="w-full">
+          <div className="flex flex-col">
+            {activePlan?.status === "trialing" && (
+              <SubscriptionDowngrade activePlan={activePlan} />
+            )}
+            <Form
+              className="w-full"
+              handleSubmit={() =>
+                confirmModal(
+                  "You're about to change your subscription plan. This may incur in additional costs.",
+                  {
+                    onConfirm: (props) => {
+                      if (!selected) {
+                        return props.setError(
+                          "Subscription name is not valid."
+                        );
+                      }
+
+                      handleUpdateSubscriptionPlan({
+                        api,
+                        history,
+                        name: selected,
+                        ...props,
+                      });
+                    },
+                  }
+                )
+              }
+            >
               <div className="flex flex-wrap">
                 {packages.map((p, i) => (
                   <Button
@@ -94,6 +157,11 @@ const SubscriptionDetails: FC<Props> = ({ api, user }: Props): ReactElement => {
                   </>
                 </Link>
               </p>
+              <div className="mt-4 text-right">
+                <Button type="submit" primary>
+                  Change subscription
+                </Button>
+              </div>
             </Form>
           </div>
         )}

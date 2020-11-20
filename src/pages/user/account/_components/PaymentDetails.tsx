@@ -162,16 +162,11 @@ const PaymentDetails: FC<Props> = ({
                     className="bg-gray-90"
                   />
                 </Form.Section>
-                <div className="flex justify-center mb-4">
-                  <Button primary loading={formLoading}>
-                    Update payment method
-                  </Button>
-                </div>
-                <div className="flex justify-center">
+                <div className="flex justify-between">
                   <Link
                     to="https://www.stripe.com"
                     rel="nofollow"
-                    className="inline-flex items-center rounded bg-stripe text-white py-1 px-4 text-xs"
+                    className="inline-flex items-center rounded bg-stripe text-white py-1 px-4 text-xs self-center"
                   >
                     Powered by{" "}
                     <img
@@ -180,6 +175,9 @@ const PaymentDetails: FC<Props> = ({
                       className="w-8"
                     />
                   </Link>
+                  <Button primary loading={formLoading}>
+                    Update payment method
+                  </Button>
                 </div>
               </Form>
             )}
