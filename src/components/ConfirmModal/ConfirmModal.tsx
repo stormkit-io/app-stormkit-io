@@ -48,7 +48,11 @@ const ConfirmModal = ({ isOpen, toggleModal, children }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
   const [options, setOptions] = useState<ConfirmModalOptions>({});
-  const closeModal = (...args: [unknown?]) => toggleModal(false, ...args);
+  const closeModal = (...args: [unknown?]) => {
+    toggleModal(false, ...args);
+    setLoading(false);
+    setError(null);
+  };
 
   const confirmModal: ConfirmModalFunction = (content, options = {}) => {
     setContent(content);
