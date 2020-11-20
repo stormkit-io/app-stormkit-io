@@ -37,7 +37,12 @@ const Account = ({
           </span>
         </h1>
       </div>
-      <SubscriptionDetails api={api} user={user} />
+      <SubscriptionDetails
+        api={api}
+        history={history}
+        location={location}
+        confirmModal={confirmModal}
+      />
       <PaymentDetails
         api={api}
         history={history}
