@@ -11,7 +11,7 @@ import AppContext from "~/pages/apps/App.context";
 import AuthContext from "~/pages/auth/Auth.context";
 import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
-import InfoBox, { WARNING, ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import ConfirmModal from "~/components/ConfirmModal";
 import { PlusButton } from "~/components/Buttons";
 import { connect } from "~/utils/context";
@@ -46,7 +46,7 @@ const Team = ({
         </div>
       </h1>
       {!isCurrentUserTheOwner && !loading && (
-        <InfoBox type={WARNING} className="mb-4">
+        <InfoBox type={InfoBox.WARNING} className="mb-4">
           <div>
             In order to remove members from the team you'll need to have{" "}
             <span className="font-bold">owner</span> access.
@@ -54,7 +54,7 @@ const Team = ({
         </InfoBox>
       )}
       {error && (
-        <InfoBox type={ERROR} className="mb-4">
+        <InfoBox type={InfoBox.ERROR} className="mb-4">
           {error}
         </InfoBox>
       )}

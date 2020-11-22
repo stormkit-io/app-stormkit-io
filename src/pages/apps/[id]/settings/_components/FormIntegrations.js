@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Form from "~/components/Form";
 import Link from "~/components/Link";
-import InfoBox, { ERROR, SUCCESS } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import slackPng from "../_assets/slack.png";
 import { updateHooks } from "../actions";
@@ -129,13 +129,13 @@ const FormIntegrations = ({
         </Button>
       </div>
       {error && (
-        <InfoBox type={ERROR} toaster dismissable>
+        <InfoBox type={InfoBox.ERROR} toaster dismissable>
           {error}
         </InfoBox>
       )}
       {successMessage && (
         <InfoBox
-          type={SUCCESS}
+          type={InfoBox.SUCCESS}
           toaster
           dismissable
           onDismissed={() =>

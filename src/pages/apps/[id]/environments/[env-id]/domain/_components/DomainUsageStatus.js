@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Button from "~/components/Button";
-import InfoBox, { ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 
 const DomainUsageStatus = ({ domain, app, onVerify }) => {
   const [error, setError] = useState(null);
@@ -51,7 +51,7 @@ const DomainUsageStatus = ({ domain, app, onVerify }) => {
               <span className="font-bold">35.156.69.62</span>
             </div>
             {error && (
-              <InfoBox type={ERROR} className="mt-4">
+              <InfoBox type={InfoBox.ERROR} className="mt-4">
                 {error}
               </InfoBox>
             )}
