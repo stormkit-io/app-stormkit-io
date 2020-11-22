@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Form from "~/components/Form";
-import InfoBox, { SUCCESS, ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
@@ -161,10 +161,10 @@ const FormAppSettings = ({
           Update
         </Button>
       </div>
-      {error && <InfoBox type={ERROR}>{error}</InfoBox>}
+      {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
       {successMessage && (
         <InfoBox
-          type={SUCCESS}
+          type={InfoBox.SUCCESS}
           toaster
           dismissable
           onDismissed={() =>

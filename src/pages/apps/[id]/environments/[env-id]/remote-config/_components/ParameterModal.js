@@ -7,7 +7,7 @@ import AppContext from "~/pages/apps/App.context";
 import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
-import InfoBox, { ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { upsertRemoteConfig } from "../actions";
@@ -159,7 +159,7 @@ const ParameterModal = ({
           </Button>
         </div>
         {error && (
-          <InfoBox className="mt-8" type={ERROR}>
+          <InfoBox className="mt-8" type={InfoBox.ERROR}>
             {error}
           </InfoBox>
         )}

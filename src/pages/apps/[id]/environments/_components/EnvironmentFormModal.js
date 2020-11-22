@@ -5,7 +5,7 @@ import Modal from "~/components/Modal";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
-import InfoBox, { ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import ConfirmModal from "~/components/ConfirmModal";
 import { PlusButton } from "~/components/Buttons";
 import { connect } from "~/utils/context";
@@ -285,7 +285,7 @@ const EnvironmentFormModal = ({
             />
           </div>
           {error && (
-            <InfoBox type={ERROR} className="mb-8" scrollIntoView>
+            <InfoBox type={InfoBox.ERROR} className="mb-8" scrollIntoView>
               {error}
             </InfoBox>
           )}

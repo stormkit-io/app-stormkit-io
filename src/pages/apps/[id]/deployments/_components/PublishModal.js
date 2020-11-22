@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
-import InfoBox, { ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import { connect } from "~/utils/context";
 import { useFetchDeployments, publishDeployments } from "../actions";
@@ -43,7 +43,7 @@ const PublishModal = ({
       </Form>
       <div>
         {publishError && (
-          <InfoBox type={ERROR} className="mb-4" scrollIntoView>
+          <InfoBox type={InfoBox.ERROR} className="mb-4" scrollIntoView>
             {publishError}
           </InfoBox>
         )}

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import RootContext from "~/pages/Root.context";
 import AppContext from "~/pages/apps/App.context";
-import InfoBox, { ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
 import { connect } from "~/utils/context";
 import EnvironmentContext from "../Environment.context";
@@ -14,7 +14,7 @@ const Logs = ({ api, environment, app }) => {
   return (
     <div className="bg-white rounded p-8 mt-4">
       {error && !loading && (
-        <InfoBox type={ERROR}>{error.message || error}</InfoBox>
+        <InfoBox type={InfoBox.ERROR}>{error.message || error}</InfoBox>
       )}
       {loading && (
         <div className="flex justify-center">

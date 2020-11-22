@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Form from "~/components/Form";
 import Link from "~/components/Link";
-import InfoBox, { ERROR, SUCCESS } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import CopyBox from "~/components/CopyBox";
 import Button from "~/components/Button";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
@@ -80,10 +80,10 @@ const FormTriggerDeploys = ({
           {additionalSettings.trigger ? "Generate a new endpoint" : "Generate"}
         </Button>
       </div>
-      {error && <InfoBox type={ERROR}>{error}</InfoBox>}
+      {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
       {successMessage && (
         <InfoBox
-          type={SUCCESS}
+          type={InfoBox.SUCCESS}
           toaster
           dismissable
           onDismissed={() =>

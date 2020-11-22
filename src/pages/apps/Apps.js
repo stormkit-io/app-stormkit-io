@@ -5,7 +5,7 @@ import { connect } from "~/utils/context";
 import RootContext from "~/pages/Root.context";
 import DefaultLayout from "~/layouts/DefaultLayout";
 import Button from "~/components/Button";
-import InfoBox, { SUCCESS } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
 import Link from "~/components/Link";
 import ExplanationBox from "~/components/ExplanationBox";
@@ -22,7 +22,7 @@ export const Home = ({ api, location }) => {
   return (
     <DefaultLayout>
       {location.state?.repoInsert && (
-        <InfoBox type={SUCCESS} toaster dismissable>
+        <InfoBox type={InfoBox.SUCCESS} toaster dismissable>
           <p className="flex-auto">
             Great, your app has been created! You can now start deploying.
           </p>

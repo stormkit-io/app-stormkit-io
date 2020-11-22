@@ -86,7 +86,7 @@ const ConfirmModal = ({ isOpen, toggleModal, children }: Props) => {
           <p>Are you sure you want to continue?</p>
         </div>
         {error && (
-          <InfoBox className="mt-8" type="error">
+          <InfoBox className="mt-8" type={InfoBox.ERROR}>
             {error}
           </InfoBox>
         )}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
-import InfoBox, { ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { setDomain } from "../actions";
@@ -57,7 +57,7 @@ const DomainModal = ({
           </p>
         </div>
         {error && (
-          <InfoBox className="mb-4" type={ERROR}>
+          <InfoBox className="mb-4" type={InfoBox.ERROR}>
             {error}
           </InfoBox>
         )}

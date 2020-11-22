@@ -6,7 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableContainer from "@material-ui/core/TableContainer";
 import Button from "~/components/Button";
-import InfoBox, { ERROR } from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBox";
 
 const DomainVerificationStatus = ({ domain, onVerify }) => {
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ const DomainVerificationStatus = ({ domain, onVerify }) => {
               </Table>
             </TableContainer>
             {error && (
-              <InfoBox type={ERROR} className="mt-4">
+              <InfoBox type={InfoBox.ERROR} className="mt-4">
                 {error}
               </InfoBox>
             )}
