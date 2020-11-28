@@ -1,15 +1,21 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { FC, ReactElement, useState } from "react";
 import Form from "~/components/Form";
 
-const EnvironmentSelector = ({
+type Props = {
+  environments: any[];
+  placeholder: string;
+  onSelect: (arg0: number) => void;
+  defaultValue: string;
+};
+
+const EnvironmentSelector: FC<Props> = ({
   environments,
-  defaultValue = "",
+  defaultValue,
   onSelect,
   placeholder,
   ...rest
-}) => {
-  const [selectedEnvironment, setSelectedEnvironment] = useState(defaultValue);
+}): ReactElement => {
+  const [selectedEnvironment, setSelectedEnvironment] = useState<string>(defaultValue);
 
   return (
     <div {...rest}>
@@ -44,14 +50,8 @@ const EnvironmentSelector = ({
 };
 
 EnvironmentSelector.defaultProps = {
-  placeholder: "Select an environment"
-};
-
-EnvironmentSelector.propTypes = {
-  environments: PropTypes.array,
-  placeholder: PropTypes.string,
-  onSelect: PropTypes.func,
-  defaultValue: PropTypes.string
-};
+  placeholder: "Select an environment",
+  defaultValue: ""
+} as Partial<Props>;
 
 export default EnvironmentSelector;

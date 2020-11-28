@@ -11,6 +11,7 @@ type Props = {
   children: ReactNode;
   className?: string;
   disabled?: boolean;
+  value: string;
 }
 
 const Option: FC<Props> = forwardRef(({
