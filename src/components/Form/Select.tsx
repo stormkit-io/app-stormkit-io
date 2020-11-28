@@ -4,14 +4,17 @@ import SelectInput from "@material-ui/core/Select";
 
 type Props = {
   onChange: (arg0: any) => void;
-  variant: "filled" | "standard" | "outlined";
+  variant?: "filled" | "standard" | "outlined";
   className?: string;
+  name: string;
+  displayEmpty: boolean;
+  value: string;
 };
 
 const Select: FC<Props> = ({
   onChange,
   className,
-  variant = "filled",
+  variant,
   ...rest
 }: Props): ReactElement => {
   return (
@@ -24,5 +27,9 @@ const Select: FC<Props> = ({
     />
   );
 };
+
+Select.defaultProps = {
+  variant: "filled"
+} as Partial<Props>
 
 export default Select;
