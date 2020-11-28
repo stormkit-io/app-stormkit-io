@@ -1,83 +1,110 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, ReactNode } from "react";
 import { createPortal } from "react-dom";
-import PropTypes from "prop-types";
 import cn from "classnames";
 import Button from "~/components/Button";
 import ModalContext from "./Modal.context";
 import { timeout } from "./constants";
 import "./Modal.css";
 
-let _root;
+let _root: any;
 
-class Modal extends PureComponent {
+type Props = {
+  children: ReactNode;
+  isOpen: boolean;
+  onClose: () => void;
+  fullScreen?: boolean;
+  className: string;
+}
+
+type State = {
+  isMouseClicked: boolean;
+  isAboutToClose: boolean;
+  isClosedGracefully: boolean;
+}
+
+class Modal extends PureComponent<Props, State> {
   static Context = ModalContext;
   static timeout = timeout;
 
-  static propTypes = {
-    children: PropTypes.node,
-    isOpen: PropTypes.bool,
-    onClose: PropTypes.func,
-    fullScreen: PropTypes.bool
+  state = {
+    isMouseClicked: false,
+    isAboutToClose: false,
+
+    // Initially we assume the state is always that it is closed gracefully.
+    isClosedGracefully: !this.props.isOpen
+  }
+
+  onEscape = (e: KeyboardEvent): void => {
+    if (e.key === "Escape") {
+      this.setState({
+        isMouseClicked: true
+      });
+      this.gracefulClose(e);
+    }
   };
 
-  // Initially we assume the state is always that it is closed gracefully.
-  isClosedGracefully = !this.props.isOpen;
-
-  componentDidUpdate({ isOpen: oldIsOpen }) {
+  componentDidUpdate({ isOpen: oldIsOpen }: any): void {
     const newIsOpen = this.props.isOpen;
 
     if (newIsOpen) {
-      this.isClosedGracefully = false;
-      this.isMouseClicked = false;
-
-      this.onEscape = e => {
-        if (e.key === "Escape") {
-          this.isMouseClicked = true;
-          this.gracefulClose();
-        }
-      };
+      this.setState({
+        isClosedGracefully: false,
+        isMouseClicked: false
+      });
 
       window.addEventListener("keyup", this.onEscape);
     }
 
     if (oldIsOpen && !newIsOpen) {
-      this.isAboutToClose = true;
+      this.setState({
+        isAboutToClose: true
+      });
       this.forceUpdate();
 
       setTimeout(() => {
-        this.isAboutToClose = false;
-        this.isClosedGracefully = true;
+        this.setState({
+          isAboutToClose: false,
+          isClosedGracefully: true
+        });
+
         this.forceUpdate();
         window.removeEventListener("keyup", this.onEscape);
       }, timeout);
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     window.removeEventListener("keyup", this.onEscape);
   }
 
-  gracefulClose = e => {
-    if (this.isMouseClicked !== true) {
+  gracefulClose = (e: any): void => {
+    if (this.state.isMouseClicked !== true) {
       return;
     }
 
     e && e.preventDefault();
-    this.isAboutToClose = true;
-    this.isClosedGracefully = true;
+
+    this.setState({
+      isAboutToClose: true,
+      isClosedGracefully: true
+    });
+
     this.forceUpdate();
 
     setTimeout(() => {
       this.props.onClose && this.props.onClose();
-      this.isAboutToClose = false;
-      this.isClosedGracefully = true;
+      this.setState({
+        isAboutToClose: false,
+        isClosedGracefully: true
+      });
     }, timeout);
   };
 
-  render() {
+  render(): ReactNode {
     const { children, isOpen, className } = this.props;
+    const { isClosedGracefully, isAboutToClose } = this.state;
 
-    if (isOpen !== true && this.isClosedGracefully) {
+    if (isOpen !== true && isClosedGracefully) {
       return null;
     }
 
@@ -88,11 +115,11 @@ class Modal extends PureComponent {
     return createPortal(
       <div
         className={cn("modal-overlay fixed inset-0 bg-black-o-75 z-50", {
-          "opacity-0": this.isAboutToClose
+          "opacity-0": isAboutToClose
         })}
-        onMouseUp={this.gracefulClose}
+        onMouseUp={(e) => this.gracefulClose(e)}
         onMouseDown={() => {
-          this.isMouseClicked = true;
+          this.setState({ isMouseClicked: true });
         }}
       >
         <div className="flex items-center w-full h-full">
@@ -107,9 +134,9 @@ class Modal extends PureComponent {
             <Button
               styled={false}
               className="absolute top-0 right-0 -mt-4 -mr-4"
-              onMouseUp={this.gracefulClose}
+              onMouseUp={(e) => this.gracefulClose(e)}
               onMouseDown={() => {
-                this.isMouseClicked = true;
+                this.setState({ isMouseClicked: true });
               }}
             >
               <i className="fas fa-times" />
