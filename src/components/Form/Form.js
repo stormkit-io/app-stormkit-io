@@ -11,21 +11,20 @@ import Select from "./Select";
 import Option from "./Option";
 import Toggler from "./Toggler";
 import Switch from "./Switch";
-import Success from "./Success";
 import Section from "./components/Section";
 import Description from "./components/Description";
 
 const StyledForm = styled.form``;
 
 StyledForm.defaultProps = {
-  width: "100%"
+  width: "100%",
 };
 
 export default class Form extends PureComponent {
   static defaultProps = {
     method: "GET",
     ignoreEmptyValues: false,
-    autoComplete: "off"
+    autoComplete: "off",
   };
 
   static propTypes = {
@@ -58,7 +57,7 @@ export default class Form extends PureComponent {
      * Whether autocomplete should be turned on or off.
      * Possible values are "on" or "off".
      */
-    autoComplete: PropTypes.string
+    autoComplete: PropTypes.string,
   };
 
   static ButtonLink = ButtonLink;
@@ -69,11 +68,10 @@ export default class Form extends PureComponent {
   static Option = Option;
   static Toggler = Toggler;
   static Switch = Switch;
-  static Success = Success;
   static Section = Section;
   static Description = Description;
 
-  static getElementValue = el => {
+  static getElementValue = (el) => {
     const type = el.getAttribute("type");
 
     if (type === "checkbox") {
@@ -129,10 +127,10 @@ export default class Form extends PureComponent {
 
   state = {
     loading: false,
-    errors: {}
+    errors: {},
   };
 
-  onSubmit = async e => {
+  onSubmit = async (e) => {
     e.preventDefault();
 
     const { handleSubmit, ignoreEmptyValues, ignoreDisabled } = this.props;
@@ -144,7 +142,7 @@ export default class Form extends PureComponent {
     const form = ReactDOM.findDOMNode(this);
     const values = Form.collectFormValues(form, {
       ignoreEmptyValues,
-      ignoreDisabled
+      ignoreDisabled,
     });
 
     this.setState({ loading: true });
@@ -166,7 +164,7 @@ export default class Form extends PureComponent {
     }
   };
 
-  resetErrors = name => {
+  resetErrors = (name) => {
     if (this.state.errors[name]) {
       const errors = { ...this.state.errors };
       delete errors[name];
