@@ -1,4 +1,4 @@
-import React, { PureComponent, ReactNode } from "react";
+import React, { PureComponent, ReactNode, SyntheticEvent } from "react";
 import { createPortal } from "react-dom";
 import cn from "classnames";
 import Button from "~/components/Button";
@@ -13,60 +13,41 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   fullScreen?: boolean;
-  className: string;
+  className?: string;
 }
-
-type State = {
-  isMouseClicked: boolean;
-  isAboutToClose: boolean;
-  isClosedGracefully: boolean;
-}
-
-class Modal extends PureComponent<Props, State> {
+class Modal extends PureComponent<Props> {
   static Context = ModalContext;
   static timeout = timeout;
+  isMouseClicked = false;
+  isAboutToClose = false;
 
-  state = {
-    isMouseClicked: false,
-    isAboutToClose: false,
-
-    // Initially we assume the state is always that it is closed gracefully.
-    isClosedGracefully: !this.props.isOpen
-  }
+  // Initially we assume the state is always that it is closed gracefully.
+  isClosedGracefully = !this.props.isOpen;
 
   onEscape = (e: KeyboardEvent): void => {
     if (e.key === "Escape") {
-      this.setState({
-        isMouseClicked: true
-      });
-      this.gracefulClose(e);
+      this.isMouseClicked = true;
+      this.gracefulClose();
     }
   };
 
-  componentDidUpdate({ isOpen: oldIsOpen }: any): void {
+  componentDidUpdate({ isOpen: oldIsOpen }: Props): void {
     const newIsOpen = this.props.isOpen;
 
     if (newIsOpen) {
-      this.setState({
-        isClosedGracefully: false,
-        isMouseClicked: false
-      });
+      this.isClosedGracefully = false;
+      this.isMouseClicked = false;
 
       window.addEventListener("keyup", this.onEscape);
     }
 
     if (oldIsOpen && !newIsOpen) {
-      this.setState({
-        isAboutToClose: true
-      });
+      this.isAboutToClose = true;
       this.forceUpdate();
 
       setTimeout(() => {
-        this.setState({
-          isAboutToClose: false,
-          isClosedGracefully: true
-        });
-
+        this.isAboutToClose = false;
+        this.isClosedGracefully = true;
         this.forceUpdate();
         window.removeEventListener("keyup", this.onEscape);
       }, timeout);
@@ -77,34 +58,27 @@ class Modal extends PureComponent<Props, State> {
     window.removeEventListener("keyup", this.onEscape);
   }
 
-  gracefulClose = (e: any): void => {
-    if (this.state.isMouseClicked !== true) {
+  gracefulClose = (e?: SyntheticEvent<HTMLDivElement, MouseEvent>): void => {
+    if (this.isMouseClicked !== true) {
       return;
     }
 
     e && e.preventDefault();
-
-    this.setState({
-      isAboutToClose: true,
-      isClosedGracefully: true
-    });
-
+    this.isAboutToClose = true;
+    this.isClosedGracefully = true;
     this.forceUpdate();
 
     setTimeout(() => {
       this.props.onClose && this.props.onClose();
-      this.setState({
-        isAboutToClose: false,
-        isClosedGracefully: true
-      });
+      this.isAboutToClose = false;
+      this.isClosedGracefully = true;
     }, timeout);
   };
 
   render(): ReactNode {
     const { children, isOpen, className } = this.props;
-    const { isClosedGracefully, isAboutToClose } = this.state;
 
-    if (isOpen !== true && isClosedGracefully) {
+    if (isOpen !== true && this.isClosedGracefully) {
       return null;
     }
 
@@ -115,11 +89,11 @@ class Modal extends PureComponent<Props, State> {
     return createPortal(
       <div
         className={cn("modal-overlay fixed inset-0 bg-black-o-75 z-50", {
-          "opacity-0": isAboutToClose
+          "opacity-0": this.isAboutToClose
         })}
         onMouseUp={(e) => this.gracefulClose(e)}
         onMouseDown={() => {
-          this.setState({ isMouseClicked: true });
+          this.isMouseClicked = true;
         }}
       >
         <div className="flex items-center w-full h-full">
@@ -134,9 +108,9 @@ class Modal extends PureComponent<Props, State> {
             <Button
               styled={false}
               className="absolute top-0 right-0 -mt-4 -mr-4"
-              onMouseUp={(e) => this.gracefulClose(e)}
+              onMouseUp={() => this.gracefulClose}
               onMouseDown={() => {
-                this.setState({ isMouseClicked: true });
+                this.isMouseClicked = true;
               }}
             >
               <i className="fas fa-times" />
