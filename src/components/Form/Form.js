@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import FormContext from "./context";
 import Input from "./Input";
-import Button from "./Button";
 import ButtonLink from "./ButtonLink";
 import Checkbox from "./Checkbox";
 import Radio from "./Radio";
@@ -64,7 +63,6 @@ export default class Form extends PureComponent {
   };
 
   static ButtonLink = ButtonLink;
-  static Button = Button;
   static Input = Input;
   static Checkbox = Checkbox;
   static Radio = Radio;
