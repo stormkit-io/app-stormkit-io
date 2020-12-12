@@ -11,7 +11,6 @@ import Select from "./Select";
 import Option from "./Option";
 import Toggler from "./Toggler";
 import Switch from "./Switch";
-import Errors from "./Errors";
 import Success from "./Success";
 import Section from "./components/Section";
 import Description from "./components/Description";
@@ -70,7 +69,6 @@ export default class Form extends PureComponent {
   static Option = Option;
   static Toggler = Toggler;
   static Switch = Switch;
-  static Errors = Errors;
   static Success = Success;
   static Section = Section;
   static Description = Description;
