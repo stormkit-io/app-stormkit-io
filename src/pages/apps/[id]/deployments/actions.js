@@ -41,7 +41,7 @@ export const publishDeployments = ({ api, app, setPublishError, history }) => (
   }
 
   return api
-    .post(`/app/publish`, {
+    .post(`/app/deployments/publish`, {
       appId: `${app.id}`,
       envId,
       publish,
