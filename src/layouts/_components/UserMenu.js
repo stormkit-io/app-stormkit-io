@@ -15,7 +15,7 @@ const menuItems = [
     title: "User",
     children: [
       { to: "/user/account", text: "Account" },
-      { to: "/user/referral", text: "Free Credits" },
+      // { to: "/user/referral", text: "Free Credits" }, TODO: Implement this part
       {
         to: "https://www.stormkit.io/docs",
         text: "Docs"
