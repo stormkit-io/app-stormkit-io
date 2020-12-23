@@ -1,7 +1,8 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "ES2019",
+    "module": "esnext",
+    "target": "es2019",
     "outDir": "./dist",
     "baseUrl": "./src",
     "skipLibCheck": true,
