@@ -52,7 +52,9 @@ const EnvironmentFormModal = ({
   const handleSubmit = isEdit ? editEnvironment : insertEnvironment;
 
   useEffect(() => {
-    setIsAutoPublish(env?.autoPublish);
+    if (typeof env?.autoPublish !== "undefined") {
+      setIsAutoPublish(env?.autoPublish);
+    }
   }, [env?.autoPublish]);
 
   useEffect(() => {
