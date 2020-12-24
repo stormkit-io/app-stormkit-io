@@ -34,22 +34,26 @@ const envVarsToArray = (environment) =>
 const EnvironmentFormModal = ({
   isOpen,
   toggleModal,
-  environment,
+  environment: env,
   confirmModal,
   api,
   app,
   history,
 }) => {
-  const [isAutoPublish, setIsAutoPublish] = useState(true);
-  const [isServerless, setIsServerless] = useState(!!environment?.build?.entry);
-  const [envVars, setEnvVars] = useState(envVarsToArray(environment));
+  const [isAutoPublish, setIsAutoPublish] = useState(env?.autoPublish || true);
+  const [isServerless, setIsServerless] = useState(!!env?.build?.entry);
+  const [envVars, setEnvVars] = useState(envVarsToArray(env));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [framework, setFramework] = useState("");
   const isFramework = framework !== "" && framework !== "other";
-  const { meta } = useFetchRepoType({ api, app, env: environment });
-  const isEdit = !!environment?.id;
+  const { meta } = useFetchRepoType({ api, app, env });
+  const isEdit = !!env?.id;
   const handleSubmit = isEdit ? editEnvironment : insertEnvironment;
+
+  useEffect(() => {
+    setIsAutoPublish(env?.autoPublish);
+  }, [env?.autoPublish]);
 
   useEffect(() => {
     setFramework(
@@ -70,7 +74,7 @@ const EnvironmentFormModal = ({
           app,
           isServerless,
           isAutoPublish,
-          name: environment?.env,
+          name: env?.env,
           history,
           toggleModal,
           setLoading,
@@ -84,7 +88,7 @@ const EnvironmentFormModal = ({
             label="Name"
             className="bg-gray-90"
             required
-            defaultValue={environment?.env}
+            defaultValue={env?.env}
             fullWidth
             inputProps={{
               "aria-label": "Environment name",
@@ -101,7 +105,7 @@ const EnvironmentFormModal = ({
             label="Branch"
             className="bg-gray-90"
             required
-            defaultValue={environment?.branch}
+            defaultValue={env?.branch}
             fullWidth
             inputProps={{
               "aria-label": "Branch name",
@@ -174,7 +178,7 @@ const EnvironmentFormModal = ({
                 name="build.entry"
                 label="Serverless entry file"
                 className="bg-gray-90"
-                defaultValue={environment?.build?.entry || ""}
+                defaultValue={env?.build?.entry || ""}
                 fullWidth
                 inputProps={{
                   "aria-label": "Serverless entry file",
@@ -199,7 +203,7 @@ const EnvironmentFormModal = ({
                 name="build.distFolder"
                 label="Public folder"
                 className="bg-gray-90"
-                defaultValue={environment?.build?.distFolder || ""}
+                defaultValue={env?.build?.distFolder || ""}
                 inputProps={{
                   "aria-label": "Output/dist folder",
                 }}
@@ -217,7 +221,7 @@ const EnvironmentFormModal = ({
               label="Build command"
               className="bg-gray-90"
               required={meta.packageJson}
-              defaultValue={environment?.build?.cmd || ""}
+              defaultValue={env?.build?.cmd || ""}
               inputProps={{
                 "aria-label": "Build command",
               }}
@@ -290,7 +294,7 @@ const EnvironmentFormModal = ({
             </InfoBox>
           )}
           <div className="flex justify-between">
-            {isEdit && environment?.env !== "production" && (
+            {isEdit && env?.env !== "production" && (
               <Button
                 secondary
                 type="button"
@@ -303,7 +307,7 @@ const EnvironmentFormModal = ({
                         deleteEnvironment({
                           api,
                           app,
-                          environment,
+                          environment: env,
                           history,
                           setLoading,
                           setError,
