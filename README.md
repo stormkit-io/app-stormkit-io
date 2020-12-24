@@ -16,7 +16,7 @@ Stormkit is an infrastructure provider for modern javascript applications. It su
 
 ## Latest development
 
-You can preview the latest development at [https://beta.stormkit.dev/](https://beta.stormkit.dev). This will reflect
+You can preview the latest development on [https://app.stormkit.io/](https://app.stormkit.io). This will reflect
 changes from latest master branch.
 
 ## Contributing
