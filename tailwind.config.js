@@ -3,30 +3,37 @@ module.exports = {
     enabled: process.env.NODE_ENV === "production",
     content: ["src/index.js", "src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
     options: {
-      safelist: [
-        // Provider related dynamic classes
-        "hover:bg-github",
-        "hover:bg-gitlab",
-        "hover:bg-bitbucket",
-        "border-github",
-        "border-gitlab",
-        "border-bitbucket",
-        "text-github",
-        "text-gitlab",
-        "text-bitbucket",
+      safelist: {
+        standard: [
+          // Provider related dynamic classes
+          "hover:text-github",
+          "hover:text-gitlab",
+          "hover:text-bitbucket",
+          "hover:border-github",
+          "hover:border-gitlab",
+          "hover:border-bitbucket",
+          "border-github",
+          "border-gitlab",
+          "border-bitbucket",
+          "text-github",
+          "text-gitlab",
+          "text-bitbucket",
 
-        // InfoBox related dynamic classes
-        "text-blue-20",
-        "bg-yellow-80",
-        "bg-blue-90",
-        "bg-blue-80",
-        "bg-red-50",
-        "border-blue-80",
-        "border-yellow-60",
-        "border-green-50",
-        "border-red-50"
-      ],
-      safelistPatterns: [/^(w|h)-/]
+          // InfoBox related dynamic classes
+          "text-blue-20",
+          "bg-yellow-80",
+          "bg-blue-90",
+          "bg-blue-80",
+          "bg-red-50",
+          "border-blue-80",
+          "border-yellow-60",
+          "border-green-50",
+          "border-red-50",
+
+          // Regexp
+          /^(w|h)-/
+        ]
+      }
     }
   },
   theme: {
@@ -38,49 +45,37 @@ module.exports = {
       full: "100%",
       DEFAULT: "6px"
     },
-    maxWidth: {
-      "0": "0",
-      "1/4": "25%",
-      "1/3": "33%",
-      "1/2": "50%",
-      "3/4": "75%",
-      p48: "48%",
-      xs: "20rem",
-      sm: "24rem",
-      "2xl": "42rem",
-      "screen-sm": "640px",
-      "screen-md": "768px",
-      "screen-lg": "1024px",
-      "screen-xl": "1280px",
-      10: "2.5rem",
-      12: "3rem",
-      16: "4rem",
-      48: "12rem",
-      56: "14rem",
-      64: "16rem",
-      72: "20rem",
-      128: "32rem",
-      none: "none",
-      full: "100%"
-    },
-    minWidth: {
-      "0": "0",
-      "1/4": "25%",
-      "1/3": "33%",
-      "1/2": "50%",
-      "3/4": "75%",
-      p48: "48%",
-      10: "2.5rem",
-      12: "3rem",
-      16: "4rem",
-      48: "12rem",
-      56: "14rem",
-      64: "16rem",
-      72: "20rem",
-      128: "32rem",
-      full: "100%"
-    },
     extend: {
+      maxWidth: {
+        "1/4": "25%",
+        "1/3": "33%",
+        "1/2": "50%",
+        "3/4": "75%",
+        p48: "48%",
+        10: "2.5rem",
+        12: "3rem",
+        16: "4rem",
+        48: "12rem",
+        56: "14rem",
+        64: "16rem",
+        72: "20rem",
+        128: "32rem"
+      },
+      minWidth: {
+        "1/4": "25%",
+        "1/3": "33%",
+        "1/2": "50%",
+        "3/4": "75%",
+        p48: "48%",
+        10: "2.5rem",
+        12: "3rem",
+        16: "4rem",
+        48: "12rem",
+        56: "14rem",
+        64: "16rem",
+        72: "20rem",
+        128: "32rem"
+      },
       colors: {
         primary: "#4f4f4f",
         secondary: "#bcbed0",
