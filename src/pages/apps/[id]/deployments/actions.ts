@@ -157,7 +157,7 @@ export const useFetchDeployments = ({
       })
       .then((res) => {
         if (unmounted !== true) {
-          setDeployments((d) => [...d, ...res.deploys]);
+          setDeployments(res.deploys);
           setHasNextPage(res.hasNextPage);
         }
       })
