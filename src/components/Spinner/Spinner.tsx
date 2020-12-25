@@ -23,7 +23,8 @@ const Spinner: FC<Props> = ({
     className={cn(
       "spinner",
       "rounded-full",
-      `w-${width} h-${height}`,
+      `w-${width}`,
+      `h-${height}`,
       {
         "page-center": pageCenter,
         "bg-pink-50": primary,
