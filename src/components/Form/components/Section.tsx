@@ -12,7 +12,7 @@ const Section: FC<Props> = ({
   children,
   className,
   label,
-  marginBottom = "mb-8",
+  marginBottom = "mb-8"
 }: Props): ReactElement => {
   return (
     <div className={cn("flex", marginBottom, className)}>

@@ -19,7 +19,7 @@ interface Props {
 const Deployments: React.FC<Props> = ({
   app,
   environments,
-  api,
+  api
 }: Props): React.ReactElement => {
   const [from, setFrom] = useState(0);
   const depls = useFetchDeployments({ app, api, from, setFrom });
@@ -29,7 +29,7 @@ const Deployments: React.FC<Props> = ({
     hasNextPage,
     setDeployments,
     loading,
-    error,
+    error
   } = depls;
 
   if (error) {
@@ -89,5 +89,5 @@ const Deployments: React.FC<Props> = ({
 
 export default connect(Deployments, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app", "environments"] },
+  { Context: AppContext, props: ["app", "environments"] }
 ]);

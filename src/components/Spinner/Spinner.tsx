@@ -17,7 +17,7 @@ const Spinner: FC<Props> = ({
   pageCenter,
   primary,
   secondary,
-  className,
+  className
 }: Props): ReactElement => (
   <div
     className={cn(
@@ -28,7 +28,7 @@ const Spinner: FC<Props> = ({
       {
         "page-center": pageCenter,
         "bg-pink-50": primary,
-        "bg-blue-20": secondary,
+        "bg-blue-20": secondary
       },
       className
     )}
@@ -43,7 +43,7 @@ const Spinner: FC<Props> = ({
 // Width and height are numbers compatible with tailwind sizes.
 Spinner.defaultProps = {
   width: 10,
-  height: 10,
+  height: 10
 } as Partial<Props>;
 
 export default Spinner;

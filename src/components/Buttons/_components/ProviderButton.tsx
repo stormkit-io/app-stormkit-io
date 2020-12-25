@@ -30,7 +30,7 @@ const ProviderButton: FC<Props> = ({
           "border",
           `hover:border-${provider}`,
           `hover:text-${provider}`,
-          "rounded-xl",
+          "rounded-xl"
         ],
         className
       )}

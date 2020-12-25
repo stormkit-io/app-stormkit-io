@@ -23,7 +23,7 @@ type SubscriptionDowngradePros = {
 };
 
 const SubscriptionDowngrade: FC<SubscriptionDowngradePros> = ({
-  activePlan,
+  activePlan
 }) => {
   return (
     <InfoBox type="default" className="mb-4">
@@ -31,7 +31,7 @@ const SubscriptionDowngrade: FC<SubscriptionDowngradePros> = ({
       {new Date(activePlan.trial_end * 1000).toLocaleDateString("en-GB", {
         year: "numeric",
         month: "long",
-        day: "2-digit",
+        day: "2-digit"
       })}
       . After that you'll be downgraded to <b>{activePlan.plan.nickname}</b>{" "}
       package.
@@ -43,11 +43,11 @@ const SubscriptionDetails: FC<Props> = ({
   api,
   confirmModal,
   history,
-  location,
+  location
 }: Props): ReactElement => {
   const { loading, error, subscription } = useFetchSubscription({
     api,
-    location,
+    location
   });
 
   const [selected, setSelected] = useState<SubscriptionName | undefined>(
@@ -58,7 +58,7 @@ const SubscriptionDetails: FC<Props> = ({
     setSelected(subscription?.name);
   }, [subscription?.name, loading]);
 
-  const pckg = packages.find((i) => i.name === subscription?.name);
+  const pckg = packages.find(i => i.name === subscription?.name);
   const activePlan = subscription?.activePlans?.[0];
 
   return (
@@ -78,7 +78,7 @@ const SubscriptionDetails: FC<Props> = ({
                 confirmModal(
                   "You're about to change your subscription plan. This may incur in additional costs.",
                   {
-                    onConfirm: (props) => {
+                    onConfirm: props => {
                       if (!selected) {
                         return props.setError(
                           "Subscription name is not valid."
@@ -89,9 +89,9 @@ const SubscriptionDetails: FC<Props> = ({
                         api,
                         history,
                         name: selected,
-                        ...props,
+                        ...props
                       });
-                    },
+                    }
                   }
                 )
               }
@@ -105,7 +105,7 @@ const SubscriptionDetails: FC<Props> = ({
                     style={{
                       maxWidth: "49%",
                       minWidth: "49%",
-                      marginRight: i % 2 === 0 ? "2%" : 0,
+                      marginRight: i % 2 === 0 ? "2%" : 0
                     }}
                     className="price flex flex-col flex-auto shadow-lg border border-gray-80 p-6 bg-white mb-4"
                     onClick={() => {
@@ -131,7 +131,7 @@ const SubscriptionDetails: FC<Props> = ({
                       <span className="text-xs">/ month</span>
                     </div>
                     <ul className="flex-auto">
-                      {features[p.name].map((f) => (
+                      {features[p.name].map(f => (
                         <li key={f} className="text-sm mb-2">
                           <span
                             className="fas fa-check-circle mr-2"

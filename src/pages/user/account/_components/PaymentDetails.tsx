@@ -15,7 +15,7 @@ import stripeLogoSvg from "~/assets/images/stripe-logo-white.svg";
 const {
   useFetchCards,
   handleUpdatePaymentMethod,
-  handleRemovePaymentMethod,
+  handleRemovePaymentMethod
 } = actions;
 
 type Props = {
@@ -31,14 +31,14 @@ const {
   CardExpiryElement,
   CardCvcElement,
   useStripe,
-  useElements,
+  useElements
 } = stripejs;
 
 const PaymentDetails: FC<Props> = ({
   api,
   history,
   location,
-  confirmModal,
+  confirmModal
 }: Props): ReactElement => {
   const [showForm, setShowForm] = useState(false);
   const [formError, setError] = useState<string | null>(null);
@@ -62,7 +62,7 @@ const PaymentDetails: FC<Props> = ({
           <>
             {cards.length ? (
               <div className="mb-4">
-                {cards.map((card) => (
+                {cards.map(card => (
                   <div
                     key={card.id}
                     className="flex justify-between bg-gray-90 border border-solid border-gray-83 p-4"
@@ -96,7 +96,7 @@ const PaymentDetails: FC<Props> = ({
                               onConfirm: ({
                                 setLoading,
                                 setError,
-                                closeModal,
+                                closeModal
                               }) => {
                                 handleRemovePaymentMethod({
                                   api,
@@ -104,9 +104,9 @@ const PaymentDetails: FC<Props> = ({
                                   setLoading,
                                   setError,
                                   history,
-                                  closeModal,
+                                  closeModal
                                 });
-                              },
+                              }
                             }
                           )
                         }
@@ -128,7 +128,7 @@ const PaymentDetails: FC<Props> = ({
                   api,
                   history,
                   setError,
-                  setLoading,
+                  setLoading
                 })}
               >
                 {errorMsg && (

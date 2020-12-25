@@ -19,7 +19,7 @@ const Account = ({
   user,
   history,
   location,
-  confirmModal,
+  confirmModal
 }: Props): ReactElement => {
   return (
     <div>
@@ -55,5 +55,5 @@ const Account = ({
 export default connect(Account, [
   { Context: RootContext, props: ["api"] },
   { Context: AuthContext, props: ["user"] },
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
+  { Context: ConfirmModal, props: ["confirmModal"], wrap: true }
 ]);
