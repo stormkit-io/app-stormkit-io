@@ -2,7 +2,7 @@ import React, { FC, ReactElement, ReactNode } from "react";
 import cn from "classnames";
 import Button from "~/components/Button";
 
-type Props = {
+export interface Props {
   provider: "github" | "gitlab" | "bitbucket";
   text: "GitHub" | "GitLab" | "Bitbucket";
   type?: "button" | "submit";
@@ -28,11 +28,9 @@ const ProviderButton: FC<Props> = ({
           "w-full",
           "items-center",
           "border",
-          `border-${provider}`,
-          `text-${provider}`,
-          `hover:bg-${provider}`,
-          "hover:text-white",
-          "rounded-xl"
+          `hover:border-${provider}`,
+          `hover:text-${provider}`,
+          "rounded-xl",
         ],
         className
       )}

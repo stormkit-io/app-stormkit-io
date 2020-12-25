@@ -1,7 +1,7 @@
 import React from "react";
-import ProviderButton from "./_components/ProviderButton";
+import ProviderButton, { Props } from "./_components/ProviderButton";
 
-const GitlabButton = props => {
+const GitlabButton = (props: Props): React.ReactElement => {
   return <ProviderButton {...props} provider="gitlab" text="GitLab" />;
 };
 
