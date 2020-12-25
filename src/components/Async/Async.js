@@ -1,17 +1,7 @@
 import React, { Component } from "react";
-import styled, { keyframes } from "styled-components";
+import "./Async.css";
 
 const config = {};
-
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to   { opacity: 1; }
-`;
-
-const Fader = styled.div`
-  animation: ${fadeIn} 1s;
-  min-width: 100%;
-`;
 
 const Async = getComponent => {
   class AsyncComponent extends Component {
@@ -45,9 +35,9 @@ const Async = getComponent => {
 
       if (Component) {
         return (
-          <Fader>
+          <div className="w-full faded duration-1000">
             <Component {...this.props} />
-          </Fader>
+          </div>
         );
       }
 
