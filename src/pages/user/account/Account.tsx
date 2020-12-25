@@ -2,7 +2,6 @@ import React, { ReactElement } from "react";
 import { RouteChildrenProps } from "react-router-dom";
 import { connect } from "~/utils/context";
 import Api from "~/utils/api/Api";
-import { User } from "~/types/user";
 import AuthContext from "~/pages/auth/Auth.context";
 import RootContext from "~/pages/Root.context";
 import ConfirmModal, { TConfirmModal } from "~/components/ConfirmModal";

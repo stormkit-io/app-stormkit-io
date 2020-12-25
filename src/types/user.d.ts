@@ -1,4 +1,4 @@
-export type User = {
+declare type User = {
   id: string;
   avatar: string;
   email: string;
