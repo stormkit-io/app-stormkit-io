@@ -1,18 +1,28 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import AppContext from "~/pages/apps/App.context";
 import RootContext from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
+import Api from "~/utils/api/Api";
 import { connect } from "~/utils/context";
 import { useFetchDeployments } from "./actions";
 import Deployment from "./_components/Deployment";
 // import Filters from "./_components/Filters";
 
-const Deployments = ({ app, environments, api, location }) => {
+interface Props {
+  app: App;
+  api: Api;
+  environments: Array<Environment>;
+}
+
+const Deployments: React.FC<Props> = ({
+  app,
+  environments,
+  api,
+}: Props): React.ReactElement => {
   const [from, setFrom] = useState(0);
-  const depls = useFetchDeployments({ app, api, location, from });
+  const depls = useFetchDeployments({ app, api, from });
   const {
     deployments,
     success,
@@ -75,12 +85,6 @@ const Deployments = ({ app, environments, api, location }) => {
       )}
     </div>
   );
-};
-
-Deployments.propTypes = {
-  app: PropTypes.object,
-  api: PropTypes.object,
-  location: PropTypes.object,
 };
 
 export default connect(Deployments, [
