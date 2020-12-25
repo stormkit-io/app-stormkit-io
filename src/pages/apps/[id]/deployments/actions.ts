@@ -102,7 +102,9 @@ interface UseFetchDeploymentsProps {
   api: Api;
   app: App;
   from: number;
+  skipQuery?: boolean;
   filters?: Filter;
+  setFrom?: (v: number) => void;
 }
 
 interface UseFetchDeploymentsReturnValaue {
@@ -123,23 +125,33 @@ export const useFetchDeployments = ({
   api,
   app,
   from,
+  skipQuery,
   filters,
+  setFrom,
 }: UseFetchDeploymentsProps): UseFetchDeploymentsReturnValaue => {
   const location = useLocation<LocationState>();
   const [deployments, setDeployments] = useState<Array<Deployment>>([]);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [lastFrom, setLastFrom] = useState(from);
 
   const { envId, branch, published } = filters || {};
   const refreshTime = location?.state?.deployments;
   const success = location?.state?.success;
 
   useEffect(() => {
+    if (refreshTime && setFrom) {
+      setLastFrom(0);
+      setFrom(0);
+    }
+  }, [refreshTime]);
+
+  useEffect(() => {
     let unmounted = false;
 
     // This is a special case where we reset the selected environment.
-    if (envId === "") {
+    if (envId === "" || skipQuery) {
       setDeployments([]);
       return;
     }
@@ -157,8 +169,11 @@ export const useFetchDeployments = ({
       })
       .then((res) => {
         if (unmounted !== true) {
-          setDeployments(res.deploys);
           setHasNextPage(res.hasNextPage);
+          setLastFrom(from);
+          setDeployments(
+            lastFrom !== from ? [...deployments, ...res.deploys] : res.deploys
+          );
         }
       })
       .finally(() => {
@@ -170,7 +185,7 @@ export const useFetchDeployments = ({
     return () => {
       unmounted = true;
     };
-  }, [api, app.id, envId, branch, published, from, refreshTime]);
+  }, [api, app.id, envId, branch, published, from, refreshTime, skipQuery]);
 
   return {
     deployments,

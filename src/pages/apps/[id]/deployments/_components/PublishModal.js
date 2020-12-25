@@ -23,7 +23,7 @@ const PublishModal = ({
   const [selectedEnvironment, setSelectedEnvironment] = useState("");
   const [publishError, setPublishError] = useState(null);
   const filters = { envId: selectedEnvironment, published: true };
-  const result = useFetchDeployments({ api, app, filters });
+  const result = useFetchDeployments({ api, app, filters, skipQuery: !isOpen });
   const { deployments, loading, error } = result;
 
   return (

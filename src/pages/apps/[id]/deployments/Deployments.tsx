@@ -22,7 +22,7 @@ const Deployments: React.FC<Props> = ({
   api,
 }: Props): React.ReactElement => {
   const [from, setFrom] = useState(0);
-  const depls = useFetchDeployments({ app, api, from });
+  const depls = useFetchDeployments({ app, api, from, setFrom });
   const {
     deployments,
     success,
