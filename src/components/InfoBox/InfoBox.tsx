@@ -1,4 +1,11 @@
-import React, { FC, ReactElement, useEffect, useRef, useState, ReactNode } from "react";
+import React, {
+  FC,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode
+} from "react";
 import cn from "classnames";
 import Button from "~/components/Button";
 import "./InfoBox.css";
@@ -47,32 +54,32 @@ const colors = {
     bg: "red-50",
     border: "red-50",
     icon: ""
-  },
+  }
 };
 
 type StateClass =
-  typeof ACTION_REQUIRED |
-  typeof SUCCESS |
-  typeof WARNING |
-  typeof ERROR |
-  typeof DEFAULT;
+  | typeof ACTION_REQUIRED
+  | typeof SUCCESS
+  | typeof WARNING
+  | typeof ERROR
+  | typeof DEFAULT;
 
 type Props = {
-  children: ReactNode,
-  className?: string,
-  type: StateClass,
-  showIcon?: boolean,
-  scrollIntoView?: boolean,
-  toaster?: boolean,
-  dismissable?: boolean,
-  onDismissed?: () => void,
-}
+  children: ReactNode;
+  className?: string;
+  type: StateClass;
+  showIcon?: boolean;
+  scrollIntoView?: boolean;
+  toaster?: boolean;
+  dismissable?: boolean;
+  onDismissed?: () => void;
+};
 
 const InfoBox: FC<Props> & {
-  ERROR: any,
-  SUCCESS: any,
-  WARNING: any,
-  ACTION_REQUIRED: any
+  ERROR: any;
+  SUCCESS: any;
+  WARNING: any;
+  ACTION_REQUIRED: any;
 } = ({
   children,
   className,
@@ -83,68 +90,68 @@ const InfoBox: FC<Props> & {
   dismissable,
   onDismissed
 }: Props): ReactElement => {
-    const [isOpen, setIsOpen] = useState<boolean>(true);
-    const ref = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const ref = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      if (ref.current?.scrollIntoView && scrollIntoView) {
-        ref.current.scrollIntoView({ behavior: "smooth" });
-      }
-    }, [ref, scrollIntoView]);
-
-    const classes: Array<string> = [
-      "rounded",
-      "px-4",
-      "py-2",
-      "flex",
-      "items-center",
-      "text-sm",
-      `bg-${colors[type].bg}`,
-      `text-${colors[type].text}`,
-      "border",
-      "border-solid",
-      `border-${colors[type].border}`
-    ];
-
-    if (isOpen === false) {
-      return <></>;
+  useEffect(() => {
+    if (ref.current?.scrollIntoView && scrollIntoView) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
     }
+  }, [ref, scrollIntoView]);
 
-    return (
-      <div
-        ref={ref}
-        className={cn(classes, className, {
-          shadow: toaster,
-          "infobox-toaster": toaster,
-          "w-full": !toaster
-        })}
-      >
-        {showIcon && (
-          <span
-            className={cn(
-              "inline-flex flex-auto flex-grow-0 min-w-10 max-w-10 h-10 items-center justify-center rounded-full mr-4",
-              `bg-${colors[type].icon}`
-            )}
-          >
-            <span className={cn(icons[type], "text-2xl")} />
-          </span>
-        )}
-        <div className="flex-auto">{children}</div>
-        {dismissable && (
-          <Button
-            className="ml-4"
-            styled={false}
-            onClick={() => {
-              setIsOpen(false);
-              onDismissed && onDismissed();
-            }}
-          >
-            <span className="fas fa-times font-bold text-xl" />
-          </Button>
-        )}
-      </div>
-    );
-  };
+  const classes: Array<string> = [
+    "rounded",
+    "px-4",
+    "py-2",
+    "flex",
+    "items-center",
+    "text-sm",
+    `bg-${colors[type].bg}`,
+    `text-${colors[type].text}`,
+    "border",
+    "border-solid",
+    `border-${colors[type].border}`
+  ];
+
+  if (isOpen === false) {
+    return <></>;
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={cn(classes, className, {
+        shadow: toaster,
+        "infobox-toaster": toaster,
+        "w-full": !toaster
+      })}
+    >
+      {showIcon && (
+        <span
+          className={cn(
+            "inline-flex flex-auto flex-grow-0 min-w-10 max-w-10 h-10 items-center justify-center rounded-full mr-4",
+            `bg-${colors[type].icon}`
+          )}
+        >
+          <span className={cn(icons[type], "text-2xl")} />
+        </span>
+      )}
+      <div className="flex-auto">{children}</div>
+      {dismissable && (
+        <Button
+          className="ml-4"
+          styled={false}
+          onClick={() => {
+            setIsOpen(false);
+            onDismissed && onDismissed();
+          }}
+        >
+          <span className="fas fa-times font-bold text-xl" />
+        </Button>
+      )}
+    </div>
+  );
+};
 
 InfoBox.ERROR = ERROR;
 InfoBox.SUCCESS = SUCCESS;
@@ -153,7 +160,7 @@ InfoBox.ACTION_REQUIRED = ACTION_REQUIRED;
 
 InfoBox.defaultProps = {
   type: DEFAULT,
-  showIcon: true,
+  showIcon: true
 } as Partial<Props>;
 
 export default InfoBox;

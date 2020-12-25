@@ -1,4 +1,10 @@
-import React, { ReactNode, useState, createContext, Children, cloneElement } from "react";
+import React, {
+  ReactNode,
+  useState,
+  createContext,
+  Children,
+  cloneElement
+} from "react";
 import { timeout } from "./constants";
 
 // Provides a context for custom modals which need a context.

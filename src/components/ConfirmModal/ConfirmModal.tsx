@@ -16,7 +16,7 @@ type Props = {
 type ConfirmModalCallback = ({
   setLoading,
   closeModal,
-  setError,
+  setError
 }: {
   setLoading: (value: boolean) => void;
   closeModal: () => void;
@@ -118,10 +118,10 @@ const ConfirmModal = ({ isOpen, toggleModal, children }: Props) => {
 };
 
 const enhanced = connect(ConfirmModal, [
-  { Context: ModalContext, props: ["toggleModal", "isOpen"], wrap: true },
+  { Context: ModalContext, props: ["toggleModal", "isOpen"], wrap: true }
 ]);
 
 export default Object.assign(enhanced, {
   Consumer: context.Consumer,
-  Provider: enhanced,
+  Provider: enhanced
 });

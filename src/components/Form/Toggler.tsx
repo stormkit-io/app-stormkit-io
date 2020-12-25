@@ -8,7 +8,7 @@ type Props = {
   defaultSelected: string | number;
   name: string;
   onSelect: (arg0: any) => void;
-}
+};
 
 const Toggler: FC<Props> = ({
   children,
@@ -17,7 +17,9 @@ const Toggler: FC<Props> = ({
   name,
   className
 }: Props): ReactElement => {
-  const [selectedValue, setSelectedValue] = useState<string | number>(defaultSelected);
+  const [selectedValue, setSelectedValue] = useState<string | number>(
+    defaultSelected
+  );
   const childArray = Children.toArray(children);
 
   return (

@@ -30,6 +30,6 @@ const Select: FC<Props> = ({
 
 Select.defaultProps = {
   variant: "filled"
-} as Partial<Props>
+} as Partial<Props>;
 
 export default Select;

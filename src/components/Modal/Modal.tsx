@@ -89,9 +89,9 @@ class Modal extends PureComponent<Props> {
     return createPortal(
       <div
         className={cn("modal-overlay fixed inset-0 bg-black-o-75 z-50", {
-          "opacity-0": this.isAboutToClose,
+          "opacity-0": this.isAboutToClose
         })}
-        onMouseUp={(e) => this.gracefulClose(e)}
+        onMouseUp={e => this.gracefulClose(e)}
         onMouseDown={() => {
           this.isMouseClicked = true;
         }}
@@ -102,8 +102,8 @@ class Modal extends PureComponent<Props> {
               "modal-content flex-auto sm:m-12 md:m-auto h-full sm:h-auto w-full sm:w-auto",
               className
             )}
-            onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}
           >
             <div
               className="bg-white sm:rounded-lg overflow-y-auto p-12 h-full w-full"
