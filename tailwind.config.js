@@ -36,7 +36,7 @@ module.exports = {
       lg: "13px",
       xl: "30px",
       full: "100%",
-      default: "6px"
+      DEFAULT: "6px"
     },
     maxWidth: {
       "0": "0",

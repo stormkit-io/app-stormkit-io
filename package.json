@@ -46,8 +46,7 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-transition-group": "^4.4.1",
-    "styled-components": "4.2.0",
-    "tailwindcss": "^1.4.6"
+    "tailwindcss": "^2.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -65,7 +64,7 @@
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^1.13.0",
     "add": "^2.0.6",
-    "autoprefixer": "^9.8.0",
+    "autoprefixer": "^10.1.0",
     "awesome-typescript-loader": "^5.2.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.6",
@@ -89,7 +88,8 @@
     "mini-css-extract-plugin": "^0.9.0",
     "nock": "^12.0.3",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "postcss-loader": "^3.0.0",
+    "postcss": "^8.2.1",
+    "postcss-loader": "^4.1.0",
     "prettier": "^1.18.2",
     "react-dev-utils": "^9.0.1",
     "style-loader": "^1.2.1",
