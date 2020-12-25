@@ -3,7 +3,7 @@ module.exports = {
     enabled: process.env.NODE_ENV === "production",
     content: ["src/index.js", "src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
     options: {
-      whitelist: [
+      safelist: [
         // Provider related dynamic classes
         "hover:bg-github",
         "hover:bg-gitlab",
@@ -26,7 +26,7 @@ module.exports = {
         "border-green-50",
         "border-red-50"
       ],
-      whitelistPatterns: [/^(w|h)-/]
+      safelistPatterns: [/^(w|h)-/]
     }
   },
   theme: {
