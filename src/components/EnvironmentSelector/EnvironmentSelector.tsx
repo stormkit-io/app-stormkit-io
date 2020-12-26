@@ -2,9 +2,9 @@ import React, { FC, ReactElement, useState } from "react";
 import Form from "~/components/Form";
 
 type Props = {
-  environments: any[];
+  environments: Array<Environment>;
   placeholder: string;
-  onSelect: (arg0: number) => void;
+  onSelect: (arg0: Environment) => void;
   defaultValue: string;
 };
 
@@ -25,7 +25,8 @@ const EnvironmentSelector: FC<Props> = ({
         name="envId"
         displayEmpty
         value={selectedEnvironment}
-        onChange={id => {
+        onChange={e => {
+          const id = e.target.value as string;
           setSelectedEnvironment(id);
 
           if (typeof onSelect === "function") {
@@ -34,6 +35,7 @@ const EnvironmentSelector: FC<Props> = ({
         }}
       >
         <Form.Option disabled value="">
+          <span className="fas fa-th-large mr-2 text-gray-60" />
           {placeholder}
         </Form.Option>
         {environments.map(env => (
@@ -41,7 +43,7 @@ const EnvironmentSelector: FC<Props> = ({
             <span>
               <span>{env.name || env.env}</span>{" "}
               <span className="text-xs opacity-75">
-                ({env.getDomainName()})
+                ({env.getDomainName && env.getDomainName()})
               </span>
             </span>
           </Form.Option>

@@ -1,21 +1,16 @@
-import React, {
-  ReactNode,
-  FC,
-  forwardRef,
-  ReactElement,
-  MutableRefObject
-} from "react";
+import React, { forwardRef, MutableRefObject } from "react";
 import cn from "classnames";
 
-type Props = {
-  children: ReactNode;
-  className?: string;
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
   value: string;
-};
+}
 
-const Option: FC<Props> = forwardRef(
-  ({ children, className, disabled, ...rest }: Props, ref): ReactElement => {
+const Option: React.FC<Props> = forwardRef(
+  (
+    { children, className, disabled, value, ...rest },
+    ref
+  ): React.ReactElement => {
     return (
       <div
         className={cn(

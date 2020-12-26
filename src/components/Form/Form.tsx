@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Input from "./Input";
 import Checkbox from "./Checkbox";
 import Radio from "./Radio";
@@ -17,7 +18,7 @@ interface Props<T> extends React.HTMLProps<HTMLFormElement> {
   autoComplete?: "off" | "on";
   ignoreDisabled?: boolean;
   ignoreEmptyValues?: boolean;
-  handleSubmit: (value: T) => void;
+  handleSubmit?: (value: T) => void;
 }
 
 const getElementValue = (el: HTMLFormElement): FormValue => {
@@ -93,7 +94,7 @@ function useFormSubmit<T>({
       ignoreDisabled
     });
 
-    handleSubmit(values);
+    handleSubmit && handleSubmit(values);
   };
 }
 
@@ -120,6 +121,7 @@ function Form<T>({
 }
 
 Form.Input = Input;
+Form.ControlLabel = FormControlLabel;
 Form.Checkbox = Checkbox;
 Form.Radio = Radio;
 Form.Select = Select;
