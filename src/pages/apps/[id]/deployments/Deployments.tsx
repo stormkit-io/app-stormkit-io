@@ -6,9 +6,9 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import Api from "~/utils/api/Api";
 import { connect } from "~/utils/context";
-import { useFetchDeployments } from "./actions";
+import { useFetchDeployments, Filters as IFilters } from "./actions";
 import Deployment from "./_components/Deployment";
-// import Filters from "./_components/Filters";
+import Filters from "./_components/Filters";
 
 interface Props {
   app: App;
@@ -22,7 +22,8 @@ const Deployments: React.FC<Props> = ({
   api
 }: Props): React.ReactElement => {
   const [from, setFrom] = useState(0);
-  const depls = useFetchDeployments({ app, api, from, setFrom });
+  const [filters, setFilters] = useState<IFilters>({});
+  const depls = useFetchDeployments({ app, api, from, setFrom, filters });
   const {
     deployments,
     success,
@@ -51,12 +52,22 @@ const Deployments: React.FC<Props> = ({
           <div className="flex-auto">{success}</div>
         </InfoBox>
       )}
+      <Filters
+        filters={filters}
+        environments={environments}
+        onFilterChange={f => {
+          setFilters(f);
+        }}
+      />
       {loading && from === 0 ? (
         <div className="flex justify-center bg-white rounded p-4">
           <Spinner primary />
         </div>
       ) : (
         <div className="flex flex-col justify-center bg-white rounded p-4 mb-4">
+          {deployments.length === 0 &&
+            Object.keys(filters).length > 0 &&
+            "No deployments were found matching these filters."}
           {deployments.map((d, i) => (
             <Deployment
               deployment={d}
