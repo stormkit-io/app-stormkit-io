@@ -26,4 +26,5 @@ declare type Environment = {
   build: BuildConfig;
   domain: DomainConfig;
   lastDeploy?: LastDeploy;
+  getDomainName?: () => string;
 };
