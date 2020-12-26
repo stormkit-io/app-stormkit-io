@@ -92,18 +92,19 @@ export const publishDeployments = ({
     });
 };
 
-interface Filter {
-  envId: string;
-  branch: string;
-  published: boolean;
-}
+export type Filters = {
+  envId?: string;
+  branch?: string;
+  published?: boolean;
+  status?: boolean;
+};
 
 interface UseFetchDeploymentsProps {
   api: Api;
   app: App;
   from: number;
   skipQuery?: boolean;
-  filters?: Filter;
+  filters?: Filters;
   setFrom?: (v: number) => void;
 }
 
@@ -135,10 +136,10 @@ export const useFetchDeployments = ({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [lastFrom, setLastFrom] = useState(from);
-
-  const { envId, branch, published } = filters || {};
   const refreshTime = location?.state?.deployments;
   const success = location?.state?.success;
+
+  const { envId, status, published, branch } = filters || {};
 
   useEffect(() => {
     if (refreshTime && setFrom) {
@@ -164,8 +165,9 @@ export const useFetchDeployments = ({
         appId: `${app.id}`,
         from,
         envId,
-        branch,
+        status,
         published,
+        branch,
       })
       .then((res) => {
         if (unmounted !== true) {
@@ -185,7 +187,17 @@ export const useFetchDeployments = ({
     return () => {
       unmounted = true;
     };
-  }, [api, app.id, envId, branch, published, from, refreshTime, skipQuery]);
+  }, [
+    api,
+    app.id,
+    envId,
+    published,
+    branch,
+    status,
+    refreshTime,
+    from,
+    skipQuery,
+  ]);
 
   return {
     deployments,
