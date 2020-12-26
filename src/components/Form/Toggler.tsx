@@ -1,26 +1,26 @@
-import React, { FC, ReactNode, Children, useState, ReactElement } from "react";
+import React, { useState } from "react";
 import cn from "classnames";
 import Button from "~/components/Button";
 
-type Props = {
+interface Props {
   className?: string;
-  children: ReactNode;
+  children: React.ReactNode;
   defaultSelected: string | number;
   name: string;
-  onSelect: (arg0: any) => void;
-};
+  onSelect: (arg0: unknown) => void;
+}
 
-const Toggler: FC<Props> = ({
+const Toggler: React.FC<Props> = ({
   children,
   onSelect,
   defaultSelected,
   name,
   className
-}: Props): ReactElement => {
+}: Props): React.ReactElement => {
   const [selectedValue, setSelectedValue] = useState<string | number>(
     defaultSelected
   );
-  const childArray = Children.toArray(children);
+  const childArray = React.Children.toArray(children);
 
   return (
     <div
@@ -30,7 +30,11 @@ const Toggler: FC<Props> = ({
       )}
     >
       <input type="hidden" value={selectedValue} name={name} />
-      {childArray.map((c: any, i: number) => {
+      {childArray.map((c: React.ReactNode, i: number) => {
+        if (!React.isValidElement<{ "data-value": string }>(c)) {
+          return;
+        }
+
         const value =
           typeof c.props["data-value"] !== "undefined"
             ? c.props["data-value"]
