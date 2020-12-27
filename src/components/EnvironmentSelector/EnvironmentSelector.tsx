@@ -39,7 +39,7 @@ const EnvironmentSelector: React.FC<Props> = ({
           {placeholder}
         </Form.Option>
         {environments.map(env => (
-          <Form.Option value={env.id} key={env.id}>
+          <Form.Option value={env.id || ""} key={env.id}>
             <span>
               <span>{env.name || env.env}</span>{" "}
               <span className="text-xs opacity-75">
