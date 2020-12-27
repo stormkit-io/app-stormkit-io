@@ -7,7 +7,6 @@ import InfoBox from "~/components/InfoBox";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
-import { TConfirmModal } from "~/components/ConfirmModal";
 import * as actions from "../actions";
 import { stripePromise, stripeStyles } from "./constants";
 import stripeLogoSvg from "~/assets/images/stripe-logo-white.svg";
@@ -22,7 +21,7 @@ type Props = {
   api: Api;
   history: History;
   location: Location;
-  confirmModal: TConfirmModal;
+  confirmModal: ConfirmModalFn;
 };
 
 const {

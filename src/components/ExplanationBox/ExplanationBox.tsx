@@ -5,7 +5,7 @@ import "./ExplanationBox.css";
 type Props = {
   title: string;
   children: ReactNode;
-  className: string;
+  className?: string;
   absolute?: boolean;
   arrowStyles?: CSSProperties;
 };

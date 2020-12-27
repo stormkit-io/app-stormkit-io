@@ -1,11 +1,11 @@
 import React from "react";
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect, useLocation, RouteProps } from "react-router-dom";
 import Async from "~/components/Async";
 import Spinner from "~/components/Spinner";
 
 Async.configure({ Loader: Spinner, props: { pageCenter: true } });
 
-export default [
+const routes: Array<RouteProps> = [
   {
     path: "/",
     exact: true,
@@ -45,3 +45,5 @@ export default [
     component: Async(() => import("~/pages/user"))
   }
 ];
+
+export default routes;

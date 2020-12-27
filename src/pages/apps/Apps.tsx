@@ -1,7 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
+import { Location } from "history";
+import { Redirect, useLocation } from "react-router-dom";
 import { connect } from "~/utils/context";
+import Api from "~/utils/api/Api";
 import RootContext from "~/pages/Root.context";
 import DefaultLayout from "~/layouts/DefaultLayout";
 import Button from "~/components/Button";
@@ -12,7 +13,16 @@ import ExplanationBox from "~/components/ExplanationBox";
 import { useFetchAppList } from "./actions";
 import { AppRow, Title } from "./_components";
 
-export const Home = ({ api, location }) => {
+interface Props {
+  api: Api;
+}
+
+interface LocationState extends Location {
+  repoInsert: boolean;
+}
+
+export const Home: React.FC<Props> = ({ api }): React.ReactElement => {
+  const location = useLocation<LocationState>();
   const { apps, loading, error } = useFetchAppList({ api });
 
   if (apps.length === 0 && !loading) {
@@ -35,7 +45,9 @@ export const Home = ({ api, location }) => {
         </Title>
         <div className="flex flex-auto">
           <div className="page-section mr-6 flex flex-col">
-            {!loading && error && <InfoBox error>{error}</InfoBox>}
+            {!loading && error && (
+              <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
+            )}
             {loading && (
               <div className="flex w-full items-center justify-center">
                 <Spinner primary width={8} height={8} />
@@ -75,11 +87,6 @@ export const Home = ({ api, location }) => {
       </section>
     </DefaultLayout>
   );
-};
-
-Home.propTypes = {
-  api: PropTypes.object,
-  location: PropTypes.object
 };
 
 export default connect(Home, [{ Context: RootContext, props: ["api"] }]);

@@ -4,14 +4,14 @@ import { connect } from "~/utils/context";
 import Api from "~/utils/api/Api";
 import AuthContext from "~/pages/auth/Auth.context";
 import RootContext from "~/pages/Root.context";
-import ConfirmModal, { TConfirmModal } from "~/components/ConfirmModal";
+import ConfirmModal from "~/components/ConfirmModal";
 import SubscriptionDetails from "./_components/SubscriptionDetails";
 import PaymentDetails from "./_components/PaymentDetails";
 
 type Props = {
   api: Api;
   user: User;
-  confirmModal: TConfirmModal;
+  confirmModal: ConfirmModalFn;
 } & RouteChildrenProps;
 
 const Account = ({

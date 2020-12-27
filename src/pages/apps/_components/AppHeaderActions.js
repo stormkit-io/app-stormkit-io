@@ -4,7 +4,7 @@ import { connect } from "~/utils/context";
 import Button from "~/components/Button";
 import DeployModal from "./DeployModal";
 
-const HeaderActions = ({ api, app, history, environments, toggleModal }) => {
+const HeaderActions = ({ api, app, environments, toggleModal }) => {
   return (
     <div className="mr-6">
       <Button
@@ -15,12 +15,7 @@ const HeaderActions = ({ api, app, history, environments, toggleModal }) => {
         <span className="fas fa-rocket mr-4 text-lg" />
         <span className="text-sm">Deploy now</span>
       </Button>
-      <DeployModal
-        api={api}
-        app={app}
-        history={history}
-        environments={environments}
-      />
+      <DeployModal api={api} app={app} environments={environments} />
     </div>
   );
 };
@@ -28,7 +23,6 @@ const HeaderActions = ({ api, app, history, environments, toggleModal }) => {
 HeaderActions.propTypes = {
   api: PropTypes.object,
   app: PropTypes.object,
-  history: PropTypes.object,
   environments: PropTypes.array,
   toggleModal: PropTypes.func
 };

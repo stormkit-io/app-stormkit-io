@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
+import Api from "~/utils/api/Api";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
@@ -8,20 +9,28 @@ import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { deploy } from "../actions";
 
+interface Props {
+  api: Api;
+  app: App;
+  isOpen: boolean;
+  toggleModal: ToggleModal;
+  environments: Array<Environment>;
+}
+
 const ModalContext = Modal.Context();
 
-const DeployModal = ({
+const DeployModal: React.FC<Props> = ({
   isOpen,
   toggleModal,
   environments,
   api,
-  app,
-  history
-}) => {
-  const [selectedEnvironment, setSelectedEnvironment] = useState(null);
+  app
+}): React.ReactElement => {
+  const history = useHistory();
+  const [selectedEnvironment, setSelectedEnvironment] = useState<Environment>();
   const [branch, setBranch] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<null | string>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <Modal
@@ -36,22 +45,22 @@ const DeployModal = ({
           app,
           environment: selectedEnvironment,
           toggleModal,
+          history,
           setError,
-          setLoading,
-          history
+          setLoading
         })}
       >
         <EnvironmentSelector
           className="mb-4"
           placeholder="Select an environment to deploy"
           environments={environments}
-          onSelect={e => {
+          onSelect={(env: Environment): void => {
             if (!branch || branch === selectedEnvironment?.branch) {
-              setBranch(e.branch);
+              setBranch(env.branch);
             }
 
             setError(null);
-            setSelectedEnvironment(e);
+            setSelectedEnvironment(env);
           }}
         />
         <Form.Input
@@ -81,15 +90,6 @@ const DeployModal = ({
       </Form>
     </Modal>
   );
-};
-
-DeployModal.propTypes = {
-  isOpen: PropTypes.bool,
-  toggleModal: PropTypes.func,
-  environments: PropTypes.array,
-  api: PropTypes.object,
-  app: PropTypes.object,
-  history: PropTypes.object
 };
 
 export default Object.assign(

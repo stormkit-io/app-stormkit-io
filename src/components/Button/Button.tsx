@@ -4,7 +4,7 @@ import Spinner from "~/components/Spinner";
 import Link from "~/components/Link";
 import "./Button.css";
 
-type Props = {
+interface Props extends React.HTMLProps<HTMLButtonElement> {
   as?: "div" | "span" | "a" | "button";
   primary?: boolean;
   secondary?: boolean;
@@ -12,8 +12,7 @@ type Props = {
   loading?: boolean;
   styled?: boolean;
   href?: string;
-  onClick?: (e?: MouseEvent) => void;
-} & React.HTMLProps<HTMLButtonElement>;
+}
 
 const prepareStyles = (
   classes: Array<string>,
@@ -103,7 +102,9 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         props.onKeyDown = (e: React.KeyboardEvent) =>
           (e.key === "Enter" || e.key === " ") &&
           props.onClick &&
-          props.onClick();
+          props.onClick(
+            (e as unknown) as React.MouseEvent<HTMLButtonElement, MouseEvent>
+          );
       }
     }
 

@@ -1,24 +1,40 @@
-import { waitFor, act } from "@testing-library/react";
-import { withAppContext } from "~/testing/helpers";
+import router from "react-router";
+import { waitFor } from "@testing-library/react";
+import { withMockContext } from "~/testing/helpers";
 import * as data from "~/testing/data";
 import * as nocks from "~/testing/nocks";
 
-describe("pages/app", () => {
+const fileName = "pages/apps/App.context";
+
+describe.only(fileName, () => {
+  const path = `~/${fileName}`;
   let wrapper;
+
+  const createWrapper = ({ status = 200 }) => {
+    const app = data.mockApp();
+    const envs = data.mockEnvironments({ app });
+
+    jest.spyOn(router, "useRouteMatch").mockReturnValue({
+      params: { id: app.id }
+    });
+
+    jest.spyOn(router, "useLocation").mockReturnValue({
+      state: {}
+    });
+
+    nocks.mockFetchApp({ app, status });
+    nocks.mockFetchEnvironments({
+      app,
+      status,
+      response: { hasNextPage: false, envs }
+    });
+
+    wrapper = withMockContext({ path, mockModal: false });
+  };
 
   describe("when an app is found", () => {
     beforeEach(() => {
-      const app = data.mockAppResponse();
-      const envs = data.mockEnvironmentsResponse();
-      nocks.mockAppProxy({ app, envs: envs.envs });
-
-      act(() => {
-        wrapper = withAppContext({
-          app,
-          envs: envs,
-          path: "/apps/1"
-        });
-      });
+      createWrapper({ status: 200 });
     });
 
     test("should display the navigation on the left", async () => {
@@ -39,17 +55,20 @@ describe("pages/app", () => {
 
   describe("when an app is not found", () => {
     beforeEach(() => {
-      wrapper = withAppContext({
-        app: {},
-        envs: data.mockEnvironmentsResponse(),
-        path: "/apps/100"
-      });
+      createWrapper({ status: 404 });
     });
 
     test("should not display the menu or header", async () => {
       await waitFor(() => {
         expect(() => wrapper.getByText("Environments")).toThrow();
         expect(() => wrapper.getByText("Deployments")).toThrow();
+        expect(() => wrapper.getByText("Deploy now")).toThrow();
+      });
+    });
+
+    test("should display a 4 oh 4 message", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("4 oh 4")).toBeTruthy();
       });
     });
   });

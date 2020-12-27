@@ -1,47 +1,52 @@
 import { waitFor, fireEvent } from "@testing-library/react";
-import { withAppContext } from "~/testing/helpers";
+import { withMockContext } from "~/testing/helpers";
+import nock from "nock";
 import * as data from "~/testing/data";
-import * as nocks from "~/testing/nocks";
 
-describe("pages/apps/[id]/environments/[env-id]/snippets", () => {
+const fileName = `pages/apps/[id]/environments/[env-id]/snippets/Snippets`;
+
+describe.only(fileName, () => {
   let wrapper;
+  let toggleModal;
+  let snippets;
 
-  const mockResponse = data.mockEnvironmentsResponse();
-
-  const app = data.mockAppResponse();
-  const envs = data.mockEnvironmentsResponse().envs.slice(0, 1);
-  const env = envs[0];
+  const app = data.mockApp();
+  const env = data.mockEnvironments({ app }).slice(0, 1)[0];
 
   beforeEach(() => {
-    nocks.mockAppProxy({ app, envs });
-    nocks.mockSnippetsResponse({ app, env });
+    toggleModal = jest.fn();
+    snippets = data.mockSnippets();
 
-    wrapper = withAppContext({
-      app,
-      envs: mockResponse,
-      path: `/apps/${app.id}/environments/${env.id}/snippets`,
+    nock(process.env.API_DOMAIN)
+      .get(`/app/${app.id}/envs/${env.name}/snippets`)
+      .reply(200, { snippets });
+
+    wrapper = withMockContext({
+      path: `~/${fileName}`,
+      props: {
+        app,
+        environment: env,
+        toggleModal,
+      },
     });
   });
 
   test("should load snippets", async () => {
     await waitFor(() => {
-      expect(wrapper.getByText("Snippet 1")).toBeTruthy();
-      expect(wrapper.getByText("Snippet 2")).toBeTruthy();
+      expect(wrapper.getByText(snippets.head[0].title)).toBeTruthy();
+      expect(wrapper.getByText(snippets.body[0].title)).toBeTruthy();
     });
   });
 
   test("should have a new button which opens a modal", async () => {
-    let button;
-
     await waitFor(() => {
-      button = wrapper.getByLabelText("Insert snippet");
-      expect(button).toBeTruthy();
+      expect(wrapper.getByText(snippets.head[0].title)).toBeTruthy();
     });
 
-    fireEvent.click(button);
+    fireEvent.click(wrapper.getByLabelText("Insert snippet"));
 
     await waitFor(() => {
-      expect(wrapper.getByText("Create snippet")).toBeTruthy();
+      expect(toggleModal).toHaveBeenCalled();
     });
   });
 });

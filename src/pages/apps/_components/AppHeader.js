@@ -4,7 +4,7 @@ import UserMenu from "~/layouts/_components/UserMenu";
 import { formattedDate } from "~/utils/helpers/deployments";
 import AppHeaderActions from "./AppHeaderActions";
 
-const AppHeader = ({ app, envs, api, history }) => {
+const AppHeader = ({ app, envs, api }) => {
   const provider = app.repo.split("/").shift();
 
   return (
@@ -24,12 +24,7 @@ const AppHeader = ({ app, envs, api, history }) => {
         </div>
       </div>
       <div className="flex flex-auto items-center justify-end">
-        <AppHeaderActions
-          app={app}
-          api={api}
-          history={history}
-          environments={envs}
-        />
+        <AppHeaderActions app={app} api={api} environments={envs} />
         <UserMenu />
       </div>
     </header>
@@ -40,8 +35,7 @@ AppHeader.propTypes = {
   api: PropTypes.object,
   app: PropTypes.object,
   envs: PropTypes.array,
-  actions: PropTypes.node,
-  history: PropTypes.object
+  actions: PropTypes.node
 };
 
 export default AppHeader;

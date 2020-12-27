@@ -38,12 +38,27 @@ export const withUserContext = ({
  * @param {string} path       The import path to the component's file.
  * @param {object} mockProps  The properties that will be directly injected to the component on mount.
  */
-export const withMockContext = (path, mockProps = {}) => {
-  jest.mock("~/components/Modal", () => {
-    const mock = ({ children }) => children;
-    mock.Context = i => i;
-    return mock;
-  });
+export const withMockContext = (...args) => {
+  let path,
+    mockProps,
+    mockModal = true;
+
+  if (typeof args[0] === "string") {
+    path = args[0];
+    mockProps = args[1];
+  } else {
+    path = args[0].path;
+    mockProps = args[0].props ?? {};
+    mockModal = args[0].mockModal ?? true;
+  }
+
+  if (mockModal) {
+    jest.mock("~/components/Modal", () => {
+      const mock = ({ children }) => children;
+      mock.Context = i => i;
+      return mock;
+    });
+  }
 
   // This is a tiny little hack to update mock props object for each test.
   global.__MOCK_PROPS__ = mockProps;
@@ -67,15 +82,13 @@ export const withMockContext = (path, mockProps = {}) => {
   });
 
   const Component = require(path).default;
-  const memoryHistory = createMemoryHistory();
   const wrapper = render(
-    <Router history={memoryHistory}>
+    <Router history={createMemoryHistory()}>
       <Component {...mockProps} />
     </Router>
   );
 
   return Object.assign(wrapper, {
-    history: memoryHistory,
     injectedProps: mockProps
   });
 };

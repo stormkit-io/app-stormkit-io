@@ -1,7 +1,8 @@
-type BuildConfig = {
+declare type BuildConfig = {
   entry: string;
   distFolder: string;
   cmd: string;
+  vars: Record<string, string>;
 };
 
 type DomainConfig = {
@@ -17,7 +18,7 @@ type LastDeploy = {
 };
 
 declare type Environment = {
-  id: string;
+  id?: string;
   env: string; // Name of the environment - will be deprecated.
   name: string;
   appId: string;

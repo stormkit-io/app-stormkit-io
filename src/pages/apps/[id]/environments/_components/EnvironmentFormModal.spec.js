@@ -12,23 +12,48 @@ describe(fileName, () => {
   let wrapper;
 
   describe("when environment object is empty", () => {
+    let app;
+
     beforeEach(() => {
+      app = data.mockApp();
+
       wrapper = withMockContext(path, {
-        app: { id: "1" },
+        app,
         toggleModal: jest.fn(),
       });
     });
 
     test("should submit the form properly", async () => {
-      const scope = nocks.mockEnvironmentInsertionCall();
+      const name = "staging";
+      const environment = {
+        appId: app.id,
+        env: name,
+        name,
+        branch: "my-branch",
+        autoPublish: true,
+        domain: {
+          verified: false,
+        },
+        build: {
+          entry: "",
+          distFolder: "",
+          cmd: "npm run build",
+          vars: {
+            NODE_ENV: "development",
+          },
+        },
+      };
+
+      const scope = nocks.mockInsertEnvironment({ environment });
       const envKey = wrapper.getByLabelText("Environment variable name 0");
       const envVal = wrapper.getByLabelText("Environment variable value 0");
       const buildCmd = wrapper.getByLabelText("Build command");
-      userEvent.type(wrapper.getByLabelText("Environment name"), "staging");
-      userEvent.type(wrapper.getByLabelText("Branch name"), "my-branch");
-      userEvent.type(buildCmd, "npm run build");
+
+      userEvent.type(wrapper.getByLabelText("Environment name"), name);
+      userEvent.type(wrapper.getByLabelText("Branch name"), environment.branch);
+      userEvent.type(buildCmd, environment.build.cmd);
       userEvent.type(envKey, "NODE_ENV");
-      userEvent.type(envVal, "development");
+      userEvent.type(envVal, environment.build.vars.NODE_ENV);
       fireEvent.click(wrapper.getByText("Create environment"));
 
       await waitFor(() => {
@@ -39,16 +64,33 @@ describe(fileName, () => {
   });
 
   describe("when production environment is provided", () => {
+    let app;
+    let environment;
+
     beforeEach(() => {
+      app = data.mockApp();
+      environment = data.mockEnvironments({ app })[0];
+
+      nocks.mockFetchRepoType({
+        appId: app.id,
+        name: environment.env,
+        response: { packageJson: true, type: "-" },
+      });
+
       wrapper = withMockContext(path, {
-        app: { id: "1" },
+        app,
         toggleModal: jest.fn(),
-        environment: data.mockEnvironmentsResponse().envs[0],
+        environment,
       });
     });
 
     test("should submit the form properly", async () => {
-      const scope = nocks.mockEnvironmentUpdateCall();
+      const scope = nocks.mockUpdateEnvironment({
+        environment: {
+          ...environment,
+          branch: `${environment.branch}-new`,
+        },
+      });
 
       userEvent.type(wrapper.getByLabelText("Branch name"), "-new");
       fireEvent.click(wrapper.getByText("Update environment"));
@@ -66,19 +108,34 @@ describe(fileName, () => {
 
   describe("when a non-production environment is provided", () => {
     let metaScope;
+    let app;
+    let environment;
 
     beforeEach(() => {
-      const environment = data.mockEnvironmentsResponse().envs[1];
-      metaScope = nocks.mockMetaCall({ appId: "1", name: environment.env });
-      wrapper = withMockContext(path, {
-        app: { id: "1" },
-        toggleModal: jest.fn(),
-        environment,
+      app = data.mockApp();
+      environment = data.mockEnvironments({ app })[1];
+      metaScope = nocks.mockFetchRepoType({
+        appId: app.id,
+        name: environment.env,
+        response: { packageJson: true, type: "-" },
+      });
+
+      wrapper = withMockContext({
+        path,
+        props: {
+          app,
+          toggleModal: jest.fn(),
+          environment,
+        },
       });
     });
 
     test("should be deletable", async () => {
-      const scope = nocks.mockEnvironmentDeleteCall();
+      const scope = nocks.mockDeleteEnvironment({
+        appId: app.id,
+        env: environment.name,
+      });
+
       fireEvent.click(wrapper.getByText("Delete"));
 
       expect(

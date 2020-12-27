@@ -30,7 +30,7 @@ const Filters: React.FC<Props> = ({
           environments={environments}
           placeholder="Environment"
           defaultValue={""}
-          onSelect={e => setFilters({ ...filters, envId: e.id })}
+          onSelect={(e: Environment) => setFilters({ ...filters, envId: e.id })}
         />
       </div>
 

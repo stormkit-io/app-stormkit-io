@@ -1,6 +1,7 @@
 import Async from "~/components/Async";
+import { RouteProps } from "react-router-dom";
 
-export default [
+const routes: Array<RouteProps> = [
   {
     path: "/apps/:id",
     exact: true,
@@ -35,3 +36,5 @@ export default [
     component: Async(() => import("~/pages/apps/[id]/settings"))
   }
 ];
+
+export default routes;

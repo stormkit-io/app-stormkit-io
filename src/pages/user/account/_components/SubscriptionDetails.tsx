@@ -5,7 +5,6 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
-import { TConfirmModal } from "~/components/ConfirmModal";
 import Api from "~/utils/api/Api";
 import { useFetchSubscription, handleUpdateSubscriptionPlan } from "../actions";
 import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
@@ -15,7 +14,7 @@ type Props = {
   api: Api;
   location: Location;
   history: History;
-  confirmModal: TConfirmModal;
+  confirmModal: ConfirmModalFn;
 };
 
 type SubscriptionDowngradePros = {

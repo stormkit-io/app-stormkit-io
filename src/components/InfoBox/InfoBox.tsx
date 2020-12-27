@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  ReactElement,
-  useEffect,
-  useRef,
-  useState,
-  ReactNode
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import cn from "classnames";
 import Button from "~/components/Button";
 import "./InfoBox.css";
@@ -64,32 +57,32 @@ type StateClass =
   | typeof ERROR
   | typeof DEFAULT;
 
-type Props = {
-  children: ReactNode;
+interface Props {
+  children: React.ReactNode;
   className?: string;
-  type: StateClass;
+  type?: StateClass;
   showIcon?: boolean;
   scrollIntoView?: boolean;
   toaster?: boolean;
   dismissable?: boolean;
   onDismissed?: () => void;
-};
+}
 
-const InfoBox: FC<Props> & {
-  ERROR: any;
-  SUCCESS: any;
-  WARNING: any;
-  ACTION_REQUIRED: any;
+const InfoBox: React.FC<Props> & {
+  ERROR: typeof ERROR;
+  SUCCESS: typeof SUCCESS;
+  WARNING: typeof WARNING;
+  ACTION_REQUIRED: typeof ACTION_REQUIRED;
 } = ({
   children,
   className,
   scrollIntoView,
   showIcon,
-  type,
+  type = DEFAULT,
   toaster,
   dismissable,
   onDismissed
-}: Props): ReactElement => {
+}): React.ReactElement => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const ref = useRef<HTMLDivElement>(null);
 

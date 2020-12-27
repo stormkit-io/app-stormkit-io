@@ -1,7 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { toArray } from "~/utils/helpers/array";
+import { Location, History } from "history";
+import { useLocation } from "react-router-dom";
+import Api from "~/utils/api/Api";
+import { prepareBuildObject } from "./helpers";
 
-export const useFetchEnvironments = ({ api, app, location }) => {
+interface FetchEnvironmentProps {
+  api: Api;
+  app?: App;
+}
+
+interface FetchEnvironmentsReturnValue {
+  environments: Array<Environment>;
+  hasNextPage: boolean;
+  loading: boolean;
+  error: string | null;
+}
+
+interface LocationState extends Location {
+  envs: number;
+}
+
+export const useFetchEnvironments = ({
+  api,
+  app
+}: FetchEnvironmentProps): FetchEnvironmentsReturnValue => {
+  const location = useLocation<LocationState>();
   const [environments, setEnvironments] = useState([]);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [error, setError] = useState(null);
@@ -11,7 +34,7 @@ export const useFetchEnvironments = ({ api, app, location }) => {
   useEffect(() => {
     let unmounted = false;
 
-    if (!app.id) {
+    if (!app?.id) {
       return;
     }
 
@@ -24,7 +47,7 @@ export const useFetchEnvironments = ({ api, app, location }) => {
         if (unmounted !== true) {
           setHasNextPage(res.hasNextPage);
           setEnvironments(
-            res.envs.map(e => ({
+            res.envs.map((e: Environment) => ({
               ...e,
               getDomainName: () => {
                 return e.domain?.name && e.domain?.verified
@@ -46,19 +69,41 @@ export const useFetchEnvironments = ({ api, app, location }) => {
     return () => {
       unmounted = true;
     };
-  }, [api, app.id, app.displayName, refresh]);
+  }, [api, app?.id, app?.displayName, refresh]);
 
   return { environments, error, loading, hasNextPage };
 };
 
-export const STATUS = {
+type STATUS_OK = 200;
+type STATUS_NOT_FOUND = 404;
+type STATUS_NOT_CONFIGURED = "NOT_CONFIGURED";
+type STATUSES = STATUS_OK | STATUS_NOT_FOUND | STATUS_NOT_CONFIGURED | null;
+
+export const STATUS: Record<string, STATUSES> = {
   OK: 200,
   NOT_FOUND: 404,
   NOT_CONFIGURED: "NOT_CONFIGURED"
 };
 
-export const useFetchStatus = ({ api, app, domain, lastDeploy }) => {
-  const [status, setStatus] = useState(null);
+interface FetchStatusProps {
+  api: Api;
+  app: App;
+  domain: string;
+  lastDeploy?: { id: string };
+}
+
+interface FetchStatusReturnValue {
+  status: STATUSES;
+  loading: boolean;
+}
+
+export const useFetchStatus = ({
+  api,
+  app,
+  domain,
+  lastDeploy
+}: FetchStatusProps): FetchStatusReturnValue => {
+  const [status, setStatus] = useState<STATUSES>(null);
   const [loading, setLoading] = useState(false);
   const lastDeployId = lastDeploy?.id;
 
@@ -96,8 +141,27 @@ export const useFetchStatus = ({ api, app, domain, lastDeploy }) => {
   return { status, loading };
 };
 
-export const useFetchRepoType = ({ app, api, env }) => {
-  const [meta, setMeta] = useState({});
+interface Meta {
+  type: "-" | "nuxt" | "next" | "angular";
+}
+
+interface FetchRepoTypeProps {
+  api: Api;
+  app: App;
+  env: Environment;
+}
+
+interface FetchRepoTypeReturnValue {
+  loading: boolean;
+  meta: Meta;
+}
+
+export const useFetchRepoType = ({
+  app,
+  api,
+  env
+}: FetchRepoTypeProps): FetchRepoTypeReturnValue => {
+  const [meta, setMeta] = useState<Meta>({ type: "-" });
   const [loading, setLoading] = useState(false);
   const name = env?.env || "production";
 
@@ -132,6 +196,16 @@ export const useFetchRepoType = ({ app, api, env }) => {
   return { meta, loading };
 };
 
+interface DeleteEnvironmentProps {
+  api: Api;
+  app: App;
+  environment: Environment;
+  history: History;
+  closeModal: CloseModal;
+  setLoading: SetLoading;
+  setError: SetError;
+}
+
 export const deleteEnvironment = ({
   api,
   app,
@@ -140,11 +214,11 @@ export const deleteEnvironment = ({
   setLoading,
   setError,
   closeModal
-}) => {
+}: DeleteEnvironmentProps): Promise<void> => {
   const name = environment?.env;
 
   if (!name) {
-    return;
+    return Promise.reject();
   }
 
   setLoading(true);
@@ -174,33 +248,16 @@ export const deleteEnvironment = ({
     });
 };
 
-const prepareBuildObject = (values, isServerless) => {
-  const vars = {};
-
-  const keys = toArray(values["build.vars.keys"]);
-  const vals = toArray(values["build.vars.values"]);
-
-  keys.forEach((key, i) => {
-    vars[key] = vals[i].replace(/^['"]+|['"]+$/g, "");
-  });
-
-  const build = {
-    cmd: values["build.cmd"],
-    entry: values["build.entry"] || "",
-    distFolder: values["build.distFolder"] || "",
-    vars
-  };
-
-  if (!build.cmd) {
-    build.cmd = "echo 'skip build step'";
-  }
-
-  if (isServerless && !build.entry) {
-    build.entry = "__SSR__";
-  }
-
-  return build;
-};
+interface InsertEnvironmentProps {
+  api: Api;
+  app: App;
+  history: History;
+  isServerless: boolean;
+  isAutoPublish: boolean;
+  toggleModal: ToggleModal;
+  setError: SetError;
+  setLoading: SetLoading;
+}
 
 export const insertEnvironment = ({
   api,
@@ -211,7 +268,7 @@ export const insertEnvironment = ({
   toggleModal,
   setError,
   setLoading
-}) => values => {
+}: InsertEnvironmentProps) => (values: Record<string, string>): void => {
   const { name, branch } = values;
   const build = prepareBuildObject(values, isServerless);
 
@@ -258,6 +315,18 @@ export const insertEnvironment = ({
     });
 };
 
+interface EditEnvironmentProps {
+  api: Api;
+  app: App;
+  history: History;
+  isServerless: boolean;
+  isAutoPublish: boolean;
+  environmentId: string;
+  toggleModal: ToggleModal;
+  setError: SetErrorWithJSX;
+  setLoading: SetLoading;
+}
+
 export const editEnvironment = ({
   api,
   app,
@@ -268,7 +337,7 @@ export const editEnvironment = ({
   toggleModal,
   setError,
   setLoading
-}) => values => {
+}: EditEnvironmentProps) => (values: Record<string, string>): void => {
   const { name, branch } = values;
   const build = prepareBuildObject(values, isServerless);
 
@@ -300,8 +369,13 @@ export const editEnvironment = ({
       });
     })
     .catch(async res => {
-      console.log(res);
-      const data = await res.json();
+      let data: { code: "duplicate"; errors: Record<string, string> };
+
+      try {
+        data = await res.json();
+      } catch (e) {
+        return;
+      }
 
       let message;
 
