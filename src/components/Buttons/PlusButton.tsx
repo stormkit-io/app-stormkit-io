@@ -1,22 +1,22 @@
-import React, { FC, ReactElement } from "react";
+import React from "react";
 import cn from "classnames";
 import Button from "../Button";
 
 const SMALL = "small";
 const MEDIUM = "medium";
 
-type Props = {
+interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   className?: string;
-  text: string;
+  text?: string;
   size?: typeof SMALL | typeof MEDIUM;
-};
+}
 
-const PlusButton: FC<Props> = ({
+const PlusButton: React.FC<Props> = ({
   className,
   size,
   text,
   ...props
-}: Props): ReactElement => (
+}: Props): React.ReactElement => (
   <div className="flex w-full justify-center">
     <Button
       styled={false}
@@ -34,7 +34,8 @@ const PlusButton: FC<Props> = ({
           "text-xl": size === "small"
         })}
       >
-        <span className="fas fa-plus-circle mr-2 text-lg" /> {text}
+        <span className="fas fa-plus-circle mr-2 text-lg" />
+        {text ? ` ${text}` : ""}
       </span>
     </Button>
   </div>

@@ -1,25 +1,38 @@
 import * as lib from "@testing-library/react";
+import router from "react-router";
 import nock from "nock";
-import { withAppContext } from "~/testing/helpers";
+import { withMockContext } from "~/testing/helpers";
 import * as data from "~/testing/data";
-import * as nocks from "~/testing/nocks";
 
-const { waitFor, fireEvent, getByText, within } = lib;
+const { waitFor, fireEvent, getByText } = lib;
+const fileName = "pages/apps/_components/DeployModal";
 
-describe("pages/apps", () => {
+describe(fileName, () => {
   let wrapper;
   let app;
+  let envs;
+  let historySpy;
   const id = "412341"; // deploy id
 
   beforeEach(() => {
-    app = data.mockAppResponse();
-    const envs = data.mockEnvironmentsResponse();
-    nocks.mockAppProxy({ app, envs: envs.envs });
+    app = data.mockApp();
+    envs = data.mockEnvironments({ app });
 
-    wrapper = withAppContext({
-      app,
-      envs: envs,
-      path: "/apps/1"
+    historySpy = jest.fn();
+
+    jest.spyOn(router, "useHistory").mockReturnValue({
+      push: historySpy
+    });
+
+    wrapper = withMockContext({
+      path: `~/${fileName}`,
+      props: {
+        app,
+        environments: envs,
+        toggleModal: (v, cb) => {
+          !v && cb();
+        }
+      }
     });
   });
 
@@ -70,11 +83,7 @@ describe("pages/apps", () => {
 
     document.body.querySelector("[name=branch]").value = "master";
 
-    fireEvent.click(
-      within(document.body.querySelector(".modal-overlay")).getByText(
-        "Deploy now"
-      )
-    );
+    fireEvent.click(wrapper.getByText("Deploy now"));
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
@@ -85,7 +94,7 @@ describe("pages/apps", () => {
     await executeDeployFlow({ id });
 
     await waitFor(() => {
-      expect(wrapper.history.entries[1].pathname).toBe(
+      expect(historySpy).toHaveBeenCalledWith(
         `/apps/${app.id}/deployments/${id}`
       );
     });
@@ -95,7 +104,7 @@ describe("pages/apps", () => {
     await executeDeployFlow({ id, status: 429 });
 
     await waitFor(() => {
-      expect(wrapper.history.entries[1]).toBeUndefined();
+      expect(historySpy).not.toHaveBeenCalled();
       expect(
         wrapper.getByText(
           /You have exceeded the maximum number of concurrent builds/
@@ -108,7 +117,7 @@ describe("pages/apps", () => {
     await executeDeployFlow({ id, status: 400 });
 
     await waitFor(() => {
-      expect(wrapper.history.entries[1]).toBeUndefined();
+      expect(historySpy).not.toHaveBeenCalled();
       expect(
         wrapper.getByText(
           /Something wrong happened here. Please contact us at hello@stormkit.io/

@@ -1,20 +1,20 @@
-import React, { FC, ReactElement, useState } from "react";
+import React, { useState } from "react";
 import Form from "~/components/Form";
 
-type Props = {
+interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
   environments: Array<Environment>;
   placeholder: string;
   onSelect: (arg0: Environment) => void;
-  defaultValue: string;
-};
+  defaultValue?: string;
+}
 
-const EnvironmentSelector: FC<Props> = ({
+const EnvironmentSelector: React.FC<Props> = ({
   environments,
-  defaultValue,
+  defaultValue = "",
   onSelect,
   placeholder,
   ...rest
-}): ReactElement => {
+}): React.ReactElement => {
   const [selectedEnvironment, setSelectedEnvironment] = useState<string>(
     defaultValue
   );

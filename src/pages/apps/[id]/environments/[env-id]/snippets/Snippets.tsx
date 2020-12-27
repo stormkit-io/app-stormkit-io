@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import { useLocation } from "react-router";
 import Tooltip from "@material-ui/core/Tooltip";
 import { connect } from "~/utils/context";
+import Api from "~/utils/api/Api";
 import RootContext from "~/pages/Root.context";
 import AppContext from "~/pages/apps/App.context";
 import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
@@ -11,6 +12,13 @@ import { PlusButton } from "~/components/Buttons";
 import { useFetchSnippets } from "./actions";
 import SnippetModal from "./_components/SnippetModal";
 import SnippetTable from "./_components/SnippetTable";
+
+interface Props {
+  api: Api;
+  app: App;
+  environment: Environment;
+  toggleModal: ToggleModal;
+}
 
 const Explanation = () => (
   <p>
@@ -22,13 +30,19 @@ const Explanation = () => (
   </p>
 );
 
-const Snippets = ({ api, app, environment: env, toggleModal, location }) => {
+const Snippets: React.FC<Props> = ({
+  api,
+  app,
+  environment: env,
+  toggleModal
+}): React.ReactElement => {
+  const location = useLocation();
   const fetchOpts = { api, app, env, location };
   const { loading, error, snippets, setSnippets } = useFetchSnippets(fetchOpts);
-  const [selectedSnippet, setSelectedSnippet] = useState();
+  const [selectedSnippet, setSelectedSnippet] = useState<Snippet | undefined>();
 
   useEffect(() => {
-    setSelectedSnippet();
+    setSelectedSnippet(undefined);
   }, [snippets]);
 
   return (
@@ -44,7 +58,7 @@ const Snippets = ({ api, app, environment: env, toggleModal, location }) => {
           <PlusButton
             size="small"
             onClick={() => {
-              setSelectedSnippet();
+              setSelectedSnippet(undefined);
               toggleModal(true);
             }}
             className="p-2 rounded"
@@ -75,8 +89,8 @@ const Snippets = ({ api, app, environment: env, toggleModal, location }) => {
               app={app}
               environment={env}
               setSnippets={setSnippets}
-              setSelectedSnippet={(...args) => {
-                setSelectedSnippet(...args);
+              setSelectedSnippet={(args: Snippet) => {
+                setSelectedSnippet(args);
                 toggleModal(true);
               }}
             />
@@ -87,17 +101,9 @@ const Snippets = ({ api, app, environment: env, toggleModal, location }) => {
   );
 };
 
-Snippets.propTypes = {
-  api: PropTypes.object,
-  app: PropTypes.object,
-  environment: PropTypes.object,
-  toggleModal: PropTypes.func,
-  location: PropTypes.object,
-};
-
 export default connect(Snippets, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app"] },
   { Context: EnvironmentContext, props: ["environment"] },
-  { Context: SnippetModal, props: ["toggleModal"], wrap: true },
+  { Context: SnippetModal, props: ["toggleModal"], wrap: true }
 ]);

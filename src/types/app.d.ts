@@ -11,4 +11,5 @@ declare type App = {
   autoDeploy: autoDeploy;
   defaultEnv: string;
   displayName: string;
+  commitPrefix?: string;
 };

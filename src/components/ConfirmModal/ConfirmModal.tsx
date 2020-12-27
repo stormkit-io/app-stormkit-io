@@ -1,4 +1,4 @@
-import React, { useState, createContext, ReactChildren } from "react";
+import React, { useState, createContext } from "react";
 import Modal from "~/components/Modal";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
@@ -7,33 +7,11 @@ import { connect } from "~/utils/context";
 const ModalContext = Modal.Context();
 const context = createContext({});
 
-type Props = {
+interface Props {
   isOpen: boolean;
   toggleModal: (onOrOff: boolean, ...rest: [unknown?]) => void;
-  children: ReactChildren;
-};
-
-type ConfirmModalCallback = ({
-  setLoading,
-  closeModal,
-  setError
-}: {
-  setLoading: (value: boolean) => void;
-  closeModal: () => void;
-  setError: (err: string | null) => void;
-}) => void;
-
-type ConfirmModalOptions = {
-  callback?: ConfirmModalCallback;
-  onCancel?: (closeModal: () => void) => void;
-  onConfirm?: ConfirmModalCallback;
-  confirmText?: string;
-};
-
-export type ConfirmModalFunction = (
-  content: string,
-  options: ConfirmModalOptions
-) => void;
+  children: React.ReactNode;
+}
 
 /**
  * Usage:
@@ -54,7 +32,7 @@ const ConfirmModal = ({ isOpen, toggleModal, children }: Props) => {
     setError(null);
   };
 
-  const confirmModal: ConfirmModalFunction = (content, options = {}) => {
+  const confirmModal: ConfirmModalFn = (content, options = {}) => {
     setContent(content);
     setOptions(options);
     toggleModal(true);

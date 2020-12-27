@@ -77,7 +77,7 @@ export default class Api {
 
       return json;
     } catch (e) {
-      console.error(e);
+      // Do nothing because the response is successful. Maybe it's an empty response.
     }
   }
 

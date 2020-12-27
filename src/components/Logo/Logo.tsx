@@ -1,19 +1,19 @@
-import React, { ReactElement, FC } from "react";
+import React from "react";
 import cn from "classnames";
 import logo from "~/assets/images/stormkit-logo.svg";
 
 interface Props {
-  iconOnly: boolean;
-  iconSize: number;
-  className: string;
+  iconOnly?: boolean;
+  iconSize?: number;
+  className?: string;
 }
 
-const Logo: FC<Props> = ({
-  iconOnly,
+const Logo: React.FC<Props> = ({
+  iconOnly = false,
   className,
   iconSize = 16,
   ...rest
-}: Props): ReactElement => {
+}: Props): React.ReactElement => {
   return (
     <span className={cn("inline-flex items-center", className)} {...rest}>
       <img

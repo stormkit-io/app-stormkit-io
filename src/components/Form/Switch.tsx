@@ -1,21 +1,9 @@
 import React, { useState, useEffect, ReactElement, FC } from "react";
-import SwitchUI from "@material-ui/core/Switch";
+import SwitchUI, { SwitchProps } from "@material-ui/core/Switch";
 
-type Props = {
-  /**
-   * Whether the switch is checked or not.
-   */
-  checked: boolean;
-
-  /**
-   * A confirmation callback before switching the component.
-   * It receives a callback argument, that expects a boolean
-   * value as an argument. It's used to set the checked state
-   * after the confirm action.
-   */
-  confirm: (arg0: any) => void;
-  onChange?: (arg0: any) => void;
-};
+interface Props extends SwitchProps {
+  confirm?: (arg0: (val: boolean) => void) => void;
+}
 
 /**
  * Wrap the Material-UI Switch component since it does not
@@ -41,7 +29,7 @@ const Switch: FC<Props> = ({
           confirm(setChecked);
         } else {
           setChecked(!isChecked);
-          rest.onChange && rest.onChange(val);
+          rest.onChange && rest.onChange(val, !isChecked);
         }
       }}
     />

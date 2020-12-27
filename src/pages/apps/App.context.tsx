@@ -1,23 +1,39 @@
 import React, { createContext } from "react";
-import PropTypes from "prop-types";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { connect } from "~/utils/context";
+import Api from "~/utils/api/Api";
 import MenuLayout from "~/layouts/MenuLayout";
 import RootContext from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
+import Link from "~/components/Link";
+import Error404 from "~/components/Errors/Error404";
 import AppHeader from "./_components/AppHeader";
 import AppMenu from "./_components/AppMenu";
 import { useFetchApp } from "./actions";
 import { useFetchEnvironments } from "./[id]/environments/actions";
 import routes from "./routes";
 
-const Context = createContext();
+interface IContext {
+  app?: App;
+  environments?: Array<Environment>;
+}
 
-const AppContext = ({ api, match, location, history }) => {
+interface Props {
+  api: Api;
+}
+
+interface MatchParams {
+  id: string;
+}
+
+const Context = createContext<IContext>({});
+
+const AppContext: React.FC<Props> = ({ api }) => {
+  const match = useRouteMatch<MatchParams>();
   const { id } = match.params;
-  const { app, error, loading } = useFetchApp({ api, appId: id, location });
-  const envs = useFetchEnvironments({ api, app, location });
+  const { app, error, loading } = useFetchApp({ api, appId: id });
+  const envs = useFetchEnvironments({ api, app });
 
   if (loading) {
     return <Spinner primary pageCenter />;
@@ -32,23 +48,36 @@ const AppContext = ({ api, match, location, history }) => {
     );
   }
 
+  if (!loading && !app) {
+    return (
+      <Error404>
+        <p>
+          O-oh, we couldn't find this app. Would you like to go back to
+          <br />
+          <Link to="/" secondary>
+            My Apps
+          </Link>
+          ?
+        </p>
+      </Error404>
+    );
+  }
+
   return (
     <Context.Provider value={{ app, environments: envs.environments }}>
       <MenuLayout menu={<AppMenu app={app} />}>
         <div className="flex flex-grow-0 max-w-screen-lg m-auto w-full mb-24">
-          <AppHeader
-            app={app}
-            api={api}
-            envs={envs.environments}
-            history={history}
-          />
+          <AppHeader app={app} api={api} envs={envs.environments} />
         </div>
         <div className="flex flex-auto max-w-screen-lg m-auto w-full">
           {envs.loading && <Spinner primary />}
           {!envs.loading && (
             <Switch>
               {routes.map(route => (
-                <Route {...route} key={route.path} />
+                <Route
+                  {...route}
+                  key={Array.isArray(route.path) ? route.path[0] : route.path}
+                />
               ))}
             </Switch>
           )}
@@ -56,13 +85,6 @@ const AppContext = ({ api, match, location, history }) => {
       </MenuLayout>
     </Context.Provider>
   );
-};
-
-AppContext.propTypes = {
-  api: PropTypes.object,
-  match: PropTypes.object,
-  location: PropTypes.object,
-  history: PropTypes.object
 };
 
 const enhanced = connect(AppContext, [
