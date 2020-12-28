@@ -64,6 +64,19 @@ export default class Api {
     const request = new Request(url, opts);
     const resp = await fetch(request);
 
+    if (resp.status === 403) {
+      try {
+        const json = await resp.json();
+
+        if (json?.user === false) {
+          window.location.href = "/auth";
+          return;
+        }
+      } catch (e) {
+        // Do nothing
+      }
+    }
+
     if (resp.status.toString()[0] !== "2") {
       throw resp;
     }
@@ -77,7 +90,7 @@ export default class Api {
 
       return json;
     } catch (e) {
-      // Do nothing because the response is successful. Maybe it's an empty response.
+      // Do nothing as the response is successful. Maybe it's an empty response.
     }
   }
 
