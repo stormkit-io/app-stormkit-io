@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Location } from "history";
 import { Redirect, useLocation } from "react-router-dom";
 import { connect } from "~/utils/context";
@@ -8,10 +8,11 @@ import DefaultLayout from "~/layouts/DefaultLayout";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
-import Link from "~/components/Link";
 import ExplanationBox from "~/components/ExplanationBox";
 import { useFetchAppList } from "./actions";
 import { AppRow, Title } from "./_components";
+
+const limit = 20;
 
 interface Props {
   api: Api;
@@ -23,11 +24,14 @@ interface LocationState extends Location {
 
 export const Home: React.FC<Props> = ({ api }): React.ReactElement => {
   const location = useLocation<LocationState>();
-  const { apps, loading, error } = useFetchAppList({ api });
+  const [from, setFrom] = useState(0);
+  const { apps, loading, error, hasNextPage } = useFetchAppList({ api, from });
 
   if (apps.length === 0 && !loading) {
     return <Redirect to="/apps/new" />;
   }
+
+  const isLoadingFirstTime = loading && apps.length === 0;
 
   return (
     <DefaultLayout>
@@ -48,25 +52,29 @@ export const Home: React.FC<Props> = ({ api }): React.ReactElement => {
             {!loading && error && (
               <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
             )}
-            {loading && (
+            {isLoadingFirstTime && (
               <div className="flex w-full items-center justify-center">
                 <Spinner primary width={8} height={8} />
               </div>
             )}
-            {!loading && !error && (
+            {!isLoadingFirstTime && !error && (
               <>
                 <div className="flex-auto">
                   {apps.map(app => (
                     <AppRow key={app.id} {...app} />
                   ))}
                 </div>
-                <div className="mt-4">
-                  Want some extra features for free?{" "}
-                  <Link to="/user/referral" secondary>
-                    Invite friends
-                  </Link>{" "}
-                  and earn up to 3 months of Pro.
-                </div>
+                {hasNextPage && (
+                  <div className="mt-4 flex justify-center">
+                    <Button
+                      secondary
+                      loading={loading}
+                      onClick={() => setFrom(from + limit)}
+                    >
+                      Load more
+                    </Button>
+                  </div>
+                )}
               </>
             )}
           </div>

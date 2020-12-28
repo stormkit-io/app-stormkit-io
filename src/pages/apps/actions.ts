@@ -5,20 +5,24 @@ import Api from "~/utils/api/Api";
 
 interface FetchAppListProps {
   api: Api;
+  from?: number;
 }
 
 interface FetchAppListReturnValue {
   apps: Array<App>;
   error: string | null;
   loading: boolean;
+  hasNextPage: boolean;
 }
 
 export const useFetchAppList = ({
   api,
+  from = 0,
 }: FetchAppListProps): FetchAppListReturnValue => {
   const [apps, setApps] = useState<Array<App>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
@@ -27,10 +31,11 @@ export const useFetchAppList = ({
     setError(null);
 
     api
-      .fetch("/apps")
+      .fetch(`/apps?from=${from}`)
       .then((res) => {
         if (unmounted !== true) {
-          setApps(res.apps);
+          setApps([...apps, ...res.apps]);
+          setHasNextPage(res.hasNextPage);
           setLoading(false);
         }
       })
@@ -43,9 +48,9 @@ export const useFetchAppList = ({
     return () => {
       unmounted = true;
     };
-  }, [api]);
+  }, [api, from]);
 
-  return { apps, loading, error };
+  return { apps, loading, error, hasNextPage };
 };
 
 interface FetchAppProps {
