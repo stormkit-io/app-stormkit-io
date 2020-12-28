@@ -33,16 +33,20 @@ type LocationState = {
   cards: Location;
 };
 
-type FetchCardsProps = {
+interface FetchCardsProps {
   api: Api;
   location: Location;
-};
+}
+
+interface FetchCardsAPIResponse {
+  cards: Cards;
+}
 
 export const useFetchCards = ({
   api,
   location,
 }: FetchCardsProps): FetchCardsReturnValue => {
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState<Cards>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const state = location.state as LocationState;
@@ -55,11 +59,11 @@ export const useFetchCards = ({
     setError(null);
 
     api
-      .fetch("/user/subscription/cards")
+      .fetch<FetchCardsAPIResponse>("/user/subscription/cards")
       .then((res) => {
         if (unmounted !== true) {
           setLoading(false);
-          setCards(res.cards.filter((c: Card) => c.TypeData.last4));
+          setCards(res.cards.filter((c) => c.TypeData.last4));
         }
       })
       .catch((res) => {
