@@ -9,6 +9,11 @@ import Api from "~/utils/api/Api";
 import { LocalStorage } from "~/utils/storage";
 import * as data from "~/testing/data";
 
+/**
+ * @deprecated
+ *
+ * Use withMockContext instead.
+ */
 export const withUserContext = ({
   user = data.mockUserResponse(),
   path,
@@ -93,6 +98,11 @@ export const withMockContext = (...args) => {
   });
 };
 
+/**
+ * @deprecated
+ *
+ * Use withMockContext instead.
+ */
 export const withAppContext = ({ app, envs, path, status = 200, user }) => {
   nock("http://localhost")
     .get(`/app/${app.id}`)
@@ -113,6 +123,11 @@ export const withAppContext = ({ app, envs, path, status = 200, user }) => {
   });
 };
 
+/**
+ * @deprecated
+ *
+ * Use withMockContext instead.
+ */
 export const renderWithContext = ({ history = createMemoryHistory() } = {}) => {
   const MockRouter = ({ children }) => children;
   const component = render(
@@ -123,3 +138,5 @@ export const renderWithContext = ({ history = createMemoryHistory() } = {}) => {
   component.history = history;
   return component;
 };
+
+export const waitForPromises = () => new Promise(setImmediate);
