@@ -1,16 +1,41 @@
 import { LocalStorage } from "~/utils/storage";
 
+type Body =
+  | string
+  | Blob
+  | ArrayBufferView
+  | ArrayBuffer
+  | FormData
+  | URLSearchParams
+  | ReadableStream<Uint8Array>
+  | null
+  | undefined;
+
+interface Options {
+  baseurl: string;
+}
+
+interface FetchOptions extends Record<string, unknown> {
+  method?: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
+  headers?: Record<string, string>;
+  body?: Body;
+  params?: Body; // alias for body
+}
+
 export default class Api {
   static STORAGE_TOKEN_KEY = "skit_token";
 
-  static isAbsolute(url) {
-    return url && url.match(/^(https?|\/\/)/) !== null;
+  static isAbsolute(url: string): boolean {
+    return url?.match(/^(https?|\/\/)/) !== null;
   }
 
-  constructor(opts) {
+  baseurl = "";
+  headers: Record<string, string> = {};
+
+  constructor(opts: Options) {
     this.baseurl = opts.baseurl;
     this.headers = {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     };
 
     const token = LocalStorage.get(Api.STORAGE_TOKEN_KEY);
@@ -20,32 +45,45 @@ export default class Api {
     }
   }
 
-  setAuthToken(token) {
+  setAuthToken(token: string): void {
     LocalStorage.set(Api.STORAGE_TOKEN_KEY, token);
     this.headers.Authorization = "Bearer " + token;
   }
 
-  getAuthToken() {
+  getAuthToken(): string | undefined | null {
     return LocalStorage.get(Api.STORAGE_TOKEN_KEY);
   }
 
-  removeAuthToken() {
+  removeAuthToken(): void {
     LocalStorage.del(Api.STORAGE_TOKEN_KEY);
     delete this.headers.Authorization;
   }
 
-  getHeaders(additional = {}) {
+  getHeaders(additional: Record<string, string> = {}): Headers {
     const headers = new Headers();
 
-    Object.keys(this.headers).forEach(k => {
+    Object.keys(this.headers).forEach((k) => {
       headers.append(k, this.headers[k]);
     });
 
-    Object.keys(additional).forEach(k => {
+    Object.keys(additional).forEach((k) => {
       headers.append(k, additional[k]);
     });
 
     return headers;
+  }
+
+  private async handle403(response: Response): Promise<void> {
+    try {
+      const json = await response.json();
+
+      if (json?.user === false && window.location.pathname !== "/auth") {
+        window.location.href = "/auth";
+        return;
+      }
+    } catch (e) {
+      throw response;
+    }
   }
 
   /**
@@ -55,25 +93,20 @@ export default class Api {
    * @param opts
    * @return {Promise<any>}
    */
-  async fetch(url, opts = {}) {
+  async fetch<T>(url: string, opts: FetchOptions = {}): Promise<T> {
     if (Api.isAbsolute(url) === false) {
       url = this.baseurl.replace(/\/+$/, "") + "/" + url.replace(/^\//, "");
     }
 
-    opts.headers = this.getHeaders(opts.headers);
-    const request = new Request(url, opts);
+    const headers = this.getHeaders(opts.headers);
+    const request = new Request(url, { ...opts, headers });
     const resp = await fetch(request);
 
     if (resp.status === 403) {
       try {
-        const json = await resp.json();
-
-        if (json?.user === false) {
-          window.location.href = "/auth";
-          return;
-        }
+        this.handle403(resp);
       } catch (e) {
-        // Do nothing
+        throw resp;
       }
     }
 
@@ -88,17 +121,17 @@ export default class Api {
         this.setAuthToken(json.jwt);
       }
 
-      return json;
+      return json as T;
     } catch (e) {
-      // Do nothing as the response is successful. Maybe it's an empty response.
+      throw resp;
     }
   }
 
   // Helper method for sending post requests.
-  async post(url, opts = {}) {
+  async post<T>(url: string, opts: FetchOptions = {}): Promise<T> {
     // This line of code allows using post as post(url, myRequestBody)
     if (!opts.body && !opts.params) {
-      opts = { body: opts };
+      opts = { body: (opts as unknown) as Body };
     }
 
     opts.method = "POST";
@@ -111,10 +144,10 @@ export default class Api {
   }
 
   // Helper method for sending put requests.
-  async put(url, opts = {}) {
+  async put<T>(url: string, opts: FetchOptions = {}): Promise<T> {
     // This line of code allows using post as put(url, myRequestBody)
     if (!opts.body && !opts.params) {
-      opts = { body: opts };
+      opts = { body: (opts as unknown) as Body };
     }
 
     opts.method = "PUT";
@@ -127,10 +160,10 @@ export default class Api {
   }
 
   // Helper method for sending delete requests.
-  async delete(url, opts = {}) {
+  async delete<T>(url: string, opts: FetchOptions = {}): Promise<T> {
     // This line of code allows using post as put(url, myRequestBody)
     if (!opts.body && !opts.params) {
-      opts = { body: opts };
+      opts = { body: (opts as unknown) as Body };
     }
 
     opts.method = "DELETE";

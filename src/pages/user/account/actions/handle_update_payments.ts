@@ -17,10 +17,6 @@ type UpdatePaymentMethodProps = {
   history: History;
 };
 
-type UpdatePaymentMethodFormValues = {
-  name: string;
-};
-
 type HandleStripeErrorProps = {
   error: StripeError | undefined;
   setError: (value: string | null) => void;
@@ -42,6 +38,14 @@ const handleStripeError = ({ error, setError }: HandleStripeErrorProps) => {
       "An unexpected error occurred while processing card information."
   );
 };
+
+interface UpdatePaymentMethodFormValues {
+  name: string;
+}
+
+interface UpdatePaymentMethodAPIResponse {
+  customerId: string;
+}
 
 export const handleUpdatePaymentMethod = (
   props: UpdatePaymentMethodProps
@@ -78,13 +82,20 @@ export const handleUpdatePaymentMethod = (
     }
 
     if (source?.status === "chargeable") {
-      const { customerId } = await api.post("/user/subscription/card", {
-        sourceId: source.id,
-      });
+      const options = { sourceId: source.id };
 
-      if (customerId) {
-        setLoading(false);
-        return history.push({ state: { cards: Date.now() } });
+      try {
+        const response = await api.post<UpdatePaymentMethodAPIResponse>(
+          "/user/subscription/card",
+          options
+        );
+
+        if (response && response.customerId) {
+          setLoading(false);
+          return history.push({ state: { cards: Date.now() } });
+        }
+      } catch (e) {
+        // Do nothing
       }
     }
 

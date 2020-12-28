@@ -12,4 +12,6 @@ declare type App = {
   defaultEnv: string;
   displayName: string;
   commitPrefix?: string;
+  provider?: "github" | "bitbucket" | "gitlab";
+  name?: string;
 };

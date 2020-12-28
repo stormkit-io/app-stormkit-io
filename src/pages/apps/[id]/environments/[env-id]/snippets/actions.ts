@@ -66,6 +66,10 @@ interface LocationState extends Location {
   snippets: number;
 }
 
+interface FetchSnippetsAPIResponse {
+  snippets: Snippets;
+}
+
 export const useFetchSnippets = ({
   api,
   app,
@@ -84,7 +88,9 @@ export const useFetchSnippets = ({
     setLoading(true);
 
     api
-      .fetch(`/app/${app.id}/envs/${env.env}/snippets`)
+      .fetch<FetchSnippetsAPIResponse>(
+        `/app/${app.id}/envs/${env.env}/snippets`
+      )
       .then((res) => {
         if (!unmounted) {
           setSnippets(normalize(res.snippets));

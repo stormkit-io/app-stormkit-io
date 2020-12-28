@@ -15,6 +15,11 @@ interface FetchAppListReturnValue {
   hasNextPage: boolean;
 }
 
+interface FetchAppListAPIResponse {
+  apps: Array<App>;
+  hasNextPage: boolean;
+}
+
 export const useFetchAppList = ({
   api,
   from = 0,
@@ -31,7 +36,7 @@ export const useFetchAppList = ({
     setError(null);
 
     api
-      .fetch(`/apps?from=${from}`)
+      .fetch<FetchAppListAPIResponse>(`/apps?from=${from}`)
       .then((res) => {
         if (unmounted !== true) {
           setApps([...apps, ...res.apps]);
@@ -68,6 +73,10 @@ interface LocationState extends Location {
   app?: number;
 }
 
+interface FetchAppAPIResponse {
+  app: App;
+}
+
 const appCache: Record<string, App> = {};
 
 export const useFetchApp = ({
@@ -91,12 +100,20 @@ export const useFetchApp = ({
     setError(null);
 
     api
-      .fetch(`/app/${appId}`)
+      .fetch<FetchAppAPIResponse>(`/app/${appId}`)
       .then((res) => {
         const app = res.app;
         const pieces = app.repo.split("/");
-        app.provider = pieces.shift();
-        app.name = pieces.join("/");
+        const provider = pieces.shift();
+
+        if (
+          provider === "github" ||
+          provider === "gitlab" ||
+          provider === "bitbucket"
+        ) {
+          app.provider = provider;
+          app.name = pieces.join("/");
+        }
 
         if (unmounted !== true) {
           setApp(app);
@@ -150,6 +167,10 @@ interface DeployCallbackProps {
   branch: string;
 }
 
+interface DeployAPIResponse {
+  id: string;
+}
+
 export const deploy = ({
   api,
   app,
@@ -166,7 +187,11 @@ export const deploy = ({
   setLoading(true);
 
   api
-    .post(`/app/deploy`, { env: environment.env, branch, appId: app.id })
+    .post<DeployAPIResponse>(`/app/deploy`, {
+      env: environment.env,
+      branch,
+      appId: app.id,
+    })
     .then((deploy) => {
       toggleModal(false, () => {
         if (deploy && deploy.id) {

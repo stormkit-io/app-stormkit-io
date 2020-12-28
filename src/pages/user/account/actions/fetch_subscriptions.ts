@@ -41,11 +41,15 @@ type FetchSubscriptionProps = {
   location: Location;
 };
 
-type FetchSubscriptionReturnValue = {
+interface FetchSubscriptionReturnValue {
   loading: boolean;
   error: string | null;
   subscription: Subscription | undefined;
-};
+}
+
+interface FetchSubscriptionAPIResponse {
+  subscription: Subscription;
+}
 
 export const useFetchSubscription = ({
   api,
@@ -64,10 +68,10 @@ export const useFetchSubscription = ({
     setError(null);
 
     api
-      .fetch("/user/subscription")
+      .fetch<FetchSubscriptionAPIResponse>("/user/subscription")
       .then((res) => {
         if (unmounted !== true) {
-          const sub = (res.subscription || {}) as Subscription;
+          const sub = res.subscription || {};
 
           // When the package is downgraded to free, Stripe returns the `activePlans` as
           // an empty array. This tiny hack makes sure that we have a consistent behaviour

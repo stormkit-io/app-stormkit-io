@@ -122,6 +122,11 @@ interface LocationState extends Location {
   deployments?: number;
 }
 
+interface FetchDeploymentsAPIResponse {
+  hasNextPage: boolean;
+  deploys: Array<Deployment>;
+}
+
 export const useFetchDeployments = ({
   api,
   app,
@@ -161,7 +166,7 @@ export const useFetchDeployments = ({
     setError(null);
 
     api
-      .post("/app/deployments", {
+      .post<FetchDeploymentsAPIResponse>("/app/deployments", {
         appId: `${app.id}`,
         from,
         envId,
