@@ -1,12 +1,11 @@
 import React from "react";
-import g from "lodash.get";
 
 /**
  * Formats a date.
  *
  * @param {*} ts
  */
-export const formattedDate = ts => {
+export const formattedDate = (ts: number): string => {
   const date = new Date(ts * 1000);
   const now = new Date();
 
@@ -15,7 +14,7 @@ export const formattedDate = ts => {
     date.getFullYear() === now.getFullYear() &&
     date.getMonth() === now.getMonth()
   ) {
-    return `Today at ${date.toLocaleString("de-CH", {
+    return `Today at ${date.toLocaleDateString("de-CH", {
       hour: "2-digit",
       minute: "2-digit"
     })}`;
@@ -27,18 +26,31 @@ export const formattedDate = ts => {
   });
 };
 
+interface Commit {
+  author: string;
+  branch: string;
+  msg: React.ReactNode;
+}
+
+interface PayloadCommit {
+  branch: string;
+  commit: {
+    message: string;
+    author: string;
+  };
+}
+
 /**
  * Parses a deployment object and extracts useful info.
  *
  * @param {object} deployment
  */
-export const parseCommit = deployment => {
-  const logs = g(deployment, "logs", []);
-
-  if (logs) {
-    for (let i = 0; i < logs.length; i++) {
-      const commit = g(deployment, ["logs", i, "payload", "commit"], {});
-      const branch = g(deployment, ["logs", i, "payload", "branch"], "");
+export const parseCommit = (deployment?: Deployment): Commit => {
+  if (deployment?.logs?.length) {
+    for (let i = 0; i < deployment.logs.length; i++) {
+      const payload = deployment.logs[i].payload as PayloadCommit;
+      const commit = payload?.commit || {};
+      const branch = payload?.branch || "";
       const msg = (commit.message || "").split("\n")[0];
       const author = (commit.author || "").split("<")[0];
 
@@ -48,7 +60,7 @@ export const parseCommit = deployment => {
     }
   }
 
-  if (deployment.exit !== null && deployment.exit !== 0) {
+  if (deployment?.exit !== null && deployment?.exit !== 0) {
     return {
       author: "",
       branch: "",
@@ -78,4 +90,5 @@ export const parseCommit = deployment => {
  * Converts bytes to MB
  * @param {number} byte
  */
-export const bytesToMB = byte => `${(+byte / 1000000).toFixed(2)}MB`;
+export const bytesToMB = (byte: string | number): string =>
+  `${(+byte / 1000000).toFixed(2)}MB`;

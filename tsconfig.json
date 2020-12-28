@@ -4,7 +4,7 @@
     "module": "esnext",
     "target": "es2019",
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "skipLibCheck": true,
     "allowJs": true,
     "watch": true,
@@ -21,7 +21,8 @@
     "types": ["react", "node", "jest"],
     "typeRoots": ["/node_modules/@types", "./src/types"],
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["./src/*"],
+      "~/testing/*": ["./testing/*"]
     }
   },
   "exclude": ["node_modules"]
