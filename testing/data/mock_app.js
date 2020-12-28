@@ -1,4 +1,4 @@
-export default (): App => ({
+export default () => ({
   repo: "gitlab/stormkit-io/frontend",
   displayName: "app",
   createdAt: 1551184215,
@@ -9,5 +9,5 @@ export default (): App => ({
   userId: "1",
   autoDeploy: "pull_request",
   commitPrefix: "[app]",
-  endpoint: "app.stormkit.dev",
+  endpoint: "app.stormkit.dev"
 });
