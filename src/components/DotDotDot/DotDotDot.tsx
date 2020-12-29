@@ -1,11 +1,13 @@
 import React, { useState, cloneElement } from "react";
-import PropTypes from "prop-types";
 import cn from "classnames";
 import OutsideClick from "~/components/OutsideClick";
 import Button from "~/components/Button";
 
-const DotDotDot = ({ children, className, ...rest }) => {
+const DotDotDot: React.FC<React.HTMLAttributes<HTMLButtonElement>> & {
+  Item: React.FC<ItemProps>;
+} = ({ children, className, ...rest }): React.ReactElement => {
   const [isOpen, toggleVisibility] = useState(false);
+  const childArray = React.Children.toArray(children);
 
   return (
     <OutsideClick handler={() => toggleVisibility(false)}>
@@ -19,15 +21,18 @@ const DotDotDot = ({ children, className, ...rest }) => {
         </Button>
         {isOpen && (
           <div className="flex flex-col min-w-56 absolute right-0 rounded shadow bg-white z-50 items-start mt-4 text-left">
-            {React.Children.map(
-              children,
-              (child, index) =>
-                child &&
-                cloneElement(child, {
-                  toggleVisibility,
-                  isLast: children.length - 1 === index
-                })
-            )}
+            {childArray.map((child: React.ReactNode, index: number) => {
+              if (!React.isValidElement(child)) {
+                throw new Error(
+                  "[DotDotDot]: Invalid element provided as a child"
+                );
+              }
+
+              return cloneElement(child, {
+                toggleVisibility,
+                isLast: childArray.length - 1 === index
+              });
+            })}
           </div>
         )}
       </div>
@@ -35,12 +40,17 @@ const DotDotDot = ({ children, className, ...rest }) => {
   );
 };
 
-DotDotDot.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.any
-};
+interface ItemProps {
+  icon?: string;
+  isLast?: boolean;
+  disabled?: boolean;
+  className?: string;
+  children: React.ReactNode;
+  onClick?: () => boolean;
+  toggleVisibility?: (arg0: boolean) => void;
+}
 
-DotDotDot.Item = ({
+const Item: React.FC<ItemProps> = ({
   icon,
   children,
   onClick,
@@ -79,7 +89,7 @@ DotDotDot.Item = ({
         shouldClose = onClick();
       }
 
-      if (shouldClose !== false) {
+      if (shouldClose !== false && toggleVisibility) {
         toggleVisibility(false);
       }
     }}
@@ -89,13 +99,6 @@ DotDotDot.Item = ({
   </Button>
 );
 
-DotDotDot.Item.prototypes = {
-  icon: PropTypes.string,
-  toggleVisibility: PropTypes.func,
-  isLast: PropTypes.bool,
-  children: PropTypes.node,
-  className: PropTypes.any,
-  disabled: PropTypes.bool
-};
+DotDotDot.Item = Item;
 
 export default DotDotDot;
