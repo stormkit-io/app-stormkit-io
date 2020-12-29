@@ -1,18 +1,24 @@
 import React, { Component } from "react";
 import "./Async.css";
 
-const config = {};
+interface Config {
+  Loader?: React.FC;
+  props?: Record<string, unknown>;
+}
 
-const Async = getComponent => {
+const config: Config = {};
+
+const Async = (getComponent: () => Promise<{ default: unknown }>) => {
   class AsyncComponent extends Component {
-    static Component = null;
+    static Component: React.FC | null = null;
 
     static Import = async () => {
       const Component = await getComponent();
-      AsyncComponent.Component = Component.default;
+      AsyncComponent.Component = Component.default as React.FC;
       return Component.default;
     };
 
+    unmounted = false;
     state = { Component: AsyncComponent.Component };
 
     async componentDidMount() {
@@ -41,6 +47,12 @@ const Async = getComponent => {
         );
       }
 
+      if (!Loader) {
+        throw new Error(
+          "[Async]: Missing a loader. Please use Async.configure to use a loading component."
+        );
+      }
+
       return <Loader {...props} />;
     }
   }
@@ -49,5 +61,5 @@ const Async = getComponent => {
 };
 
 export default Object.assign(Async, {
-  configure: c => Object.assign(config, c)
+  configure: (c: Record<string, unknown>) => Object.assign(config, c)
 });
