@@ -6,20 +6,23 @@ const fileName =
   "pages/apps/[id]/environments/[env-id]/domain/_components/DomainRow";
 
 describe(fileName, () => {
-  const app = { id: "1", displayName: "my-displayname" };
+  const app = data.mockApp();
   const path = `~/${fileName}`;
   let wrapper;
 
   describe("when not verified yet", () => {
-    let domainsInfo;
+    let domainInfo;
 
     beforeEach(() => {
-      domainsInfo = data.mockDomainFetchResponse();
-      domainsInfo.dns.verified = false;
-      wrapper = withMockContext(path, {
-        app,
-        domain: domainsInfo,
-        onVerify: jest.fn(),
+      domainInfo = data.mockDomainInfo();
+      domainInfo.dns.verified = false;
+      wrapper = withMockContext({
+        path,
+        props: {
+          app,
+          domain: domainInfo,
+          onVerify: jest.fn(),
+        },
       });
     });
 
@@ -30,8 +33,8 @@ describe(fileName, () => {
           "Login to your external DNS provider and create the following TXT record."
         )
       ).toBeTruthy();
-      expect(wrapper.getByText(domainsInfo.dns.txt.name)).toBeTruthy();
-      expect(wrapper.getByText(domainsInfo.dns.txt.value)).toBeTruthy();
+      expect(wrapper.getByText(domainInfo.dns.txt.name)).toBeTruthy();
+      expect(wrapper.getByText(domainInfo.dns.txt.value)).toBeTruthy();
     });
 
     test("clicking the verify now button should trigger a call and refetch", async () => {
@@ -48,15 +51,15 @@ describe(fileName, () => {
   });
 
   describe("when verified and not in use", () => {
-    let domainsInfo;
+    let domainInfo;
 
     beforeEach(() => {
-      domainsInfo = data.mockDomainFetchResponse();
-      domainsInfo.dns.verified = true;
-      domainsInfo.dns.domainInUse = false;
+      domainInfo = data.mockDomainInfo();
+      domainInfo.dns.verified = true;
+      domainInfo.dns.domainInUse = false;
       wrapper = withMockContext(path, {
         app,
-        domain: domainsInfo,
+        domain: domainInfo,
         onVerify: jest.fn(),
       });
     });
@@ -70,7 +73,7 @@ describe(fileName, () => {
         "Domain is not yet pointing to our servers",
         /Point your DNS settings to Stormkit to start using your domain/,
         "Recommended: Setting up CNAME",
-        /my-displayname\.stormkit\.dev/,
+        `${app.displayName}.stormkit.dev`,
         "Alternative: Setting up A Record",
         "35.156.69.62",
       ].forEach((text) => expect(wrapper.getByText(text)).toBeTruthy());
@@ -90,13 +93,13 @@ describe(fileName, () => {
   });
 
   describe("when verified and in use", () => {
-    let domainsInfo;
+    let domainInfo;
 
     beforeEach(() => {
-      domainsInfo = data.mockDomainFetchResponse();
+      domainInfo = data.mockDomainInfo();
       wrapper = withMockContext(path, {
         app,
-        domain: domainsInfo,
+        domain: domainInfo,
         onVerify: jest.fn(),
       });
     });
@@ -114,9 +117,9 @@ describe(fileName, () => {
         "Issuer",
         "Let's Encrypt Authority X3",
         "Issued at",
-        "June 30, 2020",
+        "2020-06-30",
         "Valid until",
-        "September 28, 2020",
+        "2020-09-28",
         "Serial no",
         "343486059919871512067800302572875759206296",
         "Signature Algorithm",

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import cn from "classnames";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,7 +8,21 @@ import DomainVerificationStatus from "./DomainVerificationStatus";
 import DomainUsageStatus from "./DomainUsageStatus";
 import DomainTLSStatus from "./DomainTLSStatus";
 
-const DomainRow = ({ domain, isLastRow, onDelete, onVerify, app }) => {
+interface Props {
+  app: App;
+  isLastRow: boolean;
+  domain: Domain;
+  onDelete: (arg0: string) => boolean;
+  onVerify: (arg0: string) => void;
+}
+
+const DomainRow: React.FC<Props> = ({
+  domain,
+  isLastRow,
+  onDelete,
+  onVerify,
+  app
+}): React.ReactElement => {
   return (
     <div className={cn("text-xs", { "mb-4": !isLastRow })}>
       <div className="p-8 border border-solid border-gray-85 rounded-tl rounded-tr flex items-center bg-white">
@@ -37,13 +50,6 @@ const DomainRow = ({ domain, isLastRow, onDelete, onVerify, app }) => {
       </TableContainer>
     </div>
   );
-};
-
-DomainRow.propTypes = {
-  app: PropTypes.object,
-  domain: PropTypes.object,
-  isLastRow: PropTypes.bool,
-  onDelete: PropTypes.func,
 };
 
 export default DomainRow;
