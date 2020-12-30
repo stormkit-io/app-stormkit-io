@@ -1,18 +1,17 @@
-import { useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { ReactElement, useEffect, FC } from "react";
 import AuthContext from "~/pages/auth/Auth.context";
 import { connect } from "~/utils/context";
 
-const Logout = ({ logout }) => {
+type Props = {
+  logout: () => void;
+}
+
+const Logout: FC<Props> = ({ logout }: Props): ReactElement => {
   useEffect(() => {
     logout();
   }, [logout]);
 
-  return null;
-};
-
-Logout.propTypes = {
-  logout: PropTypes.func
+  return <></>;
 };
 
 export default connect(Logout, [{ Context: AuthContext, props: ["logout"] }]);
