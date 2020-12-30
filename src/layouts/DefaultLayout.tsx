@@ -1,9 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { ReactElement, ReactNode, FC } from "react";
 import Header from "./_components/Header";
 
-const DefaultLayout = ({ children, header }) => {
-  if (typeof header === "undefined") {
+type Props = {
+  children: ReactNode;
+  header?: ReactNode | undefined;
+};
+
+const DefaultLayout: FC<Props> = ({ children, header }: Props): ReactElement => {
+  if (typeof header === undefined) {
     header = <Header />;
   }
 
@@ -15,11 +19,6 @@ const DefaultLayout = ({ children, header }) => {
       </div>
     </main>
   );
-};
-
-DefaultLayout.propTypes = {
-  children: PropTypes.node,
-  header: PropTypes.node
 };
 
 export default DefaultLayout;
