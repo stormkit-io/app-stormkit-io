@@ -1,16 +1,15 @@
-import React, { ReactElement, ReactNode, FC } from "react";
+import React from "react";
 import Header from "./_components/Header";
 
-type Props = {
-  children: ReactNode;
-  header?: ReactNode | undefined;
-};
+interface Props {
+  children: React.ReactNode;
+  header?: React.ReactNode;
+}
 
-const DefaultLayout: FC<Props> = ({ children, header }: Props): ReactElement => {
-  if (typeof header === undefined) {
-    header = <Header />;
-  }
-
+const DefaultLayout: React.FC<Props> = ({
+  children,
+  header = <Header />,
+}): React.ReactElement => {
   return (
     <main className="flex flex-col max-w-screen-lg min-h-screen m-auto items-center">
       {header}
