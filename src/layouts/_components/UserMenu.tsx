@@ -3,13 +3,23 @@ import cn from "classnames";
 import Link from "~/components/Link";
 import OutsideClick from "~/components/OutsideClick";
 
-const menuItems = [
+interface SubItem {
+  to: string;
+  text: string;
+}
+
+interface MenuItem {
+  title: string;
+  children: Array<SubItem>;
+}
+
+const menuItems: Array<MenuItem> = [
   {
     title: "Apps",
     children: [
       { to: "/", text: "My Apps" },
-      { to: "/apps/new", text: "New App" }
-    ]
+      { to: "/apps/new", text: "New App" },
+    ],
   },
   {
     title: "User",
@@ -18,38 +28,38 @@ const menuItems = [
       // { to: "/user/referral", text: "Free Credits" }, TODO: Implement this part
       {
         to: "https://www.stormkit.io/docs",
-        text: "Docs"
+        text: "Docs",
       },
-      { to: "/logout", text: "Logout" }
-    ]
+      { to: "/logout", text: "Logout" },
+    ],
   },
   {
     title: "Get in touch",
     children: [
       {
         to: "https://discord.gg/6yQWhyY",
-        text: "Discord"
+        text: "Discord",
       },
-      { to: "mailto:hello@stormkit.io", text: "Email" }
-    ]
+      { to: "mailto:hello@stormkit.io", text: "Email" },
+    ],
   },
   {
     title: "Legal",
     children: [
       {
         to: "https://www.stormkit.io/policies/privacy",
-        text: "Privacy Policy"
+        text: "Privacy Policy",
       },
       {
         to: "https://www.stormkit.io/policies/terms",
-        text: "Terms of Service"
-      }
-    ]
-  }
+        text: "Terms of Service",
+      },
+    ],
+  },
 ];
 
-const UserMenu = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const UserMenu: React.FC = (): React.ReactElement => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   return (
     <OutsideClick handler={() => setIsMenuOpen(false)}>
@@ -63,18 +73,18 @@ const UserMenu = () => {
           className={cn(
             "flex flex-col absolute right-0 shadow-2xl p-8 rounded bg-white border border-black z-10",
             {
-              hidden: !isMenuOpen
+              hidden: !isMenuOpen,
             }
           )}
         >
           <div className="flex">
-            {menuItems.map(item => (
+            {menuItems.map((item) => (
               <div className="w-40" key={item.title}>
                 <h3 className="uppercase font-bold text-gray-70 mb-6 text-xs">
                   {item.title}
                 </h3>
                 <ul>
-                  {item.children.map(link => (
+                  {item.children.map((link) => (
                     <li key={link.text}>
                       <Link
                         to={link.to}
