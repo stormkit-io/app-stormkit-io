@@ -6,7 +6,7 @@ const Accounts = ({ onAccountChange, accounts, selected }) => {
     <Form.Select
       name="accounts"
       multiple={false}
-      onChange={onAccountChange}
+      onChange={(e) => onAccountChange(e.target.value)}
       value={selected}
     >
       {accounts &&
