@@ -145,7 +145,7 @@ const EnvironmentFormModal = ({
               SelectDisplayProps={{
                 className: "bg-gray-90 w-full p-4 rounded text-gray-40",
               }}
-              onChange={(f) => setFramework(f)}
+              onChange={(e) => setFramework(e.target.value)}
             >
               <Form.Option disabled value="">
                 Pick your framework

@@ -1,3 +1,4 @@
+import router from "react-router";
 import { waitFor, fireEvent } from "@testing-library/react";
 import { withMockContext } from "~/testing/helpers";
 import * as data from "~/testing/data";
@@ -9,17 +10,25 @@ describe(fileName, () => {
   const path = `~/${fileName}`;
   let app;
   let wrapper;
+  let historySpy;
 
   beforeEach(() => {
-    app = data.mockAppResponse();
+    app = data.mockApp();
+
+    historySpy = jest.fn();
+
+    jest.spyOn(router, "useHistory").mockReturnValue({
+      replace: historySpy,
+    });
+
+    jest.spyOn(router, "useLocation").mockReturnValue({
+      state: { settingsSuccess: "Your app has been saved successfully." },
+    });
+
     wrapper = withMockContext(path, {
       app,
-      environments: data.mockEnvironmentsResponse().envs,
+      environments: data.mockEnvironments({ app }),
       additionalSettings: data.mockAdditionalSettingsResponse(),
-      history: { replace: jest.fn() },
-      location: {
-        state: { settingsSuccess: "Your app has been saved successfully." },
-      },
     });
   });
 
@@ -62,7 +71,7 @@ describe(fileName, () => {
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(wrapper.injectedProps.history.replace).toHaveBeenCalledWith({
+      expect(historySpy).toHaveBeenCalledWith({
         state: expect.objectContaining({
           app: expect.any(Number),
           settingsSuccess: "Your app has been updated successfully.",

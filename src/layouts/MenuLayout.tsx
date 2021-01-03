@@ -3,7 +3,7 @@ import React, { ReactNode, ReactElement, FC } from "react";
 type Props = {
   menu: ReactNode;
   children: ReactNode;
-}
+};
 
 const MenuLayout: FC<Props> = ({ menu, children }: Props): ReactElement => (
   <main className="flex min-h-screen m-auto items-center app-layout">

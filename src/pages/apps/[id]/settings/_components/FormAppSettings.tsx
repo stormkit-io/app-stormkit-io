@@ -1,23 +1,57 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import { Location } from "history";
+import { useHistory, useLocation } from "react-router";
+import Api from "~/utils/api/Api";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
 
-const FormAppSettings = ({
+const NodeJS12 = "nodejs12.x";
+const NodeJS10 = "nodejs10.x";
+
+type Runtime = typeof NodeJS12 | typeof NodeJS10;
+
+const AutoDeployCommit = "commit";
+const AutoDeployPullRequest = "pull_request";
+const AutoDeployDisabled = "disabled";
+
+type AutoDeploy =
+  | typeof AutoDeployCommit
+  | typeof AutoDeployPullRequest
+  | typeof AutoDeployDisabled;
+
+interface AdditionalSettings {
+  runtime: Runtime;
+}
+
+interface Props {
+  api: Api;
+  app: App;
+  environments: Array<Environment>;
+  additionalSettings: AdditionalSettings;
+}
+
+interface LocationState extends Location {
+  settingsSuccess: null | boolean;
+  app: null | number;
+}
+
+const FormAppSettings: React.FC<Props> = ({
   api,
   app,
   environments,
-  additionalSettings,
-  history,
-  location,
+  additionalSettings
 }) => {
+  const history = useHistory();
+  const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [runtime, setRuntime] = useState(additionalSettings.runtime || "nodejs10.x"); // prettier-ignore
-  const [autoDeploy, setAutoDeploy] = useState(app.autoDeploy || "disabled");
+  const [runtime, setRuntime] = useState<Runtime>(additionalSettings.runtime || NodeJS10); // prettier-ignore
+  const [autoDeploy, setAutoDeploy] = useState<AutoDeploy>(
+    app.autoDeploy || "disabled"
+  );
   const [defaultEnv, setDefaultEnv] = useState(app.defaultEnv);
   const isAutoDeployEnabled = autoDeploy !== "disabled";
   const successMessage = location?.state?.settingsSuccess;
@@ -35,7 +69,7 @@ const FormAppSettings = ({
         api,
         setLoading,
         setError,
-        history,
+        history
       })}
     >
       <Form.Section label="Display name">
@@ -46,7 +80,7 @@ const FormAppSettings = ({
           defaultValue={app.displayName}
           fullWidth
           inputProps={{
-            "aria-label": "Display name",
+            "aria-label": "Display name"
           }}
         />
         <Form.Description>
@@ -65,7 +99,7 @@ const FormAppSettings = ({
           defaultValue={toRepoAddr(app.repo)}
           fullWidth
           inputProps={{
-            "aria-label": "Repository",
+            "aria-label": "Repository"
           }}
         />
         <Form.Description>
@@ -78,13 +112,13 @@ const FormAppSettings = ({
           name="runtime"
           displayEmpty
           value={runtime}
-          onChange={(v) => setRuntime(v)}
+          onChange={e => setRuntime(e.target.value as Runtime)}
           inputProps={{
-            "aria-label": "Runtime",
+            "aria-label": "Runtime"
           }}
         >
-          <Form.Option value="nodejs10.x">NodeJS 10.x</Form.Option>
-          <Form.Option value="nodejs12.x">NodeJS 12.x</Form.Option>
+          <Form.Option value={NodeJS10}>NodeJS 10.x</Form.Option>
+          <Form.Option value={NodeJS12}>NodeJS 12.x</Form.Option>
         </Form.Select>
         <Form.Description>
           The application runtime for deployments and server side environment.
@@ -101,14 +135,16 @@ const FormAppSettings = ({
           name="autoDeploy"
           displayEmpty
           value={autoDeploy}
-          onChange={(v) => setAutoDeploy(v)}
+          onChange={e => setAutoDeploy(e.target.value as AutoDeploy)}
           inputProps={{
-            "aria-label": "Auto deploy",
+            "aria-label": "Auto deploy"
           }}
         >
-          <Form.Option value="disabled">Disabled</Form.Option>
-          <Form.Option value="commit">On commit</Form.Option>
-          <Form.Option value="pull_request">On pull request</Form.Option>
+          <Form.Option value={AutoDeployDisabled}>Disabled</Form.Option>
+          <Form.Option value={AutoDeployCommit}>On commit</Form.Option>
+          <Form.Option value={AutoDeployPullRequest}>
+            On pull request
+          </Form.Option>
         </Form.Select>
         <Form.Description>
           Specify whether automatic deployments are enabled or not.
@@ -120,7 +156,7 @@ const FormAppSettings = ({
               label="Default environment"
               displayEmpty
               value={defaultEnv}
-              onChange={(v) => setDefaultEnv(v)}
+              onChange={e => setDefaultEnv(e.target.value as string)}
             >
               {environments.map(({ env }) => (
                 <Form.Option value={env} key={env}>
@@ -144,7 +180,7 @@ const FormAppSettings = ({
               defaultValue={app.commitPrefix}
               fullWidth
               inputProps={{
-                "aria-label": "Match prefix",
+                "aria-label": "Match prefix"
               }}
             />
             <Form.Description>
@@ -169,7 +205,7 @@ const FormAppSettings = ({
           dismissable
           onDismissed={() =>
             history.replace({
-              state: { app: location?.state?.app, settingsSuccess: null },
+              state: { app: location?.state?.app, settingsSuccess: null }
             })
           }
         >
@@ -178,15 +214,6 @@ const FormAppSettings = ({
       )}
     </Form>
   );
-};
-
-FormAppSettings.propTypes = {
-  app: PropTypes.object,
-  api: PropTypes.object,
-  environments: PropTypes.array,
-  additionalSettings: PropTypes.object,
-  location: PropTypes.object,
-  history: PropTypes.object,
 };
 
 export default FormAppSettings;
