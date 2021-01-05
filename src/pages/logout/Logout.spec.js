@@ -2,7 +2,7 @@ import { waitFor } from "@testing-library/react";
 import { withUserContext } from "~/testing/helpers";
 import { LocalStorage } from "~/utils/storage";
 
-describe("pages/logout", () => {
+describe("pages/Logout", () => {
   test("should trigger the logout function on mount", async () => {
     LocalStorage.set("skit_token", "abc");
 
