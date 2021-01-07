@@ -1,9 +1,15 @@
-import React from "react";
+import React, { ReactElement, FC } from "react";
 import cn from "classnames";
 import Link from "~/components/Link";
 import Logo from "~/components/Logo";
 
-const paths = [
+interface PathsType {
+  path: string,
+  text: string,
+  icon: string,
+}
+
+const paths: PathsType[] = [
   {
     path: "/user/account",
     text: "Account",
@@ -11,7 +17,7 @@ const paths = [
   }
 ];
 
-const UserMenu = () => {
+const UserMenu: FC = (): ReactElement => {
   const url = window?.location.pathname;
 
   return (
