@@ -110,6 +110,7 @@ export default class Api {
       }
     }
 
+
     if (resp.status.toString()[0] !== "2") {
       throw resp;
     }
@@ -123,7 +124,7 @@ export default class Api {
 
       return json as T;
     } catch (e) {
-      throw resp;
+      return {} as T;
     }
   }
 
