@@ -47,8 +47,8 @@ const Deployment = ({ api, app, match }) => {
           </div>
           <div className="rounded bg-gray-90 p-4">
             {settings
-              .filter((i) => i?.value)
-              .map((s) => (
+              .filter(i => i?.value)
+              .map(s => (
                 <div key={s.text} className="flex mb-4">
                   <div className="min-w-56">{s.text}</div>
                   <div>{s.value}</div>
@@ -60,7 +60,7 @@ const Deployment = ({ api, app, match }) => {
               <div
                 key={title}
                 className={cn("border border-gray-83 border-solid rounded", {
-                  "mb-8": i < deploy.logs.length - 1,
+                  "mb-8": i < deploy.logs.length - 1
                 })}
               >
                 <div className="flex justify-between p-4">
@@ -89,7 +89,7 @@ const Deployment = ({ api, app, match }) => {
             )}
             {!deploy.isRunning && deploy.tip && (
               <div className="mt-4" ref={spinnerRef}>
-                <InfoBox type={InfoBox.WARNING}>{deploy.tip}</InfoBox>
+                <InfoBox type={InfoBox.WARNING}>{deploy.tip?.msg}</InfoBox>
               </div>
             )}
             {!deploy.isRunning && deploy.exit === 0 && (
@@ -109,10 +109,10 @@ const Deployment = ({ api, app, match }) => {
 Deployment.propTypes = {
   app: PropTypes.object,
   api: PropTypes.object,
-  match: PropTypes.object,
+  match: PropTypes.object
 };
 
 export default connect(Deployment, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
+  { Context: AppContext, props: ["app"] }
 ]);
