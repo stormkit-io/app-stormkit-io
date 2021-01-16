@@ -4,7 +4,7 @@ import Spinner from "~/components/Spinner";
 import Link from "~/components/Link";
 import "./Button.css";
 
-interface Props extends React.HTMLProps<HTMLButtonElement> {
+export interface Props extends React.HTMLProps<HTMLButtonElement> {
   as?: "div" | "span" | "a" | "button";
   primary?: boolean;
   secondary?: boolean;

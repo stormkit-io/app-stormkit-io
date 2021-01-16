@@ -1,9 +1,9 @@
 import React, { useState, cloneElement } from "react";
 import cn from "classnames";
 import OutsideClick from "~/components/OutsideClick";
-import Button from "~/components/Button";
+import Button, { Props as ButtonProps } from "~/components/Button";
 
-const DotDotDot: React.FC<React.HTMLAttributes<HTMLButtonElement>> & {
+const DotDotDot: React.FC<ButtonProps> & {
   Item: React.FC<ItemProps>;
 } = ({ children, className, ...rest }): React.ReactElement => {
   const [isOpen, toggleVisibility] = useState(false);
@@ -13,9 +13,10 @@ const DotDotDot: React.FC<React.HTMLAttributes<HTMLButtonElement>> & {
     <OutsideClick handler={() => toggleVisibility(false)}>
       <div className={cn("relative", className)}>
         <Button
+          {...rest}
           styled={false}
           onClick={() => toggleVisibility(!isOpen)}
-          {...rest}
+          ref={undefined}
         >
           <i className="fas fa-ellipsis-h" />
         </Button>
@@ -40,13 +41,13 @@ const DotDotDot: React.FC<React.HTMLAttributes<HTMLButtonElement>> & {
   );
 };
 
-interface ItemProps {
+interface ItemProps extends ButtonProps {
   icon?: string;
   isLast?: boolean;
   disabled?: boolean;
   className?: string;
   children: React.ReactNode;
-  onClick?: () => boolean;
+  onClick?: () => boolean | void;
   toggleVisibility?: (arg0: boolean) => void;
 }
 
@@ -61,6 +62,8 @@ const Item: React.FC<ItemProps> = ({
   ...rest
 }) => (
   <Button
+    {...rest}
+    ref={undefined}
     as="div"
     className={cn(
       "border-solid border-gray-80 p-4 w-full",
@@ -75,7 +78,6 @@ const Item: React.FC<ItemProps> = ({
     )}
     disabled={disabled}
     styled={false}
-    {...rest}
     onClick={e => {
       e.preventDefault();
 
@@ -85,8 +87,8 @@ const Item: React.FC<ItemProps> = ({
 
       let shouldClose = true;
 
-      if (typeof onClick === "function") {
-        shouldClose = onClick();
+      if (onClick?.() === false) {
+        shouldClose = false;
       }
 
       if (shouldClose !== false && toggleVisibility) {
