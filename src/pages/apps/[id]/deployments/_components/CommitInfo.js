@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Link from "~/components/Link";
-import { parseCommit } from "~/utils/helpers/deployments";
+import { parseCommit } from "../helpers";
 import PublishedInfo from "./PublishedInfo";
 
 const CommitMessage = ({ deployment, commit }) => {

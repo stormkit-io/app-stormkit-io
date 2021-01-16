@@ -8,9 +8,8 @@ import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import { BackButton } from "~/components/Buttons";
 import { connect } from "~/utils/context";
-import { parseCommit } from "~/utils/helpers/deployments";
 import { useFetchDeployment, useScrollIntoView } from "./actions";
-import { prepareSettings, getExitCode } from "./helpers";
+import { prepareSettings, getExitCode, parseCommit } from "../helpers";
 import ExitStatus from "../_components/ExitStatus";
 
 const Deployment = ({ api, app, match }) => {
