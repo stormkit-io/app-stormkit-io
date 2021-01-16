@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Browser } from "react-kawaii";
-import { formattedDate } from "~/utils/helpers/deployments";
+import { formattedDate } from "~/utils/helpers/time";
 import Button from "~/components/Button";
 
 const Row = app => {
