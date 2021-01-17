@@ -14,7 +14,7 @@ export const useFetchMembers = ({ api, app, location }) => {
 
     api
       .fetch(`/app/${app.id}/members`)
-      .then((res) => {
+      .then(res => {
         if (unmounted !== true) {
           setLoading(false);
           setMembers(res.members);
@@ -39,16 +39,16 @@ export const useFetchMembers = ({ api, app, location }) => {
 
 export const handleInvite = ({ api, app, setToken, setError, setLoading }) => ({
   displayName,
-  provider,
+  provider
 }) => {
   setLoading(true);
 
   api
     .post(`/app/members/invite`, { appId: app.id, displayName, provider })
-    .then((res) => {
+    .then(res => {
       setToken(res.token);
     })
-    .catch(async (res) => {
+    .catch(async res => {
       if (res.status === 400) {
         const data = await res.json();
         if (data.code === "inception") {
@@ -77,7 +77,7 @@ export const handleDelete = ({
   api,
   app,
   history,
-  confirmModal,
+  confirmModal
 }) => () => {
   confirmModal(
     "Your are about to remove a member from this app. You will need to re-invite if the user needs access again.",
@@ -93,14 +93,14 @@ export const handleDelete = ({
               history.replace({ state: { members: Date.now() } });
             });
           })
-          .catch((res) => {
+          .catch(res => {
             setLoading(false);
             setError(
               res.error ||
                 "An unknown error occurred. Please try again and if the problem persists contact us from Discord or email."
             );
           });
-      },
+      }
     }
   );
 };

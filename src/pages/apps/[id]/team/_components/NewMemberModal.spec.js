@@ -14,7 +14,7 @@ describe(fileName, () => {
     wrapper = withMockContext(path, {
       app,
       toggleModal: jest.fn(),
-      isOpen: true,
+      isOpen: true
     });
   });
 
@@ -38,7 +38,7 @@ describe(fileName, () => {
       app,
       displayName,
       provider,
-      response: { token },
+      response: { token }
     });
 
     const userNameInput = wrapper.getByLabelText("User display name");

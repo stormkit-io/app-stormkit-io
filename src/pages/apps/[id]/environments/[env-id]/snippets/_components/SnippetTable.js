@@ -19,7 +19,7 @@ const SnippetTable = ({
   app,
   environment,
   setSnippets,
-  setSelectedSnippet,
+  setSelectedSnippet
 }) => {
   const rows = [].concat(snippets.head, snippets.body);
 
@@ -62,7 +62,7 @@ const SnippetTable = ({
                   <Form.Switch
                     id={`snippet-enable-${i}`}
                     checked={row.enabled}
-                    onChange={(e) =>
+                    onChange={e =>
                       enableOrDisable({
                         api,
                         app,
@@ -73,7 +73,7 @@ const SnippetTable = ({
                         isEnabled: e.target.checked,
                         confirmModal,
                         snippet: row,
-                        setSnippets,
+                        setSnippets
                       })
                     }
                   />
@@ -98,7 +98,7 @@ const SnippetTable = ({
                           api,
                           app,
                           environment,
-                          injectLocation: row._injectLocation,
+                          injectLocation: row._injectLocation
                         })
                       }
                     >
@@ -123,9 +123,9 @@ SnippetTable.propTypes = {
   app: PropTypes.object,
   environment: PropTypes.object,
   setSnippets: PropTypes.func,
-  setSelectedSnippet: PropTypes.func,
+  setSelectedSnippet: PropTypes.func
 };
 
 export default connect(SnippetTable, [
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
+  { Context: ConfirmModal, props: ["confirmModal"], wrap: true }
 ]);

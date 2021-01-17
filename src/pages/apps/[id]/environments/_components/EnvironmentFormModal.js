@@ -13,7 +13,7 @@ import {
   insertEnvironment,
   editEnvironment,
   useFetchRepoType,
-  deleteEnvironment,
+  deleteEnvironment
 } from "../actions";
 
 const ModalContext = Modal.Context();
@@ -22,13 +22,13 @@ const supportedFrameworks = [
   { text: "Next.js", value: "next" },
   { text: "Nuxt.js", value: "nuxt" },
   { text: "Angular", value: "angular" },
-  { text: "Other", value: "other" },
+  { text: "Other", value: "other" }
 ];
 
-const envVarsToArray = (environment) =>
-  Object.keys(environment?.build?.vars || { "": "" }).map((key) => ({
+const envVarsToArray = environment =>
+  Object.keys(environment?.build?.vars || { "": "" }).map(key => ({
     key,
-    value: environment ? environment.build.vars[key] : "",
+    value: environment ? environment.build.vars[key] : ""
   }));
 
 const EnvironmentFormModal = ({
@@ -38,7 +38,7 @@ const EnvironmentFormModal = ({
   confirmModal,
   api,
   app,
-  history,
+  history
 }) => {
   const [isAutoPublish, setIsAutoPublish] = useState(env?.autoPublish || true);
   const [isServerless, setIsServerless] = useState(!!env?.build?.entry);
@@ -59,7 +59,7 @@ const EnvironmentFormModal = ({
 
   useEffect(() => {
     setFramework(
-      supportedFrameworks.filter((f) => f.value === meta.type)[0]?.value ||
+      supportedFrameworks.filter(f => f.value === meta.type)[0]?.value ||
         "other"
     );
   }, [meta.type]);
@@ -80,7 +80,7 @@ const EnvironmentFormModal = ({
           history,
           toggleModal,
           setLoading,
-          setError,
+          setError
         })}
       >
         <h3 className="mb-8 font-bold">Environment details</h3>
@@ -93,7 +93,7 @@ const EnvironmentFormModal = ({
             defaultValue={env?.env}
             fullWidth
             inputProps={{
-              "aria-label": "Environment name",
+              "aria-label": "Environment name"
             }}
           />
           <div className="p-3 text-sm opacity-50">
@@ -110,7 +110,7 @@ const EnvironmentFormModal = ({
             defaultValue={env?.branch}
             fullWidth
             inputProps={{
-              "aria-label": "Branch name",
+              "aria-label": "Branch name"
             }}
           />
           <div className="p-3 text-sm opacity-50">
@@ -123,9 +123,9 @@ const EnvironmentFormModal = ({
             <Form.Switch
               className="mr"
               checked={isAutoPublish}
-              onChange={(e) => setIsAutoPublish(e.target.checked)}
+              onChange={e => setIsAutoPublish(e.target.checked)}
               inputProps={{
-                "aria-label": "Auto publish toggle",
+                "aria-label": "Auto publish toggle"
               }}
             />
             Auto Publish
@@ -143,14 +143,14 @@ const EnvironmentFormModal = ({
               displayEmpty
               value={framework}
               SelectDisplayProps={{
-                className: "bg-gray-90 w-full p-4 rounded text-gray-40",
+                className: "bg-gray-90 w-full p-4 rounded text-gray-40"
               }}
-              onChange={(e) => setFramework(e.target.value)}
+              onChange={e => setFramework(e.target.value)}
             >
               <Form.Option disabled value="">
                 Pick your framework
               </Form.Option>
-              {supportedFrameworks.map((f) => (
+              {supportedFrameworks.map(f => (
                 <Form.Option value={f.value} key={f.value}>
                   {f.text}
                 </Form.Option>
@@ -165,7 +165,7 @@ const EnvironmentFormModal = ({
               <Form.Switch
                 className="mr"
                 checked={isServerless}
-                onChange={(e) => setIsServerless(e.target.checked)}
+                onChange={e => setIsServerless(e.target.checked)}
               />
               Serverless
             </div>
@@ -183,7 +183,7 @@ const EnvironmentFormModal = ({
                 defaultValue={env?.build?.entry || ""}
                 fullWidth
                 inputProps={{
-                  "aria-label": "Serverless entry file",
+                  "aria-label": "Serverless entry file"
                 }}
               />
               <div className="p-3 text-sm opacity-50">
@@ -207,7 +207,7 @@ const EnvironmentFormModal = ({
                 className="bg-gray-90"
                 defaultValue={env?.build?.distFolder || ""}
                 inputProps={{
-                  "aria-label": "Output/dist folder",
+                  "aria-label": "Output/dist folder"
                 }}
                 fullWidth
               />
@@ -225,7 +225,7 @@ const EnvironmentFormModal = ({
               required={meta.packageJson}
               defaultValue={env?.build?.cmd || ""}
               inputProps={{
-                "aria-label": "Build command",
+                "aria-label": "Build command"
               }}
               fullWidth
             />
@@ -251,7 +251,7 @@ const EnvironmentFormModal = ({
                     defaultValue={key}
                     fullWidth
                     inputProps={{
-                      "aria-label": `Environment variable name ${i}`,
+                      "aria-label": `Environment variable name ${i}`
                     }}
                   />
                 </div>
@@ -264,7 +264,7 @@ const EnvironmentFormModal = ({
                     defaultValue={value}
                     fullWidth
                     inputProps={{
-                      "aria-label": `Environment variable value ${i}`,
+                      "aria-label": `Environment variable value ${i}`
                     }}
                   />
                   <Button
@@ -313,9 +313,9 @@ const EnvironmentFormModal = ({
                           history,
                           setLoading,
                           setError,
-                          closeModal,
+                          closeModal
                         });
-                      },
+                      }
                     }
                   )
                 }
@@ -349,13 +349,13 @@ EnvironmentFormModal.propTypes = {
   api: PropTypes.object,
   app: PropTypes.object,
   history: PropTypes.object,
-  confirmModal: PropTypes.func,
+  confirmModal: PropTypes.func
 };
 
 export default Object.assign(
   connect(withRouter(EnvironmentFormModal), [
     { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-    { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
+    { Context: ConfirmModal, props: ["confirmModal"], wrap: true }
   ]),
   ModalContext
 );

@@ -20,7 +20,7 @@ describe(fileName, () => {
         confirmModal: jest.fn(),
         toggleModal: jest.fn(),
         history: { replace: jest.fn() },
-        location: {},
+        location: {}
       });
     });
 
@@ -43,7 +43,7 @@ describe(fileName, () => {
         confirmModal: jest.fn(),
         toggleModal: jest.fn(),
         history: { replace: jest.fn() },
-        location: {},
+        location: {}
       });
     });
 
@@ -95,7 +95,7 @@ describe(fileName, () => {
         confirmModal: jest.fn(),
         toggleModal: jest.fn(),
         history: { replace: jest.fn() },
-        location: {},
+        location: {}
       });
     });
 

@@ -1,7 +1,7 @@
 type ConfirmModalCallback = ({
   setLoading,
   closeModal,
-  setError,
+  setError
 }: {
   setLoading: (value: boolean) => void;
   closeModal: () => void;

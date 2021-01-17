@@ -21,7 +21,7 @@ const Parameter = ({
   api,
   app,
   environment,
-  history,
+  history
 }) => {
   return (
     <div className={cn("text-xs", { "mb-4": !isLastRow })}>
@@ -58,9 +58,9 @@ const Parameter = ({
                       history,
                       setLoading,
                       setError,
-                      closeModal,
+                      closeModal
                     })(parameter.name);
-                  },
+                  }
                 }
               )
             }
@@ -95,7 +95,7 @@ Parameter.propTypes = {
   confirmModal: PropTypes.func,
   api: PropTypes.object,
   app: PropTypes.object,
-  history: PropTypes.object,
+  history: PropTypes.object
 };
 
 export default connect(withRouter(Parameter), [
@@ -103,5 +103,5 @@ export default connect(withRouter(Parameter), [
   { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app"] },
-  { Context: EnvironmentContext, props: ["environment"] },
+  { Context: EnvironmentContext, props: ["environment"] }
 ]);

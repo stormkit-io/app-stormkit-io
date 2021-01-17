@@ -44,7 +44,7 @@ interface FetchCardsAPIResponse {
 
 export const useFetchCards = ({
   api,
-  location,
+  location
 }: FetchCardsProps): FetchCardsReturnValue => {
   const [cards, setCards] = useState<Cards>([]);
   const [loading, setLoading] = useState(false);
@@ -60,13 +60,13 @@ export const useFetchCards = ({
 
     api
       .fetch<FetchCardsAPIResponse>("/user/subscription/cards")
-      .then((res) => {
+      .then(res => {
         if (unmounted !== true) {
           setLoading(false);
-          setCards(res.cards.filter((c) => c.TypeData.last4));
+          setCards(res.cards.filter(c => c.TypeData.last4));
         }
       })
-      .catch((res) => {
+      .catch(res => {
         if (unmounted !== true) {
           setLoading(false);
 

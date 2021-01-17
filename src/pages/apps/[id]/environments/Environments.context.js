@@ -12,7 +12,7 @@ const EnvironmentsContext = ({ environments }) => {
   return (
     <Context.Provider value={{ environments }}>
       <Switch>
-        {routes.map((route) => (
+        {routes.map(route => (
           <Route {...route} key={route.path} />
         ))}
       </Switch>
@@ -23,15 +23,15 @@ const EnvironmentsContext = ({ environments }) => {
 EnvironmentsContext.propTypes = {
   api: PropTypes.object,
   app: PropTypes.object,
-  environments: PropTypes.array,
+  environments: PropTypes.array
 };
 
 const enhanced = connect(EnvironmentsContext, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app", "environments"] },
+  { Context: AppContext, props: ["app", "environments"] }
 ]);
 
 export default Object.assign(enhanced, {
   Consumer: Context.Consumer,
-  Provider: enhanced,
+  Provider: enhanced
 });

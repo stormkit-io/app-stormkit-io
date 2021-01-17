@@ -65,7 +65,7 @@ const DomainUsageStatus = ({ domain, app, onVerify }) => {
                   setError(null);
                   onVerify({
                     setLoading,
-                    setError,
+                    setError
                   }).then(() => {
                     if (isInUse === false) {
                       setError(
@@ -88,7 +88,7 @@ const DomainUsageStatus = ({ domain, app, onVerify }) => {
 DomainUsageStatus.propTypes = {
   domain: PropTypes.object,
   app: PropTypes.object,
-  onVerify: PropTypes.func,
+  onVerify: PropTypes.func
 };
 
 export default DomainUsageStatus;

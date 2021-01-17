@@ -3,7 +3,7 @@ import {
   Stripe,
   StripeElement,
   StripeElements,
-  StripeError,
+  StripeError
 } from "@stripe/stripe-js";
 import { CardNumberElement } from "@stripe/react-stripe-js";
 import Api from "~/utils/api/Api";
@@ -72,7 +72,7 @@ export const handleUpdatePaymentMethod = (
       {
         type: "card",
         currency: "usd",
-        owner: { name },
+        owner: { name }
       }
     );
 

@@ -12,7 +12,7 @@ const Context = createContext();
 
 const EnvironmentContext = ({ environments, match, app }) => {
   const { envId } = match.params;
-  const environment = environments.filter((e) => e.id === envId)[0];
+  const environment = environments.filter(e => e.id === envId)[0];
 
   if (!environment) {
     return "";
@@ -24,7 +24,7 @@ const EnvironmentContext = ({ environments, match, app }) => {
         <EnvironmentMenu environment={environment} app={app} />
         <div className="mb-4">
           <Switch>
-            {routes.map((route) => (
+            {routes.map(route => (
               <Route {...route} key={route.path} />
             ))}
           </Switch>
@@ -36,14 +36,14 @@ const EnvironmentContext = ({ environments, match, app }) => {
 
 EnvironmentContext.propTypes = {
   environments: PropTypes.array,
-  app: PropTypes.object,
+  app: PropTypes.object
 };
 
 const enhanced = connect(withRouter(EnvironmentContext), [
-  { Context: AppContext, props: ["app", "environments"] },
+  { Context: AppContext, props: ["app", "environments"] }
 ]);
 
 export default Object.assign(enhanced, {
   Consumer: Context.Consumer,
-  Provider: enhanced,
+  Provider: enhanced
 });

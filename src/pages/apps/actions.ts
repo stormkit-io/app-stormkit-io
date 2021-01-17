@@ -22,7 +22,7 @@ interface FetchAppListAPIResponse {
 
 export const useFetchAppList = ({
   api,
-  from = 0,
+  from = 0
 }: FetchAppListProps): FetchAppListReturnValue => {
   const [apps, setApps] = useState<Array<App>>([]);
   const [loading, setLoading] = useState(true);
@@ -37,14 +37,14 @@ export const useFetchAppList = ({
 
     api
       .fetch<FetchAppListAPIResponse>(`/apps?from=${from}`)
-      .then((res) => {
+      .then(res => {
         if (unmounted !== true) {
           setApps([...apps, ...res.apps]);
           setHasNextPage(res.hasNextPage);
           setLoading(false);
         }
       })
-      .catch((e) => {
+      .catch(e => {
         if (unmounted !== true) {
           setError(e.message);
         }
@@ -81,7 +81,7 @@ const appCache: Record<string, App> = {};
 
 export const useFetchApp = ({
   api,
-  appId,
+  appId
 }: FetchAppProps): FetchAppReturnValue => {
   const location = useLocation<LocationState>();
   const [app, setApp] = useState<App | undefined>(appCache[appId]);
@@ -101,7 +101,7 @@ export const useFetchApp = ({
 
     api
       .fetch<FetchAppAPIResponse>(`/app/${appId}`)
-      .then((res) => {
+      .then(res => {
         const app = res.app;
         const pieces = app.repo.split("/");
         const provider = pieces.shift();
@@ -119,7 +119,7 @@ export const useFetchApp = ({
           setApp(app);
         }
       })
-      .catch(async (res) => {
+      .catch(async res => {
         if (res.status === 404) {
           return;
         }
@@ -178,7 +178,7 @@ export const deploy = ({
   setError,
   toggleModal,
   history,
-  environment,
+  environment
 }: DeployProps) => ({ branch }: DeployCallbackProps): void => {
   if (!environment) {
     return setError("Please select an environment.");
@@ -190,16 +190,16 @@ export const deploy = ({
     .post<DeployAPIResponse>(`/app/deploy`, {
       env: environment.env,
       branch,
-      appId: app.id,
+      appId: app.id
     })
-    .then((deploy) => {
+    .then(deploy => {
       toggleModal(false, () => {
         if (deploy && deploy.id) {
           history.push(`/apps/${app.id}/deployments/${deploy.id}`);
         }
       });
     })
-    .catch((res) => {
+    .catch(res => {
       if (res.status === 429) {
         setError(
           "You have exceeded the maximum number of concurrent builds " +

@@ -18,7 +18,7 @@ const PublishModal = ({
   deployment,
   api,
   app,
-  history,
+  history
 }) => {
   const [selectedEnvironment, setSelectedEnvironment] = useState("");
   const [publishError, setPublishError] = useState(null);
@@ -38,7 +38,7 @@ const PublishModal = ({
           className="mb-8"
           environments={environments}
           placeholder="Select an environment to publish"
-          onSelect={(e) => setSelectedEnvironment(e.id)}
+          onSelect={e => setSelectedEnvironment(e.id)}
         />
       </Form>
       <div>
@@ -51,7 +51,7 @@ const PublishModal = ({
           <DeployTable
             loading={loading}
             error={error}
-            deployments={deployments.filter((d) => d.id !== deployment.id)}
+            deployments={deployments.filter(d => d.id !== deployment.id)}
             deployment={deployment}
             environments={environments}
             envId={selectedEnvironment}
@@ -59,7 +59,7 @@ const PublishModal = ({
               api,
               app,
               history,
-              setPublishError,
+              setPublishError
             })}
           />
         )}
@@ -75,12 +75,12 @@ PublishModal.propTypes = {
   environments: PropTypes.array,
   api: PropTypes.object,
   app: PropTypes.object,
-  history: PropTypes.object,
+  history: PropTypes.object
 };
 
 export default Object.assign(
   connect(withRouter(PublishModal), [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
+    { Context: ModalContext, props: ["toggleModal", "isOpen"] }
   ]),
   ModalContext
 );

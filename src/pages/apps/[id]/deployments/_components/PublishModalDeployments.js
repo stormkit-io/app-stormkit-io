@@ -12,11 +12,11 @@ const sliders = {};
 
 const getInitialPerc = (deployment, envId) => {
   return (
-    deployment.published.filter((p) => p.envId === envId)[0]?.percentage || 0
+    deployment.published.filter(p => p.envId === envId)[0]?.percentage || 0
   );
 };
 
-const getDomainOrEnvName = (env) => {
+const getDomainOrEnvName = env => {
   return env.domain?.name && env.domain?.verified ? env.domain.name : env.env;
 };
 
@@ -27,13 +27,13 @@ const DeploymentRow = ({
   index,
   numberOfDeployments,
   handlePublishClick,
-  isInSync,
+  isInSync
 }) => {
   const [percentage, setPercentage] = useState(
     getInitialPerc(deployment, envId)
   );
 
-  const env = environments.filter((e) => e.id === envId)[0];
+  const env = environments.filter(e => e.id === envId)[0];
   const domainOrEnvName = getDomainOrEnvName(env);
 
   // This is used to sync other sliders
@@ -55,7 +55,7 @@ const DeploymentRow = ({
           {
             "mb-4": !handlePublishClick,
             "bg-gray-83 border-gray-80": index % 2 === 0,
-            "bg-gray-90 border-gray-80": index % 2 === 1,
+            "bg-gray-90 border-gray-80": index % 2 === 1
           }
         )}
       >
@@ -80,10 +80,10 @@ const DeploymentRow = ({
               }
 
               const keys = Object.keys(sliders).filter(
-                (id) => id !== deployment.id
+                id => id !== deployment.id
               );
 
-              keys.forEach((id) => {
+              keys.forEach(id => {
                 sliders[id].setPercentage((100 - percentage) / keys.length);
               });
             }}
@@ -108,7 +108,7 @@ DeploymentRow.propTypes = {
   index: PropTypes.number,
   numberOfDeployments: PropTypes.number,
   handlePublishClick: PropTypes.func,
-  isInSync: PropTypes.bool,
+  isInSync: PropTypes.bool
 };
 
 const PublishModalDeploymentTable = ({
@@ -118,7 +118,7 @@ const PublishModalDeploymentTable = ({
   environments,
   loading,
   error,
-  handlePublishClick,
+  handlePublishClick
 }) => {
   const [isInSync, setIsInSync] = useState(true);
 
@@ -142,13 +142,13 @@ const PublishModalDeploymentTable = ({
         <h2 className="text-base flex-auto">
           Currently published deployments in{" "}
           <span className="font-bold">
-            {environments.filter((e) => e.id === envId)[0].env}
+            {environments.filter(e => e.id === envId)[0].env}
           </span>
         </h2>
         <div>
           <Form.Switch
             checked={isInSync}
-            onChange={(e) => setIsInSync(e.target.checked)}
+            onChange={e => setIsInSync(e.target.checked)}
           />
           Sync sliders
         </div>
@@ -195,7 +195,7 @@ PublishModalDeploymentTable.propTypes = {
   envId: PropTypes.string,
   loading: PropTypes.bool,
   error: PropTypes.node,
-  handlePublishClick: PropTypes.func,
+  handlePublishClick: PropTypes.func
 };
 
 export default PublishModalDeploymentTable;

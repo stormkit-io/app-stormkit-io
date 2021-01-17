@@ -15,7 +15,7 @@ export const insertRepo = ({
   provider,
   history,
   setState,
-  repo,
+  repo
 }) => () => {
   setState({ loadingInsert: repo, error: null });
 
@@ -24,9 +24,9 @@ export const insertRepo = ({
     .then(() => {
       history.push("/", { repoInsert: true });
     })
-    .catch((res) => {
+    .catch(res => {
       if (res.status === 400) {
-        return res.json().then((errors) => {
+        return res.json().then(errors => {
           this.setState({ errors, loadingInsert: false });
         });
       }
@@ -45,7 +45,7 @@ export const insertRepo = ({
               </Link>{" "}
               in order to create more applications.
             </div>
-          ),
+          )
         });
       }
 
@@ -60,7 +60,7 @@ export const insertRepo = ({
               right of the page.
             </p>
           </div>
-        ),
+        )
       });
     });
 };

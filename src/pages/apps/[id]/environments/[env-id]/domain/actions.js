@@ -6,7 +6,7 @@ export const setDomain = ({
   environment,
   history,
   setError,
-  setLoading,
+  setLoading
 }) => ({ domain }) => {
   setLoading(true);
 
@@ -14,13 +14,13 @@ export const setDomain = ({
     .put("/app/env/domain", {
       appId: app.id,
       domain: domain.trim(),
-      env: environment.env,
+      env: environment.env
     })
     .then(() => {
       setLoading(false);
       history.replace({ state: { envs: Date.now() } });
     })
-    .catch((res) => {
+    .catch(res => {
       setLoading(false);
       setError(
         res.status === 400
@@ -39,7 +39,7 @@ export const deleteDomain = ({
   domainName,
   setLoading,
   setError,
-  history,
+  history
 }) => {
   setLoading(true);
 
@@ -47,12 +47,12 @@ export const deleteDomain = ({
     .delete("/app/env/domain", {
       appId: app.id,
       domain: domainName,
-      env: environment.env,
+      env: environment.env
     })
     .then(() => {
       history.replace({ state: { envs: Date.now() } });
     })
-    .catch((res) => {
+    .catch(res => {
       setLoading(false);
       setError(
         res.status === 400
@@ -72,15 +72,15 @@ export const fetchDomainsInfo = ({
   setError,
   setDomainsInfo,
   withUXFix,
-  unmounted = false,
+  unmounted = false
 }) => {
   setLoading(true);
   const timeout = withUXFix ? 1000 : 0;
 
   return api
     .fetch(`/app/${app.id}/envs/${environment.env}/lookup`)
-    .then((res) => {
-      return new Promise((resolve) => {
+    .then(res => {
+      return new Promise(resolve => {
         // This is a UX fix. Verifying the domain needs to seem like a process
         // which takes time. It will give the user the feeling that something is happening
         // behind the scenes.
@@ -141,7 +141,7 @@ export const useDomainLookup = ({ api, app, environment }) => {
       unmounted,
       setDomainsInfo,
       setLoading,
-      setError,
+      setError
     });
 
     return () => {

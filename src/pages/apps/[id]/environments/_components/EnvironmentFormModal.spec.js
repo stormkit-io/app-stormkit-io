@@ -19,7 +19,7 @@ describe(fileName, () => {
 
       wrapper = withMockContext(path, {
         app,
-        toggleModal: jest.fn(),
+        toggleModal: jest.fn()
       });
     });
 
@@ -32,16 +32,16 @@ describe(fileName, () => {
         branch: "my-branch",
         autoPublish: true,
         domain: {
-          verified: false,
+          verified: false
         },
         build: {
           entry: "",
           distFolder: "",
           cmd: "npm run build",
           vars: {
-            NODE_ENV: "development",
-          },
-        },
+            NODE_ENV: "development"
+          }
+        }
       };
 
       const scope = nocks.mockInsertEnvironment({ environment });
@@ -74,13 +74,13 @@ describe(fileName, () => {
       nocks.mockFetchRepoType({
         appId: app.id,
         name: environment.env,
-        response: { packageJson: true, type: "-" },
+        response: { packageJson: true, type: "-" }
       });
 
       wrapper = withMockContext(path, {
         app,
         toggleModal: jest.fn(),
-        environment,
+        environment
       });
     });
 
@@ -88,8 +88,8 @@ describe(fileName, () => {
       const scope = nocks.mockUpdateEnvironment({
         environment: {
           ...environment,
-          branch: `${environment.branch}-new`,
-        },
+          branch: `${environment.branch}-new`
+        }
       });
 
       userEvent.type(wrapper.getByLabelText("Branch name"), "-new");
@@ -117,7 +117,7 @@ describe(fileName, () => {
       metaScope = nocks.mockFetchRepoType({
         appId: app.id,
         name: environment.env,
-        response: { packageJson: true, type: "-" },
+        response: { packageJson: true, type: "-" }
       });
 
       wrapper = withMockContext({
@@ -125,15 +125,15 @@ describe(fileName, () => {
         props: {
           app,
           toggleModal: jest.fn(),
-          environment,
-        },
+          environment
+        }
       });
     });
 
     test("should be deletable", async () => {
       const scope = nocks.mockDeleteEnvironment({
         appId: app.id,
-        env: environment.name,
+        env: environment.name
       });
 
       fireEvent.click(wrapper.getByText("Delete"));

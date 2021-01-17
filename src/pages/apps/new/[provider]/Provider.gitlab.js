@@ -11,7 +11,7 @@ export default class GitlabRepositories extends PureComponent {
     api: PropTypes.object,
     gitlab: PropTypes.object,
     history: PropTypes.object,
-    user: PropTypes.object,
+    user: PropTypes.object
   };
 
   state = {
@@ -19,7 +19,7 @@ export default class GitlabRepositories extends PureComponent {
     repositories: [],
     loading: true,
     errors: {},
-    nextPage: null,
+    nextPage: null
   };
 
   componentDidMount() {
@@ -53,7 +53,7 @@ export default class GitlabRepositories extends PureComponent {
       login: glUser.username,
       avatar: glUser.avatar_url,
       type: "user",
-      selected: true,
+      selected: true
     };
 
     this.updateState({ accounts: [user] });
@@ -65,7 +65,7 @@ export default class GitlabRepositories extends PureComponent {
    *
    * @memberof GithubRepositories
    */
-  repositories = async (page) => {
+  repositories = async page => {
     this.updateState({ loading: true });
 
     const api = this.props.gitlab;
@@ -75,7 +75,7 @@ export default class GitlabRepositories extends PureComponent {
     this.updateState({
       repositories: [...repositories, ...repos],
       loading: false,
-      nextPage,
+      nextPage
     });
   };
 
@@ -96,7 +96,7 @@ export default class GitlabRepositories extends PureComponent {
       accounts = [],
       loading,
       requiresLogin,
-      nextPage,
+      nextPage
     } = this.state;
 
     if (requiresLogin) {
@@ -106,7 +106,7 @@ export default class GitlabRepositories extends PureComponent {
             onClick={loginUser({
               loginOauth,
               updateState: (...args) => this.updateState(...args),
-              init: () => this.init(),
+              init: () => this.init()
             })}
           />
         </LoginScreen>
@@ -127,7 +127,7 @@ export default class GitlabRepositories extends PureComponent {
           {accounts.length > 0 && (
             <div className="flex p-4 border border-solid border-gray-80 rounded bg-gray-90">
               {accounts &&
-                accounts.map((account) => (
+                accounts.map(account => (
                   <div
                     key={account.login}
                     value={account.login}
@@ -153,7 +153,7 @@ export default class GitlabRepositories extends PureComponent {
             provider="gitlab"
             loading={loading}
             hasNextPage={!!nextPage}
-            onNextPageClick={(e) => {
+            onNextPageClick={e => {
               e.preventDefault();
               this.repositories(nextPage);
             }}
