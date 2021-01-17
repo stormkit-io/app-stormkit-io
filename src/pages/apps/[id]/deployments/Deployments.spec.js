@@ -18,7 +18,7 @@ describe("pages/apps/[id]/deployments", () => {
       wrapper = withAppContext({
         app: data.mockAppResponse(),
         envs: data.mockEnvironmentsResponse(),
-        path: "/apps/1/deployments",
+        path: "/apps/1/deployments"
       });
     });
 
@@ -42,7 +42,7 @@ describe("pages/apps/[id]/deployments", () => {
       wrapper = withAppContext({
         app: data.mockAppResponse(),
         envs: data.mockEnvironmentsResponse(),
-        path: "/apps/1/deployments",
+        path: "/apps/1/deployments"
       });
     });
 

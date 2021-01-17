@@ -18,7 +18,7 @@ const Domain = ({
   toggleModal,
   confirmModal,
   history,
-  location,
+  location
 }) => {
   const info = useDomainLookup({ api, app, environment, location });
   const { loading, error, domainsInfo, setDomainsInfo } = info;
@@ -31,11 +31,11 @@ const Domain = ({
       withUXFix: true,
       setDomainsInfo,
       setLoading,
-      setError,
+      setError
     });
   };
 
-  const handleDelete = (domainName) => {
+  const handleDelete = domainName => {
     return confirmModal(
       "This will completely remove the domain and it won't be reachable anymore.",
       {
@@ -47,9 +47,9 @@ const Domain = ({
             domainName,
             setLoading,
             setError,
-            history,
+            history
           }).then(closeModal);
-        },
+        }
       }
     );
   };
@@ -112,12 +112,12 @@ Domain.propTypes = {
   toggleModal: PropTypes.func,
   confirmModal: PropTypes.func,
   history: PropTypes.object,
-  location: PropTypes.object,
+  location: PropTypes.object
 };
 
 export default connect(Domain, [
   { Context: RootContext, props: ["api"] },
   { Context: EnvironmentContext, props: ["environment", "app"] },
   { Context: DomainModal, props: ["toggleModal"], wrap: true },
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
+  { Context: ConfirmModal, props: ["confirmModal"], wrap: true }
 ]);

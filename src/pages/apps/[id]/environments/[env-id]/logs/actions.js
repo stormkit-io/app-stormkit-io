@@ -19,7 +19,7 @@ export const useFetchLogs = ({ api, environment, app }) => {
           setLogs(logs);
         }
       })
-      .catch((res) => {
+      .catch(res => {
         if (unmounted !== true) {
           setError(res.message || res);
         }

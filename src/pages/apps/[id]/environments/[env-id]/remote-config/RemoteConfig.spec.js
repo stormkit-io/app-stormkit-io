@@ -25,7 +25,7 @@ describe(fileName, () => {
       app,
       environment: env,
       toggleModal,
-      location: {},
+      location: {}
     });
   });
 
@@ -50,7 +50,7 @@ describe(fileName, () => {
       .put(`/app/env/remote-config`, {
         appId: app.id,
         env: env.env,
-        config: configToBeSent,
+        config: configToBeSent
       })
       .reply(200, { ok: true });
 

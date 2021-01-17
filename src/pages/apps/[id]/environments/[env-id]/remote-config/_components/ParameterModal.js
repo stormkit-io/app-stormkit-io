@@ -22,7 +22,7 @@ const ParameterModal = ({
   api,
   app,
   environment,
-  history,
+  history
 }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,7 @@ const ParameterModal = ({
           setError,
           setLoading,
           history,
-          toggleModal,
+          toggleModal
         })}
         className="mb-8"
       >
@@ -89,7 +89,7 @@ const ParameterModal = ({
                     minWidth: "49%",
                     maxWidth: "49%",
                     marginRight: i % 2 === 0 ? "%2" : "0",
-                    marginBottom: "2%",
+                    marginBottom: "2%"
                   }}
                   key={`t${i}`}
                 >
@@ -151,7 +151,7 @@ const ParameterModal = ({
               minWidth: "49%",
               maxWidth: "49%",
               minHeight: "329px",
-              marginBottom: "2%",
+              marginBottom: "2%"
             }}
             onClick={() => setTargetings([...targetings, {}])}
           >
@@ -184,7 +184,7 @@ ParameterModal.propTypes = {
   environment: PropTypes.object,
   api: PropTypes.object,
   app: PropTypes.object,
-  history: PropTypes.object,
+  history: PropTypes.object
 };
 
 export default Object.assign(
@@ -192,7 +192,7 @@ export default Object.assign(
     { Context: ModalContext, props: ["toggleModal", "isOpen"] },
     { Context: RootContext, props: ["api"] },
     { Context: AppContext, props: ["app"] },
-    { Context: EnvironmentContext, props: ["environment"] },
+    { Context: EnvironmentContext, props: ["environment"] }
   ]),
   ModalContext
 );

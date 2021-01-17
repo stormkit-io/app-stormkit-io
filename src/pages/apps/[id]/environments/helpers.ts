@@ -17,7 +17,7 @@ export const prepareBuildObject = (
     cmd: values["build.cmd"],
     entry: values["build.entry"] || "",
     distFolder: values["build.distFolder"] || "",
-    vars,
+    vars
   };
 
   if (!build.cmd) {

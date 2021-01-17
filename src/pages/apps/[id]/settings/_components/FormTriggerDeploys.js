@@ -23,7 +23,7 @@ const FormTriggerDeploys = ({
   environments,
   additionalSettings,
   history,
-  location,
+  location
 }) => {
   const successMessage = location?.state?.triggerDeploysSuccess;
   const defaultValue = environments?.[0]?.id;
@@ -38,7 +38,7 @@ const FormTriggerDeploys = ({
         api,
         setLoading,
         setError,
-        history,
+        history
       })}
     >
       <Form.Section label="Trigger Deploys" marginBottom="mb-4">
@@ -57,7 +57,7 @@ const FormTriggerDeploys = ({
               defaultValue={defaultValue}
               environments={environments}
               placeholder="Choose a build configuration"
-              onSelect={(e) => setSelectedEnvironment(e?.env)}
+              onSelect={e => setSelectedEnvironment(e?.env)}
             />
             {selectedEnvironment && (
               <>
@@ -88,7 +88,7 @@ const FormTriggerDeploys = ({
           dismissable
           onDismissed={() =>
             history.push({
-              state: { app: location?.state?.app, triggerDeploysSuccess: null },
+              state: { app: location?.state?.app, triggerDeploysSuccess: null }
             })
           }
         >
@@ -105,7 +105,7 @@ FormTriggerDeploys.propTypes = {
   environments: PropTypes.array,
   additionalSettings: PropTypes.object,
   location: PropTypes.object,
-  history: PropTypes.object,
+  history: PropTypes.object
 };
 
 export default FormTriggerDeploys;

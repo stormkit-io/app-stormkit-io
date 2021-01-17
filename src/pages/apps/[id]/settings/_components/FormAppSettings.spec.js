@@ -18,17 +18,17 @@ describe(fileName, () => {
     historySpy = jest.fn();
 
     jest.spyOn(router, "useHistory").mockReturnValue({
-      replace: historySpy,
+      replace: historySpy
     });
 
     jest.spyOn(router, "useLocation").mockReturnValue({
-      state: { settingsSuccess: "Your app has been saved successfully." },
+      state: { settingsSuccess: "Your app has been saved successfully." }
     });
 
     wrapper = withMockContext(path, {
       app,
       environments: data.mockEnvironments({ app }),
-      additionalSettings: data.mockAdditionalSettingsResponse(),
+      additionalSettings: data.mockAdditionalSettingsResponse()
     });
   });
 
@@ -56,8 +56,8 @@ describe(fileName, () => {
         autoDeploy: app.autoDeploy,
         runtime: "nodejs12.x",
         defaultEnv: app.defaultEnv,
-        commitPrefix: app.commitPrefix,
-      },
+        commitPrefix: app.commitPrefix
+      }
     });
 
     // Wait till the app has been loaded
@@ -74,8 +74,8 @@ describe(fileName, () => {
       expect(historySpy).toHaveBeenCalledWith({
         state: expect.objectContaining({
           app: expect.any(Number),
-          settingsSuccess: "Your app has been updated successfully.",
-        }),
+          settingsSuccess: "Your app has been updated successfully."
+        })
       });
     });
   });

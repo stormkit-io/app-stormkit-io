@@ -42,7 +42,7 @@ const Logs = ({ api, environment, app }) => {
                           day: "2-digit",
                           hour: "2-digit",
                           minute: "2-digit",
-                          second: "2-digit",
+                          second: "2-digit"
                         }
                       )}
                     </span>
@@ -67,13 +67,13 @@ const Logs = ({ api, environment, app }) => {
 Logs.propTypes = {
   env: PropTypes.object,
   envs: PropTypes.array,
-  app: PropTypes.object,
+  app: PropTypes.object
 };
 
 export default Object.assign(
   connect(Logs, [
     { Context: RootContext, props: ["api"] },
     { Context: AppContext, props: ["app"] },
-    { Context: EnvironmentContext, props: ["environment"] },
+    { Context: EnvironmentContext, props: ["environment"] }
   ])
 );

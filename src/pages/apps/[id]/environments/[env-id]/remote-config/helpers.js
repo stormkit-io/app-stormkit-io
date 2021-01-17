@@ -1,9 +1,9 @@
-export const sortConfigByKey = (config) => {
+export const sortConfigByKey = config => {
   const ordered = {};
 
   Object.keys(config)
     .sort()
-    .forEach((key) => {
+    .forEach(key => {
       ordered[key] = config[key];
     });
 
@@ -14,5 +14,5 @@ export const keyToName = {
   appVersion: "App version",
   segment: "Segment",
   percentile: "Percentile",
-  value: "Value",
+  value: "Value"
 };

@@ -14,12 +14,12 @@ export const useFetchRemoteConfig = ({ api, app, env, location }) => {
 
     api
       .fetch(`/app/${app.id}/envs/${env.env}/remote-config`)
-      .then((res) => {
+      .then(res => {
         if (unmounted !== true) {
           setConfig(res.config || {});
         }
       })
-      .catch((res) => {
+      .catch(res => {
         if (unmounted !== true) {
           setError(
             res.error ||
@@ -49,8 +49,8 @@ export const deleteKeyFromConfig = ({
   history,
   setLoading,
   setError,
-  closeModal,
-}) => (oldName) => {
+  closeModal
+}) => oldName => {
   const newConfig = { ...config };
   delete newConfig[oldName];
 
@@ -60,14 +60,14 @@ export const deleteKeyFromConfig = ({
     .put(`/app/env/remote-config`, {
       appId: app.id,
       env: environment.env,
-      config: newConfig,
+      config: newConfig
     })
     .then(() => {
       closeModal(() => {
         history.replace({
           state: {
-            rc: Date.now(),
-          },
+            rc: Date.now()
+          }
         });
       });
     })
@@ -89,8 +89,8 @@ export const upsertRemoteConfig = ({
   setError,
   setLoading,
   history,
-  toggleModal,
-}) => (values) => {
+  toggleModal
+}) => values => {
   const name = values.name.trim();
 
   if (name === "") {
@@ -108,10 +108,10 @@ export const upsertRemoteConfig = ({
   const normalized = {
     desc: values.desc,
     experimentId: values.experimentId,
-    targetings: [],
+    targetings: []
   };
 
-  Object.keys(keyToName).forEach((key) => {
+  Object.keys(keyToName).forEach(key => {
     if (!Array.isArray(values[`targetings.${key}`])) {
       values[`targetings.${key}`] = [values[`targetings.${key}`]];
     }
@@ -133,14 +133,14 @@ export const upsertRemoteConfig = ({
     .put(`/app/env/remote-config`, {
       appId: app.id,
       env: environment.env,
-      config: newConfig,
+      config: newConfig
     })
     .then(() => {
       toggleModal(false, () =>
         history.replace({
           state: {
-            rc: Date.now(),
-          },
+            rc: Date.now()
+          }
         })
       );
     })

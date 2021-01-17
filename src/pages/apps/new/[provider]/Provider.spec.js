@@ -14,7 +14,7 @@ describe("pages/apps/new/[provider]", () => {
     describe(provider, () => {
       beforeEach(() => {
         wrapper = withUserContext({
-          path: `/apps/new/${provider}`,
+          path: `/apps/new/${provider}`
         });
       });
 
@@ -41,7 +41,7 @@ describe("pages/apps/new/[provider]", () => {
         .reply(200, {
           username: "stormkit-dev",
           avatar_url: "http://localhost/my-avatar.jpg",
-          id: "151851",
+          id: "151851"
         });
     });
 
@@ -56,7 +56,7 @@ describe("pages/apps/new/[provider]", () => {
           .reply(200, []);
 
         wrapper = withUserContext({
-          path: `/apps/new/${provider}`,
+          path: `/apps/new/${provider}`
         });
       });
 
@@ -89,17 +89,17 @@ describe("pages/apps/new/[provider]", () => {
                 id: "1256156",
                 account: {
                   login: "stormkit-dev",
-                  avatar_url: "http://localhost/my-image.jpg",
-                },
+                  avatar_url: "http://localhost/my-image.jpg"
+                }
               },
               {
                 id: "1236717",
                 account: {
                   login: "stormkit-io",
-                  avatar_url: "http://localhost/my-image-2.jpg",
-                },
-              },
-            ],
+                  avatar_url: "http://localhost/my-image-2.jpg"
+                }
+              }
+            ]
           });
 
         nock("https://api.github.com")
@@ -108,12 +108,12 @@ describe("pages/apps/new/[provider]", () => {
             total_count: 30,
             repositories: [...Array(25)].map((_, i) => ({
               name: `my-repo-${i}`,
-              full_name: `stormkit-dev/my-repo-${i}`,
-            })),
+              full_name: `stormkit-dev/my-repo-${i}`
+            }))
           });
 
         wrapper = withUserContext({
-          path: `/apps/new/${provider}`,
+          path: `/apps/new/${provider}`
         });
       });
 
@@ -165,7 +165,7 @@ describe("pages/apps/new/[provider]", () => {
         .reply(200, {
           username: "stormkit-dev",
           avatar_url: "http://localhost/my-avatar.jpg",
-          id: "151851",
+          id: "151851"
         });
     });
 
@@ -182,7 +182,7 @@ describe("pages/apps/new/[provider]", () => {
         global.GITLAB_ACCESS_TOKEN = "access-token";
 
         wrapper = withUserContext({
-          path: `/apps/new/${provider}`,
+          path: `/apps/new/${provider}`
         });
       });
 
@@ -202,8 +202,8 @@ describe("pages/apps/new/[provider]", () => {
         { name: "my-repo", path_with_namespace: "stormkit-dev/my-repo" },
         {
           name: "my-other-repo",
-          path_with_namespace: "stormkit-dev/my-other-repo",
-        },
+          path_with_namespace: "stormkit-dev/my-other-repo"
+        }
       ];
 
       beforeEach(() => {
@@ -212,7 +212,7 @@ describe("pages/apps/new/[provider]", () => {
           .reply(200, repositories);
 
         wrapper = withUserContext({
-          path: `/apps/new/${provider}`,
+          path: `/apps/new/${provider}`
         });
       });
 
@@ -241,8 +241,8 @@ describe("pages/apps/new/[provider]", () => {
         { name: "my-repo", path_with_namespace: "stormkit-dev/my-repo" },
         {
           name: "my-other-repo",
-          path_with_namespace: "stormkit-dev/my-other-repo",
-        },
+          path_with_namespace: "stormkit-dev/my-other-repo"
+        }
       ];
 
       beforeEach(() => {
@@ -251,7 +251,7 @@ describe("pages/apps/new/[provider]", () => {
           .reply(200, repositories, { "X-Next-Page": "true" });
 
         wrapper = withUserContext({
-          path: `/apps/new/${provider}`,
+          path: `/apps/new/${provider}`
         });
       });
 
@@ -275,9 +275,9 @@ describe("pages/apps/new/[provider]", () => {
           nickname: "stormkit-dev",
           links: {
             avatar: {
-              href: "http://localhost/my-avatar.jpg",
-            },
-          },
+              href: "http://localhost/my-avatar.jpg"
+            }
+          }
         });
 
       nock("https://api.bitbucket.org/2.0")
@@ -288,11 +288,11 @@ describe("pages/apps/new/[provider]", () => {
               username: "stormkit-io",
               links: {
                 avatar: {
-                  href: "http://localhost/my-team-avatar.jpg",
-                },
-              },
-            },
-          ],
+                  href: "http://localhost/my-team-avatar.jpg"
+                }
+              }
+            }
+          ]
         });
     });
 
@@ -305,11 +305,11 @@ describe("pages/apps/new/[provider]", () => {
         nock("https://api.bitbucket.org/2.0")
           .get("/repositories?pagelen=100&role=admin")
           .reply(200, {
-            values: [],
+            values: []
           });
 
         wrapper = withUserContext({
-          path: `/apps/new/${provider}`,
+          path: `/apps/new/${provider}`
         });
       });
 
@@ -339,13 +339,13 @@ describe("pages/apps/new/[provider]", () => {
               { name: "my-repo", full_name: "stormkit-dev/my-repo" },
               {
                 name: "my-other-repo",
-                full_name: "stormkit-dev/my-other-repo",
-              },
-            ],
+                full_name: "stormkit-dev/my-other-repo"
+              }
+            ]
           });
 
         wrapper = withUserContext({
-          path: `/apps/new/${provider}`,
+          path: `/apps/new/${provider}`
         });
       });
 

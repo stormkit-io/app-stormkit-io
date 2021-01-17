@@ -16,7 +16,7 @@ export const handleRemovePaymentMethod = async ({
   cardId,
   setError,
   setLoading,
-  closeModal,
+  closeModal
 }: RemoveCardProps): Promise<void> => {
   setLoading(true);
 

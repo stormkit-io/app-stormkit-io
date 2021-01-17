@@ -30,7 +30,7 @@ const EnvInfo = ({ env, percentage }) => {
 
 EnvInfo.propTypes = {
   env: PropTypes.object,
-  percentage: PropTypes.number,
+  percentage: PropTypes.number
 };
 
 const PublishedInfo = ({ deployment, environments }) => {
@@ -38,10 +38,10 @@ const PublishedInfo = ({ deployment, environments }) => {
     return null;
   }
 
-  return deployment.published.map((p) => (
+  return deployment.published.map(p => (
     <EnvInfo
       key={`${p.envId}${p.percentage}`}
-      env={environments.filter((e) => e.id === p.envId)[0]}
+      env={environments.filter(e => e.id === p.envId)[0]}
       percentage={p.percentage}
     />
   ));
@@ -49,7 +49,7 @@ const PublishedInfo = ({ deployment, environments }) => {
 
 PublishedInfo.propTypes = {
   deployment: PropTypes.object,
-  environments: PropTypes.array,
+  environments: PropTypes.array
 };
 
 export default PublishedInfo;

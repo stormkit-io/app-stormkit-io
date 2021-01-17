@@ -45,7 +45,7 @@ const DomainUsageStatus = ({ domain, onVerify }) => {
                         {
                           year: "numeric",
                           month: "long",
-                          day: "2-digit",
+                          day: "2-digit"
                         }
                       )}
                     </TableCell>
@@ -56,7 +56,7 @@ const DomainUsageStatus = ({ domain, onVerify }) => {
                       {new Date(cert.endDate * 1000).toLocaleDateString("en", {
                         year: "numeric",
                         month: "long",
-                        day: "2-digit",
+                        day: "2-digit"
                       })}
                     </TableCell>
                   </TableRow>
@@ -86,7 +86,7 @@ const DomainUsageStatus = ({ domain, onVerify }) => {
 
 DomainUsageStatus.propTypes = {
   domain: PropTypes.object,
-  onVerify: PropTypes.func,
+  onVerify: PropTypes.func
 };
 
 export default DomainUsageStatus;

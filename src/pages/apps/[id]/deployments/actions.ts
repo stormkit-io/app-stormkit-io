@@ -18,12 +18,12 @@ export const deleteForever = ({
   deploymentId,
   deployments,
   setLoading,
-  setDeployments,
+  setDeployments
 }: DeleteForeverProps): Promise<void> => {
   setLoading(true);
 
   return api.delete(`/app/deploy`, { deploymentId, appId }).then(() => {
-    setDeployments(deployments.filter((d) => d.id !== deploymentId));
+    setDeployments(deployments.filter(d => d.id !== deploymentId));
   });
 };
 
@@ -43,7 +43,7 @@ export const publishDeployments = ({
   api,
   app,
   history,
-  setPublishError,
+  setPublishError
 }: PublishDeploymentsProps) => (
   sliders: Record<string, { percentage: number }>,
   envId: string
@@ -53,13 +53,13 @@ export const publishDeployments = ({
   const publish: Array<PublishInfo> = [];
   let total = 0;
 
-  Object.keys(sliders).forEach((deploymentId) => {
+  Object.keys(sliders).forEach(deploymentId => {
     const slider = sliders[deploymentId];
     total = total + slider.percentage;
 
     publish.push({
       percentage: slider.percentage,
-      deploymentId,
+      deploymentId
     });
   });
 
@@ -75,17 +75,17 @@ export const publishDeployments = ({
     .post(`/app/deployments/publish`, {
       appId: `${app.id}`,
       envId,
-      publish,
+      publish
     })
     .then(() => {
       history.replace({
         state: {
           deployments: Date.now(),
-          success: "Deployment has been successfully published.",
-        },
+          success: "Deployment has been successfully published."
+        }
       });
     })
-    .catch((e) => {
+    .catch(e => {
       setPublishError(
         e.message || "Something went wrong on our side. Please try again later."
       );
@@ -133,7 +133,7 @@ export const useFetchDeployments = ({
   from,
   skipQuery,
   filters,
-  setFrom,
+  setFrom
 }: UseFetchDeploymentsProps): UseFetchDeploymentsReturnValaue => {
   const location = useLocation<LocationState>();
   const [deployments, setDeployments] = useState<Array<Deployment>>([]);
@@ -172,9 +172,9 @@ export const useFetchDeployments = ({
         envId,
         status,
         published,
-        branch,
+        branch
       })
-      .then((res) => {
+      .then(res => {
         if (unmounted !== true) {
           setHasNextPage(res.hasNextPage);
           setLastFrom(from);
@@ -201,7 +201,7 @@ export const useFetchDeployments = ({
     status,
     refreshTime,
     from,
-    skipQuery,
+    skipQuery
   ]);
 
   return {
@@ -210,6 +210,6 @@ export const useFetchDeployments = ({
     loading,
     hasNextPage,
     success,
-    setDeployments,
+    setDeployments
   };
 };

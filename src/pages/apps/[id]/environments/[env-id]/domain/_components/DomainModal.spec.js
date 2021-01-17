@@ -18,7 +18,7 @@ describe(fileName, () => {
       environment: env,
       toggleModal: jest.fn(),
       isOpen: true,
-      history: { replace: jest.fn() },
+      history: { replace: jest.fn() }
     });
   });
 
@@ -53,7 +53,7 @@ describe(fileName, () => {
         env,
         domain,
         status: 400,
-        response: { ok: false },
+        response: { ok: false }
       });
 
       const domainName = wrapper.getByLabelText("Domain name");
@@ -76,7 +76,7 @@ describe(fileName, () => {
         env,
         domain,
         status: 429,
-        response: { ok: false },
+        response: { ok: false }
       });
 
       const domainName = wrapper.getByLabelText("Domain name");
@@ -99,7 +99,7 @@ describe(fileName, () => {
         env,
         domain,
         status: 500,
-        response: { ok: false },
+        response: { ok: false }
       });
 
       const domainName = wrapper.getByLabelText("Domain name");

@@ -17,7 +17,7 @@ export const handleUpdateSubscriptionPlan = async ({
   history,
   setError,
   setLoading,
-  closeModal,
+  closeModal
 }: HandleUpdateSubscriptionPlanProps): Promise<void> => {
   setLoading(true);
 

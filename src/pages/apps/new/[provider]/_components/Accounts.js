@@ -6,11 +6,11 @@ const Accounts = ({ onAccountChange, accounts, selected }) => {
     <Form.Select
       name="accounts"
       multiple={false}
-      onChange={(e) => onAccountChange(e.target.value)}
+      onChange={e => onAccountChange(e.target.value)}
       value={selected}
     >
       {accounts &&
-        accounts.map((account) => (
+        accounts.map(account => (
           <Form.Option key={account.login} value={account.login}>
             <img
               src={account.avatar}
