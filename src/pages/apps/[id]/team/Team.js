@@ -25,7 +25,7 @@ const Team = ({
   confirmModal,
   toggleModal,
   history,
-  location,
+  location
 }) => {
   const { members, loading, error } = useFetchMembers({ api, app, location });
   const isCurrentUserTheOwner = app.userId === user.id;
@@ -70,7 +70,7 @@ const Team = ({
               "flex flex-col justify-center bg-white border-b border-solid border-gray-83",
               {
                 "rounded-tr rounded-tl": i === 0,
-                "rounded-br rounded-bl mb-4": i === members.length - 1,
+                "rounded-br rounded-bl mb-4": i === members.length - 1
               }
             )}
           >
@@ -105,7 +105,7 @@ const Team = ({
                             app,
                             api,
                             history,
-                            confirmModal,
+                            confirmModal
                           })}
                         >
                           <span className="fas fa-times text-red-50 mr-2" />
@@ -131,7 +131,7 @@ Team.propTypes = {
   toggleModal: PropTypes.func,
   confirmModal: PropTypes.func,
   history: PropTypes.object,
-  location: PropTypes.object,
+  location: PropTypes.object
 };
 
 export default connect(Team, [
@@ -139,5 +139,5 @@ export default connect(Team, [
   { Context: AppContext, props: ["app"] },
   { Context: AuthContext, props: ["user"] },
   { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-  { Context: NewMemberModal, props: ["toggleModal"], wrap: true },
+  { Context: NewMemberModal, props: ["toggleModal"], wrap: true }
 ]);

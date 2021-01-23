@@ -20,15 +20,15 @@ const CommitMessage = ({ deployment, commit }) => {
 
 CommitMessage.propTypes = {
   commit: PropTypes.object,
-  deployment: PropTypes.object,
+  deployment: PropTypes.object
 };
 
 const CommitInfo = ({ deployment, environments }) => {
   const commit = parseCommit(deployment);
-  const env = environments.filter((e) => e.env === deployment.config.env)[0];
+  const env = environments.filter(e => e.env === deployment.config.env)[0];
   const urls = {
     environment: `/apps/${deployment.appId}/environments/${env?.id}`,
-    deployment: `/apps/${deployment.appId}/deployments/${deployment.id}`,
+    deployment: `/apps/${deployment.appId}/deployments/${deployment.id}`
   };
 
   return (
@@ -63,7 +63,7 @@ const CommitInfo = ({ deployment, environments }) => {
 
 CommitInfo.propTypes = {
   deployment: PropTypes.object,
-  environments: PropTypes.array,
+  environments: PropTypes.array
 };
 
 export default CommitInfo;

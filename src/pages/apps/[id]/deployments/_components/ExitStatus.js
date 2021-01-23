@@ -20,7 +20,7 @@ const ExitStatus = ({ code, iconOnly, className, ...rest }) =>
 ExitStatus.propTypes = {
   code: PropTypes.number,
   iconOnly: PropTypes.bool,
-  className: PropTypes.any,
+  className: PropTypes.any
 };
 
 export default ExitStatus;

@@ -21,8 +21,8 @@ describe(fileName, () => {
         props: {
           app,
           domain: domainInfo,
-          onVerify: jest.fn(),
-        },
+          onVerify: jest.fn()
+        }
       });
     });
 
@@ -60,7 +60,7 @@ describe(fileName, () => {
       wrapper = withMockContext(path, {
         app,
         domain: domainInfo,
-        onVerify: jest.fn(),
+        onVerify: jest.fn()
       });
     });
 
@@ -75,8 +75,8 @@ describe(fileName, () => {
         "Recommended: Setting up CNAME",
         `${app.displayName}.stormkit.dev`,
         "Alternative: Setting up A Record",
-        "35.156.69.62",
-      ].forEach((text) => expect(wrapper.getByText(text)).toBeTruthy());
+        "35.156.69.62"
+      ].forEach(text => expect(wrapper.getByText(text)).toBeTruthy());
     });
 
     test("clicking the verify now button should trigger a call and refetch", async () => {
@@ -100,7 +100,7 @@ describe(fileName, () => {
       wrapper = withMockContext(path, {
         app,
         domain: domainInfo,
-        onVerify: jest.fn(),
+        onVerify: jest.fn()
       });
     });
 
@@ -123,8 +123,8 @@ describe(fileName, () => {
         "Serial no",
         "343486059919871512067800302572875759206296",
         "Signature Algorithm",
-        "SHA256-RSA",
-      ].forEach((text) => expect(wrapper.getByText(text)).toBeTruthy());
+        "SHA256-RSA"
+      ].forEach(text => expect(wrapper.getByText(text)).toBeTruthy());
     });
   });
 });

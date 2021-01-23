@@ -9,7 +9,7 @@ const menuItems = [
   { icon: "far fa-chart-bar", text: "Logs", path: "/logs" },
   { icon: "fas fa-code", text: "Snippets", path: "/snippets" },
   { icon: "fas fa-tools", text: "Remote config", path: "/remote-config" },
-  { icon: "fas fa-globe", text: "Configure domain", path: "/domain" },
+  { icon: "fas fa-globe", text: "Configure domain", path: "/domain" }
 ];
 
 const EnvironmentMenu = ({ environment, app }) => {
@@ -25,14 +25,14 @@ const EnvironmentMenu = ({ environment, app }) => {
       <div className="flex">
         <Env app={app} environment={environment} isEditable />
         <nav className="flex flex-col bg-white rounded ml-4 md:min-w-1/3 md:max-w-1/3 px-4 py-6">
-          {menuItems.map((i) => (
+          {menuItems.map(i => (
             <Link
               to={`${url}${i.path}`}
               className={cn(
                 "text-primary text-sm flex items-center hover:bg-gray-75 p-2 rounded-lg",
                 {
                   "text-pink-50": path.indexOf(i.path) > -1,
-                  "bg-gray-90": path.indexOf(i.path) > -1,
+                  "bg-gray-90": path.indexOf(i.path) > -1
                 }
               )}
               key={i.path}
@@ -50,7 +50,7 @@ const EnvironmentMenu = ({ environment, app }) => {
 };
 
 EnvironmentMenu.propTypes = {
-  environment: PropTypes.object,
+  environment: PropTypes.object
 };
 
 export default EnvironmentMenu;

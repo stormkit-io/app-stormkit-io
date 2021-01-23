@@ -4,7 +4,7 @@ import cn from "classnames";
 import { keyToName } from "../helpers";
 
 const Targetings = ({ targeting, index, maxIndex }) => {
-  const obj = Object.keys(targeting).filter((k) => k !== "value");
+  const obj = Object.keys(targeting).filter(k => k !== "value");
   const isLeftColumn = index % 2 === 0;
   const isLast = index === maxIndex - 1;
   const isLastRow = isLast || (isLeftColumn && index === maxIndex - 2);
@@ -18,7 +18,7 @@ const Targetings = ({ targeting, index, maxIndex }) => {
         {
           "md:max-w-1/2": !isSingleRow,
           "border-b": !isLastRow,
-          "border-r": isLeftColumn && maxIndex !== 1,
+          "border-r": isLeftColumn && maxIndex !== 1
         }
       )}
     >
@@ -26,12 +26,12 @@ const Targetings = ({ targeting, index, maxIndex }) => {
         <span className="inline-block w-24">{keyToName.value}:</span>
         <span className="text-red-20">"{targeting.value}"</span>
       </div>
-      {obj.map((k) => (
+      {obj.map(k => (
         <div key={k} className="mt-2">
           <span className="inline-block py-1 w-24">{keyToName[k]}:</span>
           <span
             className={cn("inline-block rounded py-1", {
-              "bg-gray-80 px-2": targeting[k],
+              "bg-gray-80 px-2": targeting[k]
             })}
           >
             {targeting[k] || "any"}
@@ -46,7 +46,7 @@ Targetings.propTypes = {
   targeting: PropTypes.object,
   index: PropTypes.number,
   maxIndex: PropTypes.number,
-  isEditMode: PropTypes.bool,
+  isEditMode: PropTypes.bool
 };
 
 export default Targetings;

@@ -2,7 +2,7 @@
  * Prepares the headers to send to github. If the access token is not set,
  * it will throw an error.
  */
-export function prepareHeaders(token) {
+export function prepareHeaders(token: string) {
   if (!token) {
     throw new Error("unauthorized");
   }

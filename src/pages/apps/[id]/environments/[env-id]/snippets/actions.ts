@@ -25,7 +25,7 @@ const putSnippets = ({
   setLoading,
   setSnippets,
   setError,
-  onSuccess,
+  onSuccess
 }: PutSnippetsProps): Promise<void> => {
   setLoading(true);
 
@@ -33,7 +33,7 @@ const putSnippets = ({
     .put(`/app/env/snippets`, {
       appId: app.id,
       env: environment.env,
-      snippets,
+      snippets
     })
     .then(() => {
       setSnippets(normalize(snippets));
@@ -73,7 +73,7 @@ interface FetchSnippetsAPIResponse {
 export const useFetchSnippets = ({
   api,
   app,
-  env,
+  env
 }: FetchSnippetsProps): FetchSnippetsReturnValue => {
   const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
@@ -91,7 +91,7 @@ export const useFetchSnippets = ({
       .fetch<FetchSnippetsAPIResponse>(
         `/app/${app.id}/envs/${env.env}/snippets`
       )
-      .then((res) => {
+      .then(res => {
         if (!unmounted) {
           setSnippets(normalize(res.snippets));
         }
@@ -142,7 +142,7 @@ export const upsertSnippets = ({
   index = -1,
   injectLocation,
   isEnabled,
-  isPrepend,
+  isPrepend
 }: UpsertSnippetsProps) => (values: Snippet): Promise<void> => {
   if (!values.title || !values.content) {
     return Promise.resolve(setError("Title and content are required fields."));
@@ -159,8 +159,8 @@ export const upsertSnippets = ({
 
   // Delete private variables
   Object.keys(snippet)
-    .filter((k) => k[0] === "_")
-    .forEach((key) => {
+    .filter(k => k[0] === "_")
+    .forEach(key => {
       delete snippet[key];
     });
 
@@ -182,7 +182,7 @@ export const upsertSnippets = ({
     setLoading,
     setSnippets,
     setError,
-    onSuccess: () => toggleModal && toggleModal(false),
+    onSuccess: () => toggleModal && toggleModal(false)
   });
 };
 
@@ -205,7 +205,7 @@ export const deleteSnippet = ({
   api,
   app,
   environment,
-  injectLocation,
+  injectLocation
 }: DeleteSnippetProps): void => {
   confirmModal(
     `This will delete the snippet and it won't be injected anymore.`,
@@ -222,9 +222,9 @@ export const deleteSnippet = ({
           setLoading,
           setSnippets,
           setError,
-          onSuccess: closeModal,
+          onSuccess: closeModal
         });
-      },
+      }
     }
   );
 };
@@ -257,10 +257,10 @@ export const enableOrDisable = ({
           setError,
           setLoading,
           injectLocation: snippet._injectLocation || "body",
-          setSnippets,
+          setSnippets
         })(snippet).then(closeModal);
       },
-      onCancel: (close) => {
+      onCancel: close => {
         const el = document.querySelector<HTMLButtonElement>(
           `#${formSwitchSelector}`
         );
@@ -270,7 +270,7 @@ export const enableOrDisable = ({
         }
 
         close();
-      },
+      }
     }
   );
 };

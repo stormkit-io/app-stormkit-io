@@ -14,7 +14,7 @@ const RepoList = ({
   repositories,
   provider,
   hasNextPage,
-  onNextPageClick,
+  onNextPageClick
 }) => {
   const [state, setState] = useState({ error: null, loadingInsert: null });
 
@@ -35,7 +35,7 @@ const RepoList = ({
       )}
       {repositories.length > 0 ? (
         <TransitionGroup>
-          {repositories.map((r) => (
+          {repositories.map(r => (
             <CSSTransition
               timeout={350}
               classNames="fade-in"
@@ -53,7 +53,7 @@ const RepoList = ({
                   api,
                   history,
                   provider,
-                  setState,
+                  setState
                 })}
               >
                 <div>
@@ -68,7 +68,7 @@ const RepoList = ({
                     className={cn({
                       invisible:
                         state.loadingInsert ===
-                        (r.full_name || r.path_with_namespace),
+                        (r.full_name || r.path_with_namespace)
                     })}
                   >
                     Select
@@ -108,7 +108,7 @@ RepoList.propTypes = {
   provider: PropTypes.string,
   repositories: PropTypes.array,
   hasNextPage: PropTypes.bool,
-  onNextPageClick: PropTypes.func,
+  onNextPageClick: PropTypes.func
 };
 
 export default RepoList;

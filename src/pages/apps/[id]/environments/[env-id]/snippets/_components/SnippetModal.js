@@ -21,7 +21,7 @@ const SnippetModal = ({
   api,
   app,
   environment,
-  setSnippets,
+  setSnippets
 }) => {
   const isSnippetEnabled = snippet?.enabled || false;
   const isSnippetPrepend = snippet?.prepend || false;
@@ -61,7 +61,7 @@ const SnippetModal = ({
           isPrepend,
           toggleModal,
           injectLocation: snippet?._injectLocation,
-          index: snippet?._i,
+          index: snippet?._i
         })}
       >
         <div className="mb-8 p-4 rounded bg-gray-85">
@@ -107,7 +107,7 @@ const SnippetModal = ({
             <Form.Toggler
               name="_injectType"
               defaultSelected={isPrepend ? "prepend" : "append"}
-              onSelect={(value) => setIsPrepend(value === "prepend")}
+              onSelect={value => setIsPrepend(value === "prepend")}
             >
               <div data-value="prepend">Prepend</div>
               <div data-value="append">Append</div>
@@ -123,7 +123,7 @@ const SnippetModal = ({
             <Form.Switch
               className="ml-4"
               checked={isEnabled}
-              onChange={(e) => setIsEnabled(e.target.checked)}
+              onChange={e => setIsEnabled(e.target.checked)}
             />
           </div>
           <p className="opacity-50 text-sm pt-2">
@@ -157,7 +157,7 @@ SnippetModal.propTypes = {
   setSnippets: PropTypes.func,
   environment: PropTypes.object,
   api: PropTypes.object,
-  app: PropTypes.object,
+  app: PropTypes.object
 };
 
 export default Object.assign(
@@ -165,7 +165,7 @@ export default Object.assign(
     { Context: ModalContext, props: ["toggleModal", "isOpen"] },
     { Context: RootContext, props: ["api"] },
     { Context: AppContext, props: ["app"] },
-    { Context: EnvironmentContext, props: ["environment"] },
+    { Context: EnvironmentContext, props: ["environment"] }
   ]),
   ModalContext
 );

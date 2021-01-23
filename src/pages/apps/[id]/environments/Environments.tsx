@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import Api from "~/utils/api/Api";
 import AppContext from "~/pages/apps/App.context";
 import RootContext from "~/pages/Root.context";
 import { PlusButton } from "~/components/Buttons";
@@ -7,7 +7,19 @@ import Environment from "./_components/Environment";
 import EnvironmentFormModal from "./_components/EnvironmentFormModal";
 import { connect } from "~/utils/context";
 
-const Environments = ({ app, api, environments, toggleModal }) => {
+interface Props {
+  api: Api;
+  app: App;
+  environments: Array<Environment>;
+  toggleModal: ToggleModal;
+}
+
+const Environments: React.FC<Props> = ({
+  app,
+  api,
+  environments,
+  toggleModal
+}): React.ReactElement => {
   return (
     <div>
       <div className="flex items-center mb-4">
@@ -24,7 +36,7 @@ const Environments = ({ app, api, environments, toggleModal }) => {
         </div>
       </div>
       <div className="flex flex-col w-full flex-wrap">
-        {environments.map((env) => (
+        {environments.map(env => (
           <div className="mb-4" key={env.id}>
             <Environment environment={env} app={app} isClickable />
           </div>
@@ -35,15 +47,8 @@ const Environments = ({ app, api, environments, toggleModal }) => {
   );
 };
 
-Environments.propTypes = {
-  environments: PropTypes.array,
-  app: PropTypes.object,
-  api: PropTypes.object,
-  toggleModal: PropTypes.func,
-};
-
 export default connect(Environments, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app", "environments"] },
-  { Context: EnvironmentFormModal, props: ["toggleModal"], wrap: true },
+  { Context: EnvironmentFormModal, props: ["toggleModal"], wrap: true }
 ]);

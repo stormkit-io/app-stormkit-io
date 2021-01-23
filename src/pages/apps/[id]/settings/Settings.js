@@ -18,7 +18,7 @@ const Settings = ({ api, app, environments, location, history, user }) => {
   const { settings, loading } = useFetchAdditionalSettings({
     api,
     app,
-    location,
+    location
   });
 
   return (
@@ -74,11 +74,11 @@ Settings.propTypes = {
   confirmModal: PropTypes.func,
   location: PropTypes.object,
   history: PropTypes.object,
-  user: PropTypes.object,
+  user: PropTypes.object
 };
 
 export default connect(Settings, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app", "environments"] },
-  { Context: AuthContext, props: ["user"] },
+  { Context: AuthContext, props: ["user"] }
 ]);
