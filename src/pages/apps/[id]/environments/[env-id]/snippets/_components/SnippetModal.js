@@ -10,6 +10,8 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { upsertSnippets } from "../actions";
+import "codemirror/keymap/sublime";
+import "codemirror/theme/idea.css";
 
 const ModalContext = Modal.Context();
 
@@ -29,6 +31,7 @@ const SnippetModal = ({
   const [loading, setLoading] = useState(false);
   const [isEnabled, setIsEnabled] = useState(isSnippetEnabled);
   const [isPrepend, setIsPrepend] = useState(isSnippetPrepend);
+  const [codeContent, setCodeContent] = useState(snippet?.content || "");
 
   useEffect(() => {
     setIsEnabled(isSnippetEnabled);
@@ -54,6 +57,7 @@ const SnippetModal = ({
           app,
           environment,
           snippets,
+          codeContent,
           setError,
           setLoading,
           setSnippets,
@@ -77,16 +81,22 @@ const SnippetModal = ({
             The snippet title that will be used internally.
           </p>
         </div>
+        <div>
+          <input name="content" type="hidden" value={codeContent} />
+        </div>
         <div className="mb-8 p-4 rounded bg-gray-85">
-          <Form.Input
-            name="content"
-            label="Content"
+          <Form.Code
+            height="200px"
             className="bg-white"
-            rows={10}
-            rowsMax={15}
-            multiline
-            defaultValue={snippet?.content}
-            fullWidth
+            value={snippet?.content}
+            onChange={instance => setCodeContent(instance.getValue())}
+            options={{
+              name: "content",
+              theme: "idea",
+              tabSize: 2,
+              keyMap: "sublime",
+              mode: "html"
+            }}
           />
           <p className="opacity-50 text-sm pt-2">
             The content that will be injected to document on server response.

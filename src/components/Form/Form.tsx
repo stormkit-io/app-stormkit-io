@@ -9,6 +9,7 @@ import Toggler from "./Toggler";
 import Switch from "./Switch";
 import Section from "./components/Section";
 import Description from "./components/Description";
+import CodeMirror from "@uiw/react-codemirror";
 
 type FormRef = React.RefObject<HTMLFormElement>;
 type FormValue = boolean | string;
@@ -41,7 +42,6 @@ function collectFormValues<T>(
 
   const form = ref.current;
   const values: { [key: string]: FormValue | Array<FormValue> } = {};
-
   for (let i = 0; i < form.elements.length; i++) {
     const el = form.elements[i] as HTMLFormElement;
     const { name, disabled } = el;
@@ -123,6 +123,7 @@ function Form<T>({
 Form.Input = Input;
 Form.ControlLabel = FormControlLabel;
 Form.Checkbox = Checkbox;
+Form.Code = CodeMirror;
 Form.Radio = Radio;
 Form.Select = Select;
 Form.Option = Option;
