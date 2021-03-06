@@ -11,8 +11,7 @@ const openPopup = ({ url, title, onClose, width = 600, height = 600 }) => {
     title,
     "toolbar=no,location=no,status=no,menubar=no," +
       `scrollbars=yes,resizable=yes,width=${width},height=${height},` +
-      "left=100,top=100",
-    onClose // This is forwarded for unit testing.
+      "left=100,top=100"
   );
 
   // The listener that will be triggered on postMessage

@@ -44,13 +44,18 @@ describe("pages/apps/new", () => {
   `("For provider", ({ provider, human, selector }) => {
     describe(provider, () => {
       beforeEach(() => {
-        window.open = jest.fn().mockImplementation((...args) => {
-          const callback = args[3];
-          callback({
-            sessionToken: "abc-123",
-            accessToken: "abc-123",
-            user: { id: "1" }
-          });
+        window.open = jest.fn().mockImplementation(() => {
+          window.postMessage(
+            {
+              success: true,
+              sessionToken: "abc-123",
+              accessToken: "abc-123",
+              user: { id: "1" }
+            },
+            "*"
+          );
+
+          return { close: jest.fn() };
         });
 
         wrapper = withUserContext({ path: "/apps/new" });
@@ -69,8 +74,7 @@ describe("pages/apps/new", () => {
         expect(window.open).toHaveBeenCalledWith(
           `http://localhost/auth/${provider}`,
           "oauthWindow",
-          "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=600,left=100,top=100",
-          expect.anything()
+          "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=600,left=100,top=100"
         );
 
         expect(wrapper.history.entries[0].pathname).toBe(`/apps/new`);
