@@ -4,9 +4,9 @@ import Link from "~/components/Link";
 import Logo from "~/components/Logo";
 
 interface PathsType {
-  path: string,
-  text: string,
-  icon: string,
+  path: string;
+  text: string;
+  icon: string;
 }
 
 const paths: PathsType[] = [

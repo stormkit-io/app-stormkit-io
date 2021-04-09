@@ -9,6 +9,7 @@ import Toggler from "./Toggler";
 import Switch from "./Switch";
 import Section from "./components/Section";
 import Description from "./components/Description";
+import CodeMirror from "@uiw/react-codemirror";
 
 type FormRef = React.RefObject<HTMLFormElement>;
 type FormValue = boolean | string;
@@ -122,6 +123,7 @@ function Form<T>({
 
 Form.Input = Input;
 Form.ControlLabel = FormControlLabel;
+Form.Code = CodeMirror;
 Form.Checkbox = Checkbox;
 Form.Radio = Radio;
 Form.Select = Select;
