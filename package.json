@@ -34,6 +34,7 @@
     "@types/classnames": "^2.2.10",
     "@types/react-router-dom": "^5.1.5",
     "classnames": "^2.2.6",
+    "@uiw/react-codemirror": "^3.0.6",
     "dotenv": "^7.0.0",
     "flag-icon-css": "^3.3.0",
     "lodash.get": "^4.4.2",
