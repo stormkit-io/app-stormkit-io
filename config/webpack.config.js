@@ -102,6 +102,7 @@ module.exports = {
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "production"
       ),
+      "process.env.SENTRY": JSON.stringify(process.env.SENTRY),
 
       // Merge dotenv config
       ...Object.keys(parsed).reduce((obj, key) => {
