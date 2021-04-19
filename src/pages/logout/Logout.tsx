@@ -4,7 +4,7 @@ import { connect } from "~/utils/context";
 
 type Props = {
   logout: () => void;
-}
+};
 
 const Logout: FC<Props> = ({ logout }: Props): null => {
   useEffect(() => {
