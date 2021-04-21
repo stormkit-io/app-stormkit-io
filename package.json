@@ -29,8 +29,8 @@
   "dependencies": {
     "@material-ui/core": "^4.9.0",
     "@material-ui/lab": "^4.0.0-alpha.40",
-    "@sentry/react": "^6.2.5",
-    "@sentry/tracing": "^6.2.5",
+    "@sentry/react": "^6.3.0",
+    "@sentry/tracing": "^6.3.0",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.11.0",
     "@types/classnames": "^2.2.10",
