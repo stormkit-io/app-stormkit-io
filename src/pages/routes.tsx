@@ -30,6 +30,10 @@ const routes: Array<RouteProps> = [
     component: Async(() => import("~/pages/apps/new/[provider]"))
   },
   {
+    path: "/app/invitation/accept",
+    component: Async(() => import("~/pages/app/invitation/Accept"))
+  },
+  {
     path: "/app/:id",
     component: (): React.ReactElement => {
       const { pathname } = useLocation();
