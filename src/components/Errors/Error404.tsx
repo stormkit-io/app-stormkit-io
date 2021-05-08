@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "~/components/Link";
 import Logo from "~/components/Logo";
 
 const Error404: React.FC = ({ children }): React.ReactElement => {
@@ -9,7 +10,9 @@ const Error404: React.FC = ({ children }): React.ReactElement => {
         {children}
       </div>
       <div className="mt-32">
-        <Logo iconOnly />
+        <Link to="/">
+          <Logo iconOnly />
+        </Link>
       </div>
     </div>
   );
