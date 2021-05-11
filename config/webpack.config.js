@@ -24,7 +24,7 @@ module.exports = {
   // Entry files
   // @see https://webpack.js.org/concepts/entry-points/
   entry: {
-    main: [path.join(root, "src/index.js")]
+    main: [path.join(root, "src/index.tsx")]
   },
 
   output: {
