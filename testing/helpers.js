@@ -3,7 +3,6 @@ import nock from "nock";
 import { render } from "@testing-library/react";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import RootContext from "~/pages/Root.context";
 import Root from "~/pages/Root";
 import Api from "~/utils/api/Api";
 import { LocalStorage } from "~/utils/storage";
@@ -132,7 +131,7 @@ export const renderWithContext = ({ history = createMemoryHistory() } = {}) => {
   const MockRouter = ({ children }) => children;
   const component = render(
     <Router history={history}>
-      <Root Router={MockRouter} Context={RootContext} />
+      <Root Router={MockRouter} />
     </Router>
   );
   component.history = history;

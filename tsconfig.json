@@ -18,7 +18,7 @@
     "moduleResolution": "Node",
     "newLine": "lf",
     "jsx": "react",
-    "types": ["react", "node", "jest"],
+    "types": ["react", "node", "jest", "webpack-env"],
     "typeRoots": ["/node_modules/@types", "./src/types"],
     "paths": {
       "~/*": ["./src/*"],
