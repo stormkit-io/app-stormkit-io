@@ -22,7 +22,6 @@ interface LocationState extends Location {
   repoInsert: boolean;
 }
 
-
 export const Home: React.FC<Props> = ({ api }): React.ReactElement => {
   const location = useLocation<LocationState>();
   const [from, setFrom] = useState(0);
