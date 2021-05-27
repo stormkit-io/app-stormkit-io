@@ -42,16 +42,18 @@ const DotDotDot: React.FC<React.HTMLAttributes<HTMLButtonElement>> & {
 
 interface ItemProps {
   icon?: string;
+  href?: string;
   isLast?: boolean;
   disabled?: boolean;
   className?: string;
   children: React.ReactNode;
-  onClick?: () => boolean;
+  onClick?: (arg0: () => void) => void;
   toggleVisibility?: (arg0: boolean) => void;
 }
 
 const Item: React.FC<ItemProps> = ({
   icon,
+  href,
   children,
   onClick,
   toggleVisibility,
@@ -63,7 +65,7 @@ const Item: React.FC<ItemProps> = ({
   <Button
     as="div"
     className={cn(
-      "border-solid border-gray-80 p-4 w-full",
+      "border-solid border-gray-80 p-4 w-full inline-flex",
       {
         "hover:bg-gray-90": !disabled,
         "hover:text-pink-50": !disabled,
@@ -74,6 +76,7 @@ const Item: React.FC<ItemProps> = ({
       className
     )}
     disabled={disabled}
+    href={href}
     styled={false}
     {...rest}
     onClick={e => {
@@ -83,14 +86,8 @@ const Item: React.FC<ItemProps> = ({
         return;
       }
 
-      let shouldClose = true;
-
       if (typeof onClick === "function") {
-        shouldClose = onClick();
-      }
-
-      if (shouldClose !== false && toggleVisibility) {
-        toggleVisibility(false);
+        toggleVisibility && onClick(() => toggleVisibility(false));
       }
     }}
   >
