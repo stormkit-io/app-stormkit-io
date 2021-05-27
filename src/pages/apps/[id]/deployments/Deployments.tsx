@@ -23,7 +23,7 @@ const Deployments: React.FC<Props> = ({
 }: Props): React.ReactElement => {
   const [from, setFrom] = useState(0);
   const [filters, setFilters] = useState<IFilters>({});
-  const depls = useFetchDeployments({ app, api, from, setFrom, filters });
+
   const {
     deployments,
     success,
@@ -31,7 +31,7 @@ const Deployments: React.FC<Props> = ({
     setDeployments,
     loading,
     error
-  } = depls;
+  } = useFetchDeployments({ app, api, from, setFrom, filters });
 
   if (error) {
     return (
@@ -55,9 +55,7 @@ const Deployments: React.FC<Props> = ({
       <Filters
         filters={filters}
         environments={environments}
-        onFilterChange={f => {
-          setFilters(f);
-        }}
+        onFilterChange={setFilters}
       />
       {loading && from === 0 ? (
         <div className="flex justify-center bg-white rounded p-4">

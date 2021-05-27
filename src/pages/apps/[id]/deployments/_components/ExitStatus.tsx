@@ -1,11 +1,28 @@
 import React from "react";
-import PropTypes from "prop-types";
 import cn from "classnames";
 
-const ExitStatus = ({ code, iconOnly, className, ...rest }) =>
-  code === 0 ? (
+const exitSuccess = 0;
+const exitStoppedManually = -1;
+
+interface ExitStatusProps {
+  code: number | null;
+  iconOnly: boolean;
+  className: string;
+}
+
+const ExitStatus = ({
+  code,
+  iconOnly,
+  className,
+  ...rest
+}: ExitStatusProps): React.ReactElement =>
+  code === exitSuccess ? (
     <span className={cn("text-green-50", className)} {...rest}>
       <span className="fas fa-check-circle" /> {!iconOnly && "Success"}
+    </span>
+  ) : code === exitStoppedManually ? (
+    <span className={cn("text-red-50", className)} {...rest}>
+      <span className="fas fa-stop-circle" /> {!iconOnly && "Stopped"}
     </span>
   ) : code !== null ? (
     <span className={cn("text-red-50", className)} {...rest}>
@@ -16,11 +33,5 @@ const ExitStatus = ({ code, iconOnly, className, ...rest }) =>
       <span className="fas fa-running" /> {!iconOnly && "Running"}
     </span>
   );
-
-ExitStatus.propTypes = {
-  code: PropTypes.number,
-  iconOnly: PropTypes.bool,
-  className: PropTypes.any
-};
 
 export default ExitStatus;

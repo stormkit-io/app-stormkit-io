@@ -19,6 +19,7 @@ declare type Deployment = {
   exit: number;
   isAutoDeploy: boolean;
   isRunning: boolean;
+  isFork: boolean;
   logs: Array<Log>;
   numberOfFiles: number;
   published: Array<PublishInfo>;
