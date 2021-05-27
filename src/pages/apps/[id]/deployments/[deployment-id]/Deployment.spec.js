@@ -15,7 +15,7 @@ describe(fileName, () => {
   describe("when the deployment is successful", () => {
     beforeEach(() => {
       deploy = data.mockDeploymentResponse().deploy;
-      scope = nocks.mockFetchDeploymentsCall({ app, deploy });
+      scope = nocks.mockFetchDeploymentCall({ app, deploy });
       wrapper = withMockContext(path, {
         app,
         match: { params: { deploymentId: deploy.id } }
@@ -65,7 +65,7 @@ describe(fileName, () => {
     beforeEach(() => {
       deploy = data.mockDeploymentResponse().deploy;
       deploy.exit = 1;
-      scope = nocks.mockFetchDeploymentsCall({
+      scope = nocks.mockFetchDeploymentCall({
         app,
         deploy,
         response: { deploy }

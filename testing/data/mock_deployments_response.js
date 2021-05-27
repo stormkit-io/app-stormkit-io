@@ -106,7 +106,7 @@ export default () => ({
       numberOfFiles: 29,
       totalSizeInBytes: 1272457,
       version: "340",
-      exit: 0,
+      exit: null,
       percentage: 0,
       pullRequestNumber: null,
       isAutoDeploy: false,
@@ -137,7 +137,7 @@ export default () => ({
         },
         env: "production"
       },
-      isRunning: false,
+      isRunning: true,
       preview: "https://-10554696686367.stormkit.dev",
       logs: [
         {
@@ -196,6 +196,62 @@ export default () => ({
             "Successfully deployed client side.\nTotal files uploaded: 29\nTotal bytes uploaded: 1.3MB\nSuccessfully deployed server side.\nPackage size: 586.0kB\nNew function version: 340\n",
           status: true,
           title: "deploy"
+        }
+      ],
+      tip: null,
+      published: []
+    },
+    {
+      branch: "master",
+      numberOfFiles: 0,
+      totalSizeInBytes: 0,
+      exit: -1,
+      percentage: 0,
+      pullRequestNumber: null,
+      isAutoDeploy: false,
+      createdAt: 1588613461,
+      stoppedAt: 1588613607,
+      appId: "1",
+      id: "10554396586367",
+      config: {
+        appId: 1,
+        autoPublish: true,
+        branch: "master",
+        build: {
+          cmd: "yarn test \u0026\u0026 yarn run build:console",
+          distFolder: "packages/console/dist",
+          entry: "packages/console/server/renderer.js",
+          vars: {
+            API_DOMAIN: "https://api.stormkit.io",
+            BABEL_ENV: "production",
+            NODE_ENV: "production",
+            ROOT: "\u003croot\u003e/packages/console",
+            STRIPE_API_KEY: "pk_live_pQIxMmRarwRKipTeFcTVW2cF00BcVT5IFj"
+          }
+        },
+        domain: {
+          cname: "app-stormkit-io-cnmiji6et.hosting.stormkit.io.",
+          name: "app.stormkit.io",
+          verified: true
+        },
+        env: "production"
+      },
+      isRunning: false,
+      preview: "https://-10554696686367.stormkit.dev",
+      logs: [
+        {
+          message:
+            "Succesfully checked out master\nThis deployment has been stopped manually",
+          payload: {
+            branch: "master",
+            commit: {
+              author: "Foo Bar \u003cfoobar@stormkit.io\u003e",
+              message: "My stopped deployment",
+              sha: "a577d3dc4b2111caabefe74c5c0ceb2b02dff4de"
+            }
+          },
+          status: false,
+          title: "checkout master"
         }
       ],
       tip: null,

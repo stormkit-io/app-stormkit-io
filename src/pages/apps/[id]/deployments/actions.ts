@@ -3,13 +3,17 @@ import { useLocation } from "react-router";
 import { History, Location } from "history";
 import Api from "~/utils/api/Api";
 
+export type setLoadingArgs = null | "delete" | "stop";
+type setLoadingFunc = (value: setLoadingArgs) => void;
+type setDeploymentsFunc = (value: Array<Deployment>) => void;
+
 interface DeleteForeverProps {
   api: Api;
   appId: string;
   deploymentId: string;
   deployments: Array<Deployment>;
-  setLoading: (value: boolean) => void;
-  setDeployments: (value: Array<Deployment>) => void;
+  setLoading: setLoadingFunc;
+  setDeployments: setDeploymentsFunc;
 }
 
 export const deleteForever = ({
@@ -20,7 +24,7 @@ export const deleteForever = ({
   setLoading,
   setDeployments
 }: DeleteForeverProps): Promise<void> => {
-  setLoading(true);
+  setLoading("delete");
 
   return api.delete(`/app/deploy`, { deploymentId, appId }).then(() => {
     setDeployments(deployments.filter(d => d.id !== deploymentId));
@@ -167,7 +171,7 @@ export const useFetchDeployments = ({
 
     api
       .post<FetchDeploymentsAPIResponse>("/app/deployments", {
-        appId: `${app.id}`,
+        appId: app.id,
         from,
         envId,
         status,
@@ -212,4 +216,40 @@ export const useFetchDeployments = ({
     success,
     setDeployments
   };
+};
+
+interface StopDeploymentProps {
+  api: Api;
+  appId: string;
+  deploymentId: string;
+  deployments: Array<Deployment>;
+  setLoading: setLoadingFunc;
+  setDeployments: (deployments: Array<Deployment>) => void;
+}
+
+export const stopDeployment = ({
+  api,
+  appId,
+  deploymentId,
+  deployments,
+  setLoading,
+  setDeployments
+}: StopDeploymentProps): Promise<void> => {
+  setLoading("stop");
+
+  return api.post("/app/deploy/stop", { appId, deploymentId }).then(() => {
+    setLoading(null);
+    setDeployments(
+      deployments.slice(0).map(d =>
+        d.id === deploymentId
+          ? {
+              ...d,
+              exit: -1,
+              stoppedAt: Date.now(),
+              isRunning: false
+            }
+          : d
+      )
+    );
+  });
 };
