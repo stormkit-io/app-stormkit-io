@@ -98,6 +98,7 @@ const Team = ({
                     <TableCell className="text-right">
                       <DotDotDot aria-label="More settings">
                         <DotDotDot.Item
+                          icon="fas fa-times text-red-50 mr-2"
                           aria-label={`Delete ${member.fullName ||
                             member.displayName}`}
                           onClick={handleDelete({
@@ -108,7 +109,6 @@ const Team = ({
                             confirmModal
                           })}
                         >
-                          <span className="fas fa-times text-red-50 mr-2" />
                           Delete
                         </DotDotDot.Item>
                       </DotDotDot>

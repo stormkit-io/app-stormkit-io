@@ -38,13 +38,17 @@ const Parameter = ({
         <DotDotDot aria-label="Expand options">
           <DotDotDot.Item
             aria-label="Edit parameter"
-            onClick={() => toggleModal(true)}
+            icon="fas fa-pen mr-2"
+            onClick={close => {
+              toggleModal(true);
+              close();
+            }}
           >
-            <span className="fas fa-pen mr-2" />
             Edit
           </DotDotDot.Item>
           <DotDotDot.Item
             aria-label="Delete parameter"
+            icon="fas fa-times text-red-50 mr-2"
             onClick={() =>
               confirmModal(
                 "This will completely remove the parameter and it won't be available anymore to your source code.",
@@ -65,7 +69,6 @@ const Parameter = ({
               )
             }
           >
-            <span className="fas fa-times text-red-50 mr-2" />
             Delete
           </DotDotDot.Item>
         </DotDotDot>
