@@ -82,13 +82,17 @@ const SnippetTable = ({
                   <DotDotDot>
                     <DotDotDot.Item
                       aria-label="Edit snippet"
-                      onClick={() => setSelectedSnippet(row)}
+                      icon="fas fa-pen mr-2"
+                      onClick={close => {
+                        setSelectedSnippet(row);
+                        close();
+                      }}
                     >
-                      <span className="fas fa-pen mr-2" />
                       Edit
                     </DotDotDot.Item>
                     <DotDotDot.Item
                       aria-label="Delete snippet"
+                      icon="fas fa-times text-red-50 mr-2"
                       onClick={() =>
                         deleteSnippet({
                           confirmModal,
@@ -102,7 +106,6 @@ const SnippetTable = ({
                         })
                       }
                     >
-                      <span className="fas fa-times text-red-50 mr-2" />
                       Delete
                     </DotDotDot.Item>
                   </DotDotDot>

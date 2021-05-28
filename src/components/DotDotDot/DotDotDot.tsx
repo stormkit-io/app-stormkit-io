@@ -65,7 +65,7 @@ const Item: React.FC<ItemProps> = ({
   <Button
     as="div"
     className={cn(
-      "border-solid border-gray-80 p-4 w-full inline-flex",
+      "border-solid border-gray-80 p-4 w-full inline-flex items-center",
       {
         "hover:bg-gray-90": !disabled,
         "hover:text-pink-50": !disabled,
