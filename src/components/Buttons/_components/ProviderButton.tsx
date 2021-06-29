@@ -3,7 +3,7 @@ import cn from "classnames";
 import Button from "~/components/Button";
 
 export interface Props {
-  provider: "github" | "gitlab" | "bitbucket";
+  provider: Provider;
   text: "GitHub" | "GitLab" | "Bitbucket";
   type?: "button" | "submit";
   children: ReactNode;
