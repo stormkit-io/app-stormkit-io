@@ -1,17 +1,23 @@
 import { waitFor } from "@testing-library/react";
-import { withUserContext } from "~/testing/helpers";
-import { LocalStorage } from "~/utils/storage";
+import { withMockContext } from "~/testing/helpers";
 
-describe("pages/Logout", () => {
+const fileName = "pages/logout";
+
+describe(fileName, () => {
+  const path = `~/${fileName}`;
+
   test("should trigger the logout function on mount", async () => {
-    LocalStorage.set("skit_token", "abc");
+    const spy = jest.fn();
 
-    withUserContext({
-      path: "/logout"
+    withMockContext({
+      path,
+      props: {
+        logout: spy
+      }
     });
 
     await waitFor(() => {
-      expect(LocalStorage.get("skit_token")).toBe(null);
+      expect(spy).toHaveBeenCalledWith();
     });
   });
 });
