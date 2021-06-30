@@ -26,14 +26,13 @@ interface FetchUserResponse {
 }
 
 export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
+  const token = api.getAuthToken();
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User>();
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(!!token);
 
   useEffect(() => {
     let unmounted: boolean;
-
-    const token = api.getAuthToken();
 
     if (token) {
       setLoading(true);
@@ -61,7 +60,7 @@ export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
     return () => {
       unmounted = true;
     };
-  }, [api]);
+  }, [api, token]);
 
   return { error, user, loading, setError, setUser };
 };
