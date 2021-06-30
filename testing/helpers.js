@@ -3,7 +3,6 @@ import nock from "nock";
 import { render } from "@testing-library/react";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import Root from "~/pages/Root";
 import Api from "~/utils/api/Api";
 import { LocalStorage } from "~/utils/storage";
 import * as data from "~/testing/data";
@@ -86,14 +85,16 @@ export const withMockContext = (...args) => {
   });
 
   const Component = require(path).default;
+  const history = createMemoryHistory();
   const wrapper = render(
-    <Router history={createMemoryHistory()}>
+    <Router history={history}>
       <Component {...mockProps} />
     </Router>
   );
 
   return Object.assign(wrapper, {
-    injectedProps: mockProps
+    injectedProps: mockProps,
+    history
   });
 };
 
@@ -128,6 +129,7 @@ export const withAppContext = ({ app, envs, path, status = 200, user }) => {
  * Use withMockContext instead.
  */
 export const renderWithContext = ({ history = createMemoryHistory() } = {}) => {
+  const Root = require("~/pages/Root").default;
   const MockRouter = ({ children }) => children;
   const component = render(
     <Router history={history}>
