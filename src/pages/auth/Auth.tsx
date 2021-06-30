@@ -1,6 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import qs from "query-string";
 import { connect } from "~/utils/context";
 import CenterLayout from "~/layouts/CenterLayout";
@@ -9,14 +8,23 @@ import AuthContext from "./Auth.context";
 import OauthLogin from "./_components/OauthLogin";
 import "./Auth.css";
 
-const Auth = ({ user, location }) => {
+interface Props {
+  user: User;
+}
+
+const Auth: React.FC<Props> = ({ user }): React.ReactElement => {
+  const location = useLocation();
+
   if (user) {
     const { redirect = "/" } = qs.parse(location.search.replace("?", ""));
-    return <Redirect to={redirect} />;
+
+    if (typeof redirect === "string") {
+      return <Redirect to={redirect} />;
+    }
   }
 
   return (
-    <CenterLayout header={false}>
+    <CenterLayout>
       <div className="mb-16 text-center pt-6 sm:pt-0">
         <Logo />
       </div>
@@ -54,11 +62,6 @@ const Auth = ({ user, location }) => {
       </div>
     </CenterLayout>
   );
-};
-
-Auth.propTypes = {
-  user: PropTypes.object,
-  location: PropTypes.object
 };
 
 export default connect(Auth, [{ Context: AuthContext, props: ["user"] }]);

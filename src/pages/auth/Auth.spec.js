@@ -1,14 +1,20 @@
-import { renderWithContext, withUserContext } from "~/testing/helpers";
+import router from "react-router";
+import { withMockContext } from "~/testing/helpers";
 import { waitFor } from "@testing-library/react";
 
-describe("pages/auth", () => {
+const fileName = "pages/auth";
+
+describe(fileName, () => {
+  const path = `~/${fileName}`;
   let wrapper;
 
   describe("when user is logged in and redirect is provided", () => {
     beforeEach(() => {
-      wrapper = withUserContext({
-        path: "/auth?redirect=/apps"
+      jest.spyOn(router, "useLocation").mockReturnValue({
+        search: "?redirect=/apps"
       });
+
+      wrapper = withMockContext(path, { user: { id: 1 } });
     });
 
     test("redirects user to the given page", async () => {
@@ -20,9 +26,11 @@ describe("pages/auth", () => {
 
   describe("when user is logged in and redirect is not provided", () => {
     beforeEach(() => {
-      wrapper = withUserContext({
-        path: "/auth"
+      jest.spyOn(router, "useLocation").mockReturnValue({
+        search: ""
       });
+
+      wrapper = withMockContext(path, { user: { id: 1 } });
     });
 
     test("redirects user to the home page", async () => {
@@ -33,8 +41,19 @@ describe("pages/auth", () => {
   });
 
   describe("when user is not logged in", () => {
+    let loginOauthSpy;
+
     beforeEach(() => {
-      wrapper = renderWithContext({});
+      loginOauthSpy = jest.fn();
+
+      jest.spyOn(router, "useLocation").mockReturnValue({
+        search: ""
+      });
+
+      wrapper = withMockContext(path, {
+        user: undefined,
+        loginOauth: loginOauthSpy
+      });
     });
 
     test("displays some text", async () => {
