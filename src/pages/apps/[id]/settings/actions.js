@@ -144,12 +144,17 @@ export const updateAdditionalSettings = ({
         .json()
         .then(({ errors }) => {
           setLoading(false);
-          setError(errors);
+          setError(
+            Object.keys(errors)
+              .map(k => errors[k])
+              .join(", ")
+          );
         })
         .catch(() => {
           setLoading(false);
           setError(
-            "Something wrong happened while updating settings. Please try again and if the problem persists contact us from Discord or email."
+            "Something went wrong happened while updating settings. " +
+              "Please try again and if the problem persists contact us from Discord or email."
           );
         });
     });
