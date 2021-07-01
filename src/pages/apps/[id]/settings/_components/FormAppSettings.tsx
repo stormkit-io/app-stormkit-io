@@ -8,10 +8,11 @@ import Button from "~/components/Button";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
 
+const NodeJS14 = "nodejs14.x";
 const NodeJS12 = "nodejs12.x";
 const NodeJS10 = "nodejs10.x";
 
-type Runtime = typeof NodeJS12 | typeof NodeJS10;
+type Runtime = typeof NodeJS14 | typeof NodeJS12 | typeof NodeJS10;
 
 const AutoDeployCommit = "commit";
 const AutoDeployPullRequest = "pull_request";
@@ -119,6 +120,7 @@ const FormAppSettings: React.FC<Props> = ({
         >
           <Form.Option value={NodeJS10}>NodeJS 10.x</Form.Option>
           <Form.Option value={NodeJS12}>NodeJS 12.x</Form.Option>
+          <Form.Option value={NodeJS14}>NodeJS 14.x</Form.Option>
         </Form.Select>
         <Form.Description>
           The application runtime for deployments and server side environment.
@@ -197,7 +199,11 @@ const FormAppSettings: React.FC<Props> = ({
           Update
         </Button>
       </div>
-      {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
+      {error && (
+        <InfoBox type={InfoBox.ERROR} className="mt-4">
+          {error}
+        </InfoBox>
+      )}
       {successMessage && (
         <InfoBox
           type={InfoBox.SUCCESS}
