@@ -45,8 +45,8 @@ export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
             LocalStorage.set(LS_USER, user);
           }
         })
-        .catch(_ => {
-          if (!unmounted) {
+        .catch(e => {
+          if (!unmounted && e.status !== 403) {
             setError("Something went wrong, log in again.");
           }
         })
