@@ -13,7 +13,10 @@ const User: FC = (): ReactElement => (
     <div className="flex flex-auto max-w-screen-lg m-auto w-full mt-6">
       <Switch>
         {routes.map(route => (
-          <Route {...route} key={route.path} />
+          <Route
+            {...route}
+            key={Array.isArray(route.path) ? route.path[0] : route.path}
+          />
         ))}
       </Switch>
     </div>
