@@ -3,7 +3,7 @@ import {
   Stripe,
   StripeElement,
   StripeElements,
-  StripeError
+  StripeError,
 } from "@stripe/stripe-js";
 import { CardNumberElement } from "@stripe/react-stripe-js";
 import Api from "~/utils/api/Api";
@@ -47,67 +47,67 @@ interface UpdatePaymentMethodAPIResponse {
   customerId: string;
 }
 
-export const handleUpdatePaymentMethod = (
-  props: UpdatePaymentMethodProps
-) => async (formValues: UpdatePaymentMethodFormValues): Promise<void> => {
-  const { api, stripe, elements, setLoading, setError, history } = props;
-  const name = formValues.name?.trim();
+export const handleUpdatePaymentMethod =
+  (props: UpdatePaymentMethodProps) =>
+  async (formValues: UpdatePaymentMethodFormValues): Promise<void> => {
+    const { api, stripe, elements, setLoading, setError, history } = props;
+    const name = formValues.name?.trim();
 
-  if (!stripe || !elements) {
-    return setError("Stripe is not loaded yet.");
-  }
-
-  if (!name) {
-    return setError("Please provide a cardholder's name.");
-  }
-
-  try {
-    setError(null);
-    setLoading(true);
-
-    const element = elements.getElement(CardNumberElement);
-
-    const { source, error } = await stripe.createSource(
-      element as StripeElement,
-      {
-        type: "card",
-        currency: "usd",
-        owner: { name }
-      }
-    );
-
-    if (!source?.id) {
-      setLoading(false);
-      return handleStripeError({ error, setError });
+    if (!stripe || !elements) {
+      return setError("Stripe is not loaded yet.");
     }
 
-    if (source?.status === "chargeable") {
-      const options = { sourceId: source.id };
+    if (!name) {
+      return setError("Please provide a cardholder's name.");
+    }
 
-      try {
-        const response = await api.post<UpdatePaymentMethodAPIResponse>(
-          "/user/subscription/card",
-          options
-        );
+    try {
+      setError(null);
+      setLoading(true);
 
-        if (response && response.customerId) {
-          setLoading(false);
-          return history.push({ state: { cards: Date.now() } });
+      const element = elements.getElement(CardNumberElement);
+
+      const { source, error } = await stripe.createSource(
+        element as StripeElement,
+        {
+          type: "card",
+          currency: "usd",
+          owner: { name },
         }
-      } catch (e) {
-        // Do nothing
-      }
-    }
+      );
 
-    setLoading(false);
-    return setError(
-      "Your card seems not to be chargeable. Please try using a different card."
-    );
-  } catch (e) {
-    console.error(e.message);
-    setLoading(false);
-    setError(
-      "We were not able to create a payment source on Stripe. Please contact us on Discord or through email."
-    );
-  }
-};
+      if (!source?.id) {
+        setLoading(false);
+        return handleStripeError({ error, setError });
+      }
+
+      if (source?.status === "chargeable") {
+        const options = { sourceId: source.id };
+
+        try {
+          const response = await api.post<UpdatePaymentMethodAPIResponse>(
+            "/user/subscription/card",
+            options
+          );
+
+          if (response && response.customerId) {
+            setLoading(false);
+            return history.push({ state: { cards: Date.now() } });
+          }
+        } catch (e) {
+          // Do nothing
+        }
+      }
+
+      setLoading(false);
+      return setError(
+        "Your card seems not to be chargeable. Please try using a different card."
+      );
+    } catch (e) {
+      console.error(e.message);
+      setLoading(false);
+      setError(
+        "We were not able to create a payment source on Stripe. Please contact us on Discord or through email."
+      );
+    }
+  };

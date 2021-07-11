@@ -5,8 +5,8 @@ const routes: Array<RouteProps> = [
   {
     path: "/user/account",
     exact: true,
-    component: Async(() => import("~/pages/user/account"))
-  }
+    component: Async(() => import("~/pages/user/account")),
+  },
 ];
 
 export default routes;

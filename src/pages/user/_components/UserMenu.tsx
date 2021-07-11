@@ -13,8 +13,8 @@ const paths: PathsType[] = [
   {
     path: "/user/account",
     text: "Account",
-    icon: "fas fa-user"
-  }
+    icon: "fas fa-user",
+  },
 ];
 
 const UserMenu: FC = (): ReactElement => {
@@ -35,7 +35,7 @@ const UserMenu: FC = (): ReactElement => {
               className={cn(
                 "inline-flex hover:bg-blue-20 hover:text-white rounded py-2 px-4 items-center",
                 {
-                  "text-pink-50": url.indexOf(path.path) === 0
+                  "text-pink-50": url.indexOf(path.path) === 0,
                 }
               )}
             >

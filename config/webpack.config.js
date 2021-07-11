@@ -24,27 +24,27 @@ module.exports = {
   // Entry files
   // @see https://webpack.js.org/concepts/entry-points/
   entry: {
-    main: [path.join(root, "src/index.tsx")]
+    main: [path.join(root, "src/index.tsx")],
   },
 
   output: {
     filename: isDev ? undefined : "client.[hash].js",
     chunkFilename: "[name].[chunkhash].js",
     path: path.join(root, "dist"), // The path to the bundle directory
-    publicPath: process.env.PUBLIC_URL || "/" // Tell webpack to server always from the root
+    publicPath: process.env.PUBLIC_URL || "/", // Tell webpack to server always from the root
   },
 
   // @see https://webpack.js.org/configuration/resolve/
   resolve: {
     alias: {
-      "~": path.join(root, "src")
+      "~": path.join(root, "src"),
     },
     extensions: [".tsx", ".ts", ".js"],
     plugins: [
       new TsConfigPathsPlugin({
-        configFile: path.resolve(__dirname, "./tsconfig.json")
-      })
-    ]
+        configFile: path.resolve(__dirname, "./tsconfig.json"),
+      }),
+    ],
   },
 
   // @see https://webpack.js.org/configuration/module/
@@ -60,42 +60,42 @@ module.exports = {
             plugins: [
               "@babel/plugin-proposal-class-properties",
               "@babel/plugin-syntax-dynamic-import",
-              "@babel/plugin-transform-runtime"
-            ]
-          }
-        }
+              "@babel/plugin-transform-runtime",
+            ],
+          },
+        },
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: ["file-loader"]
+        use: ["file-loader"],
       },
       {
         test: /\.css$/,
         use: [
           { loader: MiniCssExtractPlugin.loader, options: { hmr: isDev } },
           { loader: "css-loader" },
-          { loader: "postcss-loader" }
-        ]
+          { loader: "postcss-loader" },
+        ],
       },
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         loader: "awesome-typescript-loader",
         options: {
-          presets: ["@babel/preset-typescript", "@babel/preset-react"]
-        }
-      }
-    ]
+          presets: ["@babel/preset-typescript", "@babel/preset-react"],
+        },
+      },
+    ],
   },
 
   plugins: [
     new MiniCssExtractPlugin({
-      ignoreOrder: false
+      ignoreOrder: false,
     }),
 
     new CleanWebpackPlugin({
       dry: false,
-      cleanOnceBeforeBuildPatterns: [path.join(root, "dist")]
+      cleanOnceBeforeBuildPatterns: [path.join(root, "dist")],
     }),
 
     new webpack.DefinePlugin({
@@ -108,16 +108,16 @@ module.exports = {
       ...Object.keys(parsed).reduce((obj, key) => {
         obj[`process.env.${key}`] = JSON.stringify(parsed[key]);
         return obj;
-      }, {})
+      }, {}),
     }),
 
     new CopyWebpackPlugin({
       patterns: [
         {
           from: path.join(root, "src/public/favicon.png"),
-          to: path.join(root, "dist/favicon.png")
-        }
-      ]
+          to: path.join(root, "dist/favicon.png"),
+        },
+      ],
     }),
 
     // The server will handle injecting files by itself.
@@ -125,8 +125,8 @@ module.exports = {
       inject: true,
       template: path.join(root, "src/public/index.html"),
       publicFolder: process.env.PUBLIC_URL || "/",
-      minify: !isDev
-    })
+      minify: !isDev,
+    }),
   ],
 
   optimization: {
@@ -139,9 +139,9 @@ module.exports = {
           name: "styles",
           test: /\.css$/,
           chunks: "all",
-          enforce: true
-        }
-      }
-    }
-  }
+          enforce: true,
+        },
+      },
+    },
+  },
 };

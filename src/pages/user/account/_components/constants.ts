@@ -13,26 +13,26 @@ export const packages: Array<Package> = [
     name: "free",
     title: "Free",
     price: 0,
-    color: "#e4bb17"
+    color: "#e4bb17",
   },
   {
     name: "starter",
     title: "Starter",
     price: 9.9,
-    color: "#4388c7"
+    color: "#4388c7",
   },
   {
     name: "medium",
     title: "Medium",
     price: 49.9,
-    color: "#50b950"
+    color: "#50b950",
   },
   {
     name: "enterprise",
     title: "Enterprise",
     price: 99.9,
-    color: "#f55c27"
-  }
+    color: "#f55c27",
+  },
 ];
 
 type Features = {
@@ -51,11 +51,15 @@ export const features: Features = {
     "Unlimited domains",
     "Unlimited deployments",
     "Unlimited environments",
-    "TLS certificates included"
+    "TLS certificates included",
   ],
   starter: ["Everything in free", "3 apps", "3 team seats"],
   medium: ["Everything in starter", "10 apps", "10 team seats"],
-  enterprise: ["Everything in medium", "Unlimited apps", "Unlimited team seats"]
+  enterprise: [
+    "Everything in medium",
+    "Unlimited apps",
+    "Unlimited team seats",
+  ],
 };
 
 export const stripePromise = loadStripe(process.env.STRIPE_API_KEY || "");
@@ -64,11 +68,11 @@ export const stripeStyles = {
     fontSize: "16px",
     color: "#32325d",
     "::placeholder": {
-      color: "#b2b2b2"
-    }
+      color: "#b2b2b2",
+    },
   },
   invalid: {
     color: "#fa755a",
-    iconColor: "#fa755a"
-  }
+    iconColor: "#fa755a",
+  },
 };

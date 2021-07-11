@@ -5,24 +5,24 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
+import { ConfirmModalProps } from "~/components/ConfirmModal";
 import Api from "~/utils/api/Api";
 import { useFetchSubscription, handleUpdateSubscriptionPlan } from "../actions";
 import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
 import { packages, features } from "./constants";
 
-type Props = {
+interface Props extends ConfirmModalProps {
   api: Api;
   location: Location;
   history: History;
-  confirmModal: ConfirmModalFn;
-};
+}
 
 type SubscriptionDowngradePros = {
   activePlan: ActivePlan;
 };
 
 const SubscriptionDowngrade: FC<SubscriptionDowngradePros> = ({
-  activePlan
+  activePlan,
 }) => {
   return (
     <InfoBox type="default" className="mb-4">
@@ -30,7 +30,7 @@ const SubscriptionDowngrade: FC<SubscriptionDowngradePros> = ({
       {new Date(activePlan.trial_end * 1000).toLocaleDateString("en-GB", {
         year: "numeric",
         month: "long",
-        day: "2-digit"
+        day: "2-digit",
       })}
       . After that you'll be downgraded to <b>{activePlan.plan.nickname}</b>{" "}
       package.
@@ -42,11 +42,11 @@ const SubscriptionDetails: FC<Props> = ({
   api,
   confirmModal,
   history,
-  location
+  location,
 }: Props): ReactElement => {
   const { loading, error, subscription } = useFetchSubscription({
     api,
-    location
+    location,
   });
 
   const [selected, setSelected] = useState<SubscriptionName | undefined>(
@@ -88,9 +88,9 @@ const SubscriptionDetails: FC<Props> = ({
                         api,
                         history,
                         name: selected,
-                        ...props
+                        ...props,
                       });
-                    }
+                    },
                   }
                 )
               }
@@ -104,7 +104,7 @@ const SubscriptionDetails: FC<Props> = ({
                     style={{
                       maxWidth: "49%",
                       minWidth: "49%",
-                      marginRight: i % 2 === 0 ? "2%" : 0
+                      marginRight: i % 2 === 0 ? "2%" : 0,
                     }}
                     className="price flex flex-col flex-auto shadow-lg border border-gray-80 p-6 bg-white mb-4"
                     onClick={() => {

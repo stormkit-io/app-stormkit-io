@@ -8,7 +8,7 @@ interface Props {
 
 const DefaultLayout: React.FC<Props> = ({
   children,
-  header = <Header />
+  header = <Header />,
 }): React.ReactElement => {
   return (
     <main className="flex flex-col max-w-screen-lg min-h-screen m-auto items-center">

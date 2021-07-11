@@ -53,7 +53,7 @@ interface FetchSubscriptionAPIResponse {
 
 export const useFetchSubscription = ({
   api,
-  location
+  location,
 }: FetchSubscriptionProps): FetchSubscriptionReturnValue => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,8 +81,8 @@ export const useFetchSubscription = ({
               trial_end: sub.currentPlan?.cancel_at || 0,
               status: "trialing",
               plan: {
-                nickname: "free"
-              }
+                nickname: "free",
+              },
             });
           }
 

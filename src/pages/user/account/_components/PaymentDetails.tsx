@@ -7,22 +7,19 @@ import InfoBox from "~/components/InfoBox";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
+import { ConfirmModalProps } from "~/components/ConfirmModal";
 import * as actions from "../actions";
 import { stripePromise, stripeStyles } from "./constants";
 import stripeLogoSvg from "~/assets/images/stripe-logo-white.svg";
 
-const {
-  useFetchCards,
-  handleUpdatePaymentMethod,
-  handleRemovePaymentMethod
-} = actions;
+const { useFetchCards, handleUpdatePaymentMethod, handleRemovePaymentMethod } =
+  actions;
 
-type Props = {
+interface Props extends ConfirmModalProps {
   api: Api;
   history: History;
   location: Location;
-  confirmModal: ConfirmModalFn;
-};
+}
 
 const {
   Elements,
@@ -30,14 +27,14 @@ const {
   CardExpiryElement,
   CardCvcElement,
   useStripe,
-  useElements
+  useElements,
 } = stripejs;
 
 const PaymentDetails: FC<Props> = ({
   api,
   history,
   location,
-  confirmModal
+  confirmModal,
 }: Props): ReactElement => {
   const [showForm, setShowForm] = useState(false);
   const [formError, setError] = useState<string | null>(null);
@@ -95,7 +92,7 @@ const PaymentDetails: FC<Props> = ({
                               onConfirm: ({
                                 setLoading,
                                 setError,
-                                closeModal
+                                closeModal,
                               }) => {
                                 handleRemovePaymentMethod({
                                   api,
@@ -103,9 +100,9 @@ const PaymentDetails: FC<Props> = ({
                                   setLoading,
                                   setError,
                                   history,
-                                  closeModal
+                                  closeModal,
                                 });
-                              }
+                              },
                             }
                           )
                         }
@@ -127,7 +124,7 @@ const PaymentDetails: FC<Props> = ({
                   api,
                   history,
                   setError,
-                  setLoading
+                  setLoading,
                 })}
               >
                 {errorMsg && (

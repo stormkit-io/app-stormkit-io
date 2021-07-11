@@ -44,7 +44,7 @@ interface FetchCardsAPIResponse {
 
 export const useFetchCards = ({
   api,
-  location
+  location,
 }: FetchCardsProps): FetchCardsReturnValue => {
   const [cards, setCards] = useState<Cards>([]);
   const [loading, setLoading] = useState(false);

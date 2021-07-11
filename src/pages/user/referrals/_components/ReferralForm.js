@@ -48,7 +48,7 @@ export const ReferralForm = ({ onSubmit, loading, error }) => {
           required
           fullWidth
           inputProps={{
-            "aria-label": "User display name"
+            "aria-label": "User display name",
           }}
         />
         <p className="opacity-50 text-sm pt-2">
@@ -73,7 +73,7 @@ export const ReferralForm = ({ onSubmit, loading, error }) => {
 ReferralForm.propTypes = {
   loading: PropTypes.bool,
   error: PropTypes.node,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };
 
 export default ReferralForm;
