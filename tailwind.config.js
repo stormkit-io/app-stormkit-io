@@ -31,10 +31,10 @@ module.exports = {
           "border-red-50",
 
           // Regexp
-          /^(w|h)-/
-        ]
-      }
-    }
+          /^(w|h)-/,
+        ],
+      },
+    },
   },
   theme: {
     borderRadius: {
@@ -43,7 +43,7 @@ module.exports = {
       lg: "13px",
       xl: "30px",
       full: "100%",
-      DEFAULT: "6px"
+      DEFAULT: "6px",
     },
     extend: {
       maxWidth: {
@@ -59,7 +59,7 @@ module.exports = {
         56: "14rem",
         64: "16rem",
         72: "20rem",
-        128: "32rem"
+        128: "32rem",
       },
       minWidth: {
         "1/4": "25%",
@@ -74,7 +74,7 @@ module.exports = {
         56: "14rem",
         64: "16rem",
         72: "20rem",
-        128: "32rem"
+        128: "32rem",
       },
       colors: {
         primary: "#4f4f4f",
@@ -149,12 +149,12 @@ module.exports = {
         "yellow-40": "#ffeb3b",
         "yellow-30": "#fdd835",
         "yellow-20": "#fbc02d",
-        "yellow-10": "#f9a825"
-      }
-    }
+        "yellow-10": "#f9a825",
+      },
+    },
   },
   variants: {
-    visibility: ["responsive", "hover", "focus", "group-hover"]
+    visibility: ["responsive", "hover", "focus", "group-hover"],
   },
-  plugins: []
+  plugins: [],
 };

@@ -12,7 +12,7 @@ if (process.env.SENTRY) {
       Sentry.init({
         dsn: process.env.SENTRY,
         integrations: [new Integrations.BrowserTracing()],
-        tracesSampleRate: 1.0
+        tracesSampleRate: 1.0,
       });
     }
   );

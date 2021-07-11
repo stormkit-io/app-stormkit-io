@@ -14,8 +14,8 @@ const port = process.env.PORT;
 const server = new devServer(webpack(config), devConfig);
 
 server.listen(port, host, () => {
-  ["SIGINT", "SIGTERM"].forEach(function(sig) {
-    process.on(sig, function() {
+  ["SIGINT", "SIGTERM"].forEach(function (sig) {
+    process.on(sig, function () {
       server.close();
       process.exit();
     });

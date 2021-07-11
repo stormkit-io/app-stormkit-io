@@ -5,36 +5,35 @@ import { useEffect, useState } from "react";
  * table, and from then on they start using stormkit directly. No token needed
  * as providers like github or bitbucket already take care of verifying a user.
  */
-export const handleSubmit = ({ api, onRefer, setError, setLoading }) => ({
-  displayName,
-  provider
-}) => {
-  if (!displayName) {
-    return setError("Username is a required field.");
-  }
+export const handleSubmit =
+  ({ api, onRefer, setError, setLoading }) =>
+  ({ displayName, provider }) => {
+    if (!displayName) {
+      return setError("Username is a required field.");
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  api
-    .post("/user/referral", { displayName, provider })
-    .then(() => {
-      setLoading(false);
-      return onRefer?.({ displayName, provider, success: true });
-    })
-    .catch(e => {
-      if (e.status === 409) {
-        return setError("This user seems like has already been invited.");
-      }
+    api
+      .post("/user/referral", { displayName, provider })
+      .then(() => {
+        setLoading(false);
+        return onRefer?.({ displayName, provider, success: true });
+      })
+      .catch(e => {
+        if (e.status === 409) {
+          return setError("This user seems like has already been invited.");
+        }
 
-      if (e.status === 400) {
-        return setError("Username is invalid");
-      }
+        if (e.status === 400) {
+          return setError("Username is invalid");
+        }
 
-      return setError(
-        "Something unexpected occurred. Please try again and if the problem persists contact us from Discord or email."
-      );
-    });
-};
+        return setError(
+          "Something unexpected occurred. Please try again and if the problem persists contact us from Discord or email."
+        );
+      });
+  };
 
 export const useFetchList = ({ api }) => {
   const [loading, setLoading] = useState(false);
