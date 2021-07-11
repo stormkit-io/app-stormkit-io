@@ -2,7 +2,7 @@ import qs from "query-string";
 import {
   prepareHeaders,
   errTokenExpired,
-  errNotEnoughPermissions
+  errNotEnoughPermissions,
 } from "./helpers";
 
 export default class Bitbucket {
@@ -50,7 +50,7 @@ export default class Bitbucket {
       const query = qs.stringify(params);
 
       const request = new Request(`${this.baseurl}${url}?${query}`, {
-        headers
+        headers,
       });
 
       return fetch(request).then(res => {
@@ -70,7 +70,7 @@ export default class Bitbucket {
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
       const request = new Request(this.baseurl + "/teams?role=admin", {
-        headers
+        headers,
       });
 
       return fetch(request).then(res => {

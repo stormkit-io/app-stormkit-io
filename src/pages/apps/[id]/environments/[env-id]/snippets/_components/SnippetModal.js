@@ -23,7 +23,7 @@ const SnippetModal = ({
   api,
   app,
   environment,
-  setSnippets
+  setSnippets,
 }) => {
   const isSnippetEnabled = snippet?.enabled || false;
   const isSnippetPrepend = snippet?.prepend || false;
@@ -64,7 +64,7 @@ const SnippetModal = ({
           isPrepend,
           toggleModal,
           injectLocation: snippet?._injectLocation,
-          index: snippet?._i
+          index: snippet?._i,
         })}
       >
         <div className="mb-8 p-4 rounded bg-gray-85">
@@ -94,7 +94,7 @@ const SnippetModal = ({
               theme: "idea",
               tabSize: 2,
               keyMap: "sublime",
-              mode: "html"
+              mode: "html",
             }}
           />
           <p className="opacity-50 text-sm pt-2">
@@ -166,7 +166,7 @@ SnippetModal.propTypes = {
   setSnippets: PropTypes.func,
   environment: PropTypes.object,
   api: PropTypes.object,
-  app: PropTypes.object
+  app: PropTypes.object,
 };
 
 export default Object.assign(
@@ -174,7 +174,7 @@ export default Object.assign(
     { Context: ModalContext, props: ["toggleModal", "isOpen"] },
     { Context: RootContext, props: ["api"] },
     { Context: AppContext, props: ["app"] },
-    { Context: EnvironmentContext, props: ["environment"] }
+    { Context: EnvironmentContext, props: ["environment"] },
   ]),
   ModalContext
 );

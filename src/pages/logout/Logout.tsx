@@ -1,12 +1,8 @@
 import { useEffect, FC } from "react";
-import AuthContext from "~/pages/auth/Auth.context";
+import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
 import { connect } from "~/utils/context";
 
-type Props = {
-  logout: () => void;
-};
-
-const Logout: FC<Props> = ({ logout }: Props): null => {
+const Logout: FC<AuthContextProps> = ({ logout }): null => {
   useEffect(() => {
     logout();
   }, [logout]);
@@ -14,4 +10,6 @@ const Logout: FC<Props> = ({ logout }: Props): null => {
   return null;
 };
 
-export default connect(Logout, [{ Context: AuthContext, props: ["logout"] }]);
+export default connect<unknown, AuthContextProps>(Logout, [
+  { Context: AuthContext, props: ["logout"] },
+]);

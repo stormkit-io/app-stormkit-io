@@ -12,8 +12,8 @@ describe(fileName, () => {
     withMockContext({
       path,
       props: {
-        logout: spy
-      }
+        logout: spy,
+      },
     });
 
     await waitFor(() => {

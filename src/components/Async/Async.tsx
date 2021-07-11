@@ -61,5 +61,5 @@ const Async = (getComponent: () => Promise<{ default: unknown }>) => {
 };
 
 export default Object.assign(Async, {
-  configure: (c: Record<string, unknown>) => Object.assign(config, c)
+  configure: (c: Record<string, unknown>) => Object.assign(config, c),
 });

@@ -1,14 +1,27 @@
 import React from "react";
-import PropTypes from "prop-types";
 import cn from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
-import RootContext from "~/pages/Root.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
 import { connect } from "~/utils/context";
 import Link from "~/components/Link";
 import Button from "~/components/Button";
 import Spinner from "~/components/Spinner";
+import { ModalContextProps } from "~/components/Modal";
 import EnvironmentFormModal from "./EnvironmentFormModal";
-import { useFetchStatus, STATUS } from "../actions";
+import { useFetchStatus, STATUS, STATUSES } from "../actions";
+
+interface Props {
+  app: App;
+  environment: Environment;
+  isClickable?: boolean;
+  isEditable?: boolean;
+}
+
+interface StatusProps {
+  status: STATUSES;
+}
+
+interface ContextProps extends RootContextProps, ModalContextProps {}
 
 const InfoMessage404 = () => (
   <>
@@ -17,13 +30,13 @@ const InfoMessage404 = () => (
   </>
 );
 
-const Status = ({ status }) => {
+const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
   return (
     <div className="flex items-center">
       <span
         className={cn("text-sm", {
           "text-green-50": status === STATUS.OK,
-          "text-red-50": status !== STATUS.OK
+          "text-red-50": status !== STATUS.OK,
         })}
       >
         <span className={"fas fa-fw fa-globe mr-2"} />
@@ -40,21 +53,17 @@ const Status = ({ status }) => {
   );
 };
 
-Status.propTypes = {
-  status: PropTypes.any
-};
-
-const Environment = ({
-  environment = {},
+const Environment: React.FC<Props & ContextProps> = ({
+  environment,
   app,
   api,
   isClickable,
   isEditable,
-  toggleModal
-}) => {
+  toggleModal,
+}): React.ReactElement => {
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
-  const domain = environment.getDomainName();
+  const domain = environment.getDomainName ? environment.getDomainName() : "";
   const environmentUrl = `/apps/${app.id}/environments/${environment.id}`;
 
   const { status, loading } = useFetchStatus({ domain, lastDeploy, api, app });
@@ -66,7 +75,7 @@ const Environment = ({
         {
           "border-yellow-50": status === STATUS.NOT_FOUND,
           "border-green-50": status === STATUS.OK,
-          "border-red-50": (status || "").toString()[0] === "5"
+          "border-red-50": (status || "").toString()[0] === "5",
         }
       )}
     >
@@ -140,16 +149,7 @@ const Environment = ({
   );
 };
 
-Environment.propTypes = {
-  environment: PropTypes.object,
-  app: PropTypes.object,
-  api: PropTypes.object,
-  isClickable: PropTypes.bool,
-  isEditable: PropTypes.bool,
-  toggleModal: PropTypes.func
-};
-
-export default connect(Environment, [
+export default connect<Props, ContextProps>(Environment, [
   { Context: RootContext, props: ["api"] },
-  { Context: EnvironmentFormModal, props: ["toggleModal"] }
+  { Context: EnvironmentFormModal, props: ["toggleModal"] },
 ]);

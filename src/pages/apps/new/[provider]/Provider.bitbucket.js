@@ -13,7 +13,7 @@ export default class BitbucketRepositories extends PureComponent {
     bitbucket: PropTypes.object, // The bitbucket api
     history: PropTypes.object,
     api: PropTypes.object,
-    loginOauth: PropTypes.func
+    loginOauth: PropTypes.func,
   };
 
   state = {
@@ -24,7 +24,7 @@ export default class BitbucketRepositories extends PureComponent {
     loading: true,
     errors: {},
     hasNextPage: false,
-    pageQueryParams: {}
+    pageQueryParams: {},
   };
 
   componentDidMount() {
@@ -60,7 +60,7 @@ export default class BitbucketRepositories extends PureComponent {
       login: bbUser.nickname || bbUser.username,
       avatar: bbUser.links.avatar.href,
       type: "user",
-      selected: true
+      selected: true,
     };
 
     await this.updateState({ accounts: [user] });
@@ -80,7 +80,7 @@ export default class BitbucketRepositories extends PureComponent {
         login: t.username,
         avatar: t.links.avatar.href,
         type: "team",
-        selected: false
+        selected: false,
       }))
     );
 
@@ -107,7 +107,7 @@ export default class BitbucketRepositories extends PureComponent {
     // api params
     const defaultParams = {
       role: "admin",
-      pagelen: 100
+      pagelen: 100,
     };
 
     // fetch the repositories
@@ -115,7 +115,7 @@ export default class BitbucketRepositories extends PureComponent {
     // to filter the results.
     const res = await api.repositories({
       team: selectedAccount.type === "team" ? selectedAccount.login : undefined,
-      params: { ...defaultParams, ...pageQueryParams }
+      params: { ...defaultParams, ...pageQueryParams },
     });
 
     // check if there is a next page with more repositories
@@ -130,7 +130,7 @@ export default class BitbucketRepositories extends PureComponent {
       repositories: [...repositories, ...res.values],
       loading: false,
       hasNextPage,
-      pageQueryParams: nextPageParams
+      pageQueryParams: nextPageParams,
     });
   };
 
@@ -138,7 +138,7 @@ export default class BitbucketRepositories extends PureComponent {
     const selectedAccount = this.state.accounts.find(a => a.login === login);
     const accounts = [...this.state.accounts].map(a => ({
       ...a,
-      selected: a.login === login
+      selected: a.login === login,
     }));
 
     if (selectedAccount) {
@@ -171,7 +171,7 @@ export default class BitbucketRepositories extends PureComponent {
       loading,
       requiresLogin,
       repositories,
-      hasNextPage
+      hasNextPage,
     } = this.state;
     const { login } = accounts.filter(i => i.selected)[0] || {};
 
@@ -182,7 +182,7 @@ export default class BitbucketRepositories extends PureComponent {
             onClick={loginUser({
               loginOauth,
               updateState: (...args) => this.updateState(...args),
-              init: () => this.init()
+              init: () => this.init(),
             })}
           />
         </LoginScreen>

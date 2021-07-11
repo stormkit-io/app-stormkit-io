@@ -5,9 +5,22 @@ import Api from "~/utils/api/Api";
 import Gitlab from "~/utils/api/Gitlab";
 import Github from "~/utils/api/Github";
 import Bitbucket from "~/utils/api/Bitbucket";
-import { loginOauth, logout, useFetchUser } from "./actions";
+import {
+  loginOauth,
+  logout,
+  useFetchUser,
+  LoginOauthReturnValue,
+} from "./actions";
 
 const Context = createContext({});
+
+export interface AuthContextProps {
+  error: string | null;
+  user: User;
+  accounts: Array<ConnectedAccount>;
+  loginOauth: (p: Provider) => Promise<LoginOauthReturnValue>;
+  logout: () => void;
+}
 
 interface Props {
   api: Api;
@@ -24,7 +37,7 @@ interface RedirectProps {
 
 const RedirectUserToAuth: React.FC<RedirectProps> = ({
   pathname,
-  search
+  search,
 }): React.ReactElement => {
   const encoded =
     pathname !== "/" && pathname !== "/logout"
@@ -40,16 +53,17 @@ const AuthContext: React.FC<Props> = ({
   ...providerApi
 }): React.ReactElement => {
   const { pathname, search } = useLocation();
-  const { error, loading, user, ...fns } = useFetchUser({ api });
+  const { error, loading, user, accounts, ...fns } = useFetchUser({ api });
 
   const context = useMemo(
     () => ({
       user,
+      accounts,
       error,
       logout: logout({ api }),
-      loginOauth: loginOauth({ api, ...providerApi, ...fns })
+      loginOauth: loginOauth({ api, ...providerApi, ...fns }),
     }),
-    [user, error]
+    [user, accounts, error]
   );
 
   if (loading) {
@@ -67,5 +81,5 @@ const AuthContext: React.FC<Props> = ({
 
 export default Object.assign(AuthContext, {
   Consumer: Context.Consumer,
-  Provider: AuthContext
+  Provider: AuthContext,
 });

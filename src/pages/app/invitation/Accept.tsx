@@ -1,16 +1,13 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "~/utils/context";
-import RootContext from "~/pages/Root.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
 import Error404 from "~/components/Errors/Error404";
-import Api from "~/utils/api/Api";
 import { useParseAppId } from "./actions";
 
-interface Props {
-  api: Api;
-}
-
-const InvitationAccept = ({ api }: Props): React.ReactElement => {
+const InvitationAccept: React.FC<RootContextProps> = ({
+  api,
+}): React.ReactElement => {
   const appId = useParseAppId({ api });
 
   if (appId) {
@@ -25,6 +22,6 @@ const InvitationAccept = ({ api }: Props): React.ReactElement => {
   );
 };
 
-export default connect(InvitationAccept, [
-  { Context: RootContext, props: ["api"] }
+export default connect<unknown, RootContextProps>(InvitationAccept, [
+  { Context: RootContext, props: ["api"] },
 ]);

@@ -11,7 +11,7 @@ describe(fileName, () => {
   describe("when user is logged in and redirect is provided", () => {
     beforeEach(() => {
       jest.spyOn(router, "useLocation").mockReturnValue({
-        search: "?redirect=/apps"
+        search: "?redirect=/apps",
       });
 
       wrapper = withMockContext(path, { user: { id: 1 } });
@@ -27,7 +27,7 @@ describe(fileName, () => {
   describe("when user is logged in and redirect is not provided", () => {
     beforeEach(() => {
       jest.spyOn(router, "useLocation").mockReturnValue({
-        search: ""
+        search: "",
       });
 
       wrapper = withMockContext(path, { user: { id: 1 } });
@@ -47,12 +47,12 @@ describe(fileName, () => {
       loginOauthSpy = jest.fn();
 
       jest.spyOn(router, "useLocation").mockReturnValue({
-        search: ""
+        search: "",
       });
 
       wrapper = withMockContext(path, {
         user: undefined,
-        loginOauth: loginOauthSpy
+        loginOauth: loginOauthSpy,
       });
     });
 

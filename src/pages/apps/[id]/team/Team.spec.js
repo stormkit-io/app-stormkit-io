@@ -20,7 +20,7 @@ describe(fileName, () => {
         confirmModal: jest.fn(),
         toggleModal: jest.fn(),
         history: { replace: jest.fn() },
-        location: {}
+        location: {},
       });
     });
 
@@ -43,7 +43,7 @@ describe(fileName, () => {
         confirmModal: jest.fn(),
         toggleModal: jest.fn(),
         history: { replace: jest.fn() },
-        location: {}
+        location: {},
       });
     });
 
@@ -57,7 +57,8 @@ describe(fileName, () => {
 
     test("should not display a warning about roles but display the more settings button", async () => {
       await waitFor(() => {
-        const warning = /In order to remove members from the team you'll need to have/;
+        const warning =
+          /In order to remove members from the team you'll need to have/;
         expect(scope.isDone()).toBe(true);
         expect(() => wrapper.getByText(warning)).toThrow();
         expect(wrapper.getByLabelText("More settings")).toBeTruthy();
@@ -73,9 +74,7 @@ describe(fileName, () => {
       fireEvent.click(wrapper.getByLabelText("Delete Voo Bar"));
 
       await waitFor(() => {
-        expect(
-          wrapper.injectedProps.confirmModal
-        ).toHaveBeenCalledWith(
+        expect(wrapper.injectedProps.confirmModal).toHaveBeenCalledWith(
           "Your are about to remove a member from this app. You will need to re-invite if the user needs access again.",
           { onConfirm: expect.any(Function) }
         );
@@ -95,7 +94,7 @@ describe(fileName, () => {
         confirmModal: jest.fn(),
         toggleModal: jest.fn(),
         history: { replace: jest.fn() },
-        location: {}
+        location: {},
       });
     });
 
@@ -109,7 +108,8 @@ describe(fileName, () => {
 
     test("should display a warning about roles and do not display the more settings button", async () => {
       await waitFor(() => {
-        const warning = /In order to remove members from the team you'll need to have/;
+        const warning =
+          /In order to remove members from the team you'll need to have/;
         expect(scope.isDone()).toBe(true);
         expect(wrapper.getByText(warning)).toBeTruthy();
         expect(() => wrapper.getByLabelText("More settings")).toThrow();

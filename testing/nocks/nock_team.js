@@ -6,7 +6,7 @@ export const mockInviteMemberCall = ({
   displayName,
   provider,
   status = 200,
-  response = {}
+  response = {},
 }) =>
   nock(process.env.API_DOMAIN)
     .post(`/app/members/invite`, { appId: app.id, displayName, provider })
@@ -15,7 +15,7 @@ export const mockInviteMemberCall = ({
 export const mockFetchMembersCall = ({
   app,
   status = 200,
-  response = data.mockFetchMembersResponse()
+  response = data.mockFetchMembersResponse(),
 }) =>
   nock(process.env.API_DOMAIN)
     .get(`/app/${app.id}/members`)
@@ -25,7 +25,7 @@ export const mockDeleteMemberCall = ({
   app,
   userId,
   status = 200,
-  response = { ok: true }
+  response = { ok: true },
 }) =>
   nock(process.env.API_DOMAIN)
     .delete(`/app/member`, { appId: app.id, userId })

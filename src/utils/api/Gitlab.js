@@ -45,13 +45,13 @@ export default class Gitlab {
         membership: "true",
         order_by: "id",
         per_page: size,
-        page
+        page,
       };
 
       const request = new Request(
         `${this.baseurl}/projects?${qs.stringify(params)}`,
         {
-          headers
+          headers,
         }
       );
 

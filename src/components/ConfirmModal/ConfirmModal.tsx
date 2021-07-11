@@ -7,10 +7,19 @@ import { connect } from "~/utils/context";
 const ModalContext = Modal.Context();
 const context = createContext({});
 
+type ConfirmModalFn = (content: string, options: ConfirmModalOptions) => void;
+
+export interface ConfirmModalProps {
+  confirmModal: ConfirmModalFn;
+}
+
 interface Props {
+  children: React.ReactNode;
+}
+
+interface ContextProps {
   isOpen: boolean;
   toggleModal: (onOrOff: boolean, ...rest: [unknown?]) => void;
-  children: React.ReactNode;
 }
 
 /**
@@ -21,7 +30,11 @@ interface Props {
  * 3. A property called `confirmModal` is exported. Call that
  *    to display the modal. Signature is below.
  */
-const ConfirmModal = ({ isOpen, toggleModal, children }: Props) => {
+const ConfirmModal: React.FC<Props & ContextProps> = ({
+  isOpen,
+  toggleModal,
+  children,
+}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
@@ -95,11 +108,11 @@ const ConfirmModal = ({ isOpen, toggleModal, children }: Props) => {
   );
 };
 
-const enhanced = connect(ConfirmModal, [
-  { Context: ModalContext, props: ["toggleModal", "isOpen"], wrap: true }
+const enhanced = connect<Props, ContextProps>(ConfirmModal, [
+  { Context: ModalContext, props: ["toggleModal", "isOpen"], wrap: true },
 ]);
 
 export default Object.assign(enhanced, {
   Consumer: context.Consumer,
-  Provider: enhanced
+  Provider: enhanced,
 });

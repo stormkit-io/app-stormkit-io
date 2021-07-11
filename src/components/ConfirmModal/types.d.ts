@@ -1,7 +1,7 @@
 type ConfirmModalCallback = ({
   setLoading,
   closeModal,
-  setError
+  setError,
 }: {
   setLoading: (value: boolean) => void;
   closeModal: () => void;
@@ -14,8 +14,3 @@ declare type ConfirmModalOptions = {
   onConfirm?: ConfirmModalCallback;
   confirmText?: string;
 };
-
-declare type ConfirmModalFn = (
-  content: string,
-  options: ConfirmModalOptions
-) => void;

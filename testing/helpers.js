@@ -19,14 +19,12 @@ export const withUserContext = ({
 }) => {
   LocalStorage.set(Api.STORAGE_TOKEN_KEY, "123-abc");
 
-  nock("http://localhost")
-    .get("/user")
-    .reply(200, user);
+  nock("http://localhost").get("/user").reply(200, user);
 
   if (!rest.history) {
     rest.history = createMemoryHistory({
       initialEntries: [path],
-      initialIndex: 0
+      initialIndex: 0,
     });
   }
 
@@ -67,21 +65,20 @@ export const withMockContext = (...args) => {
   global.__MOCK_PROPS__ = mockProps;
 
   jest.mock("~/utils/context", () => ({
-    connect: Component => props => (
-      <Component {...props} {...global.__MOCK_PROPS__} />
-    )
+    connect: Component => props =>
+      <Component {...props} {...global.__MOCK_PROPS__} />,
   }));
 
   mockProps.confirmModal = jest.fn().mockImplementation((_, { onConfirm }) => {
     onConfirm({
       setLoading: jest.fn(),
       setError: jest.fn(),
-      closeModal: jest.fn()
+      closeModal: jest.fn(),
     });
   });
 
   mockProps.api = new Api({
-    baseurl: process.env.API_DOMAIN
+    baseurl: process.env.API_DOMAIN,
   });
 
   const Component = require(path).default;
@@ -94,7 +91,7 @@ export const withMockContext = (...args) => {
 
   return Object.assign(wrapper, {
     injectedProps: mockProps,
-    history
+    history,
   });
 };
 
@@ -104,22 +101,18 @@ export const withMockContext = (...args) => {
  * Use withMockContext instead.
  */
 export const withAppContext = ({ app, envs, path, status = 200, user }) => {
-  nock("http://localhost")
-    .get(`/app/${app.id}`)
-    .reply(status, { app });
+  nock("http://localhost").get(`/app/${app.id}`).reply(status, { app });
 
   if (envs) {
-    nock("http://localhost")
-      .get(`/app/1/envs`)
-      .reply(status, envs);
+    nock("http://localhost").get(`/app/1/envs`).reply(status, envs);
   }
 
   return withUserContext({
     user,
     history: createMemoryHistory({
       initialEntries: [path],
-      initialIndex: 0
-    })
+      initialIndex: 0,
+    }),
   });
 };
 

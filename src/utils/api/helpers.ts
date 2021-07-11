@@ -9,7 +9,7 @@ export function prepareHeaders(token: string) {
 
   return new Headers({
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`
+    Authorization: `Bearer ${token}`,
   });
 }
 
@@ -19,7 +19,7 @@ export function prepareHeaders(token: string) {
 export const errTokenExpired = {
   code: 401,
   error: "Token invalid or expired.",
-  reason: "token-expired"
+  reason: "token-expired",
 };
 
 /**
@@ -28,5 +28,5 @@ export const errTokenExpired = {
 export const errNotEnoughPermissions = {
   code: 403,
   error: "We're lacking some permissions to perform this operation.",
-  reason: "invalid-permissions"
+  reason: "invalid-permissions",
 };

@@ -32,7 +32,7 @@ const Row = app => {
 };
 
 Row.propTypes = {
-  app: PropTypes.array
+  app: PropTypes.array,
 };
 
 export default Row;

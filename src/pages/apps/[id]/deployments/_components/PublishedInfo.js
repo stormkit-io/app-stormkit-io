@@ -30,7 +30,7 @@ const EnvInfo = ({ env, percentage }) => {
 
 EnvInfo.propTypes = {
   env: PropTypes.object,
-  percentage: PropTypes.number
+  percentage: PropTypes.number,
 };
 
 const PublishedInfo = ({ deployment, environments }) => {
@@ -49,7 +49,7 @@ const PublishedInfo = ({ deployment, environments }) => {
 
 PublishedInfo.propTypes = {
   deployment: PropTypes.object,
-  environments: PropTypes.array
+  environments: PropTypes.array,
 };
 
 export default PublishedInfo;

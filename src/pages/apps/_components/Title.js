@@ -14,15 +14,15 @@ Title.Sub = ({ children }) => {
 };
 
 Title.Main.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 Title.Sub.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 Title.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default Title;

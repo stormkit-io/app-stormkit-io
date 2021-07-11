@@ -69,7 +69,7 @@ const DomainVerificationStatus = ({ domain, onVerify }) => {
                   setError(null);
                   onVerify({
                     setLoading,
-                    setError
+                    setError,
                   }).then(() => {
                     if (isVerified === false) {
                       setError(
@@ -91,7 +91,7 @@ const DomainVerificationStatus = ({ domain, onVerify }) => {
 
 DomainVerificationStatus.propTypes = {
   domain: PropTypes.object,
-  onVerify: PropTypes.func
+  onVerify: PropTypes.func,
 };
 
 export default DomainVerificationStatus;

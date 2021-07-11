@@ -31,7 +31,7 @@ const RemoteConfig = ({
   app,
   environment: env,
   toggleModal,
-  location
+  location,
 }) => {
   const fetchOpts = { api, app, env, location };
   const { loading, error, config } = useFetchRemoteConfig(fetchOpts);
@@ -96,12 +96,12 @@ RemoteConfig.propTypes = {
   app: PropTypes.object,
   environment: PropTypes.object,
   toggleModal: PropTypes.func,
-  location: PropTypes.object
+  location: PropTypes.object,
 };
 
 export default connect(RemoteConfig, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app"] },
   { Context: EnvironmentContext, props: ["environment"] },
-  { Context: ParameterModal, props: ["toggleModal"], wrap: true }
+  { Context: ParameterModal, props: ["toggleModal"], wrap: true },
 ]);

@@ -1,5 +1,4 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useMemo } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -9,22 +8,34 @@ import TableContainer from "@material-ui/core/TableContainer";
 import { connect } from "~/utils/context";
 import Form from "~/components/Form";
 import DotDotDot from "~/components/DotDotDot";
-import ConfirmModal from "~/components/ConfirmModal";
+import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
+import { RootContextProps } from "~/pages/Root.context";
 import { enableOrDisable, deleteSnippet } from "../actions";
 
-const SnippetTable = ({
+interface Props extends Pick<RootContextProps, "api"> {
+  snippets: Snippets;
+  app: App;
+  environment: Environment;
+  setSnippets: (val: Snippets) => void;
+  setSelectedSnippet: (val: Snippet) => void;
+}
+
+const SnippetTable: React.FC<Props & ConfirmModalProps> = ({
   snippets,
   confirmModal,
   api,
   app,
   environment,
   setSnippets,
-  setSelectedSnippet
-}) => {
-  const rows = [].concat(snippets.head, snippets.body);
+  setSelectedSnippet,
+}): React.ReactElement => {
+  const rows = useMemo<Array<Snippet>>(
+    () => [...snippets.head, ...snippets.body],
+    [snippets]
+  );
 
   if (rows.length === 0) {
-    return "";
+    return <></>;
   }
 
   return (
@@ -73,7 +84,7 @@ const SnippetTable = ({
                         isEnabled: e.target.checked,
                         confirmModal,
                         snippet: row,
-                        setSnippets
+                        setSnippets,
                       })
                     }
                   />
@@ -102,7 +113,7 @@ const SnippetTable = ({
                           api,
                           app,
                           environment,
-                          injectLocation: row._injectLocation
+                          injectLocation: row._injectLocation,
                         })
                       }
                     >
@@ -119,16 +130,6 @@ const SnippetTable = ({
   );
 };
 
-SnippetTable.propTypes = {
-  snippets: PropTypes.object,
-  confirmModal: PropTypes.func,
-  api: PropTypes.object,
-  app: PropTypes.object,
-  environment: PropTypes.object,
-  setSnippets: PropTypes.func,
-  setSelectedSnippet: PropTypes.func
-};
-
-export default connect(SnippetTable, [
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true }
+export default connect<Props, ConfirmModalProps>(SnippetTable, [
+  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
 ]);

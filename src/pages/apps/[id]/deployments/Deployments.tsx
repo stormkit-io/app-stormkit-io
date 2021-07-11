@@ -1,37 +1,26 @@
 import React, { useState } from "react";
-import AppContext from "~/pages/apps/App.context";
-import RootContext from "~/pages/Root.context";
+import AppContext, { AppContextProps } from "~/pages/apps/App.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
-import Api from "~/utils/api/Api";
 import { connect } from "~/utils/context";
 import { useFetchDeployments, Filters as IFilters } from "./actions";
 import Deployment from "./_components/Deployment";
 import Filters from "./_components/Filters";
 
-interface Props {
-  app: App;
-  api: Api;
-  environments: Array<Environment>;
-}
+type ContextProps = RootContextProps & AppContextProps;
 
-const Deployments: React.FC<Props> = ({
+const Deployments: React.FC<ContextProps> = ({
   app,
   environments,
-  api
-}: Props): React.ReactElement => {
+  api,
+}): React.ReactElement => {
   const [from, setFrom] = useState(0);
   const [filters, setFilters] = useState<IFilters>({});
 
-  const {
-    deployments,
-    success,
-    hasNextPage,
-    setDeployments,
-    loading,
-    error
-  } = useFetchDeployments({ app, api, from, setFrom, filters });
+  const { deployments, success, hasNextPage, setDeployments, loading, error } =
+    useFetchDeployments({ app, api, from, setFrom, filters });
 
   if (error) {
     return (
@@ -96,7 +85,7 @@ const Deployments: React.FC<Props> = ({
   );
 };
 
-export default connect(Deployments, [
+export default connect<unknown, ContextProps>(Deployments, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app", "environments"] }
+  { Context: AppContext, props: ["app", "environments"] },
 ]);

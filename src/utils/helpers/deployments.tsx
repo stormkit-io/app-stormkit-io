@@ -16,13 +16,13 @@ export const formattedDate = (ts: number): string => {
   ) {
     return `Today at ${date.toLocaleDateString("de-CH", {
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     })}`;
   }
 
   return date.toLocaleDateString("de-CH", {
     hour: "2-digit",
-    minute: "2-digit"
+    minute: "2-digit",
   });
 };
 
@@ -70,7 +70,7 @@ export const parseCommit = (deployment?: Deployment): Commit => {
           <br /> Mostly this happens when Stormkit cannot checkout your
           repository.
         </div>
-      )
+      ),
     };
   }
 
@@ -82,7 +82,7 @@ export const parseCommit = (deployment?: Deployment): Commit => {
         Your deployment is queued up
         <br /> We will process it immediately as soon as we have available slots
       </div>
-    )
+    ),
   };
 };
 

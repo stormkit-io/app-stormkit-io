@@ -14,7 +14,7 @@ const CopyBox: FC<Props> = ({ value }: Props): ReactElement => (
       defaultValue={value}
       className="flex-auto"
       inputProps={{
-        "aria-label": "Copy token"
+        "aria-label": "Copy token",
       }}
     />
     <Button

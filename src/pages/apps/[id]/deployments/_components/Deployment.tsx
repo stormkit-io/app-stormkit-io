@@ -4,24 +4,27 @@ import { formattedDate } from "~/utils/helpers/deployments";
 import { connect } from "~/utils/context";
 import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
+import { ModalContextProps } from "~/components/Modal";
+import { RootContextProps } from "~/pages/Root.context";
 import ExitStatus from "./ExitStatus";
 import PublishModal from "./PublishModal";
 import CommitInfo from "./CommitInfo";
-import Api from "~/utils/api/Api";
 import { deleteForever, stopDeployment, setLoadingArgs } from "../actions";
 
-interface Props {
+interface Props extends Pick<RootContextProps, "api"> {
   deployment: Deployment;
   deployments: Array<Deployment>;
   environments: Array<Environment>;
   index: number;
-  api: Api;
   app: App;
-  toggleModal: ToggleModal;
   setDeployments: (value: Array<Deployment>) => void;
 }
 
-const Deployment: React.FC<Props> = ({
+interface ContextProps
+  extends Pick<RootContextProps, "api">,
+    ModalContextProps {}
+
+const Deployment: React.FC<Props & ContextProps> = ({
   deployment,
   deployments,
   environments,
@@ -29,14 +32,14 @@ const Deployment: React.FC<Props> = ({
   api,
   app,
   toggleModal,
-  setDeployments
+  setDeployments,
 }): React.ReactElement => {
   const [loading, setLoading] = useState<setLoadingArgs>(null);
 
   const urls = {
     environment: `/apps/${deployment.appId}/environments/${deployment.config.env}`,
     deployment: `/apps/${deployment.appId}/deployments/${deployment.id}`,
-    preview: deployment.preview
+    preview: deployment.preview,
   };
 
   const isDisabled = deployment.exit !== 0;
@@ -46,7 +49,7 @@ const Deployment: React.FC<Props> = ({
       <div
         data-testid={`deploy-${deployment.id}`}
         className={cn("flex w-full px-4 py-6 rounded", {
-          "bg-gray-83": index % 2 === 1
+          "bg-gray-83": index % 2 === 1,
         })}
       >
         <div
@@ -91,7 +94,7 @@ const Deployment: React.FC<Props> = ({
                       setDeployments,
                       setLoading,
                       deployments,
-                      deploymentId: deployment.id
+                      deploymentId: deployment.id,
                     }).then(close);
                   }}
                   icon="fas fa-stop-circle text-red-50 mr-2"
@@ -113,7 +116,7 @@ const Deployment: React.FC<Props> = ({
                     deploymentId: deployment.id,
                     setLoading,
                     setDeployments,
-                    deployments
+                    deployments,
                   });
                 }}
               >
@@ -138,6 +141,6 @@ const Deployment: React.FC<Props> = ({
   );
 };
 
-export default connect(Deployment, [
-  { Context: PublishModal, props: ["toggleModal"], wrap: true }
+export default connect<Props, ContextProps>(Deployment, [
+  { Context: PublishModal, props: ["toggleModal"], wrap: true },
 ]);

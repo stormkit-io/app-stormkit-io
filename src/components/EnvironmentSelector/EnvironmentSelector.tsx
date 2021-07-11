@@ -15,9 +15,8 @@ const EnvironmentSelector: React.FC<Props> = ({
   placeholder,
   ...rest
 }): React.ReactElement => {
-  const [selectedEnvironment, setSelectedEnvironment] = useState<string>(
-    defaultValue
-  );
+  const [selectedEnvironment, setSelectedEnvironment] =
+    useState<string>(defaultValue);
 
   return (
     <div {...rest}>
@@ -55,7 +54,7 @@ const EnvironmentSelector: React.FC<Props> = ({
 
 EnvironmentSelector.defaultProps = {
   placeholder: "Select an environment",
-  defaultValue: ""
+  defaultValue: "",
 } as Partial<Props>;
 
 export default EnvironmentSelector;

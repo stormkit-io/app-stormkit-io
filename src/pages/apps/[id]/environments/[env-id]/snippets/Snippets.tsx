@@ -8,6 +8,7 @@ import AppContext from "~/pages/apps/App.context";
 import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
+import { ModalContextProps } from "~/components/Modal";
 import { PlusButton } from "~/components/Buttons";
 import { useFetchSnippets } from "./actions";
 import SnippetModal from "./_components/SnippetModal";
@@ -17,7 +18,6 @@ interface Props {
   api: Api;
   app: App;
   environment: Environment;
-  toggleModal: ToggleModal;
 }
 
 const Explanation = () => (
@@ -30,11 +30,11 @@ const Explanation = () => (
   </p>
 );
 
-const Snippets: React.FC<Props> = ({
+const Snippets: React.FC<Props & ModalContextProps> = ({
   api,
   app,
   environment: env,
-  toggleModal
+  toggleModal,
 }): React.ReactElement => {
   const location = useLocation();
   const fetchOpts = { api, app, env, location };
@@ -76,7 +76,7 @@ const Snippets: React.FC<Props> = ({
           </div>
         )}
         {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
-        {!loading && (
+        {!loading && snippets && (
           <div className="w-full relative">
             <SnippetModal
               snippets={snippets}
@@ -101,9 +101,9 @@ const Snippets: React.FC<Props> = ({
   );
 };
 
-export default connect(Snippets, [
+export default connect<Props, ModalContextProps>(Snippets, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app"] },
   { Context: EnvironmentContext, props: ["environment"] },
-  { Context: SnippetModal, props: ["toggleModal"], wrap: true }
+  { Context: SnippetModal, props: ["toggleModal"], wrap: true },
 ]);

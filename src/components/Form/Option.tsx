@@ -17,7 +17,7 @@ const Option: React.FC<Props> = forwardRef(
           "border-b border-solid border-gray-80",
           {
             "cursor-pointer hover:bg-gray-90": !disabled,
-            "bg-gray-85 text-gray-60": disabled
+            "bg-gray-85 text-gray-60": disabled,
           },
           className
         )}

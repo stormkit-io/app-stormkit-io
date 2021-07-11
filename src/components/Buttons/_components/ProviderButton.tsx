@@ -1,26 +1,27 @@
-import React, { FC, ReactElement, ReactNode } from "react";
+import React from "react";
 import cn from "classnames";
 import Button from "~/components/Button";
 
-export interface Props {
+export interface Props extends React.HTMLProps<HTMLButtonElement> {
   provider: Provider;
-  text: "GitHub" | "GitLab" | "Bitbucket";
-  type?: "button" | "submit";
-  children: ReactNode;
-  className?: string;
+  text: ProviderText;
 }
 
-const ProviderButton: FC<Props> = ({
+export type OmittedProps = Omit<Props, "provider" | "text">;
+
+const ProviderButton: React.FC<Props> = ({
   provider,
   text,
   type = "button",
   children,
   className,
   ...rest
-}: Props): ReactElement => {
+}): React.ReactElement => {
   return (
     <Button
       {...rest}
+      ref={undefined}
+      as="button"
       type={type}
       className={cn(
         [
@@ -30,7 +31,7 @@ const ProviderButton: FC<Props> = ({
           "border",
           `hover:border-${provider}`,
           `hover:text-${provider}`,
-          "rounded-xl"
+          "rounded-xl",
         ],
         className
       )}

@@ -1,9 +1,8 @@
 import React, { createContext } from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { connect } from "~/utils/context";
-import Api from "~/utils/api/Api";
 import MenuLayout from "~/layouts/MenuLayout";
-import RootContext from "~/pages/Root.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Link from "~/components/Link";
@@ -14,22 +13,21 @@ import { useFetchApp } from "./actions";
 import { useFetchEnvironments } from "./[id]/environments/actions";
 import routes from "./routes";
 
-interface IContext {
-  app?: App;
-  environments?: Array<Environment>;
-}
-
-interface Props {
-  api: Api;
+export interface AppContextProps {
+  app: App;
+  environments: Array<Environment>;
 }
 
 interface MatchParams {
   id: string;
 }
 
-const Context = createContext<IContext>({});
+const Context = createContext<AppContextProps>({
+  app: {} as App,
+  environments: [],
+});
 
-const AppContext: React.FC<Props> = ({ api }) => {
+const AppContext: React.FC<RootContextProps> = ({ api }) => {
   const match = useRouteMatch<MatchParams>();
   const { id } = match.params;
   const { app, error, loading } = useFetchApp({ api, appId: id });
@@ -48,7 +46,7 @@ const AppContext: React.FC<Props> = ({ api }) => {
     );
   }
 
-  if (!loading && !app) {
+  if (!app) {
     return (
       <Error404>
         <p>
@@ -87,11 +85,11 @@ const AppContext: React.FC<Props> = ({ api }) => {
   );
 };
 
-const enhanced = connect(AppContext, [
-  { Context: RootContext, props: ["api"] }
+const enhanced = connect<unknown, RootContextProps>(AppContext, [
+  { Context: RootContext, props: ["api"] },
 ]);
 
 export default Object.assign(enhanced, {
   Consumer: Context.Consumer,
-  Provider: enhanced
+  Provider: enhanced,
 });

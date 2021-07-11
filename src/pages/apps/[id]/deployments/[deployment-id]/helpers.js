@@ -33,16 +33,16 @@ export const prepareSettings = ({ deploy, commit }) => [
         <span className="fas fa-code-branch mr-1" />
         {commit.branch}
       </span>
-    )
+    ),
   },
   { text: "Configuration", value: deploy.config?.env },
   {
     text: "Started",
-    value: deploy.createdAt && formattedDate(deploy.createdAt)
+    value: deploy.createdAt && formattedDate(deploy.createdAt),
   },
   {
     text: "Stopped",
-    value: deploy.stoppedAt && formattedDate(deploy.stoppedAt)
+    value: deploy.stoppedAt && formattedDate(deploy.stoppedAt),
   },
   { text: "Build Status", value: <ExitStatus code={deploy.exit} /> },
   {
@@ -52,6 +52,6 @@ export const prepareSettings = ({ deploy, commit }) => [
         {deploy.preview}
         <i className="fas fa-external-link-square-alt ml-2" />
       </Link>
-    )
-  }
+    ),
+  },
 ];

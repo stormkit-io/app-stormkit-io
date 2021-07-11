@@ -16,11 +16,13 @@ interface FetchUserReturnValue {
   error: string | null;
   loading: boolean;
   user?: User;
+  accounts: Array<ConnectedAccount>;
   setUser: (u: User) => void;
   setError: SetError;
 }
 
 interface FetchUserResponse {
+  accounts: Array<ConnectedAccount>;
   user: User;
   ok: boolean;
 }
@@ -29,6 +31,7 @@ export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
   const token = api.getAuthToken();
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User>();
+  const [accounts, setAccounts] = useState<Array<ConnectedAccount>>([]);
   const [loading, setLoading] = useState<boolean>(!!token);
 
   useEffect(() => {
@@ -39,9 +42,10 @@ export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
       api.setAuthToken(token);
       api
         .fetch<FetchUserResponse>("/user")
-        .then(({ user, ok }) => {
+        .then(({ user, ok, accounts }) => {
           if (ok && !unmounted) {
             setUser(user);
+            setAccounts(accounts);
             LocalStorage.set(LS_USER, user);
           }
         })
@@ -62,18 +66,20 @@ export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
     };
   }, [api, token]);
 
-  return { error, user, loading, setError, setUser };
+  return { error, user, accounts, loading, setError, setUser };
 };
 
 interface LogoutProps {
   api: Api;
 }
 
-export const logout = ({ api }: LogoutProps) => (): void => {
-  api.removeAuthToken();
-  LocalStorage.del(LS_USER);
-  window.location.href = "/";
-};
+export const logout =
+  ({ api }: LogoutProps) =>
+  (): void => {
+    api.removeAuthToken();
+    LocalStorage.del(LS_USER);
+    window.location.href = "/";
+  };
 
 interface DataMessage {
   accessToken: string;
@@ -92,7 +98,7 @@ interface LoginOauthProps {
   setError: SetError;
 }
 
-interface LoginOauthReturnValue {
+export interface LoginOauthReturnValue {
   user: User;
   accessToken: string;
   sessionToken: string;
@@ -107,43 +113,42 @@ export const loginOauth = ({
   gitlab,
   github,
   setUser,
-  setError
+  setError,
 }: LoginOauthProps) => {
-  return (provider: Provider): (() => Promise<LoginOauthReturnValue>) => {
-    return () =>
-      new Promise(resolve => {
-        const url = api.baseurl + `/auth/${provider}`;
-        const title = "oauthWindow";
+  return (provider: Provider): Promise<LoginOauthReturnValue> => {
+    return new Promise(resolve => {
+      const url = api.baseurl + `/auth/${provider}`;
+      const title = "oauthWindow";
 
-        const onClose = (data: DataMessage) => {
-          if (data?.sessionToken) {
-            api.setAuthToken(data.sessionToken); // adds it to local storage
-            setUser(data.user);
+      const onClose = (data: DataMessage) => {
+        if (data?.sessionToken) {
+          api.setAuthToken(data.sessionToken); // adds it to local storage
+          setUser(data.user);
 
-            // Persist it for this session
-            bitbucket.accessToken = data.accessToken;
-            github.accessToken = data.accessToken;
-            gitlab.accessToken = data.accessToken;
+          // Persist it for this session
+          bitbucket.accessToken = data.accessToken;
+          github.accessToken = data.accessToken;
+          gitlab.accessToken = data.accessToken;
 
-            resolve({
-              user: data.user,
-              sessionToken: data.sessionToken,
-              accessToken: data.accessToken
-            });
+          resolve({
+            user: data.user,
+            sessionToken: data.sessionToken,
+            accessToken: data.accessToken,
+          });
+        }
+
+        if (data?.success === false) {
+          if (data.email === false) {
+            setError(
+              "We could not fetch your primary verified email from the provider. Make sure your email is verified."
+            );
+          } else {
+            setError("An error occurred while authenticating. Please retry.");
           }
+        }
+      };
 
-          if (data?.success === false) {
-            if (data.email === false) {
-              setError(
-                "We could not fetch your primary verified email from the provider. Make sure your email is verified."
-              );
-            } else {
-              setError("An error occurred while authenticating. Please retry.");
-            }
-          }
-        };
-
-        openPopup({ url, title, onClose });
-      });
+      openPopup({ url, title, onClose });
+    });
   };
 };

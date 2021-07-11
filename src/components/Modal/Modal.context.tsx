@@ -5,13 +5,21 @@ interface Props {
   children: React.ReactNode;
 }
 
+export interface ModalContextProps {
+  isOpen?: boolean;
+  toggleModal: (val: boolean, cb?: () => void) => void;
+}
+
 // Provides a context for custom modals which need a context.
 // Simply assign this object to the exported component, and it will
 // be a Modal.context instance.
-export default (): React.ReactNode => {
+export default (): ContextWrapper => {
   const context = createContext({});
 
-  const Provider = ({ children, ...rest }: Props) => {
+  const Provider: React.FC<Props> = ({
+    children,
+    ...rest
+  }): React.ReactElement => {
     const [isOpen, toggleModal] = useState(false);
 
     const toggleModalWrapper = (val: boolean, cb?: () => void) => {
@@ -36,6 +44,6 @@ export default (): React.ReactNode => {
 
   return {
     Provider,
-    Consumer: context.Consumer
+    Consumer: context.Consumer,
   };
 };

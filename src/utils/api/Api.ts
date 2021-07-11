@@ -35,7 +35,7 @@ export default class Api {
   constructor(opts: Options) {
     this.baseurl = opts.baseurl;
     this.headers = {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     };
 
     const token = LocalStorage.get(Api.STORAGE_TOKEN_KEY);
@@ -131,7 +131,7 @@ export default class Api {
   async post<T>(url: string, opts: FetchOptions = {}): Promise<T> {
     // This line of code allows using post as post(url, myRequestBody)
     if (!opts.body && !opts.params) {
-      opts = { body: (opts as unknown) as Body };
+      opts = { body: opts as unknown as Body };
     }
 
     opts.method = "POST";
@@ -147,7 +147,7 @@ export default class Api {
   async put<T>(url: string, opts: FetchOptions = {}): Promise<T> {
     // This line of code allows using post as put(url, myRequestBody)
     if (!opts.body && !opts.params) {
-      opts = { body: (opts as unknown) as Body };
+      opts = { body: opts as unknown as Body };
     }
 
     opts.method = "PUT";
@@ -163,7 +163,7 @@ export default class Api {
   async delete<T>(url: string, opts: FetchOptions = {}): Promise<T> {
     // This line of code allows using post as put(url, myRequestBody)
     if (!opts.body && !opts.params) {
-      opts = { body: (opts as unknown) as Body };
+      opts = { body: opts as unknown as Body };
     }
 
     opts.method = "DELETE";

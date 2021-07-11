@@ -22,7 +22,7 @@ export const deleteForever = ({
   deploymentId,
   deployments,
   setLoading,
-  setDeployments
+  setDeployments,
 }: DeleteForeverProps): Promise<void> => {
   setLoading("delete");
 
@@ -43,58 +43,56 @@ interface PublishInfo {
   percentage: number;
 }
 
-export const publishDeployments = ({
-  api,
-  app,
-  history,
-  setPublishError
-}: PublishDeploymentsProps) => (
-  sliders: Record<string, { percentage: number }>,
-  envId: string
-): Promise<void> => {
-  setPublishError(null);
+export const publishDeployments =
+  ({ api, app, history, setPublishError }: PublishDeploymentsProps) =>
+  (
+    sliders: Record<string, { percentage: number }>,
+    envId: string
+  ): Promise<void> => {
+    setPublishError(null);
 
-  const publish: Array<PublishInfo> = [];
-  let total = 0;
+    const publish: Array<PublishInfo> = [];
+    let total = 0;
 
-  Object.keys(sliders).forEach(deploymentId => {
-    const slider = sliders[deploymentId];
-    total = total + slider.percentage;
+    Object.keys(sliders).forEach(deploymentId => {
+      const slider = sliders[deploymentId];
+      total = total + slider.percentage;
 
-    publish.push({
-      percentage: slider.percentage,
-      deploymentId
-    });
-  });
-
-  if (total !== 100) {
-    setPublishError(
-      `The sum of percentages has be to 100. Currently it is ${total}.`
-    );
-
-    return Promise.resolve();
-  }
-
-  return api
-    .post(`/app/deployments/publish`, {
-      appId: `${app.id}`,
-      envId,
-      publish
-    })
-    .then(() => {
-      history.replace({
-        state: {
-          deployments: Date.now(),
-          success: "Deployment has been successfully published."
-        }
+      publish.push({
+        percentage: slider.percentage,
+        deploymentId,
       });
-    })
-    .catch(e => {
-      setPublishError(
-        e.message || "Something went wrong on our side. Please try again later."
-      );
     });
-};
+
+    if (total !== 100) {
+      setPublishError(
+        `The sum of percentages has be to 100. Currently it is ${total}.`
+      );
+
+      return Promise.resolve();
+    }
+
+    return api
+      .post(`/app/deployments/publish`, {
+        appId: `${app.id}`,
+        envId,
+        publish,
+      })
+      .then(() => {
+        history.replace({
+          state: {
+            deployments: Date.now(),
+            success: "Deployment has been successfully published.",
+          },
+        });
+      })
+      .catch(e => {
+        setPublishError(
+          e.message ||
+            "Something went wrong on our side. Please try again later."
+        );
+      });
+  };
 
 export type Filters = {
   envId?: string;
@@ -106,7 +104,7 @@ export type Filters = {
 interface UseFetchDeploymentsProps {
   api: Api;
   app: App;
-  from: number;
+  from?: number;
   skipQuery?: boolean;
   filters?: Filters;
   setFrom?: (v: number) => void;
@@ -137,7 +135,7 @@ export const useFetchDeployments = ({
   from,
   skipQuery,
   filters,
-  setFrom
+  setFrom,
 }: UseFetchDeploymentsProps): UseFetchDeploymentsReturnValaue => {
   const location = useLocation<LocationState>();
   const [deployments, setDeployments] = useState<Array<Deployment>>([]);
@@ -176,7 +174,7 @@ export const useFetchDeployments = ({
         envId,
         status,
         published,
-        branch
+        branch,
       })
       .then(res => {
         if (unmounted !== true) {
@@ -205,7 +203,7 @@ export const useFetchDeployments = ({
     status,
     refreshTime,
     from,
-    skipQuery
+    skipQuery,
   ]);
 
   return {
@@ -214,7 +212,7 @@ export const useFetchDeployments = ({
     loading,
     hasNextPage,
     success,
-    setDeployments
+    setDeployments,
   };
 };
 
@@ -233,7 +231,7 @@ export const stopDeployment = ({
   deploymentId,
   deployments,
   setLoading,
-  setDeployments
+  setDeployments,
 }: StopDeploymentProps): Promise<void> => {
   setLoading("stop");
 
@@ -246,7 +244,7 @@ export const stopDeployment = ({
               ...d,
               exit: -1,
               stoppedAt: Date.now(),
-              isRunning: false
+              isRunning: false,
             }
           : d
       )

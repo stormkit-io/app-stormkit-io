@@ -27,7 +27,7 @@ const DeploymentRow = ({
   index,
   numberOfDeployments,
   handlePublishClick,
-  isInSync
+  isInSync,
 }) => {
   const [percentage, setPercentage] = useState(
     getInitialPerc(deployment, envId)
@@ -55,7 +55,7 @@ const DeploymentRow = ({
           {
             "mb-4": !handlePublishClick,
             "bg-gray-83 border-gray-80": index % 2 === 0,
-            "bg-gray-90 border-gray-80": index % 2 === 1
+            "bg-gray-90 border-gray-80": index % 2 === 1,
           }
         )}
       >
@@ -108,7 +108,7 @@ DeploymentRow.propTypes = {
   index: PropTypes.number,
   numberOfDeployments: PropTypes.number,
   handlePublishClick: PropTypes.func,
-  isInSync: PropTypes.bool
+  isInSync: PropTypes.bool,
 };
 
 const PublishModalDeploymentTable = ({
@@ -118,7 +118,7 @@ const PublishModalDeploymentTable = ({
   environments,
   loading,
   error,
-  handlePublishClick
+  handlePublishClick,
 }) => {
   const [isInSync, setIsInSync] = useState(true);
 
@@ -195,7 +195,7 @@ PublishModalDeploymentTable.propTypes = {
   envId: PropTypes.string,
   loading: PropTypes.bool,
   error: PropTypes.node,
-  handlePublishClick: PropTypes.func
+  handlePublishClick: PropTypes.func,
 };
 
 export default PublishModalDeploymentTable;

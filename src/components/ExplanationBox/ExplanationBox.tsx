@@ -15,7 +15,7 @@ const ExplanationBox: FC<Props> = ({
   children,
   className,
   absolute,
-  arrowStyles
+  arrowStyles,
 }: Props): ReactElement => {
   return (
     <section
@@ -35,8 +35,8 @@ const ExplanationBox: FC<Props> = ({
 ExplanationBox.defaultProps = {
   arrowStyles: {
     left: "50%",
-    transform: "translateX(-50%)"
-  }
+    transform: "translateX(-50%)",
+  },
 } as Partial<Props>;
 
 export default ExplanationBox;

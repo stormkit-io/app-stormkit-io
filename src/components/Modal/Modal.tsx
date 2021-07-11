@@ -9,7 +9,7 @@ let _root: HTMLDivElement | undefined;
 
 type Props = {
   children: ReactNode;
-  isOpen: boolean;
+  isOpen?: boolean;
   onClose: () => void;
   fullScreen?: boolean;
   className?: string;
@@ -89,7 +89,7 @@ class Modal extends PureComponent<Props> {
     return createPortal(
       <div
         className={cn("modal-overlay fixed inset-0 bg-black-o-75 z-50", {
-          "opacity-0": this.isAboutToClose
+          "opacity-0": this.isAboutToClose,
         })}
         onMouseUp={e => this.gracefulClose(e)}
         onMouseDown={() => {

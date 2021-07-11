@@ -25,8 +25,8 @@ describe(fileName, () => {
       path,
       props: {
         app,
-        environments: envs
-      }
+        environments: envs,
+      },
     });
   });
 

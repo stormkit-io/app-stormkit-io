@@ -8,7 +8,7 @@ type Props = {
 
 const Description: FC<Props> = ({
   children,
-  className
+  className,
 }: Props): ReactElement => {
   return (
     <div className={cn("p-3 text-sm color-gray-55", className)}>{children}</div>

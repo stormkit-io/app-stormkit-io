@@ -74,7 +74,7 @@ function collectFormValues<T>(
     }
   }
 
-  return (values as unknown) as T;
+  return values as unknown as T;
 }
 
 interface FormSubmitProps<T> extends Props<T> {
@@ -85,14 +85,14 @@ function useFormSubmit<T>({
   ref,
   handleSubmit,
   ignoreEmptyValues = false,
-  ignoreDisabled = false
+  ignoreDisabled = false,
 }: FormSubmitProps<T>) {
   return (e: React.FormEvent) => {
     e.preventDefault();
 
     const values = collectFormValues<T>(ref, {
       ignoreEmptyValues,
-      ignoreDisabled
+      ignoreDisabled,
     });
 
     handleSubmit && handleSubmit(values);
@@ -111,7 +111,7 @@ function Form<T>({
     ref,
     handleSubmit,
     ignoreDisabled,
-    ignoreEmptyValues
+    ignoreEmptyValues,
   });
 
   return (

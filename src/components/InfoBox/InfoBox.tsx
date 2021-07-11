@@ -14,7 +14,7 @@ const icons = {
   [SUCCESS]: "fas fa-check",
   [WARNING]: "fas fa-radiation",
   [ERROR]: "fas fa-exclamation-triangle",
-  [DEFAULT]: "fas fa-info"
+  [DEFAULT]: "fas fa-info",
 };
 
 const colors = {
@@ -22,32 +22,32 @@ const colors = {
     text: "blue-20",
     bg: "blue-90",
     border: "",
-    icon: ""
+    icon: "",
   },
   [DEFAULT]: {
     text: "blue-30",
     bg: "blue-90",
     border: "transparent",
-    icon: "blue-80"
+    icon: "blue-80",
   },
   [SUCCESS]: {
     text: "white",
     bg: "green-50",
     border: "green-50",
-    icon: ""
+    icon: "",
   },
   [WARNING]: {
     text: "",
     bg: "yellow-80",
     border: "yellow-60",
-    icon: "yellow-30"
+    icon: "yellow-30",
   },
   [ERROR]: {
     text: "white",
     bg: "red-50",
     border: "red-50",
-    icon: ""
-  }
+    icon: "",
+  },
 };
 
 type StateClass =
@@ -81,7 +81,7 @@ const InfoBox: React.FC<Props> & {
   type = DEFAULT,
   toaster,
   dismissable,
-  onDismissed
+  onDismissed,
 }): React.ReactElement => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const ref = useRef<HTMLDivElement>(null);
@@ -103,7 +103,7 @@ const InfoBox: React.FC<Props> & {
     `text-${colors[type].text}`,
     "border",
     "border-solid",
-    `border-${colors[type].border}`
+    `border-${colors[type].border}`,
   ];
 
   if (isOpen === false) {
@@ -116,7 +116,7 @@ const InfoBox: React.FC<Props> & {
       className={cn(classes, className, {
         shadow: toaster,
         "infobox-toaster": toaster,
-        "w-full": !toaster
+        "w-full": !toaster,
       })}
     >
       {showIcon && (
@@ -153,7 +153,7 @@ InfoBox.ACTION_REQUIRED = ACTION_REQUIRED;
 
 InfoBox.defaultProps = {
   type: DEFAULT,
-  showIcon: true
+  showIcon: true,
 } as Partial<Props>;
 
 export default InfoBox;

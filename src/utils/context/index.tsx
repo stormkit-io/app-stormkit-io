@@ -1,14 +1,20 @@
 import React, { Fragment } from "react";
 import { createContext } from "react";
 
-// IMPORTANT: Put whatever is not serializable in the global context.
-// The rest should go into the redux state.
-const GlobalContext = createContext({
-  /**
-   * The request object.
-   */
-  request: null
-});
+const GlobalContext = createContext({});
+
+type Props = Record<string, unknown>;
+
+interface ProviderProps {
+  value: Record<string, unknown>;
+  children: React.ReactNode;
+}
+
+interface ConnectedContext {
+  Context: ContextWrapper;
+  props: Array<string>;
+  wrap?: boolean;
+}
 
 export const Context = {
   ...GlobalContext,
@@ -22,7 +28,7 @@ export const Context = {
    * @param {*} children React children.
    * @return {*}
    */
-  Provider: ({ value, children }) => (
+  Provider: ({ value, children }: ProviderProps): React.ReactElement => (
     <GlobalContext.Consumer>
       {context => (
         <GlobalContext.Provider value={{ ...context, ...value }}>
@@ -30,20 +36,8 @@ export const Context = {
         </GlobalContext.Provider>
       )}
     </GlobalContext.Consumer>
-  )
+  ),
 };
-
-/**
- * HOC for components which need the
- *
- * @param WrappedComponent
- * @return {function(*): *}
- */
-export default WrappedComponent => props => (
-  <Context.Consumer>
-    {context => <WrappedComponent {...props} {...context} />}
-  </Context.Consumer>
-);
 
 /**
  * Recursive function that goes through all required contexts and injects the values into a component
@@ -52,19 +46,21 @@ export default WrappedComponent => props => (
  * @param {array} Contexts an array of objects like [{Context: AuthContext, props: ["user"]}]
  * @return {func} a function receiving initialProps so that we don't have to call connect with an arrow function
  */
-export const connect = (Component, Contexts = []) => {
-  if (Array.isArray(Contexts) === false) {
-    throw new Error("Second argument of connect should be an array.");
-  }
-
-  function loopContexts(Component, Contexts, props) {
+export function connect<ComponentProps, ContextProps>(
+  Component: React.FC<ComponentProps & ContextProps>,
+  Contexts: Array<ConnectedContext> = []
+): React.FC<ComponentProps> {
+  const loopContexts = (
+    loopedContexts: Array<ConnectedContext>,
+    mergedProps: ContextProps | ComponentProps
+  ): React.ReactElement => {
     // If we reached last context, stop here
-    if (Contexts.length === 0) {
-      return <Component {...props} />;
+    if (loopedContexts.length === 0) {
+      return <Component {...(mergedProps as ContextProps & ComponentProps)} />;
     }
 
     // Generate required props for first consumer
-    const Current = Contexts[0];
+    const Current = loopedContexts.shift();
 
     if (!Current || !Current.Context.Consumer) {
       throw new Error("The passed context needs to have a Consumer attribute");
@@ -74,36 +70,43 @@ export const connect = (Component, Contexts = []) => {
       throw new Error("The passed context needs to have a Provider attribute");
     }
 
+    const { Consumer } = Current.Context;
+
     // If wrap is enabled, wrap the consumer with the provider.
-    const Provider = Current.wrap ? Current.Context.Provider : Fragment;
-    const Consumer = Current.Context.Consumer;
+    const ProviderOrFragment = Current.wrap
+      ? Current.Context.Provider
+      : Fragment;
 
     return (
-      <Provider>
+      <ProviderOrFragment>
         <Consumer>
-          {p => {
+          {(p: Props) => {
             // Get only the required props
-            const filtered = filterProps(p, Current.props);
-            // Merge them with previous props (initial + props from each step in consumer loop)
-            const merged = { ...props, ...filtered };
+            const contextProps = filterProps<ContextProps>(p, Current.props);
             // Call for the remaining contexts
-            return loopContexts(Component, Contexts.slice(1), merged);
+            return loopContexts(loopedContexts, {
+              ...mergedProps,
+              ...contextProps,
+            });
           }}
         </Consumer>
-      </Provider>
+      </ProviderOrFragment>
     );
-  }
+  };
 
-  return initialProps => loopContexts(Component, Contexts, initialProps);
-};
+  return (props): React.ReactElement => loopContexts(Contexts.slice(0), props);
+}
 
 /**
  * Loops through props and returns an object with only the keys inside the values array
  * @param {object} props
  * @param {array} values
  */
-const filterProps = (props, values) => {
-  const filtered = {};
+function filterProps<P = Record<string, unknown>>(
+  props: Props,
+  values: Array<string>
+): P {
+  const filtered: Props = {};
   const propKeys = Object.keys(props || {});
 
   values.forEach(propKey => {
@@ -124,7 +127,5 @@ const filterProps = (props, values) => {
     filtered[desiredPropKey] = props[propKey];
   });
 
-  return filtered;
-};
-
-export { default as windowContext } from "./windowContext";
+  return filtered as P;
+}

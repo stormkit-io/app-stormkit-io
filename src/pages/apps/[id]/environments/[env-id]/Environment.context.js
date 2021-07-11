@@ -36,14 +36,14 @@ const EnvironmentContext = ({ environments, match, app }) => {
 
 EnvironmentContext.propTypes = {
   environments: PropTypes.array,
-  app: PropTypes.object
+  app: PropTypes.object,
 };
 
 const enhanced = connect(withRouter(EnvironmentContext), [
-  { Context: AppContext, props: ["app", "environments"] }
+  { Context: AppContext, props: ["app", "environments"] },
 ]);
 
 export default Object.assign(enhanced, {
   Consumer: Context.Consumer,
-  Provider: enhanced
+  Provider: enhanced,
 });
