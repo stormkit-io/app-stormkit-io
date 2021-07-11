@@ -19,13 +19,11 @@ export const useParseAppId = ({ api }: EnrollProps): string => {
   useEffect(() => {
     let unmounted = false;
 
-    api
-      .post<EnrollResponse>("/app/members/enroll", { token })
-      .then(res => {
-        if (!unmounted) {
-          setAppId(res.appId);
-        }
-      });
+    api.post<EnrollResponse>("/app/members/enroll", { token }).then(res => {
+      if (!unmounted) {
+        setAppId(res.appId);
+      }
+    });
 
     return () => {
       unmounted = true;

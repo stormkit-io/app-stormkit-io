@@ -25,7 +25,7 @@ const Team = ({
   confirmModal,
   toggleModal,
   history,
-  location
+  location,
 }) => {
   const { members, loading, error } = useFetchMembers({ api, app, location });
   const isCurrentUserTheOwner = app.userId === user.id;
@@ -70,7 +70,7 @@ const Team = ({
               "flex flex-col justify-center bg-white border-b border-solid border-gray-83",
               {
                 "rounded-tr rounded-tl": i === 0,
-                "rounded-br rounded-bl mb-4": i === members.length - 1
+                "rounded-br rounded-bl mb-4": i === members.length - 1,
               }
             )}
           >
@@ -99,14 +99,15 @@ const Team = ({
                       <DotDotDot aria-label="More settings">
                         <DotDotDot.Item
                           icon="fas fa-times text-red-50 mr-2"
-                          aria-label={`Delete ${member.fullName ||
-                            member.displayName}`}
+                          aria-label={`Delete ${
+                            member.fullName || member.displayName
+                          }`}
                           onClick={handleDelete({
                             userId: member.id,
                             app,
                             api,
                             history,
-                            confirmModal
+                            confirmModal,
                           })}
                         >
                           Delete
@@ -131,7 +132,7 @@ Team.propTypes = {
   toggleModal: PropTypes.func,
   confirmModal: PropTypes.func,
   history: PropTypes.object,
-  location: PropTypes.object
+  location: PropTypes.object,
 };
 
 export default connect(Team, [
@@ -139,5 +140,5 @@ export default connect(Team, [
   { Context: AppContext, props: ["app"] },
   { Context: AuthContext, props: ["user"] },
   { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-  { Context: NewMemberModal, props: ["toggleModal"], wrap: true }
+  { Context: NewMemberModal, props: ["toggleModal"], wrap: true },
 ]);

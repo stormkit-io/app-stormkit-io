@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Location, History } from "history";
 import { useLocation } from "react-router-dom";
 import Api from "~/utils/api/Api";
+import { ModalContextProps } from "~/components/Modal";
 import { prepareBuildObject } from "./helpers";
 
 interface FetchEnvironmentsProps {
@@ -27,7 +28,7 @@ interface LocationState extends Location {
 
 export const useFetchEnvironments = ({
   api,
-  app
+  app,
 }: FetchEnvironmentsProps): FetchEnvironmentsReturnValue => {
   const location = useLocation<LocationState>();
   const [environments, setEnvironments] = useState<Array<Environment>>([]);
@@ -60,7 +61,7 @@ export const useFetchEnvironments = ({
                   : e.env === "production"
                   ? `${app.displayName}.stormkit.dev`
                   : `${app.displayName}--${e.env}.stormkit.dev`;
-              }
+              },
             }))
           );
         }
@@ -82,12 +83,17 @@ export const useFetchEnvironments = ({
 type STATUS_OK = 200;
 type STATUS_NOT_FOUND = 404;
 type STATUS_NOT_CONFIGURED = "NOT_CONFIGURED";
-type STATUSES = STATUS_OK | STATUS_NOT_FOUND | STATUS_NOT_CONFIGURED | null;
+
+export type STATUSES =
+  | STATUS_OK
+  | STATUS_NOT_FOUND
+  | STATUS_NOT_CONFIGURED
+  | null;
 
 export const STATUS: Record<string, STATUSES> = {
   OK: 200,
   NOT_FOUND: 404,
-  NOT_CONFIGURED: "NOT_CONFIGURED"
+  NOT_CONFIGURED: "NOT_CONFIGURED",
 };
 
 interface FetchStatusProps {
@@ -110,7 +116,7 @@ export const useFetchStatus = ({
   api,
   app,
   domain,
-  lastDeploy
+  lastDeploy,
 }: FetchStatusProps): FetchStatusReturnValue => {
   const [status, setStatus] = useState<STATUSES>(null);
   const [loading, setLoading] = useState(false);
@@ -129,7 +135,7 @@ export const useFetchStatus = ({
     api
       .post<FetchStatusAPIResponse>("/app/proxy", {
         url: `https://${domain}`,
-        appId: app.id
+        appId: app.id,
       })
       .then(res => {
         if (!unmounted) {
@@ -170,7 +176,7 @@ type FetchRepoTypeAPIResponse = Meta;
 export const useFetchRepoType = ({
   app,
   api,
-  env
+  env,
 }: FetchRepoTypeProps): FetchRepoTypeReturnValue => {
   const [meta, setMeta] = useState<Meta>({ type: "-" });
   const [loading, setLoading] = useState(false);
@@ -224,7 +230,7 @@ export const deleteEnvironment = ({
   history,
   setLoading,
   setError,
-  closeModal
+  closeModal,
 }: DeleteEnvironmentProps): Promise<void> => {
   const name = environment?.env;
 
@@ -237,7 +243,7 @@ export const deleteEnvironment = ({
   return api
     .delete(`/app/env`, {
       appId: app.id,
-      env: name
+      env: name,
     })
     .then(() => {
       setLoading(false);
@@ -246,8 +252,8 @@ export const deleteEnvironment = ({
           pathname: `/apps/${app.id}/environments`,
           state: {
             envs: Date.now(),
-            message: "Environment has been removed successfully."
-          }
+            message: "Environment has been removed successfully.",
+          },
         });
       });
     })
@@ -259,147 +265,150 @@ export const deleteEnvironment = ({
     });
 };
 
-interface InsertEnvironmentProps {
+interface InsertEnvironmentProps
+  extends Pick<ModalContextProps, "toggleModal"> {
   api: Api;
   app: App;
   history: History;
   isServerless: boolean;
   isAutoPublish: boolean;
-  toggleModal: ToggleModal;
   setError: SetError;
   setLoading: SetLoading;
 }
 
-export const insertEnvironment = ({
-  api,
-  app,
-  history,
-  isServerless,
-  isAutoPublish,
-  toggleModal,
-  setError,
-  setLoading
-}: InsertEnvironmentProps) => (values: Record<string, string>): void => {
-  const { name, branch } = values;
-  const build = prepareBuildObject(values, isServerless);
+export const insertEnvironment =
+  ({
+    api,
+    app,
+    history,
+    isServerless,
+    isAutoPublish,
+    toggleModal,
+    setError,
+    setLoading,
+  }: InsertEnvironmentProps) =>
+  (values: Record<string, string>): void => {
+    const { name, branch } = values;
+    const build = prepareBuildObject(values, isServerless);
 
-  if (!name || !branch) {
-    return setError("Environment and branch names are required.");
-  }
+    if (!name || !branch) {
+      return setError("Environment and branch names are required.");
+    }
 
-  setLoading(false);
+    setLoading(false);
 
-  api
-    .post(`/app/env`, {
-      appId: app.id,
-      env: name,
-      branch,
-      build,
-      autoPublish: isAutoPublish
-    })
-    .then(() => {
-      setLoading(false);
-      toggleModal(false, () => {
-        history.replace({
-          state: {
-            envs: Date.now(),
-            message:
-              "Environment has been created successfully. You can now deploy with your new configuration."
-          }
+    api
+      .post(`/app/env`, {
+        appId: app.id,
+        env: name,
+        branch,
+        build,
+        autoPublish: isAutoPublish,
+      })
+      .then(() => {
+        setLoading(false);
+        toggleModal(false, () => {
+          history.replace({
+            state: {
+              envs: Date.now(),
+              message:
+                "Environment has been created successfully. You can now deploy with your new configuration.",
+            },
+          });
         });
+      })
+      .catch(async res => {
+        setLoading(false);
+        const data = await res.json();
+
+        if (data.errors.env) {
+          setError(data.errors.env);
+        } else {
+          return Promise.reject();
+        }
+      })
+      .catch(() => {
+        setError(
+          "Something went wrong while creating the environment. Please try again, if the problem persists reach us from Discord."
+        );
       });
-    })
-    .catch(async res => {
-      setLoading(false);
-      const data = await res.json();
+  };
 
-      if (data.errors.env) {
-        setError(data.errors.env);
-      } else {
-        return Promise.reject();
-      }
-    })
-    .catch(() => {
-      setError(
-        "Something went wrong while creating the environment. Please try again, if the problem persists reach us from Discord."
-      );
-    });
-};
-
-interface EditEnvironmentProps {
+interface EditEnvironmentProps extends Pick<ModalContextProps, "toggleModal"> {
   api: Api;
   app: App;
   history: History;
   isServerless: boolean;
   isAutoPublish: boolean;
   environmentId: string;
-  toggleModal: ToggleModal;
   setError: SetErrorWithJSX;
   setLoading: SetLoading;
 }
 
-export const editEnvironment = ({
-  api,
-  app,
-  history,
-  isServerless,
-  isAutoPublish,
-  environmentId,
-  toggleModal,
-  setError,
-  setLoading
-}: EditEnvironmentProps) => (values: Record<string, string>): void => {
-  const { name, branch } = values;
-  const build = prepareBuildObject(values, isServerless);
+export const editEnvironment =
+  ({
+    api,
+    app,
+    history,
+    isServerless,
+    isAutoPublish,
+    environmentId,
+    toggleModal,
+    setError,
+    setLoading,
+  }: EditEnvironmentProps) =>
+  (values: Record<string, string>): void => {
+    const { name, branch } = values;
+    const build = prepareBuildObject(values, isServerless);
 
-  if (!name || !branch) {
-    return setError("Environment and branch names are required.");
-  }
+    if (!name || !branch) {
+      return setError("Environment and branch names are required.");
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  api
-    .put(`/app/env`, {
-      appId: app.id,
-      envId: environmentId,
-      env: name,
-      branch,
-      build,
-      autoPublish: isAutoPublish
-    })
-    .then(() => {
-      setLoading(false);
-      toggleModal(false, () => {
-        history.replace({
-          state: {
-            envs: Date.now(),
-            message:
-              "Environment has been updated successfully. You can now deploy with your new configuration."
-          }
+    api
+      .put(`/app/env`, {
+        appId: app.id,
+        envId: environmentId,
+        env: name,
+        branch,
+        build,
+        autoPublish: isAutoPublish,
+      })
+      .then(() => {
+        setLoading(false);
+        toggleModal(false, () => {
+          history.replace({
+            state: {
+              envs: Date.now(),
+              message:
+                "Environment has been updated successfully. You can now deploy with your new configuration.",
+            },
+          });
         });
+      })
+      .catch(async res => {
+        let data: { code: "duplicate"; errors: Record<string, string> };
+
+        try {
+          data = await res.json();
+        } catch (e) {
+          return;
+        }
+
+        let message;
+
+        if (data.code === "duplicate") {
+          message =
+            "You can't have duplicate environments or branch names for the same application.";
+        } else if (res.status === 400 && data.errors) {
+          message = Object.keys(data.errors).map(k => (
+            <div key={k}>{data.errors[k]}</div>
+          ));
+        }
+
+        setError(message);
+        setLoading(false);
       });
-    })
-    .catch(async res => {
-      let data: { code: "duplicate"; errors: Record<string, string> };
-
-      try {
-        data = await res.json();
-      } catch (e) {
-        return;
-      }
-
-      let message;
-
-      if (data.code === "duplicate") {
-        message =
-          "You can't have duplicate environments or branch names for the same application.";
-      } else if (res.status === 400 && data.errors) {
-        message = Object.keys(data.errors).map(k => (
-          <div key={k}>{data.errors[k]}</div>
-        ));
-      }
-
-      setError(message);
-      setLoading(false);
-    });
-};
+  };

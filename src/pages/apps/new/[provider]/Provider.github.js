@@ -13,12 +13,12 @@ import Accounts from "./_components/Accounts";
 const URL = {
   production: "https://github.com/apps/stormkit-io/installations/new",
   development: "https://github.com/apps/stormkit-io-dev/installations/new",
-  test: "https://github.com/apps/stormkit-io-dev/installations/new"
+  test: "https://github.com/apps/stormkit-io-dev/installations/new",
 }[process.env.NODE_ENV];
 
 const defaultPageQueryParams = {
   page: 1,
-  per_page: 25
+  per_page: 25,
 };
 
 export default class GithubRepos extends PureComponent {
@@ -27,7 +27,7 @@ export default class GithubRepos extends PureComponent {
     history: PropTypes.object,
     loginOauth: PropTypes.func,
     user: PropTypes.object,
-    api: PropTypes.object
+    api: PropTypes.object,
   };
 
   state = {
@@ -39,7 +39,7 @@ export default class GithubRepos extends PureComponent {
     requiresLogin: false,
     loadingInsert: false,
     hasNextPage: false,
-    pageQueryParams: defaultPageQueryParams
+    pageQueryParams: defaultPageQueryParams,
   };
 
   async componentDidMount() {
@@ -84,7 +84,7 @@ export default class GithubRepos extends PureComponent {
       const acc = {
         login: inst.account.login,
         installationId: inst.id,
-        avatar: inst.account.avatar_url
+        avatar: inst.account.avatar_url,
       };
 
       if (g(inst, "account.login") === user.displayName) {
@@ -120,7 +120,7 @@ export default class GithubRepos extends PureComponent {
         const { accounts, selectedAccount } = await this.getInstallations();
         this.updateState({ accounts, selectedAccount });
         this.getRepositories();
-      }
+      },
     });
   };
 
@@ -139,7 +139,7 @@ export default class GithubRepos extends PureComponent {
 
     const res = await api.repositories({
       installationId: selectedAccount.installationId,
-      params: pageQueryParams
+      params: pageQueryParams,
     });
 
     const hasNextPage =
@@ -151,7 +151,7 @@ export default class GithubRepos extends PureComponent {
       hasNextPage,
       pageQueryParams: hasNextPage
         ? { ...pageQueryParams, page: pageQueryParams.page + 1 }
-        : pageQueryParams
+        : pageQueryParams,
     });
   };
 
@@ -159,7 +159,7 @@ export default class GithubRepos extends PureComponent {
     const selectedAccount = this.state.accounts.find(a => a.login === login);
     const accounts = [...this.state.accounts].map(a => ({
       ...a,
-      selected: a.login === login
+      selected: a.login === login,
     }));
 
     if (selectedAccount) {
@@ -194,7 +194,7 @@ export default class GithubRepos extends PureComponent {
       selectedAccount,
       loading,
       requiresLogin,
-      hasNextPage
+      hasNextPage,
     } = this.state;
 
     const { login } = selectedAccount || {};
@@ -206,7 +206,7 @@ export default class GithubRepos extends PureComponent {
             onClick={loginUser({
               loginOauth,
               updateState: (...args) => this.updateState(...args),
-              init: () => this.init()
+              init: () => this.init(),
             })}
           />
         </LoginScreen>

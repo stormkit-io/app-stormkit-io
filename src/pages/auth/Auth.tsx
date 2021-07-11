@@ -8,11 +8,11 @@ import AuthContext from "./Auth.context";
 import OauthLogin from "./_components/OauthLogin";
 import "./Auth.css";
 
-interface Props {
+interface ContextProps {
   user: User;
 }
 
-const Auth: React.FC<Props> = ({ user }): React.ReactElement => {
+const Auth: React.FC<ContextProps> = ({ user }): React.ReactElement => {
   const location = useLocation();
 
   if (user) {
@@ -64,4 +64,6 @@ const Auth: React.FC<Props> = ({ user }): React.ReactElement => {
   );
 };
 
-export default connect(Auth, [{ Context: AuthContext, props: ["user"] }]);
+export default connect<unknown, ContextProps>(Auth, [
+  { Context: AuthContext, props: ["user"] },
+]);

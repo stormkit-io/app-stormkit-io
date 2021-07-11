@@ -14,7 +14,7 @@ interface Props {
 const Filters: React.FC<Props> = ({
   onFilterChange,
   environments,
-  filters: existingFilters
+  filters: existingFilters,
 }): React.ReactElement => {
   const [branchTempValue, setBranchTempValue] = useState("");
   const [filters, setFilters] = useState<IFilters>(existingFilters);
@@ -42,7 +42,7 @@ const Filters: React.FC<Props> = ({
           onChange={e =>
             setFilters({
               ...filters,
-              published: parseBoolean(e.target.value as string)
+              published: parseBoolean(e.target.value as string),
             })
           }
         >
@@ -62,7 +62,7 @@ const Filters: React.FC<Props> = ({
           onChange={e =>
             setFilters({
               ...filters,
-              status: parseBoolean(e.target.value as string)
+              status: parseBoolean(e.target.value as string),
             })
           }
         >
@@ -92,7 +92,7 @@ const Filters: React.FC<Props> = ({
               <InputAdornment position="start">
                 <span className="fas fa-search" />
               </InputAdornment>
-            )
+            ),
           }}
         />
       </div>

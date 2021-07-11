@@ -18,7 +18,7 @@ const Targetings = ({ targeting, index, maxIndex }) => {
         {
           "md:max-w-1/2": !isSingleRow,
           "border-b": !isLastRow,
-          "border-r": isLeftColumn && maxIndex !== 1
+          "border-r": isLeftColumn && maxIndex !== 1,
         }
       )}
     >
@@ -31,7 +31,7 @@ const Targetings = ({ targeting, index, maxIndex }) => {
           <span className="inline-block py-1 w-24">{keyToName[k]}:</span>
           <span
             className={cn("inline-block rounded py-1", {
-              "bg-gray-80 px-2": targeting[k]
+              "bg-gray-80 px-2": targeting[k],
             })}
           >
             {targeting[k] || "any"}
@@ -46,7 +46,7 @@ Targetings.propTypes = {
   targeting: PropTypes.object,
   index: PropTypes.number,
   maxIndex: PropTypes.number,
-  isEditMode: PropTypes.bool
+  isEditMode: PropTypes.bool,
 };
 
 export default Targetings;

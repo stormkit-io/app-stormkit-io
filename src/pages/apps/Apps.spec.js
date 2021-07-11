@@ -56,7 +56,7 @@ describe(fileName, () => {
     test("should trigger a new call when the button is clicked", async () => {
       const scope = mockFetchApps({
         from: 20,
-        response: { apps, hasNextPage: false }
+        response: { apps, hasNextPage: false },
       });
 
       let button;
@@ -76,7 +76,7 @@ describe(fileName, () => {
   describe("when the user has just created an app", () => {
     beforeEach(() => {
       jest.spyOn(router, "useLocation").mockReturnValue({
-        state: { repoInsert: true }
+        state: { repoInsert: true },
       });
 
       mockFetchApps({ response: { apps, hasNextPage: false } });

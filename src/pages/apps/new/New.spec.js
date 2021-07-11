@@ -50,7 +50,7 @@ describe("pages/apps/new", () => {
               success: true,
               sessionToken: "abc-123",
               accessToken: "abc-123",
-              user: { id: "1" }
+              user: { id: "1" },
             },
             "*"
           );

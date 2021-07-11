@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Location, History } from "history";
 import { useLocation } from "react-router-dom";
+import { ModalContextProps } from "~/components/Modal";
 import Api from "~/utils/api/Api";
 
 interface FetchAppListProps {
@@ -22,7 +23,7 @@ interface FetchAppListAPIResponse {
 
 export const useFetchAppList = ({
   api,
-  from = 0
+  from = 0,
 }: FetchAppListProps): FetchAppListReturnValue => {
   const [apps, setApps] = useState<Array<App>>([]);
   const [loading, setLoading] = useState(true);
@@ -81,7 +82,7 @@ const appCache: Record<string, App> = {};
 
 export const useFetchApp = ({
   api,
-  appId
+  appId,
 }: FetchAppProps): FetchAppReturnValue => {
   const location = useLocation<LocationState>();
   const [app, setApp] = useState<App | undefined>(appCache[appId]);
@@ -153,14 +154,13 @@ export const useFetchApp = ({
   return { app, loading, error };
 };
 
-interface DeployProps {
+interface DeployProps extends Pick<ModalContextProps, "toggleModal"> {
   api: Api;
   app: App;
   history: History;
   environment?: Environment;
   setError: SetError;
   setLoading: SetLoading;
-  toggleModal: ToggleModal;
 }
 
 interface DeployCallbackProps {
@@ -171,49 +171,51 @@ interface DeployAPIResponse {
   id: string;
 }
 
-export const deploy = ({
-  api,
-  app,
-  setLoading,
-  setError,
-  toggleModal,
-  history,
-  environment
-}: DeployProps) => ({ branch }: DeployCallbackProps): void => {
-  if (!environment) {
-    return setError("Please select an environment.");
-  }
+export const deploy =
+  ({
+    api,
+    app,
+    setLoading,
+    setError,
+    toggleModal,
+    history,
+    environment,
+  }: DeployProps) =>
+  ({ branch }: DeployCallbackProps): void => {
+    if (!environment) {
+      return setError("Please select an environment.");
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  api
-    .post<DeployAPIResponse>(`/app/deploy`, {
-      env: environment.env,
-      branch,
-      appId: app.id
-    })
-    .then(deploy => {
-      toggleModal(false, () => {
-        if (deploy && deploy.id) {
-          history.push(`/apps/${app.id}/deployments/${deploy.id}`);
+    api
+      .post<DeployAPIResponse>(`/app/deploy`, {
+        env: environment.env,
+        branch,
+        appId: app.id,
+      })
+      .then(deploy => {
+        toggleModal(false, () => {
+          if (deploy && deploy.id) {
+            history.push(`/apps/${app.id}/deployments/${deploy.id}`);
+          }
+        });
+      })
+      .catch(res => {
+        if (res.status === 429) {
+          setError(
+            "You have exceeded the maximum number of concurrent builds " +
+              "allowed for your application. Please wait until your other " +
+              "deployments are completed. You can always upgrade your package " +
+              "if you need more concurrent builds."
+          );
+        } else {
+          setError(
+            "Something wrong happened here. Please contact us at hello@stormkit.io"
+          );
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    })
-    .catch(res => {
-      if (res.status === 429) {
-        setError(
-          "You have exceeded the maximum number of concurrent builds " +
-            "allowed for your application. Please wait until your other " +
-            "deployments are completed. You can always upgrade your package " +
-            "if you need more concurrent builds."
-        );
-      } else {
-        setError(
-          "Something wrong happened here. Please contact us at hello@stormkit.io"
-        );
-      }
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-};
+  };

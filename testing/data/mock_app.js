@@ -9,5 +9,5 @@ export default () => ({
   userId: "1",
   autoDeploy: "pull_request",
   commitPrefix: "[app]",
-  endpoint: "app.stormkit.dev"
+  endpoint: "app.stormkit.dev",
 });

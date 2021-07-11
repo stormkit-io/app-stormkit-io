@@ -60,7 +60,7 @@ const Deployment = ({ api, app, match }) => {
               <div
                 key={title}
                 className={cn("border border-gray-83 border-solid rounded", {
-                  "mb-8": i < deploy.logs.length - 1
+                  "mb-8": i < deploy.logs.length - 1,
                 })}
               >
                 <div className="flex justify-between p-4">
@@ -109,10 +109,10 @@ const Deployment = ({ api, app, match }) => {
 Deployment.propTypes = {
   app: PropTypes.object,
   api: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
 };
 
 export default connect(Deployment, [
   { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] }
+  { Context: AppContext, props: ["app"] },
 ]);

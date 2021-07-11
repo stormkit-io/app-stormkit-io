@@ -21,7 +21,7 @@ const DomainRow: React.FC<Props> = ({
   isLastRow,
   onDelete,
   onVerify,
-  app
+  app,
 }): React.ReactElement => {
   return (
     <div className={cn("text-xs", { "mb-4": !isLastRow })}>

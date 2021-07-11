@@ -26,8 +26,8 @@ describe.only(fileName, () => {
       props: {
         app,
         environment: env,
-        toggleModal
-      }
+        toggleModal,
+      },
     });
   });
 

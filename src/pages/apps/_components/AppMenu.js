@@ -8,15 +8,15 @@ const paths = ({ app }) => [
   {
     path: `/apps/${app.id}/environments`,
     text: "Environments",
-    icon: "fas fa-th-large"
+    icon: "fas fa-th-large",
   },
   {
     path: `/apps/${app.id}/deployments`,
     text: "Deployments",
-    icon: "fas fa-ship"
+    icon: "fas fa-ship",
   },
   { path: `/apps/${app.id}/team`, text: "Team", icon: "fas fa-users" },
-  { path: `/apps/${app.id}/settings`, text: "Settings", icon: "fas fa-cogs" }
+  { path: `/apps/${app.id}/settings`, text: "Settings", icon: "fas fa-cogs" },
 ];
 
 const AppMenu = ({ app }) => {
@@ -37,7 +37,7 @@ const AppMenu = ({ app }) => {
               className={cn(
                 "inline-flex hover:bg-blue-20 hover:text-white rounded py-2 px-4 items-center",
                 {
-                  "text-pink-50": url.indexOf(path.path) === 0
+                  "text-pink-50": url.indexOf(path.path) === 0,
                 }
               )}
             >
@@ -61,7 +61,7 @@ const AppMenu = ({ app }) => {
 };
 
 AppMenu.propTypes = {
-  app: PropTypes.object
+  app: PropTypes.object,
 };
 
 export default AppMenu;

@@ -6,3 +6,10 @@ declare type User = {
   displayName: string;
   memberSince: number;
 };
+
+declare type ConnectedAccount = {
+  provider: Provider;
+  hasPersonalAccessToken: boolean;
+  displayName: string;
+  url?: string;
+};

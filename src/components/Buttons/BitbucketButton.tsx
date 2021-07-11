@@ -1,7 +1,7 @@
 import React from "react";
-import ProviderButton, { Props } from "./_components/ProviderButton";
+import ProviderButton, { OmittedProps } from "./_components/ProviderButton";
 
-const BitbucketButton = (props: Props): React.ReactElement => {
+const BitbucketButton = (props: OmittedProps): React.ReactElement => {
   return <ProviderButton {...props} provider="bitbucket" text="Bitbucket" />;
 };
 

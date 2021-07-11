@@ -24,15 +24,15 @@ describe(fileName, () => {
 
       nocks.mockFetchDeploymentsCall({
         appId: app.id,
-        response: mockDeploymentsResponse
+        response: mockDeploymentsResponse,
       });
 
       wrapper = withMockContext({
         path,
         props: {
           app,
-          environments: data.mockEnvironments({ app })
-        }
+          environments: data.mockEnvironments({ app }),
+        },
       });
     });
 
@@ -98,15 +98,15 @@ describe(fileName, () => {
 
       nocks.mockFetchDeploymentsCall({
         appId: app.id,
-        response: mockDeploymentsResponse
+        response: mockDeploymentsResponse,
       });
 
       wrapper = withMockContext({
         path,
         props: {
           app,
-          environments: envs
-        }
+          environments: envs,
+        },
       });
     });
 
@@ -129,15 +129,15 @@ describe(fileName, () => {
 
       nocks.mockFetchDeploymentsCall({
         appId: app.id,
-        response: mockDeploymentsResponse
+        response: mockDeploymentsResponse,
       });
 
       wrapper = withMockContext({
         path,
         props: {
           app,
-          environments: envs
-        }
+          environments: envs,
+        },
       });
     });
 

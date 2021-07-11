@@ -1,36 +1,31 @@
 import { useEffect, useState } from "react";
 
-export const setDomain = ({
-  app,
-  api,
-  environment,
-  history,
-  setError,
-  setLoading
-}) => ({ domain }) => {
-  setLoading(true);
+export const setDomain =
+  ({ app, api, environment, history, setError, setLoading }) =>
+  ({ domain }) => {
+    setLoading(true);
 
-  api
-    .put("/app/env/domain", {
-      appId: app.id,
-      domain: domain.trim(),
-      env: environment.env
-    })
-    .then(() => {
-      setLoading(false);
-      history.replace({ state: { envs: Date.now() } });
-    })
-    .catch(res => {
-      setLoading(false);
-      setError(
-        res.status === 400
-          ? "Please provide a valid domain name."
-          : res.status === 429
-          ? "You have issued too many requests. Please wait a while before retrying."
-          : "Something went wrong while setting up the domain. Make sure it is a valid domain."
-      );
-    });
-};
+    api
+      .put("/app/env/domain", {
+        appId: app.id,
+        domain: domain.trim(),
+        env: environment.env,
+      })
+      .then(() => {
+        setLoading(false);
+        history.replace({ state: { envs: Date.now() } });
+      })
+      .catch(res => {
+        setLoading(false);
+        setError(
+          res.status === 400
+            ? "Please provide a valid domain name."
+            : res.status === 429
+            ? "You have issued too many requests. Please wait a while before retrying."
+            : "Something went wrong while setting up the domain. Make sure it is a valid domain."
+        );
+      });
+  };
 
 export const deleteDomain = ({
   api,
@@ -39,7 +34,7 @@ export const deleteDomain = ({
   domainName,
   setLoading,
   setError,
-  history
+  history,
 }) => {
   setLoading(true);
 
@@ -47,7 +42,7 @@ export const deleteDomain = ({
     .delete("/app/env/domain", {
       appId: app.id,
       domain: domainName,
-      env: environment.env
+      env: environment.env,
     })
     .then(() => {
       history.replace({ state: { envs: Date.now() } });
@@ -72,7 +67,7 @@ export const fetchDomainsInfo = ({
   setError,
   setDomainsInfo,
   withUXFix,
-  unmounted = false
+  unmounted = false,
 }) => {
   setLoading(true);
   const timeout = withUXFix ? 1000 : 0;
@@ -141,7 +136,7 @@ export const useDomainLookup = ({ api, app, environment }) => {
       unmounted,
       setDomainsInfo,
       setLoading,
-      setError
+      setError,
     });
 
     return () => {

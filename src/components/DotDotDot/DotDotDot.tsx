@@ -30,7 +30,7 @@ const DotDotDot: React.FC<React.HTMLAttributes<HTMLButtonElement>> & {
 
               return cloneElement(child, {
                 toggleVisibility,
-                isLast: childArray.length - 1 === index
+                isLast: childArray.length - 1 === index,
               });
             })}
           </div>
@@ -71,7 +71,7 @@ const Item: React.FC<ItemProps> = ({
         "hover:text-pink-50": !disabled,
         "opacity-50": disabled,
         "cursor-not-allowed": disabled,
-        "border-b": !isLast
+        "border-b": !isLast,
       },
       className
     )}

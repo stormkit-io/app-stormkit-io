@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Location } from "history";
 import Api from "~/utils/api/Api";
+import { ConfirmModalProps } from "~/components/ConfirmModal";
+import { ModalContextProps } from "~/components/Modal";
 import { normalize, isUndef } from "./helpers";
 
 type SetSnippets = (val: Snippets) => void;
@@ -25,7 +27,7 @@ const putSnippets = ({
   setLoading,
   setSnippets,
   setError,
-  onSuccess
+  onSuccess,
 }: PutSnippetsProps): Promise<void> => {
   setLoading(true);
 
@@ -33,7 +35,7 @@ const putSnippets = ({
     .put(`/app/env/snippets`, {
       appId: app.id,
       env: environment.env,
-      snippets
+      snippets,
     })
     .then(() => {
       setSnippets(normalize(snippets));
@@ -73,7 +75,7 @@ interface FetchSnippetsAPIResponse {
 export const useFetchSnippets = ({
   api,
   app,
-  env
+  env,
 }: FetchSnippetsProps): FetchSnippetsReturnValue => {
   const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
@@ -115,7 +117,7 @@ export const useFetchSnippets = ({
   return { loading, error, snippets, setSnippets };
 };
 
-interface UpsertSnippetsProps {
+interface UpsertSnippetsProps extends Partial<ModalContextProps> {
   api: Api;
   app: App;
   environment: Environment;
@@ -123,71 +125,75 @@ interface UpsertSnippetsProps {
   setLoading: SetLoading;
   setSnippets: SetSnippets;
   snippets: Snippets;
-  toggleModal: ToggleModal;
   index: number;
   injectLocation: "head" | "body";
   isEnabled: boolean;
-  isPrepend: boolean;
+  isPrepend?: boolean;
 }
 
-export const upsertSnippets = ({
-  api,
-  app,
-  environment,
-  setError,
-  setLoading,
-  snippets,
-  setSnippets,
-  toggleModal,
-  index = -1,
-  injectLocation,
-  isEnabled,
-  isPrepend
-}: UpsertSnippetsProps) => (values: Snippet): Promise<void> => {
-  if (!values.title || !values.content) {
-    return Promise.resolve(setError("Title and content are required fields."));
-  }
-
-  const isEdit = index > -1;
-  const clone = JSON.parse(JSON.stringify(snippets || {}));
-  const snippet: Snippet = clone?.[injectLocation]?.[index] || {};
-
-  Object.assign(snippet, values);
-
-  snippet.enabled = isEnabled;
-  snippet.prepend = isUndef(isPrepend) ? snippet.prepend : isPrepend;
-
-  // Delete private variables
-  Object.keys(snippet)
-    .filter(k => k[0] === "_")
-    .forEach(key => {
-      delete snippet[key];
-    });
-
-  const hasInjectLocationChanged = injectLocation !== values._injectLocation;
-  const _injectLocation = values._injectLocation || "";
-
-  if (isEdit && hasInjectLocationChanged) {
-    clone[injectLocation].splice(index, 1);
-    clone[_injectLocation].push(snippet);
-  } else if (!isEdit) {
-    clone[_injectLocation].push(snippet);
-  }
-
-  return putSnippets({
-    snippets: clone,
+export const upsertSnippets =
+  ({
     api,
     app,
     environment,
-    setLoading,
-    setSnippets,
     setError,
-    onSuccess: () => toggleModal && toggleModal(false)
-  });
-};
+    setLoading,
+    snippets,
+    setSnippets,
+    toggleModal,
+    index = -1,
+    injectLocation,
+    isEnabled,
+    isPrepend,
+  }: UpsertSnippetsProps) =>
+  (values: Snippet): Promise<void> => {
+    if (!values.title || !values.content) {
+      return Promise.resolve(
+        setError("Title and content are required fields.")
+      );
+    }
 
-interface DeleteSnippetProps {
-  confirmModal: ConfirmModalFn;
+    const isEdit = index > -1;
+    const clone = JSON.parse(JSON.stringify(snippets || {}));
+    const snippet: Snippet = clone?.[injectLocation]?.[index] || {};
+
+    Object.assign(snippet, values);
+
+    snippet.enabled = isEnabled;
+    snippet.prepend = isUndef(isPrepend) ? snippet.prepend : isPrepend || false;
+
+    // Delete private variables
+    Object.keys(snippet)
+      .filter(k => k[0] === "_")
+      .forEach(key => {
+        if (key === "_i" || key === "_injectLocation") {
+          delete snippet[key];
+        }
+      });
+
+    const hasInjectLocationChanged = injectLocation !== values._injectLocation;
+    const _injectLocation = values._injectLocation || "";
+
+    if (isEdit && hasInjectLocationChanged) {
+      clone[injectLocation].splice(index, 1);
+      clone[_injectLocation].push(snippet);
+    } else if (!isEdit) {
+      clone[_injectLocation].push(snippet);
+    }
+
+    return putSnippets({
+      snippets: clone,
+      api,
+      app,
+      environment,
+      setLoading,
+      setSnippets,
+      setError,
+      onSuccess: () => toggleModal && toggleModal(false),
+    });
+  };
+
+interface DeleteSnippetProps extends ConfirmModalProps {
   snippets: Snippets;
   setSnippets: SetSnippets;
   api: Api;
@@ -205,7 +211,7 @@ export const deleteSnippet = ({
   api,
   app,
   environment,
-  injectLocation
+  injectLocation,
 }: DeleteSnippetProps): void => {
   confirmModal(
     `This will delete the snippet and it won't be injected anymore.`,
@@ -222,15 +228,21 @@ export const deleteSnippet = ({
           setLoading,
           setSnippets,
           setError,
-          onSuccess: closeModal
+          onSuccess: closeModal,
         });
-      }
+      },
     }
   );
 };
 
-interface EnableOrDisableProps extends UpsertSnippetsProps {
-  confirmModal: ConfirmModalFn;
+type ExtendedUpsertSnippetProps = Omit<
+  UpsertSnippetsProps,
+  "setError" | "setLoading" | "injectLocation" | "isPrepend" | "toggleModal"
+>;
+
+interface EnableOrDisableProps
+  extends ConfirmModalProps,
+    ExtendedUpsertSnippetProps {
   id: string;
   snippet: Snippet;
 }
@@ -257,7 +269,7 @@ export const enableOrDisable = ({
           setError,
           setLoading,
           injectLocation: snippet._injectLocation || "body",
-          setSnippets
+          setSnippets,
         })(snippet).then(closeModal);
       },
       onCancel: close => {
@@ -270,7 +282,7 @@ export const enableOrDisable = ({
         }
 
         close();
-      }
+      },
     }
   );
 };

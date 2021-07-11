@@ -7,7 +7,7 @@ const Id = ({ match }) => {
 };
 
 Id.propTypes = {
-  match: PropTypes.object
+  match: PropTypes.object,
 };
 
 export default Id;

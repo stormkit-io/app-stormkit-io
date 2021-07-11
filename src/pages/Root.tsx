@@ -10,16 +10,18 @@ interface Props {
 
 const Root: React.FC<Props> = ({ Router }): React.ReactElement => (
   <StylesProvider injectFirst>
-    <RootContext.Provider Router={Router}>
-      <Switch>
-        {routes.map(route => (
-          <Route
-            {...route}
-            key={Array.isArray(route.path) ? route.path[0] : route.path}
-          />
-        ))}
-      </Switch>
-    </RootContext.Provider>
+    <Router>
+      <RootContext.Provider>
+        <Switch>
+          {routes.map(route => (
+            <Route
+              {...route}
+              key={Array.isArray(route.path) ? route.path[0] : route.path}
+            />
+          ))}
+        </Switch>
+      </RootContext.Provider>
+    </Router>
   </StylesProvider>
 );
 

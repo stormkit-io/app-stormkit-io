@@ -15,7 +15,7 @@ const Toggler: React.FC<Props> = ({
   onSelect,
   defaultSelected,
   name,
-  className
+  className,
 }: Props): React.ReactElement => {
   const [selectedValue, setSelectedValue] = useState<string | number>(
     defaultSelected
@@ -54,7 +54,7 @@ const Toggler: React.FC<Props> = ({
               "rounded-tl-lg": i === 0,
               "rounded-bl-lg": i === 0,
               "rounded-tr-lg": i === childArray.length - 1,
-              "rounded-br-lg": i === childArray.length - 1
+              "rounded-br-lg": i === childArray.length - 1,
             })}
             onClick={() => {
               setSelectedValue(value);

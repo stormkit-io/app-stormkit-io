@@ -15,7 +15,7 @@ const DomainModal = ({
   api,
   app,
   environment,
-  history
+  history,
 }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ const DomainModal = ({
           api,
           app,
           environment,
-          history
+          history,
         })}
       >
         <div className="mb-4 p-4 rounded bg-gray-85">
@@ -49,7 +49,7 @@ const DomainModal = ({
             required
             fullWidth
             inputProps={{
-              "aria-label": "Domain name"
+              "aria-label": "Domain name",
             }}
           />
           <p className="opacity-50 text-sm pt-2">
@@ -77,12 +77,12 @@ DomainModal.propTypes = {
   history: PropTypes.object,
   environment: PropTypes.object,
   api: PropTypes.object,
-  app: PropTypes.object
+  app: PropTypes.object,
 };
 
 export default Object.assign(
   connect(DomainModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] }
+    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
   ]),
   ModalContext
 );

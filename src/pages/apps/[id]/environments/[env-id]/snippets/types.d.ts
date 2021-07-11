@@ -1,10 +1,10 @@
-declare interface Snippet extends Record<string, string | number | boolean> {
+declare interface Snippet {
   title: string;
   content: string;
   enabled: boolean;
   prepend: boolean;
-  _injectLocation?: "head" | "body";
-  _i?: number;
+  _injectLocation: "head" | "body";
+  _i: number;
 }
 
 declare interface Snippets {

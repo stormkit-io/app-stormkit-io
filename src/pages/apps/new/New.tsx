@@ -1,20 +1,31 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { useHistory } from "react-router";
 import { connect } from "~/utils/context";
 import DefaultLayout from "~/layouts/DefaultLayout";
-import AuthContext from "~/pages/auth/Auth.context";
-import RootContext from "~/pages/Root.context";
+import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
 import { Title } from "~/pages/apps/_components";
 import { useFetchAppList } from "~/pages/apps/actions";
 import ExplanationBox from "~/components/ExplanationBox";
 import Link from "~/components/Link";
 import * as btn from "~/components/Buttons";
-import { login as loginAction } from "./actions";
 
-const Start = ({ loginOauth, history, api, ...rest }) => {
+interface ContextProps extends AuthContextProps, RootContextProps {}
+
+const Start: React.FC<ContextProps> = ({
+  loginOauth,
+  api,
+}): React.ReactElement => {
+  const history = useHistory();
   const { apps, loading } = useFetchAppList({ api });
-  const login = provider =>
-    loginAction({ api: rest[provider], provider, history, loginOauth });
+
+  const login = (provider: Provider) => {
+    return loginOauth(provider).then(({ accessToken }) => {
+      if (accessToken) {
+        history.push(`/apps/new/${provider}`);
+      }
+    });
+  };
 
   return (
     <DefaultLayout>
@@ -39,12 +50,15 @@ const Start = ({ loginOauth, history, api, ...rest }) => {
               Step 1 of 2. Where can we find your codebase?
             </h3>
             <div className="flex flex-auto items-center py-24">
-              <btn.GithubButton onClick={login("github")} className="mr-4" />
-              <btn.BitbucketButton
-                onClick={login("bitbucket")}
+              <btn.GithubButton
+                onClick={() => login("github")}
                 className="mr-4"
               />
-              <btn.GitlabButton onClick={login("gitlab")} />
+              <btn.BitbucketButton
+                onClick={() => login("bitbucket")}
+                className="mr-4"
+              />
+              <btn.GitlabButton onClick={() => login("gitlab")} />
             </div>
             <p>
               Having issues setting up your project? Reach us at{" "}
@@ -70,15 +84,7 @@ const Start = ({ loginOauth, history, api, ...rest }) => {
   );
 };
 
-Start.propTypes = {
-  github: PropTypes.object,
-  bitbucket: PropTypes.object,
-  history: PropTypes.object,
-  api: PropTypes.object,
-  loginOauth: PropTypes.func
-};
-
-export default connect(Start, [
-  { Context: RootContext, props: ["bitbucket", "github", "gitlab", "api"] },
-  { Context: AuthContext, props: ["loginOauth"] }
+export default connect<unknown, ContextProps>(Start, [
+  { Context: RootContext, props: ["api"] },
+  { Context: AuthContext, props: ["loginOauth"] },
 ]);

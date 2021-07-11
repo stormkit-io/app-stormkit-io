@@ -10,8 +10,8 @@ export default ({ app }) => [
       cmd: "yarn test \u0026\u0026 yarn run build:console",
       vars: {
         BABEL_ENV: "production",
-        NODE_ENV: "production"
-      }
+        NODE_ENV: "production",
+      },
     },
     autoPublish: true,
     appId: app.id,
@@ -19,11 +19,11 @@ export default ({ app }) => [
     domain: {
       name: "app.stormkit.io",
       verified: true,
-      cname: "app-stormkit-io-cnmiji6et.hosting.stormkit.io."
+      cname: "app-stormkit-io-cnmiji6et.hosting.stormkit.io.",
     },
     getDomainName() {
       return "app.stormkit.io";
-    }
+    },
   },
   {
     id: "863521234275",
@@ -38,17 +38,17 @@ export default ({ app }) => [
         API_DOMAIN: "https://api.stormkit.io",
         BABEL_ENV: "production",
         NODE_ENV: "production",
-        ROOT: "\u003croot\u003e/packages/console"
-      }
+        ROOT: "\u003croot\u003e/packages/console",
+      },
     },
     autoPublish: false,
     appId: app.id,
     lastDeploy: { id: "3414609680676", createdAt: 1568463533, exit: 0 },
     domain: {
-      verified: false
+      verified: false,
     },
     getDomainName() {
       return `${app.displayName}--development.stormkit.dev`;
-    }
-  }
+    },
+  },
 ];

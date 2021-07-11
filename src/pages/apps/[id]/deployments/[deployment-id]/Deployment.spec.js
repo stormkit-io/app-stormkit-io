@@ -18,7 +18,7 @@ describe(fileName, () => {
       scope = nocks.mockFetchDeploymentCall({ app, deploy });
       wrapper = withMockContext(path, {
         app,
-        match: { params: { deploymentId: deploy.id } }
+        match: { params: { deploymentId: deploy.id } },
       });
     });
 
@@ -68,11 +68,11 @@ describe(fileName, () => {
       scope = nocks.mockFetchDeploymentCall({
         app,
         deploy,
-        response: { deploy }
+        response: { deploy },
       });
       wrapper = withMockContext(path, {
         app,
-        match: { params: { deploymentId: deploy.id } }
+        match: { params: { deploymentId: deploy.id } },
       });
     });
 

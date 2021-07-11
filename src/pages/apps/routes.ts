@@ -5,36 +5,36 @@ const routes: Array<RouteProps> = [
   {
     path: "/apps/:id",
     exact: true,
-    component: Async(() => import("~/pages/apps/[id]"))
+    component: Async(() => import("~/pages/apps/[id]")),
   },
   {
     path: "/apps/:id/environments",
-    component: Async(() =>
-      import("~/pages/apps/[id]/environments/Environments.context")
-    )
+    component: Async(
+      () => import("~/pages/apps/[id]/environments/Environments.context")
+    ),
   },
   {
     path: "/apps/:id/deployments",
     exact: true,
-    component: Async(() => import("~/pages/apps/[id]/deployments"))
+    component: Async(() => import("~/pages/apps/[id]/deployments")),
   },
   {
     path: "/apps/:id/deployments/:deploymentId",
     exact: true,
-    component: Async(() =>
-      import("~/pages/apps/[id]/deployments/[deployment-id]")
-    )
+    component: Async(
+      () => import("~/pages/apps/[id]/deployments/[deployment-id]")
+    ),
   },
   {
     path: "/apps/:id/team",
     exact: true,
-    component: Async(() => import("~/pages/apps/[id]/team"))
+    component: Async(() => import("~/pages/apps/[id]/team")),
   },
   {
     path: "/apps/:id/settings",
     exact: true,
-    component: Async(() => import("~/pages/apps/[id]/settings"))
-  }
+    component: Async(() => import("~/pages/apps/[id]/settings")),
+  },
 ];
 
 export default routes;

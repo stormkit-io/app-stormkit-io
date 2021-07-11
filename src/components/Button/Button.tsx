@@ -28,7 +28,7 @@ const prepareStyles = (
       "items-center",
       "justify-center",
       "rounded-lg",
-      "button"
+      "button",
     ]
   );
 
@@ -67,7 +67,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
     const props = {
       className: cn(classes, className),
       disabled: disabled || loading ? "disabled" : undefined,
-      ...rest
+      ...rest,
     };
 
     const content = (
@@ -82,7 +82,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
                   "w-full",
                   "justify-center",
                   {
-                    invisible: loading
+                    invisible: loading,
                   }
                 )}
               >
@@ -103,7 +103,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
           (e.key === "Enter" || e.key === " ") &&
           props.onClick &&
           props.onClick(
-            (e as unknown) as React.MouseEvent<HTMLButtonElement, MouseEvent>
+            e as unknown as React.MouseEvent<HTMLButtonElement, MouseEvent>
           );
       }
     }

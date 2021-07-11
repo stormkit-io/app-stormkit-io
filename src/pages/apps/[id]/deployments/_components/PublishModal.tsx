@@ -1,27 +1,33 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
-import Modal from "~/components/Modal";
+import { useHistory } from "react-router-dom";
+import Modal, { ModalContextProps } from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
+import { RootContextProps } from "~/pages/Root.context";
 import { connect } from "~/utils/context";
 import { useFetchDeployments, publishDeployments } from "../actions";
 import DeployTable from "./PublishModalDeployments";
 
 const ModalContext = Modal.Context();
 
-const PublishModal = ({
+interface Props extends Pick<RootContextProps, "api"> {
+  environments: Array<Environment>;
+  deployment: Deployment;
+  app: App;
+}
+
+const PublishModal: React.FC<Props & ModalContextProps> = ({
   isOpen,
   toggleModal,
   environments,
   deployment,
   api,
   app,
-  history
-}) => {
-  const [selectedEnvironment, setSelectedEnvironment] = useState("");
-  const [publishError, setPublishError] = useState(null);
+}): React.ReactElement => {
+  const history = useHistory();
+  const [selectedEnvironment, setSelectedEnvironment] = useState<string>("");
+  const [publishError, setPublishError] = useState<string | null>(null);
   const filters = { envId: selectedEnvironment, published: true };
   const result = useFetchDeployments({ api, app, filters, skipQuery: !isOpen });
   const { deployments, loading, error } = result;
@@ -38,7 +44,7 @@ const PublishModal = ({
           className="mb-8"
           environments={environments}
           placeholder="Select an environment to publish"
-          onSelect={e => setSelectedEnvironment(e.id)}
+          onSelect={e => e.id && setSelectedEnvironment(e.id)}
         />
       </Form>
       <div>
@@ -59,7 +65,7 @@ const PublishModal = ({
               api,
               app,
               history,
-              setPublishError
+              setPublishError,
             })}
           />
         )}
@@ -68,19 +74,9 @@ const PublishModal = ({
   );
 };
 
-PublishModal.propTypes = {
-  isOpen: PropTypes.bool,
-  toggleModal: PropTypes.func,
-  deployment: PropTypes.object,
-  environments: PropTypes.array,
-  api: PropTypes.object,
-  app: PropTypes.object,
-  history: PropTypes.object
-};
-
 export default Object.assign(
-  connect(withRouter(PublishModal), [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] }
+  connect<Props, ModalContextProps>(PublishModal, [
+    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
   ]),
   ModalContext
 );

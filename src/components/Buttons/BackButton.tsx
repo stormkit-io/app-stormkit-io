@@ -21,7 +21,7 @@ const BackButton: FC<Props> = ({
       `w-${size} h-${size}`,
       {
         "text-3xl": size === 8,
-        "text-2xl": size === 6
+        "text-2xl": size === 6,
       },
       className
     )}

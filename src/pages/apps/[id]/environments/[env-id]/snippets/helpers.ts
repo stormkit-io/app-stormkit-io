@@ -8,12 +8,12 @@ export const normalize = (snippets: Snippets): Snippets => {
     head: head.map((s: Snippet, _i: number) => ({
       ...s,
       _injectLocation: "head",
-      _i
+      _i,
     })),
     body: body.map((s: Snippet, _i: number) => ({
       ...s,
       _injectLocation: "body",
-      _i
-    }))
+      _i,
+    })),
   };
 };

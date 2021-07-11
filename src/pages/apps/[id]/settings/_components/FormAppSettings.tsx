@@ -43,7 +43,7 @@ const FormAppSettings: React.FC<Props> = ({
   api,
   app,
   environments,
-  additionalSettings
+  additionalSettings,
 }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -70,7 +70,7 @@ const FormAppSettings: React.FC<Props> = ({
         api,
         setLoading,
         setError,
-        history
+        history,
       })}
     >
       <Form.Section label="Display name">
@@ -81,7 +81,7 @@ const FormAppSettings: React.FC<Props> = ({
           defaultValue={app.displayName}
           fullWidth
           inputProps={{
-            "aria-label": "Display name"
+            "aria-label": "Display name",
           }}
         />
         <Form.Description>
@@ -100,7 +100,7 @@ const FormAppSettings: React.FC<Props> = ({
           defaultValue={toRepoAddr(app.repo)}
           fullWidth
           inputProps={{
-            "aria-label": "Repository"
+            "aria-label": "Repository",
           }}
         />
         <Form.Description>
@@ -115,7 +115,7 @@ const FormAppSettings: React.FC<Props> = ({
           value={runtime}
           onChange={e => setRuntime(e.target.value as Runtime)}
           inputProps={{
-            "aria-label": "Runtime"
+            "aria-label": "Runtime",
           }}
         >
           <Form.Option value={NodeJS10}>NodeJS 10.x</Form.Option>
@@ -139,7 +139,7 @@ const FormAppSettings: React.FC<Props> = ({
           value={autoDeploy}
           onChange={e => setAutoDeploy(e.target.value as AutoDeploy)}
           inputProps={{
-            "aria-label": "Auto deploy"
+            "aria-label": "Auto deploy",
           }}
         >
           <Form.Option value={AutoDeployDisabled}>Disabled</Form.Option>
@@ -182,7 +182,7 @@ const FormAppSettings: React.FC<Props> = ({
               defaultValue={app.commitPrefix}
               fullWidth
               inputProps={{
-                "aria-label": "Match prefix"
+                "aria-label": "Match prefix",
               }}
             />
             <Form.Description>
@@ -211,7 +211,7 @@ const FormAppSettings: React.FC<Props> = ({
           dismissable
           onDismissed={() =>
             history.replace({
-              state: { app: location?.state?.app, settingsSuccess: null }
+              state: { app: location?.state?.app, settingsSuccess: null },
             })
           }
         >

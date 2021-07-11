@@ -34,9 +34,9 @@ FormDangerZone.propTypes = {
   history: PropTypes.object,
   api: PropTypes.object,
   app: PropTypes.object,
-  confirmModal: PropTypes.func
+  confirmModal: PropTypes.func,
 };
 
 export default connect(FormDangerZone, [
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true }
+  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
 ]);

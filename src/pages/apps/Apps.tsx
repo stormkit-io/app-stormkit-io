@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Location } from "history";
 import { Redirect, useLocation } from "react-router-dom";
 import { connect } from "~/utils/context";
-import Api from "~/utils/api/Api";
-import RootContext from "~/pages/Root.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
 import DefaultLayout from "~/layouts/DefaultLayout";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
@@ -14,15 +13,13 @@ import { AppRow, Title } from "./_components";
 
 const limit = 20;
 
-interface Props {
-  api: Api;
-}
-
 interface LocationState extends Location {
   repoInsert: boolean;
 }
 
-export const Home: React.FC<Props> = ({ api }): React.ReactElement => {
+export const Home: React.FC<RootContextProps> = ({
+  api,
+}): React.ReactElement => {
   const location = useLocation<LocationState>();
   const [from, setFrom] = useState(0);
   const { apps, loading, error, hasNextPage } = useFetchAppList({ api, from });
@@ -97,4 +94,6 @@ export const Home: React.FC<Props> = ({ api }): React.ReactElement => {
   );
 };
 
-export default connect(Home, [{ Context: RootContext, props: ["api"] }]);
+export default connect<unknown, RootContextProps>(Home, [
+  { Context: RootContext, props: ["api"] },
+]);

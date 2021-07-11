@@ -15,7 +15,7 @@ const LoginScreen = ({ children }) => {
 };
 
 LoginScreen.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default LoginScreen;

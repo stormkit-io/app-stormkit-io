@@ -24,13 +24,13 @@ HeaderActions.propTypes = {
   api: PropTypes.object,
   app: PropTypes.object,
   environments: PropTypes.array,
-  toggleModal: PropTypes.func
+  toggleModal: PropTypes.func,
 };
 
 export default connect(HeaderActions, [
   {
     Context: DeployModal,
     props: ["toggleModal"],
-    wrap: true
-  }
+    wrap: true,
+  },
 ]);

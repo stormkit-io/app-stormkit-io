@@ -16,7 +16,7 @@ describe("pages/auth/Auth.context", () => {
   const createWrapper = () => {
     const history = createMemoryHistory();
     const api = new Api({
-      baseurl: process.env.API_DOMAIN
+      baseurl: process.env.API_DOMAIN,
     });
 
     wrapper = render(
@@ -39,7 +39,7 @@ describe("pages/auth/Auth.context", () => {
 
       jest.spyOn(router, "useLocation").mockReturnValue({
         search: "my-query=1",
-        pathname: "/apps/1231231"
+        pathname: "/apps/1231231",
       });
 
       scope = nocks.mockFetchUser({ response: { ok: false, user: null } });
@@ -67,7 +67,7 @@ describe("pages/auth/Auth.context", () => {
 
       jest.spyOn(router, "useLocation").mockReturnValue({
         search: "my-query=1",
-        pathname: "/apps/1231231"
+        pathname: "/apps/1231231",
       });
 
       scope = nocks.mockFetchUser({});
@@ -83,7 +83,7 @@ describe("pages/auth/Auth.context", () => {
         expect(scope.isDone()).toBe(true);
         expect(
           wrapper.getByText(
-            `{"user":{"displayName":"stormkit","avatar":"https://avatars2.githubusercontent.com/u/3321893?v=4","email":"foo@bar","memberSince":1551184200,"isAdmin":true,"id":"1644802351","fullName":"Foo Bar"},"error":null}`
+            `{"user":{"displayName":"stormkit","avatar":"https://avatars2.githubusercontent.com/u/3321893?v=4","email":"foo@bar","memberSince":1551184200,"id":"1644802351","fullName":"Foo Bar"},"accounts":[{"provider":"gitlab","url":"","displayName":"Footormkit"},{"provider":"bitbucket","url":"https://bitbucket.org/%7B6e4d532c-e1b6-4496-90cb-f94f09af2bda%7D/","displayName":"stormkit"},{"provider":"github","url":"https://api.github.com/users/stormkit","displayName":"stormkit"}],"error":null}`
           )
         ).not.toBe(null);
       });

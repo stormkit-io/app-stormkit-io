@@ -5,7 +5,7 @@ export const mockFetchDeploymentCall = ({
   app,
   deploy,
   status = 200,
-  response = data.mockDeploymentResponse()
+  response = data.mockDeploymentResponse(),
 }) =>
   nock(process.env.API_DOMAIN)
     .get(`/app/${app.id}/deploy/${deploy.id}`)
@@ -16,7 +16,7 @@ export const mockFetchDeploymentsCall = ({
   from = 0,
   filters = {},
   status: responseStatus = 200,
-  response
+  response,
 }) => {
   const cleanFilters = {};
 
@@ -35,7 +35,7 @@ export const mockStopDeploymentCall = ({
   appId,
   deploymentId,
   status = 200,
-  response = { ok: true }
+  response = { ok: true },
 }) =>
   nock(process.env.API_DOMAIN)
     .post(`/app/deploy/stop`, { appId, deploymentId })

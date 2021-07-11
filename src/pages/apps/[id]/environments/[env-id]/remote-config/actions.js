@@ -41,120 +41,124 @@ export const useFetchRemoteConfig = ({ api, app, env, location }) => {
   return { error, loading, config, setConfig };
 };
 
-export const deleteKeyFromConfig = ({
-  api,
-  app,
-  config,
-  environment,
-  history,
-  setLoading,
-  setError,
-  closeModal
-}) => oldName => {
-  const newConfig = { ...config };
-  delete newConfig[oldName];
+export const deleteKeyFromConfig =
+  ({
+    api,
+    app,
+    config,
+    environment,
+    history,
+    setLoading,
+    setError,
+    closeModal,
+  }) =>
+  oldName => {
+    const newConfig = { ...config };
+    delete newConfig[oldName];
 
-  setLoading(true);
+    setLoading(true);
 
-  return api
-    .put(`/app/env/remote-config`, {
-      appId: app.id,
-      env: environment.env,
-      config: newConfig
-    })
-    .then(() => {
-      closeModal(() => {
-        history.replace({
-          state: {
-            rc: Date.now()
-          }
+    return api
+      .put(`/app/env/remote-config`, {
+        appId: app.id,
+        env: environment.env,
+        config: newConfig,
+      })
+      .then(() => {
+        closeModal(() => {
+          history.replace({
+            state: {
+              rc: Date.now(),
+            },
+          });
         });
+      })
+      .catch(() => {
+        setError(
+          "Something went wrong while deleting the config. Please try again, if the problem persists contact us from Discord or email."
+        );
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    })
-    .catch(() => {
-      setError(
-        "Something went wrong while deleting the config. Please try again, if the problem persists contact us from Discord or email."
-      );
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-};
-
-export const upsertRemoteConfig = ({
-  api,
-  app,
-  config,
-  environment,
-  setError,
-  setLoading,
-  history,
-  toggleModal
-}) => values => {
-  const name = values.name.trim();
-
-  if (name === "") {
-    return setError("Parameter name cannot be empty.");
-  }
-
-  if (config[name] && name !== values.nameOld) {
-    return setError(
-      "This name already exists in the config. Please either update or delete it."
-    );
-  }
-
-  setLoading(true);
-
-  const normalized = {
-    desc: values.desc,
-    experimentId: values.experimentId,
-    targetings: []
   };
 
-  Object.keys(keyToName).forEach(key => {
-    if (!Array.isArray(values[`targetings.${key}`])) {
-      values[`targetings.${key}`] = [values[`targetings.${key}`]];
+export const upsertRemoteConfig =
+  ({
+    api,
+    app,
+    config,
+    environment,
+    setError,
+    setLoading,
+    history,
+    toggleModal,
+  }) =>
+  values => {
+    const name = values.name.trim();
+
+    if (name === "") {
+      return setError("Parameter name cannot be empty.");
     }
 
-    values[`targetings.${key}`].forEach((v, i) => {
-      normalized.targetings[i] = normalized.targetings[i] || {};
-      normalized.targetings[i][key] = v;
-    });
-  });
-
-  const newConfig = { ...config, [name]: normalized };
-
-  // Delete the previous version in case name has changed.
-  if (name !== values.nameOld) {
-    delete newConfig[values.nameOld];
-  }
-
-  return api
-    .put(`/app/env/remote-config`, {
-      appId: app.id,
-      env: environment.env,
-      config: newConfig
-    })
-    .then(() => {
-      toggleModal(false, () =>
-        history.replace({
-          state: {
-            rc: Date.now()
-          }
-        })
+    if (config[name] && name !== values.nameOld) {
+      return setError(
+        "This name already exists in the config. Please either update or delete it."
       );
-    })
-    .catch(() => {
-      const error =
-        "Something went wrong on our side. Please try again later or reach us if the problem persists.";
+    }
 
-      if (typeof setError === "function") {
-        setError(error);
-      } else {
-        throw new Error(error);
+    setLoading(true);
+
+    const normalized = {
+      desc: values.desc,
+      experimentId: values.experimentId,
+      targetings: [],
+    };
+
+    Object.keys(keyToName).forEach(key => {
+      if (!Array.isArray(values[`targetings.${key}`])) {
+        values[`targetings.${key}`] = [values[`targetings.${key}`]];
       }
-    })
-    .finally(() => {
-      setLoading(false);
+
+      values[`targetings.${key}`].forEach((v, i) => {
+        normalized.targetings[i] = normalized.targetings[i] || {};
+        normalized.targetings[i][key] = v;
+      });
     });
-};
+
+    const newConfig = { ...config, [name]: normalized };
+
+    // Delete the previous version in case name has changed.
+    if (name !== values.nameOld) {
+      delete newConfig[values.nameOld];
+    }
+
+    return api
+      .put(`/app/env/remote-config`, {
+        appId: app.id,
+        env: environment.env,
+        config: newConfig,
+      })
+      .then(() => {
+        toggleModal(false, () =>
+          history.replace({
+            state: {
+              rc: Date.now(),
+            },
+          })
+        );
+      })
+      .catch(() => {
+        const error =
+          "Something went wrong on our side. Please try again later or reach us if the problem persists.";
+
+        if (typeof setError === "function") {
+          setError(error);
+        } else {
+          throw new Error(error);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };

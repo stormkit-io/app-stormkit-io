@@ -14,5 +14,5 @@ export const keyToName = {
   appVersion: "App version",
   segment: "Segment",
   percentile: "Percentile",
-  value: "Value"
+  value: "Value",
 };

@@ -19,10 +19,10 @@ const Provider = ({
   history,
   user,
   loginOauth,
-  api
+  api,
 }) => {
   const { provider } = match.params;
-  const popupLogin = loginOauth(provider);
+  const popupLogin = () => loginOauth(provider);
 
   return (
     <DefaultLayout>
@@ -92,10 +92,10 @@ Provider.propTypes = {
   github: PropTypes.object,
   gitlab: PropTypes.object,
   api: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
 };
 
 export default connect(Provider, [
   { Context: RootContext, props: ["bitbucket", "github", "gitlab", "api"] },
-  { Context: AuthContext, props: ["user", "loginOauth"] }
+  { Context: AuthContext, props: ["user", "loginOauth"] },
 ]);

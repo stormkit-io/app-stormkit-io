@@ -46,7 +46,7 @@ const NewMemberModal = ({ isOpen, toggleModal, api, app }) => {
               api,
               setLoading,
               setToken,
-              setError
+              setError,
             })}
           />
         </>
@@ -74,12 +74,12 @@ NewMemberModal.propTypes = {
   isOpen: PropTypes.bool,
   toggleModal: PropTypes.func,
   api: PropTypes.object,
-  app: PropTypes.object
+  app: PropTypes.object,
 };
 
 export default Object.assign(
   connect(NewMemberModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] }
+    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
   ]),
   ModalContext
 );

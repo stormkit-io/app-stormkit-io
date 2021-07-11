@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React from "react";
 import cn from "classnames";
 import "./Spinner.css";
 
@@ -11,14 +11,14 @@ interface Props {
   className?: string;
 }
 
-const Spinner: FC<Props> = ({
+const Spinner: React.FC<Props> = ({
   width,
   height,
   pageCenter,
   primary,
   secondary,
-  className
-}: Props): ReactElement => (
+  className,
+}: Props): React.ReactElement => (
   <div
     className={cn(
       "spinner",
@@ -28,7 +28,7 @@ const Spinner: FC<Props> = ({
       {
         "page-center": pageCenter,
         "bg-pink-50": primary,
-        "bg-blue-20": secondary
+        "bg-blue-20": secondary,
       },
       className
     )}
@@ -43,7 +43,7 @@ const Spinner: FC<Props> = ({
 // Width and height are numbers compatible with tailwind sizes.
 Spinner.defaultProps = {
   width: 10,
-  height: 10
+  height: 10,
 } as Partial<Props>;
 
 export default Spinner;

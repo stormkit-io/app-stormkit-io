@@ -11,7 +11,7 @@ export default class GitlabRepositories extends PureComponent {
     api: PropTypes.object,
     gitlab: PropTypes.object,
     history: PropTypes.object,
-    user: PropTypes.object
+    user: PropTypes.object,
   };
 
   state = {
@@ -19,7 +19,7 @@ export default class GitlabRepositories extends PureComponent {
     repositories: [],
     loading: true,
     errors: {},
-    nextPage: null
+    nextPage: null,
   };
 
   componentDidMount() {
@@ -53,7 +53,7 @@ export default class GitlabRepositories extends PureComponent {
       login: glUser.username,
       avatar: glUser.avatar_url,
       type: "user",
-      selected: true
+      selected: true,
     };
 
     this.updateState({ accounts: [user] });
@@ -75,7 +75,7 @@ export default class GitlabRepositories extends PureComponent {
     this.updateState({
       repositories: [...repositories, ...repos],
       loading: false,
-      nextPage
+      nextPage,
     });
   };
 
@@ -96,7 +96,7 @@ export default class GitlabRepositories extends PureComponent {
       accounts = [],
       loading,
       requiresLogin,
-      nextPage
+      nextPage,
     } = this.state;
 
     if (requiresLogin) {
@@ -106,7 +106,7 @@ export default class GitlabRepositories extends PureComponent {
             onClick={loginUser({
               loginOauth,
               updateState: (...args) => this.updateState(...args),
-              init: () => this.init()
+              init: () => this.init(),
             })}
           />
         </LoginScreen>

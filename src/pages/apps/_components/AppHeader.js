@@ -35,7 +35,7 @@ AppHeader.propTypes = {
   api: PropTypes.object,
   app: PropTypes.object,
   envs: PropTypes.array,
-  actions: PropTypes.node
+  actions: PropTypes.node,
 };
 
 export default AppHeader;

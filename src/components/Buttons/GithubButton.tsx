@@ -1,7 +1,7 @@
 import React from "react";
-import ProviderButton, { Props } from "./_components/ProviderButton";
+import ProviderButton, { OmittedProps } from "./_components/ProviderButton";
 
-const GithubButton = (props: Props): React.ReactElement => {
+const GithubButton = (props: OmittedProps): React.ReactElement => {
   return <ProviderButton {...props} provider="github" text="GitHub" />;
 };
 

@@ -15,18 +15,18 @@ describe.only(fileName, () => {
     const envs = data.mockEnvironments({ app });
 
     jest.spyOn(router, "useRouteMatch").mockReturnValue({
-      params: { id: app.id }
+      params: { id: app.id },
     });
 
     jest.spyOn(router, "useLocation").mockReturnValue({
-      state: {}
+      state: {},
     });
 
     nocks.mockFetchApp({ app, status });
     nocks.mockFetchEnvironments({
       app,
       status,
-      response: { hasNextPage: false, envs }
+      response: { hasNextPage: false, envs },
     });
 
     wrapper = withMockContext({ path, mockModal: false });

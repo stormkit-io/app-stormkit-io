@@ -31,7 +31,7 @@ const PlusButton: React.FC<Props> = ({
       <span
         className={cn({
           "text-2xl": size === "medium",
-          "text-xl": size === "small"
+          "text-xl": size === "small",
         })}
       >
         <span className="fas fa-plus-circle mr-2 text-lg" />
@@ -43,7 +43,7 @@ const PlusButton: React.FC<Props> = ({
 
 PlusButton.defaultProps = {
   size: MEDIUM,
-  text: "New"
+  text: "New",
 } as Props;
 
 export default PlusButton;

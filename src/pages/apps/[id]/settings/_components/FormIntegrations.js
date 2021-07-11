@@ -14,7 +14,7 @@ const FormIntegrations = ({
   app,
   additionalSettings: settings,
   history,
-  location
+  location,
 }) => {
   const slackHookOnStart = settings.hooks?.slack?.onStart || false;
   const slackHookOnEnd = settings.hooks?.slack?.onEnd || false;
@@ -33,7 +33,7 @@ const FormIntegrations = ({
         api,
         setLoading,
         setError,
-        history
+        history,
       })}
     >
       <Form.Section
@@ -51,7 +51,7 @@ const FormIntegrations = ({
           placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
           defaultValue={settings.hooks?.slack?.webhook}
           inputProps={{
-            "aria-label": "Webhook URL"
+            "aria-label": "Webhook URL",
           }}
           required
           fullWidth
@@ -71,7 +71,7 @@ const FormIntegrations = ({
             settings.hooks?.slack?.channel
           )}
           inputProps={{
-            "aria-label": "Channel name"
+            "aria-label": "Channel name",
           }}
           required
           fullWidth
@@ -140,7 +140,7 @@ const FormIntegrations = ({
           dismissable
           onDismissed={() =>
             history.push({
-              state: { app: location?.state?.app, integrationsSuccess: null }
+              state: { app: location?.state?.app, integrationsSuccess: null },
             })
           }
         >
@@ -157,7 +157,7 @@ FormIntegrations.propTypes = {
   environments: PropTypes.array,
   additionalSettings: PropTypes.object,
   location: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
 };
 
 export default FormIntegrations;

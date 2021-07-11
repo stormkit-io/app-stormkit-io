@@ -39,7 +39,7 @@ export const fallbackStore = {
    */
   clear: () => {
     fallbackStore._cache = {};
-  }
+  },
 };
 
 const UNDEF = void 0;

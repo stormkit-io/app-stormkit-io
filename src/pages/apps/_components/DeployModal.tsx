@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Api from "~/utils/api/Api";
-import Modal from "~/components/Modal";
+import Modal, { ModalContextProps } from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
@@ -12,19 +12,17 @@ import { deploy } from "../actions";
 interface Props {
   api: Api;
   app: App;
-  isOpen: boolean;
-  toggleModal: ToggleModal;
   environments: Array<Environment>;
 }
 
 const ModalContext = Modal.Context();
 
-const DeployModal: React.FC<Props> = ({
+const DeployModal: React.FC<Props & ModalContextProps> = ({
   isOpen,
   toggleModal,
   environments,
   api,
-  app
+  app,
 }): React.ReactElement => {
   const history = useHistory();
   const [selectedEnvironment, setSelectedEnvironment] = useState<Environment>();
@@ -47,7 +45,7 @@ const DeployModal: React.FC<Props> = ({
           toggleModal,
           history,
           setError,
-          setLoading
+          setLoading,
         })}
       >
         <EnvironmentSelector
@@ -93,8 +91,8 @@ const DeployModal: React.FC<Props> = ({
 };
 
 export default Object.assign(
-  connect(DeployModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] }
+  connect<Props, ModalContextProps>(DeployModal, [
+    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
   ]),
   ModalContext
 );

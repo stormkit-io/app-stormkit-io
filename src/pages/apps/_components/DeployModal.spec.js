@@ -21,7 +21,7 @@ describe(fileName, () => {
     historySpy = jest.fn();
 
     jest.spyOn(router, "useHistory").mockReturnValue({
-      push: historySpy
+      push: historySpy,
     });
 
     wrapper = withMockContext({
@@ -31,8 +31,8 @@ describe(fileName, () => {
         environments: envs,
         toggleModal: (v, cb) => {
           !v && cb();
-        }
-      }
+        },
+      },
     });
   });
 
@@ -46,7 +46,7 @@ describe(fileName, () => {
       .post("/app/deploy", {
         appId: `${app.id}`,
         env: "production",
-        branch: "master"
+        branch: "master",
       })
       .reply(status, { ok: true, id });
 

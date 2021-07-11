@@ -1,24 +1,22 @@
 import React from "react";
-import Api from "~/utils/api/Api";
-import AppContext from "~/pages/apps/App.context";
-import RootContext from "~/pages/Root.context";
+import AppContext, { AppContextProps } from "~/pages/apps/App.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
 import { PlusButton } from "~/components/Buttons";
+import { ModalContextProps } from "~/components/Modal";
 import Environment from "./_components/Environment";
 import EnvironmentFormModal from "./_components/EnvironmentFormModal";
 import { connect } from "~/utils/context";
 
-interface Props {
-  api: Api;
-  app: App;
-  environments: Array<Environment>;
-  toggleModal: ToggleModal;
-}
+interface ContextProps
+  extends ModalContextProps,
+    RootContextProps,
+    AppContextProps {}
 
-const Environments: React.FC<Props> = ({
+const Environments: React.FC<ContextProps> = ({
   app,
   api,
   environments,
-  toggleModal
+  toggleModal,
 }): React.ReactElement => {
   return (
     <div>
@@ -47,8 +45,8 @@ const Environments: React.FC<Props> = ({
   );
 };
 
-export default connect(Environments, [
+export default connect<unknown, ContextProps>(Environments, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app", "environments"] },
-  { Context: EnvironmentFormModal, props: ["toggleModal"], wrap: true }
+  { Context: EnvironmentFormModal, props: ["toggleModal"], wrap: true },
 ]);
