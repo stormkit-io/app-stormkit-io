@@ -22,23 +22,23 @@ const UserProfile: React.FC<Props> = ({
     <>
       <h1 className="mb-4 text-2xl text-white">Account settings</h1>
       <div className="rounded bg-white p-8 mb-8">
-        <h2 className="mb-4 font-bold text-lg">Details</h2>
-        <div className="flex items-center mb-8">
-          <span className="rounded-full inline-flex w-12 h-12 items-center justify-center overflow-hidden mr-4">
-            <img src={user.avatar} alt="User Profile" />
-          </span>
-          <span>
-            {`${user.fullName}`.trim() || user.displayName}
-            <br />
-            {user.email}
-          </span>
-          <span className="flex-auto inline-flex ml-4 pl-4 border-gray-300 border-l">
-            Member since
-            <br />
-            {memberSince}
-          </span>
+        <div className="flex flex-col items-center max-w-screen-md m-auto">
+          <div className="flex-auto text-center">
+            <div className="rounded-full inline-flex w-24 h-24 items-center justify-center overflow-hidden mb-4">
+              <img src={user.avatar} alt="User Profile" />
+            </div>
+            <div className="text-sm">
+              {user.fullName.trim() || user.displayName}
+              <br />
+              {user.email}
+              <br />
+              <span className="text-xs text-secondary">
+                Member since {memberSince}
+              </span>
+            </div>
+          </div>
+          <ConnectedAccounts accounts={accounts} />
         </div>
-        <ConnectedAccounts accounts={accounts} />
       </div>
     </>
   );
