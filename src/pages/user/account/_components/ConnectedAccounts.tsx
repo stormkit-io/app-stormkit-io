@@ -20,17 +20,17 @@ const ConnectedAccounts: React.FC<Props & ModalContextProps> = ({
   toggleModal,
 }): React.ReactElement => {
   return (
-    <div>
-      <h2 className="mt-8 font-bold text-lg">Connected Accounts</h2>
-      <h3 className="font-light text-sm text-secondary">
+    <div className="mt-12">
+      <h2 className="font-bold text-lg">Connected Accounts</h2>
+      <h3 className="font-light text-xs text-secondary mb-4">
         This is the list of connected providers. The primary email specified for
         the provider is used to combine these accounts.
       </h3>
-      <div>
+      <div className="mb-4">
         {accounts.map(({ provider, hasPersonalAccessToken }, i) => (
           <div
             key={provider}
-            className={cn("mt-2 py-2 flex", {
+            className={cn("py-4 flex", {
               "border-b border-gray-200": i !== accounts.length - 1,
             })}
           >
