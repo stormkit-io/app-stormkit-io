@@ -15,6 +15,10 @@ const texts: Record<Provider, string> = {
   bitbucket: "Bitbucket",
 };
 
+const showPersonalAccessButton = (provider: Provider): boolean => {
+  return provider === "gitlab";
+};
+
 const ConnectedAccounts: React.FC<Props & ModalContextProps> = ({
   accounts,
   toggleModal,
@@ -30,6 +34,7 @@ const ConnectedAccounts: React.FC<Props & ModalContextProps> = ({
         {accounts.map(({ provider, hasPersonalAccessToken }, i) => (
           <div
             key={provider}
+            data-testid={provider}
             className={cn("py-4 flex", {
               "border-b border-gray-200": i !== accounts.length - 1,
             })}
@@ -38,7 +43,7 @@ const ConnectedAccounts: React.FC<Props & ModalContextProps> = ({
               <span className={`text-ml mr-2 fab fa-${provider}`} />
               {texts[provider]}
             </span>
-            {provider === "gitlab" ? (
+            {showPersonalAccessButton(provider) ? (
               <span>
                 <Link
                   to="#"
@@ -48,7 +53,8 @@ const ConnectedAccounts: React.FC<Props & ModalContextProps> = ({
                     toggleModal(true);
                   }}
                 >
-                  Set personal access token
+                  {hasPersonalAccessToken ? "Reset" : "Set"} personal access
+                  token
                 </Link>
                 <PersonalAccessTokenModal hasToken={hasPersonalAccessToken} />
               </span>
