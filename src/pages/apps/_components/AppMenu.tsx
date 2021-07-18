@@ -1,10 +1,19 @@
 import React from "react";
-import PropTypes from "prop-types";
 import cn from "classnames";
 import Link from "~/components/Link";
 import Logo from "~/components/Logo";
 
-const paths = ({ app }) => [
+interface Props {
+  app: App;
+}
+
+interface Path {
+  path: string;
+  text: string;
+  icon: string;
+}
+
+const paths = ({ app }: Props): Array<Path> => [
   {
     path: `/apps/${app.id}/environments`,
     text: "Environments",
@@ -19,7 +28,7 @@ const paths = ({ app }) => [
   { path: `/apps/${app.id}/settings`, text: "Settings", icon: "fas fa-cogs" },
 ];
 
-const AppMenu = ({ app }) => {
+const AppMenu: React.FC<Props> = ({ app }): React.ReactElement => {
   const url = window?.location.pathname;
 
   return (
@@ -58,10 +67,6 @@ const AppMenu = ({ app }) => {
       </div>
     </div>
   );
-};
-
-AppMenu.propTypes = {
-  app: PropTypes.object,
 };
 
 export default AppMenu;

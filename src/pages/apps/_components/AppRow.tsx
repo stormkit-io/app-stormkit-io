@@ -1,10 +1,13 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Browser } from "react-kawaii";
 import { formattedDate } from "~/utils/helpers/deployments";
 import Button from "~/components/Button";
 
-const Row = app => {
+interface Props {
+  app: App;
+}
+
+const Row: React.FC<Props> = ({ app }): React.ReactElement => {
   const { repo, id, deployedAt, displayName } = app;
 
   return (
@@ -29,10 +32,6 @@ const Row = app => {
       <span className="fas fa-chevron-right" />
     </Button>
   );
-};
-
-Row.propTypes = {
-  app: PropTypes.array,
 };
 
 export default Row;

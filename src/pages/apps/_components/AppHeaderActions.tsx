@@ -1,10 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "~/utils/context";
 import Button from "~/components/Button";
+import { ModalContextProps } from "~/components/Modal";
+import { RootContextProps } from "~/pages/Root.context";
 import DeployModal from "./DeployModal";
 
-const HeaderActions = ({ api, app, environments, toggleModal }) => {
+interface Props extends Pick<RootContextProps, "api"> {
+  app: App;
+  environments: Array<Environment>;
+}
+
+const HeaderActions: React.FC<Props & ModalContextProps> = ({
+  api,
+  app,
+  environments,
+  toggleModal,
+}) => {
   return (
     <div className="mr-6">
       <Button
@@ -20,14 +31,7 @@ const HeaderActions = ({ api, app, environments, toggleModal }) => {
   );
 };
 
-HeaderActions.propTypes = {
-  api: PropTypes.object,
-  app: PropTypes.object,
-  environments: PropTypes.array,
-  toggleModal: PropTypes.func,
-};
-
-export default connect(HeaderActions, [
+export default connect<Props, ModalContextProps>(HeaderActions, [
   {
     Context: DeployModal,
     props: ["toggleModal"],
