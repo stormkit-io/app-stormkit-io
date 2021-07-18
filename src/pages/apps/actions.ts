@@ -209,6 +209,11 @@ export const deploy =
               "deployments are completed. You can always upgrade your package " +
               "if you need more concurrent builds."
           );
+        } else if (res.status === 401) {
+          setError(
+            "We do not have enough permissions to continue with the deployment. " +
+              "Check the documentation for more information."
+          );
         } else {
           setError(
             "Something wrong happened here. Please contact us at hello@stormkit.io"
