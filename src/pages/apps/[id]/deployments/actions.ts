@@ -74,7 +74,7 @@ export const publishDeployments =
 
     return api
       .post(`/app/deployments/publish`, {
-        appId: `${app.id}`,
+        appId: app.id,
         envId,
         publish,
       })
