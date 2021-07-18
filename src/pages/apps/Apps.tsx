@@ -58,7 +58,7 @@ export const Home: React.FC<RootContextProps> = ({
               <>
                 <div className="flex-auto">
                   {apps.map(app => (
-                    <AppRow key={app.id} {...app} />
+                    <AppRow key={app.id} app={app} />
                   ))}
                 </div>
                 {hasNextPage && (

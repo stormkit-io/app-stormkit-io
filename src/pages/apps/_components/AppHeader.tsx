@@ -1,10 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
 import UserMenu from "~/layouts/_components/UserMenu";
 import { formattedDate } from "~/utils/helpers/deployments";
+import { RootContextProps } from "~/pages/Root.context";
 import AppHeaderActions from "./AppHeaderActions";
 
-const AppHeader = ({ app, envs, api }) => {
+interface Props extends Pick<RootContextProps, "api"> {
+  app: App;
+  envs: Array<Environment>;
+}
+
+const AppHeader: React.FC<Props> = ({ app, envs, api }): React.ReactElement => {
   const provider = app.repo.split("/").shift();
 
   return (
@@ -29,13 +34,6 @@ const AppHeader = ({ app, envs, api }) => {
       </div>
     </header>
   );
-};
-
-AppHeader.propTypes = {
-  api: PropTypes.object,
-  app: PropTypes.object,
-  envs: PropTypes.array,
-  actions: PropTypes.node,
 };
 
 export default AppHeader;
