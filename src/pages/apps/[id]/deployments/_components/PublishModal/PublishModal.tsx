@@ -5,32 +5,38 @@ import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import { RootContextProps } from "~/pages/Root.context";
+import { AppContextProps } from "~/pages/apps/App.context";
 import { connect } from "~/utils/context";
-import { useFetchDeployments, publishDeployments } from "../actions";
-import DeployTable from "./PublishModalDeployments";
+import { useFetchDeployments, publishDeployments } from "../../actions";
+import DeploymentToBePublished from "./DeploymentRow";
+import PreviouslyPublishedDeployments from "./PreviouslyPublishedDeployments";
 
 const ModalContext = Modal.Context();
 
-interface Props extends Pick<RootContextProps, "api"> {
-  environments: Array<Environment>;
+interface Props extends Pick<RootContextProps, "api">, AppContextProps {
   deployment: Deployment;
-  app: App;
 }
 
 const PublishModal: React.FC<Props & ModalContextProps> = ({
   isOpen,
   toggleModal,
   environments,
-  deployment,
+  deployment: deploymentToBePublished,
   api,
   app,
 }): React.ReactElement => {
+  const skipQuery = !isOpen;
   const history = useHistory();
   const [selectedEnvironment, setSelectedEnvironment] = useState<string>("");
   const [publishError, setPublishError] = useState<string | null>(null);
+  const [isInSync, setIsInSync] = useState(true);
   const filters = { envId: selectedEnvironment, published: true };
-  const result = useFetchDeployments({ api, app, filters, skipQuery: !isOpen });
+  const result = useFetchDeployments({ api, app, filters, skipQuery, from: 0 });
   const { deployments, loading, error } = result;
+
+  const previouslyPublishedDeployments = deployments.filter(
+    d => d.id !== deploymentToBePublished.id
+  );
 
   return (
     <Modal
@@ -54,20 +60,32 @@ const PublishModal: React.FC<Props & ModalContextProps> = ({
           </InfoBox>
         )}
         {selectedEnvironment && (
-          <DeployTable
-            loading={loading}
-            error={error}
-            deployments={deployments.filter(d => d.id !== deployment.id)}
-            deployment={deployment}
-            environments={environments}
-            envId={selectedEnvironment}
-            handlePublishClick={publishDeployments({
-              api,
-              app,
-              history,
-              setPublishError,
-            })}
-          />
+          <>
+            <DeploymentToBePublished
+              index={1}
+              deployment={deploymentToBePublished}
+              envId={selectedEnvironment}
+              environments={environments}
+              numberOfDeployments={deployments.length}
+              initialPercentage={100}
+              displaySlider={previouslyPublishedDeployments.length > 0}
+              isInSync={isInSync}
+              handlePublishClick={publishDeployments({
+                api,
+                app,
+                history,
+                setPublishError,
+              })}
+            />
+            <PreviouslyPublishedDeployments
+              loading={loading}
+              error={error}
+              deployments={previouslyPublishedDeployments}
+              environments={environments}
+              envId={selectedEnvironment}
+              onSyncChange={setIsInSync}
+            />
+          </>
         )}
       </div>
     </Modal>

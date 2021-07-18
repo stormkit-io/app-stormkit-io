@@ -21,7 +21,7 @@ export const mockFetchDeploymentsCall = ({
   const cleanFilters = {};
 
   Object.keys(filters).forEach(key => {
-    if (typeof filters[key] === "undefined") {
+    if (typeof filters[key] !== "undefined") {
       cleanFilters[key] = filters[key];
     }
   });
@@ -39,4 +39,15 @@ export const mockStopDeploymentCall = ({
 }) =>
   nock(process.env.API_DOMAIN)
     .post(`/app/deploy/stop`, { appId, deploymentId })
+    .reply(status, response);
+
+export const mockPublishDeploymentsCall = ({
+  appId,
+  envId,
+  publish,
+  status = 200,
+  response = { ok: true },
+}) =>
+  nock(process.env.API_DOMAIN)
+    .post(`/app/deployments/publish`, { appId, envId, publish })
     .reply(status, response);
