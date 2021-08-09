@@ -10,9 +10,8 @@ import { toRepoAddr } from "../helpers";
 
 const NodeJS14 = "nodejs14.x";
 const NodeJS12 = "nodejs12.x";
-const NodeJS10 = "nodejs10.x";
 
-type Runtime = typeof NodeJS14 | typeof NodeJS12 | typeof NodeJS10;
+type Runtime = typeof NodeJS14 | typeof NodeJS12;
 
 const AutoDeployCommit = "commit";
 const AutoDeployPullRequest = "pull_request";
@@ -49,7 +48,9 @@ const FormAppSettings: React.FC<Props> = ({
   const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [runtime, setRuntime] = useState<Runtime>(additionalSettings.runtime || NodeJS10); // prettier-ignore
+  const [runtime, setRuntime] = useState<Runtime>(
+    additionalSettings.runtime || NodeJS12
+  );
   const [autoDeploy, setAutoDeploy] = useState<AutoDeploy>(
     app.autoDeploy || "disabled"
   );
@@ -118,7 +119,6 @@ const FormAppSettings: React.FC<Props> = ({
             "aria-label": "Runtime",
           }}
         >
-          <Form.Option value={NodeJS10}>NodeJS 10.x</Form.Option>
           <Form.Option value={NodeJS12}>NodeJS 12.x</Form.Option>
           <Form.Option value={NodeJS14}>NodeJS 14.x</Form.Option>
         </Form.Select>
