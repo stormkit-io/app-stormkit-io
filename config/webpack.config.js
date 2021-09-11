@@ -5,8 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const TerserJSPlugin = require("terser-webpack-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const config = require("dotenv").config();
 
@@ -54,14 +53,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
-          loader: "babel-loader",
+          loader: "esbuild-loader",
           options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: [
-              "@babel/plugin-proposal-class-properties",
-              "@babel/plugin-syntax-dynamic-import",
-              "@babel/plugin-transform-runtime",
-            ],
+            loader: "jsx",
+            target: "es2015",
           },
         },
       },
@@ -80,9 +75,10 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: "awesome-typescript-loader",
+        loader: "esbuild-loader",
         options: {
-          presets: ["@babel/preset-typescript", "@babel/preset-react"],
+          loader: "tsx",
+          target: "es2015",
         },
       },
     ],
@@ -131,17 +127,7 @@ module.exports = {
 
   optimization: {
     minimizer: !isDev
-      ? [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
+      ? [new ESBuildMinifyPlugin({ target: "es2015", css: true })]
       : undefined,
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: "styles",
-          test: /\.css$/,
-          chunks: "all",
-          enforce: true,
-        },
-      },
-    },
   },
 };
