@@ -11,7 +11,7 @@ describe(fileName, () => {
   const path = `~/${fileName}`;
   let wrapper;
 
-  describe("when environment object is empty", () => {
+  describe("when environment object is empty - create mode", () => {
     let app;
 
     beforeEach(() => {
@@ -45,6 +45,10 @@ describe(fileName, () => {
       };
 
       const scope = nocks.mockInsertEnvironment({ environment });
+
+      // Add a new row
+      fireEvent.click(wrapper.getByLabelText("Add new environment variable"));
+
       const envKey = wrapper.getByLabelText("Environment variable name 0");
       const envVal = wrapper.getByLabelText("Environment variable value 0");
       const buildCmd = wrapper.getByLabelText("Build command");
