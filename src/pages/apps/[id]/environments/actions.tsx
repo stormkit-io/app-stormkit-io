@@ -158,6 +158,7 @@ export const useFetchStatus = ({
 
 interface Meta {
   type: "-" | "nuxt" | "next" | "angular";
+  packageJson?: boolean;
 }
 
 interface FetchRepoTypeProps {

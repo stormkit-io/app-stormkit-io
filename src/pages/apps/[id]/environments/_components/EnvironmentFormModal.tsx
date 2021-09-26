@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
-import Modal from "~/components/Modal";
+import { useHistory } from "react-router-dom";
+import { RootContextProps } from "~/pages/Root.context";
+import { AppContextProps } from "~/pages/apps/App.context";
+import Modal, { ModalContextProps } from "~/components/Modal";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
-import ConfirmModal from "~/components/ConfirmModal";
+import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
 import { PlusButton } from "~/components/Buttons";
 import { connect } from "~/utils/context";
 import {
@@ -15,6 +16,15 @@ import {
   useFetchRepoType,
   deleteEnvironment,
 } from "../actions";
+
+interface Props
+  extends ConfirmModalProps,
+    Pick<RootContextProps, "api">,
+    Pick<AppContextProps, "app"> {
+  environment: Environment;
+}
+
+type EnvVar = { key: string; value: string };
 
 const ModalContext = Modal.Context();
 
@@ -25,21 +35,27 @@ const supportedFrameworks = [
   { text: "Other", value: "other" },
 ];
 
-const envVarsToArray = environment =>
-  Object.keys(environment?.build?.vars || { "": "" }).map(key => ({
+const envVarsToArray = (environment: Environment): Array<EnvVar> => {
+  if (!environment?.build?.vars) {
+    return [];
+  }
+
+  return Object.keys(environment.build.vars).map(key => ({
     key,
     value: environment ? environment.build.vars[key] : "",
   }));
+};
 
-const EnvironmentFormModal = ({
+const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
   isOpen,
   toggleModal,
   environment: env,
   confirmModal,
   api,
   app,
-  history,
-}) => {
+}): React.ReactElement => {
+  const history = useHistory();
+
   const [isAutoPublish, setIsAutoPublish] = useState(env?.autoPublish || true);
   const [isServerless, setIsServerless] = useState(!!env?.build?.entry);
   const [envVars, setEnvVars] = useState(envVarsToArray(env));
@@ -64,6 +80,12 @@ const EnvironmentFormModal = ({
     );
   }, [meta.type]);
 
+  if (isEdit && !env?.id) {
+    throw new Error(
+      "Invalid environment object passed. Id is a required field."
+    );
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -76,7 +98,7 @@ const EnvironmentFormModal = ({
           app,
           isServerless,
           isAutoPublish,
-          name: env?.env,
+          environmentId: env?.id || "",
           history,
           toggleModal,
           setLoading,
@@ -145,7 +167,11 @@ const EnvironmentFormModal = ({
               SelectDisplayProps={{
                 className: "bg-gray-90 w-full p-4 rounded text-gray-40",
               }}
-              onChange={e => setFramework(e.target.value)}
+              onChange={e => {
+                if (typeof e.target.value === "string") {
+                  setFramework(e.target.value);
+                }
+              }}
             >
               <Form.Option disabled value="">
                 Pick your framework
@@ -239,7 +265,7 @@ const EnvironmentFormModal = ({
             These variables can be used both on client-side and on server-side.
             Variables not used won't appear in the source code.
           </div>
-          <div className="mb-8">
+          <div className="mb-8" id="env-vars">
             {envVars.map(({ key, value }, i) => (
               <div className="flex justify-between mb-2" key={`${key}${i}`}>
                 <div className="flex-auto mr-2">
@@ -285,8 +311,9 @@ const EnvironmentFormModal = ({
             <PlusButton
               className="mt-2"
               size="small"
+              aria-label="Add new environment variable"
               onClick={() => {
-                setEnvVars([].concat(envVars, [{}]));
+                setEnvVars([...envVars, { key: "", value: "" }]);
               }}
             />
           </div>
@@ -342,18 +369,8 @@ const EnvironmentFormModal = ({
   );
 };
 
-EnvironmentFormModal.propTypes = {
-  isOpen: PropTypes.bool,
-  toggleModal: PropTypes.func,
-  environment: PropTypes.object,
-  api: PropTypes.object,
-  app: PropTypes.object,
-  history: PropTypes.object,
-  confirmModal: PropTypes.func,
-};
-
 export default Object.assign(
-  connect(withRouter(EnvironmentFormModal), [
+  connect<Props, ModalContextProps>(EnvironmentFormModal, [
     { Context: ModalContext, props: ["toggleModal", "isOpen"] },
     { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
   ]),
