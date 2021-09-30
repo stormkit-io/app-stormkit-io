@@ -12,9 +12,10 @@ import Accounts from "./_components/Accounts";
 
 const URL = {
   production: "https://github.com/apps/stormkit-io/installations/new",
-  development: "https://github.com/apps/stormkit-io-dev/installations/new",
+  staging: "https://github.com/apps/stormkit-io-staging/installations/new",
   test: "https://github.com/apps/stormkit-io-dev/installations/new",
-}[process.env.NODE_ENV];
+  local: "https://github.com/apps/stormkit-io-dev/installations/new",
+}[process.env.STORMKIT_ENV];
 
 const defaultPageQueryParams = {
   page: 1,
