@@ -10,4 +10,5 @@ export default () => ({
   autoDeploy: "pull_request",
   commitPrefix: "[app]",
   endpoint: "app.stormkit.dev",
+  provider: "gitlab",
 });
