@@ -1,5 +1,6 @@
 import React from "react";
 import UserMenu from "~/layouts/_components/UserMenu";
+import Link from "~/components/Link";
 import { formattedDate } from "~/utils/helpers/deployments";
 import { RootContextProps } from "~/pages/Root.context";
 import AppHeaderActions from "./AppHeaderActions";
@@ -9,15 +10,28 @@ interface Props extends Pick<RootContextProps, "api"> {
   envs: Array<Environment>;
 }
 
+const providerHosts: Record<Provider, string> = {
+  bitbucket: "bitbucket.org",
+  github: "github.com",
+  gitlab: "gitlab.com",
+};
+
 const AppHeader: React.FC<Props> = ({ app, envs, api }): React.ReactElement => {
-  const provider = app.repo.split("/").shift();
+  const repoPath = app.repo.substring(app.repo.indexOf("/") + 1);
 
   return (
     <header className="flex w-full mt-6">
       <div className="flex items-center pt-1">
-        <span className={`fab fa-${provider} text-white mr-6 text-5xl`} />
+        <span className={`fab fa-${app.provider} text-white mr-6 text-5xl`} />
         <div className="flex flex-col">
-          <div className="text-white mb-1">{app.name}</div>
+          <div className="text-white mb-1">
+            <Link
+              to={`https://${providerHosts[app.provider]}/${repoPath}`}
+              aria-label="Repository URL"
+            >
+              {app.repo}
+            </Link>
+          </div>
           <div className="text-secondary text-sm">
             Last deploy: {formattedDate(app.deployedAt)}
             <span
