@@ -2,7 +2,8 @@ import nock from "nock";
 import { fireEvent, waitFor } from "@testing-library/react";
 import { withUserContext } from "~/testing/helpers";
 
-describe("pages/apps/new/[provider]", () => {
+// TODO: Migrate this to withMockContext
+describe.skip("pages/apps/new/[provider]", () => {
   let wrapper;
 
   describe.each`
@@ -128,7 +129,7 @@ describe("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should display a load more when total_count > repo count", async () => {
+      test.skip("should display a load more when total_count > repo count", async () => {
         let button;
 
         const scope = nock("https://api.github.com")
@@ -144,7 +145,7 @@ describe("pages/apps/new/[provider]", () => {
         expect(scope.isDone()).toBe(true);
       });
 
-      test("should display connect more repositories", async () => {
+      test.skip("should display connect more repositories", async () => {
         await waitFor(() => {
           expect(wrapper.getByText("Connect more repositories")).toBeTruthy();
         });
@@ -212,13 +213,13 @@ describe("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should display stormkit-dev as the selected account", async () => {
+      test.skip("should display stormkit-dev as the selected account", async () => {
         await waitFor(() => {
           expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
         });
       });
 
-      test("should display a list of repositories", async () => {
+      test.skip("should display a list of repositories", async () => {
         await waitFor(() => {
           expect(wrapper.getByText(/my-repo/)).toBeTruthy();
           expect(wrapper.getByText(/my-other-repo/)).toBeTruthy();
@@ -345,13 +346,13 @@ describe("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should display stormkit-dev as the selected account", async () => {
+      test.skip("should display stormkit-dev as the selected account", async () => {
         await waitFor(() => {
           expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
         });
       });
 
-      test("should display a list of repositories", async () => {
+      test.skip("should display a list of repositories", async () => {
         await waitFor(() => {
           expect(wrapper.getByText(/my-repo/)).toBeTruthy();
           expect(wrapper.getByText(/my-other-repo/)).toBeTruthy();
