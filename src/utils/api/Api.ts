@@ -98,6 +98,17 @@ export default class Api {
       url = this.baseurl.replace(/\/+$/, "") + "/" + url.replace(/^\//, "");
     }
 
+    if (
+      document.cookie.indexOf("sk_canary=true") > -1 ||
+      window.location.search.indexOf("sk_canary=true") > -1
+    ) {
+      if (url.indexOf("?") > -1) {
+        url = url.replace("?", "?sk_canary=true&");
+      } else {
+        url += "?sk_canary=true";
+      }
+    }
+
     const headers = this.getHeaders(opts.headers);
     const request = new Request(url, { ...opts, headers });
     const resp = await fetch(request);
