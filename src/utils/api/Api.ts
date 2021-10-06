@@ -70,6 +70,10 @@ export default class Api {
       headers.append(k, additional[k]);
     });
 
+    if (document.cookie.indexOf("sk_canary=true") > -1) {
+      headers.append("SK-canary", "true");
+    }
+
     return headers;
   }
 
