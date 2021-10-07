@@ -43,7 +43,7 @@ $ npm run dev:live
 
 Your project will be running at [https://localhost:3000](https://localhost:3000)
 
-You'll need a backend to work with. Currently the backend is not yet open-source. To speed up the process however,
+You'll need a backend to work with. Currently the backend is not open-source. To speed up the process however,
 it's possible to create a proxy and point directly the live API which will allow local development. In order to do
 that simply create an `.env` file and specify the following environment variables:
 
