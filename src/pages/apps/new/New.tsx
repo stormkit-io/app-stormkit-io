@@ -61,12 +61,14 @@ const Start: React.FC<ContextProps> = ({
               <btn.GitlabButton onClick={() => login("gitlab")} />
             </div>
             <p>
-              Having issues setting up your project? Create { }
+              Having issues setting up your project? Create {}
               <Link
                 className="text-pink-50"
                 to="https://github.com/stormkit-io/app-stormkit-io/issues/new?assignees=eldemcan%2C+svedova&labels=bug%2C+project+setup&template=project-setup-issue.md&title=Project+setup+issue"
-                target="_blank">
-              issue on Github.</Link>
+                target="_blank"
+              >
+                issue on Github.
+              </Link>
             </p>
           </div>
           <div className="min-w-1/3 max-w-1/3">
