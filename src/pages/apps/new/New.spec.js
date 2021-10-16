@@ -8,7 +8,7 @@ describe("pages/apps/new", () => {
   const findGitlabButton = () => wrapper.getByText("GitLab");
   const findBitbucketButton = () => wrapper.getByText("Bitbucket");
   const findHavingIssues = () => wrapper.getByText(/Having issues/);
-  const findEmail = () => wrapper.getByText("hello@stormkit.io");
+  const findGithubLink = () => wrapper.getByText(/issue on Github/);
 
   afterEach(() => {
     window.open = undefined;
@@ -31,7 +31,7 @@ describe("pages/apps/new", () => {
     test("should contain link to email support", async () => {
       await waitFor(() => {
         expect(findHavingIssues()).toBeTruthy();
-        expect(findEmail()).toBeTruthy();
+        expect(findGithubLink()).toBeTruthy();
       });
     });
   });
