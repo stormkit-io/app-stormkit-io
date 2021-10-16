@@ -7,47 +7,62 @@ import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { useFetchDeployments, Filters as IFilters } from "./actions";
 import Deployment from "./_components/Deployment";
-import Filters from "./_components/Filters";
 import noDeployment from "~/assets/images/no-deployments.svg";
+import noResult from "~/assets/images/empty-filter-result.svg";
 import Api from "~/utils/api/Api";
+import Filters from "./_components/Filters";
 
 type ContextProps = RootContextProps & AppContextProps;
 
-function renderDeployments(deployments: Deployment[],
-                           environments: Environment[],
-                           setDeployments:  (value: Deployment[]) => void,
-                           api: Api,
-                           app:App ){
+function renderDeployments(
+  deployments: Deployment[],
+  environments: Environment[],
+  setDeployments: (value: Deployment[]) => void,
+  api: Api,
+  app: App,
+  filters: IFilters
+) {
+  if (deployments.length === 0 && Object.keys(filters).length > 0) {
+    return (<div className="flex justify-center">
+        <div>
+          <p>"No deployments were found matching these filters." </p>
+          <br/>
+          <img
+            className="box-content h-48 w-45"
+            src={noResult}
+            alt="no result"
+          />
+        </div>
+      </div>)
+  } else if (deployments.length == 0) {
+    return (
+      <div className="flex justify-center">
+        <div>
+          <p>"There are no deployments."</p>
+          <img
+            className="box-content h-48 w-48"
+            src={noDeployment}
+            alt="No deployment"
+          />
+        </div>
+      </div>
+    );
+  }
 
-   if (deployments.length == 0) {
-     return (
-       <div className="flex justify-center">
-         <div>
-       <p >There are no deployments</p>
-      <img className="box-content h-48 w-48"
-      src={noDeployment}
-      alt="No deployment"
-    />
-    </div>
-     </div>
-     )
-   }
-
-  return(
-    deployments.map((d, i) => (
-            <>
-            <Deployment
-              deployment={d}
-              environments={environments}
-              deployments={deployments}
-              setDeployments={setDeployments}
-              index={i}
-              app={app}
-              api={api}
-              key={d.id}
-            />
-            </>
-    )))
+  return deployments.map((d, i) => (
+    <>
+      <Deployment
+        deployment={d}
+        environments={environments}
+        deployments={deployments}
+        setDeployments={setDeployments}
+        index={i}
+        app={app}
+        api={api}
+        key={d.id}
+      />
+    </>
+  ));
 }
 
 const Deployments: React.FC<ContextProps> = ({
@@ -61,7 +76,7 @@ const Deployments: React.FC<ContextProps> = ({
   const { deployments, success, hasNextPage, setDeployments, loading, error } =
     useFetchDeployments({ app, api, from, setFrom, filters });
 
-      setDeployments
+  setDeployments;
   if (error) {
     return (
       <div className="flex justify-center bg-white rounded p-4">
@@ -92,10 +107,14 @@ const Deployments: React.FC<ContextProps> = ({
         </div>
       ) : (
         <div className="flex flex-col justify-center bg-white rounded p-4 mb-4">
-          {deployments.length === 0 &&
-            Object.keys(filters).length > 0 &&
-            "No deployments were found matching these filters."}
-            {renderDeployments(deployments, environments, setDeployments, api, app )}
+          {renderDeployments(
+            deployments,
+            environments,
+            setDeployments,
+            api,
+            app,
+            filters,
+          )}
           {hasNextPage && (
             <div className="flex justify-center w-full mt-4">
               <Button
