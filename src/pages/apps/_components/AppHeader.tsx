@@ -4,6 +4,7 @@ import Link from "~/components/Link";
 import { formattedDate } from "~/utils/helpers/deployments";
 import { RootContextProps } from "~/pages/Root.context";
 import AppHeaderActions from "./AppHeaderActions";
+import FeedbackModal from "./FeedbackModal";
 
 interface Props extends Pick<RootContextProps, "api"> {
   app: App;
@@ -43,6 +44,7 @@ const AppHeader: React.FC<Props> = ({ app, envs, api }): React.ReactElement => {
         </div>
       </div>
       <div className="flex flex-auto items-center justify-end">
+        <FeedbackModal />
         <AppHeaderActions app={app} api={api} environments={envs} />
         <UserMenu />
       </div>
