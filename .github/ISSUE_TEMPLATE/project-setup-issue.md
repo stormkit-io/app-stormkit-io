@@ -1,6 +1,6 @@
 ---
 name: Project setup issue
-about: Project setup bug
+about: Project setup related issues/bugs
 title: Project setup issue
 labels: bug, project setup
 assignees: eldemcan, svedova
