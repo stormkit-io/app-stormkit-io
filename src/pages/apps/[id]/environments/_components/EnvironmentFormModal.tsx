@@ -248,9 +248,9 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
             <Form.Input
               name="build.cmd"
               label="Build command"
-              error={Boolean(buildCmd.length == 0)}
+              error={!buildCmd.length}
               className="bg-gray-90"
-              onChange={item => setBuildCmd((item.target.value))}
+              onChange={item => setBuildCmd(item.target.value)}
               value={buildCmd}
               required={meta.packageJson}
               inputProps={{
@@ -260,7 +260,8 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
             />
             <div className="p-3 text-sm opacity-50">
               The command to build your application. You can chain multiple
-              commands with the <b>&amp;&amp;</b> operator. (i.e. npm build && npm start)
+              commands with the <b>&amp;&amp;</b> operator. (i.e. npm build &&
+              npm start)
             </div>
           </div>
           <h3 className="mt-8 font-bold">Environment variables</h3>
