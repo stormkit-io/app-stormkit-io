@@ -147,4 +147,37 @@ describe(fileName, () => {
       });
     });
   });
+
+  describe("when has no deployments", () => {
+    beforeEach(() => {
+      const app = data.mockApp();
+      const envs = data.mockEnvironments({ app });
+
+      nocks.mockFetchDeploymentsCall({
+        appId: app.id,
+        response: {
+          deploys: [],
+        },
+      });
+
+      wrapper = withMockContext({
+        path,
+        props: {
+          app,
+          environments: envs,
+        },
+      });
+    });
+
+    test("should display an empty state text", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("It's quite empty here.")).toBeTruthy();
+        expect(
+          wrapper.getByText(
+            "Hit the Deploy Now button above to start your first deployment."
+          )
+        ).toBeTruthy();
+      });
+    });
+  });
 });
