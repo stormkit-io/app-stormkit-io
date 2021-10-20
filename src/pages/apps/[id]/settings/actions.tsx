@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps, useLocation } from "react-router-dom";
+import { RootContextProps } from "~/pages/Root.context";
+import { ConfirmModalProps } from "~/components/ConfirmModal";
 import { formatRepo } from "./helpers";
+import type { AppSettings, LocationState, Runtime } from "./types.d";
+
+interface DeleteAppProps
+  extends Pick<RootContextProps, "api">,
+    Pick<ConfirmModalProps, "confirmModal">,
+    Pick<RouteComponentProps, "history"> {
+  app: App;
+}
+
+type voidFn = () => void;
 
 /**
  * Action to delete an application.
  */
 export const deleteApp =
-  ({ api, app, confirmModal, history }) =>
+  ({ api, app, confirmModal, history }: DeleteAppProps): voidFn =>
   () => {
     confirmModal(
       "This will completely remove the application. All associated files and endpoints will be gone. Remember there is no going back from here.",
       {
+        typeConfirmationText: "permanently delete application",
         onConfirm: ({ closeModal, setError, setLoading }) => {
           setLoading(true);
           api
             .delete("/app", { appId: app.id })
             .then(() => {
               setLoading(false);
-              closeModal(() => history.push("/"));
+              closeModal();
+              history.push("/");
             })
             .catch(() => {
               setLoading(false);
@@ -30,8 +44,22 @@ export const deleteApp =
     );
   };
 
+interface UpdateDeployTriggerProps
+  extends Pick<RootContextProps, "api">,
+    Pick<RouteComponentProps, "history"> {
+  app: App;
+  setLoading: SetLoading;
+  setError: SetError;
+}
+
 export const updateDeployTrigger =
-  ({ api, app, setLoading, setError, history }) =>
+  ({
+    api,
+    app,
+    setLoading,
+    setError,
+    history,
+  }: UpdateDeployTriggerProps): voidFn =>
   () => {
     setLoading(true);
     setError(null);
@@ -55,10 +83,28 @@ export const updateDeployTrigger =
       });
   };
 
-export const useFetchAdditionalSettings = ({ api, app, location }) => {
-  const [error, setError] = useState(null);
+interface UseFetchAdditionalSettings extends Pick<RootContextProps, "api"> {
+  app: App;
+}
+
+interface UseFetchAdditionalSettingsReturnValue {
+  loading: boolean;
+  error: string | null;
+  settings: AppSettings;
+}
+
+export const useFetchAdditionalSettings = ({
+  api,
+  app,
+}: UseFetchAdditionalSettings): UseFetchAdditionalSettingsReturnValue => {
+  const location = useLocation<LocationState>();
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [settings, setSettings] = useState({});
+  const [settings, setSettings] = useState<AppSettings>({
+    envs: [],
+    runtime: "nodejs14.x",
+  });
+
   const refresh = location?.state?.app;
 
   useEffect(() => {
@@ -68,12 +114,12 @@ export const useFetchAdditionalSettings = ({ api, app, location }) => {
     setError(null);
 
     api
-      .fetch(`/app/${app.id}/settings`)
+      .fetch<AppSettings>(`/app/${app.id}/settings`)
       .then(res => {
         if (unmounted !== true) {
           setSettings({
-            trigger: res.deployTrigger,
-            hooks: res.deployHooks,
+            deployTrigger: res.deployTrigger,
+            deployHooks: res.deployHooks,
             runtime: res.runtime,
             envs: res.envs,
           });
@@ -100,9 +146,39 @@ export const useFetchAdditionalSettings = ({ api, app, location }) => {
   return { loading, error, settings };
 };
 
+interface UpdateAdditionalSettingsProps
+  extends Pick<RootContextProps, "api">,
+    Pick<RouteComponentProps, "history"> {
+  setError: SetError;
+  setLoading: SetLoading;
+  app: App;
+}
+
+interface FormValues {
+  repo: string;
+  displayName: string;
+  autoDeploy: string;
+  defaultEnv: string;
+  commitPrefix: string;
+  runtime: Runtime;
+}
+
 export const updateAdditionalSettings =
-  ({ api, app, setLoading, setError, history }) =>
-  ({ repo, displayName, autoDeploy, commitPrefix, runtime, defaultEnv }) => {
+  ({
+    api,
+    app,
+    setLoading,
+    setError,
+    history,
+  }: UpdateAdditionalSettingsProps) =>
+  ({
+    repo,
+    displayName,
+    autoDeploy,
+    commitPrefix,
+    runtime,
+    defaultEnv,
+  }: FormValues): void => {
     repo = formatRepo(repo);
     setLoading(true);
     setError(null);
@@ -129,7 +205,7 @@ export const updateAdditionalSettings =
       .catch(res => {
         res
           .json()
-          .then(({ errors }) => {
+          .then(({ errors }: { errors: Record<string, string> }) => {
             setLoading(false);
             setError(
               Object.keys(errors)
@@ -147,9 +223,25 @@ export const updateAdditionalSettings =
       });
   };
 
+interface UpdateHooksProps
+  extends Pick<RootContextProps, "api">,
+    Pick<RouteComponentProps, "history"> {
+  app: App;
+  setLoading: SetLoading;
+  setError: SetError;
+}
+
+interface HooksFormValues {
+  "slack.webhook": string;
+  "slack.channel"?: string;
+  "slack.onStart": "true" | "false";
+  "slack.onEnd": "true" | "false";
+  "slack.onPublish": "true" | "false";
+}
+
 export const updateHooks =
-  ({ api, app, setLoading, setError, history }) =>
-  values => {
+  ({ api, app, setLoading, setError, history }: UpdateHooksProps) =>
+  (values: HooksFormValues): void => {
     const hooks = {
       slack: {
         webhook: values["slack.webhook"],

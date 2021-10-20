@@ -7,11 +7,10 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
+import type { Runtime, AppSettings } from "../types.d";
 
 const NodeJS14 = "nodejs14.x";
 const NodeJS12 = "nodejs12.x";
-
-type Runtime = typeof NodeJS14 | typeof NodeJS12;
 
 const AutoDeployCommit = "commit";
 const AutoDeployPullRequest = "pull_request";
@@ -22,15 +21,11 @@ type AutoDeploy =
   | typeof AutoDeployPullRequest
   | typeof AutoDeployDisabled;
 
-interface AdditionalSettings {
-  runtime: Runtime;
-}
-
 interface Props {
   api: Api;
   app: App;
   environments: Array<Environment>;
-  additionalSettings: AdditionalSettings;
+  additionalSettings: AppSettings;
 }
 
 interface LocationState extends Location {
@@ -47,10 +42,8 @@ const FormAppSettings: React.FC<Props> = ({
   const history = useHistory();
   const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [runtime, setRuntime] = useState<Runtime>(
-    additionalSettings.runtime || NodeJS12
-  );
+  const [error, setError] = useState<string | null>(null);
+  const [runtime, setRuntime] = useState<Runtime>(additionalSettings.runtime);
   const [autoDeploy, setAutoDeploy] = useState<AutoDeploy>(
     app.autoDeploy || "disabled"
   );

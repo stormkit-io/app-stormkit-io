@@ -1,9 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "~/utils/context";
-import RootContext from "~/pages/Root.context";
-import AppContext from "~/pages/apps/App.context";
-import AuthContext from "~/pages/auth/Auth.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
+import AppContext, { AppContextProps } from "~/pages/apps/App.context";
+import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
 import Spinner from "~/components/Spinner";
 import FormAppSettings from "./_components/FormAppSettings";
 import FormTriggerDeploys from "./_components/FormTriggerDeploys";
@@ -13,12 +12,16 @@ import * as actions from "./actions";
 
 const { useFetchAdditionalSettings } = actions;
 
-const Settings = ({ api, app, environments, location, history, user }) => {
+interface ContextProps
+  extends Pick<RootContextProps, "api">,
+    Pick<AppContextProps, "app" | "environments">,
+    Pick<AuthContextProps, "user"> {}
+
+const Settings: React.FC<ContextProps> = ({ api, app, environments, user }) => {
   const isCurrentUserTheOwner = app.userId === user.id;
   const { settings, loading } = useFetchAdditionalSettings({
     api,
     app,
-    location,
   });
 
   return (
@@ -34,8 +37,6 @@ const Settings = ({ api, app, environments, location, history, user }) => {
               app={app}
               additionalSettings={settings}
               environments={environments}
-              location={location}
-              history={history}
             />
           </div>
           <div className="rounded bg-white p-8 mb-8">
@@ -44,8 +45,6 @@ const Settings = ({ api, app, environments, location, history, user }) => {
               app={app}
               additionalSettings={settings}
               environments={environments}
-              location={location}
-              history={history}
             />
           </div>
           <div className="rounded bg-white p-8 mb-8">
@@ -53,13 +52,11 @@ const Settings = ({ api, app, environments, location, history, user }) => {
               api={api}
               app={app}
               additionalSettings={settings}
-              location={location}
-              history={history}
             />
           </div>
           {isCurrentUserTheOwner && (
             <div className="rounded bg-white p-8 mb-8">
-              <FormDangerZone api={api} app={app} history={history} />
+              <FormDangerZone api={api} app={app} />
             </div>
           )}
         </>
@@ -68,16 +65,7 @@ const Settings = ({ api, app, environments, location, history, user }) => {
   );
 };
 
-Settings.propTypes = {
-  app: PropTypes.object,
-  api: PropTypes.object,
-  confirmModal: PropTypes.func,
-  location: PropTypes.object,
-  history: PropTypes.object,
-  user: PropTypes.object,
-};
-
-export default connect(Settings, [
+export default connect<unknown, ContextProps>(Settings, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app", "environments"] },
   { Context: AuthContext, props: ["user"] },

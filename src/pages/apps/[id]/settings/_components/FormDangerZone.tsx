@@ -1,13 +1,24 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "~/utils/context";
-import ConfirmModal from "~/components/ConfirmModal";
+import { useHistory } from "react-router-dom";
+import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
+import { RootContextProps } from "~/pages/Root.context";
 import { deleteApp } from "../actions";
 
-const FormDangerZone = ({ confirmModal, api, app, history }) => {
+interface Props extends Pick<RootContextProps, "api"> {
+  app: App;
+}
+
+const FormDangerZone: React.FC<Props & ConfirmModalProps> = ({
+  confirmModal,
+  api,
+  app,
+}): React.ReactElement => {
+  const history = useHistory();
+
   return (
     <Form.Section label="Danger Zone" marginBottom="mb-4">
       <InfoBox className="mb-4">
@@ -30,13 +41,6 @@ const FormDangerZone = ({ confirmModal, api, app, history }) => {
   );
 };
 
-FormDangerZone.propTypes = {
-  history: PropTypes.object,
-  api: PropTypes.object,
-  app: PropTypes.object,
-  confirmModal: PropTypes.func,
-};
-
-export default connect(FormDangerZone, [
+export default connect<Props, ConfirmModalProps>(FormDangerZone, [
   { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
 ]);
