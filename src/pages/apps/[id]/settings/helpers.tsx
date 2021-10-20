@@ -2,9 +2,9 @@
  * Receive a repo address in Stormkit format and
  * transform it to a URL.
  */
-export const toRepoAddr = repo => {
+export const toRepoAddr = (repo: string): string => {
   if (!repo) {
-    return;
+    return "";
   }
 
   const [provider, ...rest] = repo.split("/");
@@ -21,14 +21,16 @@ export const toRepoAddr = repo => {
   if (provider === "gitlab") {
     return `gitlab.com:${address}.git`;
   }
+
+  return "";
 };
 
 /**
  * Formats the repository address in a Stormkit format.
  */
-export const formatRepo = repo => {
+export const formatRepo = (repo: string): string => {
   if (!repo) {
-    return;
+    return "";
   }
 
   const providers = ["github.com", "bitbucket.org", "gitlab.com"];
@@ -48,14 +50,16 @@ export const formatRepo = repo => {
       }
     }
   }
+
+  return "";
 };
 
 /**
  * Prefixes the hashtag (#) to the channel name to follow the Slack naming conventions.
  */
-export const formattedSlackChannelName = channel => {
+export const formattedSlackChannelName = (channel: string): string => {
   if (!channel) {
-    return;
+    return "";
   }
 
   return `#${channel.replace(/^#/, "")}`;

@@ -1,24 +1,32 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { useLocation, useHistory } from "react-router-dom";
 import Form from "~/components/Form";
 import Link from "~/components/Link";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
+import { RootContextProps } from "~/pages/Root.context";
 import slackPng from "../_assets/slack.png";
 import { updateHooks } from "../actions";
 import { formattedSlackChannelName } from "../helpers";
+import type { AppSettings, LocationState } from "../types.d";
 
-const FormIntegrations = ({
+interface Props extends Pick<RootContextProps, "api"> {
+  app: App;
+  additionalSettings: AppSettings;
+}
+
+const FormIntegrations: React.FC<Props> = ({
   api,
   app,
   additionalSettings: settings,
-  history,
-  location,
-}) => {
-  const slackHookOnStart = settings.hooks?.slack?.onStart || false;
-  const slackHookOnEnd = settings.hooks?.slack?.onEnd || false;
-  const slackHookOnPublish = settings.hooks?.slack?.onPublish || false;
+}): React.ReactElement => {
+  const location = useLocation<LocationState>();
+  const history = useHistory();
+
+  const slackHookOnStart = settings.deployHooks?.slack?.onStart || false;
+  const slackHookOnEnd = settings.deployHooks?.slack?.onEnd || false;
+  const slackHookOnPublish = settings.deployHooks?.slack?.onPublish || false;
   const successMessage = location?.state?.integrationsSuccess;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -49,7 +57,7 @@ const FormIntegrations = ({
           name="slack.webhook"
           className="bg-gray-90"
           placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
-          defaultValue={settings.hooks?.slack?.webhook}
+          defaultValue={settings.deployHooks?.slack?.webhook}
           inputProps={{
             "aria-label": "Webhook URL",
           }}
@@ -68,7 +76,7 @@ const FormIntegrations = ({
           className="bg-gray-90"
           placeholder="#general"
           defaultValue={formattedSlackChannelName(
-            settings.hooks?.slack?.channel
+            settings.deployHooks?.slack?.channel || ""
           )}
           inputProps={{
             "aria-label": "Channel name",
@@ -149,15 +157,6 @@ const FormIntegrations = ({
       )}
     </Form>
   );
-};
-
-FormIntegrations.propTypes = {
-  app: PropTypes.object,
-  api: PropTypes.object,
-  environments: PropTypes.array,
-  additionalSettings: PropTypes.object,
-  location: PropTypes.object,
-  history: PropTypes.object,
 };
 
 export default FormIntegrations;
