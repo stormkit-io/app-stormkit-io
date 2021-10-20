@@ -110,8 +110,11 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.join(root, "src/public/favicon.png"),
-          to: path.join(root, "dist/favicon.png"),
+          from: path.join(root, "src/public/*"),
+          globOptions: {
+            ignore: ["**/index.html"],
+          },
+          to: "[name].[ext]",
         },
       ],
     }),
