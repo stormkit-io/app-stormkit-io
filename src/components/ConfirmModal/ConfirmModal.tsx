@@ -1,11 +1,37 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 import Modal from "~/components/Modal";
+import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import { connect } from "~/utils/context";
 
 const ModalContext = Modal.Context();
 const context = createContext({});
+
+type ConfirmModalCallback = ({
+  setLoading,
+  closeModal,
+  setError,
+}: {
+  setLoading: (value: boolean) => void;
+  closeModal: () => void;
+  setError: (err: string | null) => void;
+}) => void;
+
+interface ConfirmModalOptions {
+  onCancel?: (closeModal: () => void) => void;
+  callback?: ConfirmModalCallback;
+  onConfirm?: ConfirmModalCallback;
+  /**
+   * The confirmation text that will be shown to the user.
+   */
+  confirmText?: string;
+  /**
+   * When this prop is provided, the confirm modal will display an input
+   * and will enable the confirm button only when input value matches this string.
+   */
+  typeConfirmationText?: string;
+}
 
 type ConfirmModalFn = (content: string, options: ConfirmModalOptions) => void;
 
@@ -39,6 +65,14 @@ const ConfirmModal: React.FC<Props & ContextProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
   const [options, setOptions] = useState<ConfirmModalOptions>({});
+  const [confirmButtonEnabled, setConfirmButtonEnabled] = useState<boolean>(
+    !options.typeConfirmationText
+  );
+
+  useEffect(() => {
+    setConfirmButtonEnabled(!options.typeConfirmationText);
+  }, [options.typeConfirmationText, isOpen]);
+
   const closeModal = (...args: [unknown?]) => {
     toggleModal(false, ...args);
     setLoading(false);
@@ -67,6 +101,12 @@ const ConfirmModal: React.FC<Props & ContextProps> = ({
     }
   };
 
+  const verifyConfirmationInput = (e: React.FormEvent<HTMLInputElement>) => {
+    if (e.target.value === options.typeConfirmationText) {
+      setConfirmButtonEnabled(true);
+    }
+  };
+
   return (
     <context.Provider value={{ confirmModal }}>
       {children}
@@ -78,7 +118,23 @@ const ConfirmModal: React.FC<Props & ContextProps> = ({
         <h2 className="font-bold text-2xl text-center mb-16">Confirm action</h2>
         <div className="text-sm text-center">
           <p className="mb-2">{content}</p>
-          <p>Are you sure you want to continue?</p>
+
+          {options.typeConfirmationText ? (
+            <>
+              <p>
+                Type <b>{options.typeConfirmationText}</b> in order to proceed.
+              </p>
+              <Form.Input
+                className="mt-4"
+                placeholder={options.typeConfirmationText}
+                onChange={verifyConfirmationInput}
+                fullWidth
+                autoFocus
+              />
+            </>
+          ) : (
+            <p>Are you sure you want to continue?</p>
+          )}
         </div>
         {error && (
           <InfoBox className="mt-8" type={InfoBox.ERROR}>
@@ -98,6 +154,7 @@ const ConfirmModal: React.FC<Props & ContextProps> = ({
             primary
             className="py-2"
             loading={loading}
+            disabled={!confirmButtonEnabled}
             onClick={handleSuccess}
           >
             {options.confirmText || "Yes, continue"}
