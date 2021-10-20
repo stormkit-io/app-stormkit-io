@@ -65,7 +65,9 @@ const Button = forwardRef<HTMLButtonElement, Props>(
     }
 
     const props = {
-      className: cn(classes, className),
+      className: cn(classes, className, {
+        "disabled:opacity-50 cursor-not-allowed": disabled,
+      }),
       disabled: disabled || loading ? "disabled" : undefined,
       ...rest,
     };
