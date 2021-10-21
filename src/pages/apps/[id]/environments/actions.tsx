@@ -370,8 +370,8 @@ export const editEnvironment =
 
     api
       .put(`/app/env`, {
+        id: environmentId,
         appId: app.id,
-        envId: environmentId,
         env: name,
         branch,
         build,
@@ -390,12 +390,16 @@ export const editEnvironment =
         });
       })
       .catch(async res => {
-        let data: { code: "duplicate"; errors: Record<string, string> };
+        let data: {
+          code?: "duplicate";
+          errors?: Record<string, string>;
+          error?: string;
+        };
 
         try {
           data = await res.json();
-        } catch (e) {
-          return;
+        } catch {
+          data = {};
         }
 
         let message;
@@ -403,10 +407,17 @@ export const editEnvironment =
         if (data.code === "duplicate") {
           message =
             "You can't have duplicate environments or branch names for the same application.";
-        } else if (res.status === 400 && data.errors) {
-          message = Object.keys(data.errors).map(k => (
-            <div key={k}>{data.errors[k]}</div>
-          ));
+        } else if (res.status === 400) {
+          if (data.errors) {
+            message = Object.keys(data.errors).map(k => (
+              <div key={k}>{data.errors?.[k]}</div>
+            ));
+          } else {
+            message = data.error;
+          }
+        } else if (res.status === 404) {
+          message =
+            "The environment is not found. Refresh the page and check that it's not deleted.";
         }
 
         setError(message);

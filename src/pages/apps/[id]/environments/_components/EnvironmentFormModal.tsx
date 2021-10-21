@@ -260,8 +260,8 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
             />
             <div className="p-3 text-sm opacity-50">
               The command to build your application. You can chain multiple
-              commands with the <b>&amp;&amp;</b> operator. (i.e. npm build &&
-              npm start)
+              commands with the <b>&amp;&amp;</b> operator. (i.e. npm run test
+              &amp;&amp; npm run build)
             </div>
           </div>
           <h3 className="mt-8 font-bold">Environment variables</h3>

@@ -45,7 +45,7 @@ export const mockUpdateEnvironment = ({
   nock(endpoint)
     .put(`/app/env`, {
       appId: environment.appId,
-      envId: environment.id,
+      id: environment.id,
       env: environment.env,
       branch: environment.branch,
       autoPublish: environment.autoPublish,
