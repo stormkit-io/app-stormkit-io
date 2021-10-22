@@ -27,13 +27,7 @@ interface Props
 type EnvVar = { key: string; value: string };
 
 const ModalContext = Modal.Context();
-
-const supportedFrameworks = [
-  { text: "Next.js", value: "next" },
-  { text: "Nuxt.js", value: "nuxt" },
-  { text: "Angular", value: "angular" },
-  { text: "Other", value: "other" },
-];
+const frameworks = ["angular", "nuxt", "next"];
 
 const envVarsToArray = (environment: Environment): Array<EnvVar> => {
   if (!environment?.build?.vars) {
@@ -62,9 +56,8 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
   const [loading, setLoading] = useState(false);
   const [buildCmd, setBuildCmd] = useState(env?.build?.cmd || "");
   const [error, setError] = useState(null);
-  const [framework, setFramework] = useState("");
-  const isFramework = framework !== "" && framework !== "other";
   const { meta } = useFetchRepoType({ api, app, env });
+  const isFramework = frameworks.indexOf(meta.type) > -1;
   const isEdit = !!env?.id;
   const handleSubmit = isEdit ? editEnvironment : insertEnvironment;
 
@@ -73,13 +66,6 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
       setIsAutoPublish(env?.autoPublish);
     }
   }, [env?.autoPublish]);
-
-  useEffect(() => {
-    setFramework(
-      supportedFrameworks.filter(f => f.value === meta.type)[0]?.value ||
-        "other"
-    );
-  }, [meta.type]);
 
   if (isEdit && !env?.id) {
     throw new Error(
@@ -160,33 +146,6 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
         </div>
         <h3 className="my-8 font-bold">Build configuration</h3>
         <div className="flex flex-col">
-          <div className="flex-auto mb-8">
-            <Form.Select
-              name="framework"
-              displayEmpty
-              value={framework}
-              SelectDisplayProps={{
-                className: "bg-gray-90 w-full p-4 rounded text-gray-40",
-              }}
-              onChange={e => {
-                if (typeof e.target.value === "string") {
-                  setFramework(e.target.value);
-                }
-              }}
-            >
-              <Form.Option disabled value="">
-                Pick your framework
-              </Form.Option>
-              {supportedFrameworks.map(f => (
-                <Form.Option value={f.value} key={f.value}>
-                  {f.text}
-                </Form.Option>
-              ))}
-            </Form.Select>
-            <div className="p-3 text-sm opacity-50">
-              Specify the framework you're using.
-            </div>
-          </div>
           <div className="mb-8">
             <div className="flex w-full border border-solid border-gray-85 rounded py-2 items-center text-sm bg-gray-90">
               <Form.Switch
