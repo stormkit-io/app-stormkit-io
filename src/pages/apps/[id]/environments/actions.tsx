@@ -142,6 +142,9 @@ export const useFetchStatus = ({
           setStatus(res.status);
         }
       })
+      .catch(() => {
+        // do nothing
+      })
       .finally(() => {
         if (!unmounted) {
           setLoading(false);
