@@ -150,7 +150,6 @@ describe(fileName, () => {
       await waitFor(() => {
         expect(metaScope.isDone()).toBe(true);
         expect(scope.isDone()).toBe(true);
-        expect(wrapper.getByText("Other")).toBeTruthy();
       });
     });
   });
