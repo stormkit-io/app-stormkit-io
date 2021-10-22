@@ -1,11 +1,21 @@
+interface OpenPopupProps {
+  url: string;
+  title: string;
+  onClose?: (data: unknown) => void;
+  width?: number;
+  height?: number;
+}
+
 /**
  * Helper function that opens a popup and calls onClose when needed.
  */
-const openPopup = ({ url, title, onClose, width = 600, height = 600 }) => {
-  if (!url) {
-    throw new Error("URL is empty");
-  }
-
+const openPopup = ({
+  url,
+  title,
+  onClose,
+  width = 600,
+  height = 600,
+}: OpenPopupProps): Window | null => {
   const popup = window.open(
     url,
     title,
@@ -15,17 +25,20 @@ const openPopup = ({ url, title, onClose, width = 600, height = 600 }) => {
   );
 
   // The listener that will be triggered on postMessage
-  const listener = e => {
+  const listener = (e: MessageEvent) => {
     if (typeof e.data.success !== "undefined") {
       // Show the status for longer for better UX
       setTimeout(() => {
-        popup.close();
+        if (typeof popup?.close !== "undefined") {
+          popup.close();
+        }
+
         if (typeof onClose === "function") {
           onClose(e.data);
         }
       }, 1000);
 
-      window.removeEventListener("message", listener);
+      window.removeEventListener<"message">("message", listener);
     }
   };
 
