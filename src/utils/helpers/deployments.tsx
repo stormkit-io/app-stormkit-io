@@ -26,7 +26,7 @@ export const formattedDate = (ts: number): string => {
   });
 };
 
-interface Commit {
+export interface Commit {
   author: string;
   branch: string;
   msg: React.ReactNode;
@@ -60,29 +60,31 @@ export const parseCommit = (deployment?: Deployment): Commit => {
     }
   }
 
-  if (deployment?.exit !== null && deployment?.exit !== 0) {
-    return {
-      author: "",
-      branch: "",
-      msg: (
-        <div>
-          Deployment has failed
-          <br /> Mostly this happens when Stormkit cannot checkout your
-          repository.
-        </div>
-      ),
-    };
+  const exitCode = deployment?.exit;
+
+  let msg = (
+    <div>
+      Your deployment is queued up
+      <br /> We will process it immediately as soon as we have available slots
+    </div>
+  );
+
+  if (exitCode && exitCode > 0) {
+    msg = (
+      <div>
+        Deployment has failed
+        <br />
+        Mostly this happens when Stormkit cannot checkout your repository
+      </div>
+    );
+  } else if (exitCode === -1) {
+    msg = <div>Deployment has been stopped manually</div>;
   }
 
   return {
     author: "",
     branch: "",
-    msg: (
-      <div>
-        Your deployment is queued up
-        <br /> We will process it immediately as soon as we have available slots
-      </div>
-    ),
+    msg,
   };
 };
 
