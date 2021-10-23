@@ -1,29 +1,41 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Link from "~/components/Link";
 import { parseCommit } from "~/utils/helpers/deployments";
+import type { Commit } from "~/utils/helpers/deployments";
 import PublishedInfo from "./PublishedInfo";
 
-const CommitMessage = ({ deployment, commit }) => {
+interface Props {
+  deployment: Deployment;
+  environments: Array<Environment>;
+}
+
+interface CommitMessageProps {
+  deployment: Deployment;
+  commit: Commit;
+}
+
+const CommitMessage: React.FC<CommitMessageProps> = ({
+  deployment,
+  commit,
+}): React.ReactElement => {
   const isPublished = deployment.published?.length > 0;
 
-  if (isPublished === false) {
-    return commit.msg;
+  // No need to shorten if it's not published
+  if (!isPublished) {
+    return <span>{commit.msg}</span>;
   }
 
-  if (commit.msg.length > 30) {
-    return commit.msg.substring(0, 30) + "...";
+  if (typeof commit.msg === "string" && commit.msg.length > 30) {
+    return <span>{commit.msg.substring(0, 30)}...</span>;
   }
 
-  return commit.msg;
+  return <span>{commit.msg}</span>;
 };
 
-CommitMessage.propTypes = {
-  commit: PropTypes.object,
-  deployment: PropTypes.object,
-};
-
-const CommitInfo = ({ deployment, environments }) => {
+const CommitInfo: React.FC<Props> = ({
+  deployment,
+  environments,
+}): React.ReactElement => {
   const commit = parseCommit(deployment);
   const env = environments.filter(e => e.env === deployment.config.env)[0];
   const urls = {
@@ -59,11 +71,6 @@ const CommitInfo = ({ deployment, environments }) => {
       </div>
     </>
   );
-};
-
-CommitInfo.propTypes = {
-  deployment: PropTypes.object,
-  environments: PropTypes.array,
 };
 
 export default CommitInfo;

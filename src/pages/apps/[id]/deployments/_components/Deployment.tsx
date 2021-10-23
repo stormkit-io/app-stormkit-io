@@ -54,7 +54,7 @@ const Deployment: React.FC<Props & ContextProps> = ({
       >
         <div
           data-testid={`deploy-${deployment.id}-exit-status`}
-          className="flex flex-grow-0 items-start mr-4 pt-1"
+          className="flex flex-grow-0 items-start mr-4"
         >
           <ExitStatus code={deployment.exit} className="text-lg" iconOnly />
         </div>
