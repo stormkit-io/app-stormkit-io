@@ -160,14 +160,15 @@ export const useFetchStatus = ({
 };
 
 interface Meta {
-  type: "-" | "nuxt" | "next" | "angular";
+  type: "nuxt" | "next" | "react" | "vue" | "angular" | "nest" | "-";
   packageJson?: boolean;
+  isFramework?: boolean;
 }
 
 interface FetchRepoTypeProps {
   api: Api;
   app: App;
-  env: Environment;
+  env?: Environment;
 }
 
 interface FetchRepoTypeReturnValue {
@@ -188,6 +189,16 @@ export const useFetchRepoType = ({
 
   useEffect(() => {
     let unmounted = false;
+
+    // For the production environment we fetch the meta information while
+    // fetching the application. Therefore, we do not need to re-fetch it.
+    if (name === "production" && app.meta) {
+      return setMeta({
+        type: app.meta.repoType,
+        packageJson: app.meta.hasPackageJson,
+        isFramework: app.meta.isFramework,
+      });
+    }
 
     setLoading(true);
 
