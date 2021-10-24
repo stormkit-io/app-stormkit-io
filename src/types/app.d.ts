@@ -14,4 +14,9 @@ declare type App = {
   commitPrefix?: string;
   provider: "github" | "bitbucket" | "gitlab";
   name?: string;
+  meta?: {
+    isFramework: boolean;
+    hasPackageJson: boolean;
+    repoType: "nuxt" | "next" | "react" | "vue" | "angular" | "nest" | "-";
+  };
 };

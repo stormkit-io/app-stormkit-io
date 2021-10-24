@@ -157,70 +157,71 @@ export const useFetchApp = ({
 interface DeployProps extends Pick<ModalContextProps, "toggleModal"> {
   api: Api;
   app: App;
+  config?: {
+    cmd: string;
+    branch: string;
+    distFolder?: string;
+    publish: boolean;
+  };
   history: History;
   environment?: Environment;
   setError: SetError;
   setLoading: SetLoading;
 }
 
-interface DeployCallbackProps {
-  branch: string;
-}
-
 interface DeployAPIResponse {
   id: string;
 }
 
-export const deploy =
-  ({
-    api,
-    app,
-    setLoading,
-    setError,
-    toggleModal,
-    history,
-    environment,
-  }: DeployProps) =>
-  ({ branch }: DeployCallbackProps): void => {
-    if (!environment) {
-      return setError("Please select an environment.");
-    }
+export const deploy = ({
+  api,
+  app,
+  config,
+  setLoading,
+  setError,
+  toggleModal,
+  history,
+  environment,
+}: DeployProps): void => {
+  if (!environment) {
+    return setError("Please select an environment.");
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    api
-      .post<DeployAPIResponse>(`/app/deploy`, {
-        env: environment.env,
-        branch,
-        appId: app.id,
-      })
-      .then(deploy => {
-        toggleModal(false, () => {
-          if (deploy && deploy.id) {
-            history.push(`/apps/${app.id}/deployments/${deploy.id}`);
-          }
-        });
-      })
-      .catch(res => {
-        if (res.status === 429) {
-          setError(
-            "You have exceeded the maximum number of concurrent builds " +
-              "allowed for your application. Please wait until your other " +
-              "deployments are completed. You can always upgrade your package " +
-              "if you need more concurrent builds."
-          );
-        } else if (res.status === 401) {
-          setError(
-            "We do not have enough permissions to continue with the deployment. " +
-              "Check the documentation for more information."
-          );
-        } else {
-          setError(
-            "Something wrong happened here. Please contact us at hello@stormkit.io"
-          );
+  api
+    .post<DeployAPIResponse>(`/app/deploy`, {
+      env: environment.env,
+      appId: app.id,
+      ...config,
+    })
+    .then(deploy => {
+      toggleModal(false, () => {
+        if (deploy && deploy.id) {
+          history.push(`/apps/${app.id}/deployments/${deploy.id}`);
         }
-      })
-      .finally(() => {
-        setLoading(false);
       });
-  };
+    })
+    .catch(res => {
+      if (res.status === 429) {
+        setError(
+          "You have exceeded the maximum number of concurrent builds " +
+            "allowed for your application. Please wait until your other " +
+            "deployments are completed. You can always upgrade your package " +
+            "if you need more concurrent builds."
+        );
+      } else if (res.status === 401) {
+        setError(
+          "We do not have enough permissions to continue with the deployment. " +
+            "Check the documentation for more information."
+        );
+      } else {
+        setError(
+          "Something wrong happened here. Please contact us at hello@stormkit.io"
+        );
+      }
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+};

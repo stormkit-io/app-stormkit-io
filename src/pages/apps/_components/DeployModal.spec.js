@@ -1,6 +1,7 @@
 import * as lib from "@testing-library/react";
 import router from "react-router";
 import nock from "nock";
+import userEvent from "@testing-library/user-event";
 import { withMockContext } from "~/testing/helpers";
 import * as data from "~/testing/data";
 
@@ -47,6 +48,9 @@ describe(fileName, () => {
         appId: `${app.id}`,
         env: "production",
         branch: "master",
+        distFolder: "my-dist",
+        cmd: "echo hi",
+        publish: true,
       })
       .reply(status, { ok: true, id });
 
@@ -75,13 +79,19 @@ describe(fileName, () => {
       fireEvent.click(option);
     });
 
-    expect(
-      wrapper.getByText(
-        "This environment has Auto Publish turned on. This deployment will be published if it is successful."
-      )
-    ).toBeTruthy();
+    const buildFolder = wrapper.getByLabelText("Build Folder");
+    const branch = wrapper.getByLabelText("Branch to deploy");
+    const cmd = wrapper.getByLabelText("Cmd to execute");
+    expect(buildFolder.value).toBe("packages/console/dist");
+    expect(branch.value).toBe("master");
+    expect(cmd.value).toBe("yarn test && yarn run build:console");
 
-    document.body.querySelector("[name=branch]").value = "master";
+    userEvent.clear(buildFolder);
+    userEvent.clear(branch);
+    userEvent.clear(cmd);
+    userEvent.type(buildFolder, "my-dist");
+    userEvent.type(branch, "master");
+    userEvent.type(cmd, "echo hi");
 
     fireEvent.click(wrapper.getByText("Deploy now"));
 
