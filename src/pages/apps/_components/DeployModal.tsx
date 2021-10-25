@@ -44,8 +44,8 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
         setCmd("");
         setDist("");
         setBranch("");
-        setIsAutoPublish(undefined);
         setSelectedEnv(undefined);
+        setIsAutoPublish(undefined);
       }}
       className="max-w-screen-sm"
     >
@@ -73,6 +73,7 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
           className="mb-4"
           placeholder="Select an environment to deploy"
           environments={environments}
+          defaultValue={selectedEnv?.id}
           onSelect={(env: Environment): void => {
             if (!branch) {
               setBranch(env.branch);

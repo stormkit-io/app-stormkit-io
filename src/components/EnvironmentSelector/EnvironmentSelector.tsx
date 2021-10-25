@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "~/components/Form";
 
 interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
@@ -17,6 +17,10 @@ const EnvironmentSelector: React.FC<Props> = ({
 }): React.ReactElement => {
   const [selectedEnvironment, setSelectedEnvironment] =
     useState<string>(defaultValue);
+
+  useEffect(() => {
+    setSelectedEnvironment(defaultValue);
+  }, [defaultValue]);
 
   return (
     <div {...rest}>
