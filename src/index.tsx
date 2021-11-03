@@ -23,7 +23,7 @@ if (module.hot) {
   module.hot.accept();
 }
 
-ReactDOM.render(
+ReactDOM.hydrate(
   <Root Router={BrowserRouter} />,
   document.querySelector("#root")
 );
