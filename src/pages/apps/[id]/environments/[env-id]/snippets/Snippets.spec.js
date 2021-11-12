@@ -5,7 +5,10 @@ import * as data from "~/testing/data";
 
 const fileName = `pages/apps/[id]/environments/[env-id]/snippets/Snippets`;
 
-describe.only(fileName, () => {
+jest.mock("codemirror/keymap/sublime", () => {});
+jest.mock("codemirror/theme/idea.css", () => {});
+
+describe(fileName, () => {
   let wrapper;
   let toggleModal;
   let snippets;
