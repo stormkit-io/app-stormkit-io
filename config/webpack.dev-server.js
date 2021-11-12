@@ -11,7 +11,6 @@ const config = {
 
   port: process.env.PORT || 3000,
   host: process.env.IP || "localhost",
-  public: process.env.IP,
 
   // The following breaks dev server, but would be cool to include it one day.
   // http2: true,
