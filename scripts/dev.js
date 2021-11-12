@@ -5,13 +5,13 @@ process.env.IP = process.env.IP || "localhost";
 
 const webpack = require("webpack");
 const devServer = require("webpack-dev-server");
-const config = require("../config/webpack.config");
-const devConfig = require("../config/webpack.dev-server");
+const config = require("../webpack.config");
+const devConfig = require("../webpack.dev-server");
 
 const host = process.env.LISTEN;
 const port = process.env.PORT;
 
-const server = new devServer(webpack(config), devConfig);
+const server = new devServer(devConfig, webpack(config));
 
 server.listen(port, host, () => {
   ["SIGINT", "SIGTERM"].forEach(function (sig) {

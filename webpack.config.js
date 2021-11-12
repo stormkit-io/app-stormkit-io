@@ -6,14 +6,13 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { ESBuildMinifyPlugin } = require("esbuild-loader");
-const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const config = require("dotenv").config();
 
 // Helper variables
 const env = process.env.NODE_ENV || "production";
 const isDev = env === "development";
 const parsed = (config && config.parsed) || {};
-const root = path.resolve(__dirname, "..");
+const root = __dirname;
 
 module.exports = {
   // Providing the mode configuration option tells webpack to use its built-in optimizations accordingly.
@@ -39,11 +38,6 @@ module.exports = {
       "~": path.join(root, "src"),
     },
     extensions: [".tsx", ".ts", ".js"],
-    plugins: [
-      new TsConfigPathsPlugin({
-        configFile: path.resolve(__dirname, "./tsconfig.json"),
-      }),
-    ],
   },
 
   // @see https://webpack.js.org/configuration/module/

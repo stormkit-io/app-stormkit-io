@@ -4,16 +4,12 @@ const path = require("path");
 const config = {
   compress: true,
 
-  // http2: true,
   historyApiFallback: true,
 
   hot: true,
 
   port: process.env.PORT || 3000,
   host: process.env.IP || "localhost",
-
-  // The following breaks dev server, but would be cool to include it one day.
-  // http2: true,
 
   // Enable https with a self-signed certificate.
   https: {
