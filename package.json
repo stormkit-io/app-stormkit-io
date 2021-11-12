@@ -27,6 +27,8 @@
     ]
   },
   "dependencies": {
+    "@codemirror/lang-html": "^0.19.3",
+    "@codemirror/lang-javascript": "^0.19.3",
     "@material-ui/core": "^4.9.0",
     "@material-ui/lab": "^4.0.0-alpha.40",
     "@sentry/react": "^6.3.0",
@@ -35,7 +37,7 @@
     "@stripe/stripe-js": "^1.11.0",
     "@types/classnames": "^2.2.10",
     "@types/react-router-dom": "^5.1.5",
-    "@uiw/react-codemirror": "^3.0.6",
+    "@uiw/react-codemirror": "^4.2.3",
     "classnames": "^2.2.6",
     "dotenv": "^7.0.0",
     "flag-icon-css": "^3.3.0",
