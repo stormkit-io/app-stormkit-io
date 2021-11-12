@@ -79,6 +79,8 @@ export const parseCommit = (deployment?: Deployment): Commit => {
     );
   } else if (exitCode === -1) {
     msg = <div>Deployment has been stopped manually</div>;
+  } else if (exitCode === 0) {
+    msg = <div>Deployment is completed successfully</div>;
   }
 
   return {
