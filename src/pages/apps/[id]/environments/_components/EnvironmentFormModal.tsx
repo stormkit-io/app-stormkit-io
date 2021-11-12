@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { RootContextProps } from "~/pages/Root.context";
 import { AppContextProps } from "~/pages/apps/App.context";
 import Modal, { ModalContextProps } from "~/components/Modal";
-import Link from "~/components/Link";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
@@ -161,7 +160,7 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
             </div>
           </div>
           {!isFramework && isServerless && (
-            <div className="mb-8">
+            <div className="mb-8 hidden">
               <Form.Input
                 name="build.entry"
                 label="Serverless entry file"
@@ -172,17 +171,6 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
                   "aria-label": "Serverless entry file",
                 }}
               />
-              <div className="p-3 text-sm opacity-50">
-                The entry file for the server side application. For more
-                information refer to our{" "}
-                <Link
-                  to="https://www.stormkit.io/docs/deployments/configuration"
-                  secondary
-                >
-                  docs
-                </Link>
-                .
-              </div>
             </div>
           )}
           {!isFramework && (
