@@ -10,8 +10,8 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { upsertSnippets } from "../actions";
-import "codemirror/keymap/sublime";
-import "codemirror/theme/idea.css";
+import { javascript } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
 
 const ModalContext = Modal.Context();
 
@@ -88,7 +88,8 @@ const SnippetModal = ({
             height="200px"
             className="bg-white"
             value={snippet?.content}
-            onChange={instance => setCodeContent(instance.getValue())}
+            extensions={[javascript(), html()]}
+            onChange={value => setCodeContent(value)}
             options={{
               name: "content",
               theme: "idea",
