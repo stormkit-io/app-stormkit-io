@@ -4,15 +4,23 @@ type PublishInfo = {
 };
 
 type Log = {
+  title: string;
   message: string;
   payload: unknown;
   status: boolean;
+};
+
+type Commit = {
+  author?: string;
+  message?: string;
+  sha?: string;
 };
 
 declare type Deployment = {
   id: string;
   appId: string;
   branch: string;
+  commit: Commit;
   config: Environment;
   createdAt: number;
   stoppedAt: number;

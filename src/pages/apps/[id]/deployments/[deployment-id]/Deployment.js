@@ -72,14 +72,18 @@ const Deployment = ({ api, app, match }) => {
                     code={getExitCode({ deploy, index: i, status })}
                   />
                 </div>
-                <code
-                  className="block font-mono bg-blue-10 p-4 text-white rounded-br rounded-bl leading-relaxed overflow-y-auto"
-                  style={{ maxHeight: "300px" }}
-                >
-                  {message.split("\n").map((line, i) => (
-                    <div key={i}>{line}</div>
-                  ))}
-                </code>
+                {message.length ? (
+                  <code
+                    className="block font-mono bg-blue-10 p-4 text-white rounded-br rounded-bl leading-relaxed overflow-y-auto"
+                    style={{ maxHeight: "300px" }}
+                  >
+                    {message.split("\n").map((line, i) => (
+                      <div key={i}>{line}</div>
+                    ))}
+                  </code>
+                ) : (
+                  ""
+                )}
               </div>
             ))}
             {deploy.isRunning && (

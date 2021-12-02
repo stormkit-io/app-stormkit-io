@@ -46,6 +46,14 @@ interface PayloadCommit {
  * @param {object} deployment
  */
 export const parseCommit = (deployment?: Deployment): Commit => {
+  if (deployment?.commit?.author) {
+    return {
+      author: deployment.commit.author.split("<")[0],
+      msg: deployment.commit.message,
+      branch: deployment.branch,
+    };
+  }
+
   if (deployment?.logs?.length) {
     for (let i = 0; i < deployment.logs.length; i++) {
       const payload = deployment.logs[i].payload as PayloadCommit;
