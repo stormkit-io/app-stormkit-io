@@ -12,15 +12,18 @@ interface Props {
   app: App;
   isLastRow: boolean;
   domain: Domain;
-  onDelete: (arg0: string) => boolean;
-  onVerify: (arg0: string) => void;
+  onDeleteClick: (arg0: string) => void;
+  onVerifyClick: (arg0: {
+    setLoading: SetLoading;
+    setError: SetError;
+  }) => Promise<void>;
 }
 
 const DomainRow: React.FC<Props> = ({
   domain,
   isLastRow,
-  onDelete,
-  onVerify,
+  onDeleteClick,
+  onVerifyClick,
   app,
 }): React.ReactElement => {
   return (
@@ -32,7 +35,7 @@ const DomainRow: React.FC<Props> = ({
         <DotDotDot aria-label="Expand options">
           <DotDotDot.Item
             aria-label="Delete domain"
-            onClick={() => onDelete(domain.domainName)}
+            onClick={() => onDeleteClick(domain.domainName)}
           >
             <span className="fas fa-times text-red-50 mr-2" />
             Delete
@@ -42,9 +45,16 @@ const DomainRow: React.FC<Props> = ({
       <TableContainer className="bg-gray-90 rounded-br rounded-bl px-4">
         <Table aria-label="Domain configuration">
           <TableBody>
-            <DomainVerificationStatus domain={domain} onVerify={onVerify} />
-            <DomainUsageStatus domain={domain} app={app} onVerify={onVerify} />
-            <DomainTLSStatus domain={domain} onVerify={onVerify} />
+            <DomainVerificationStatus
+              domain={domain}
+              onVerifyClick={onVerifyClick}
+            />
+            <DomainUsageStatus
+              domain={domain}
+              app={app}
+              onVerifyClick={onVerifyClick}
+            />
+            <DomainTLSStatus domain={domain} onVerifyClick={onVerifyClick} />
           </TableBody>
         </Table>
       </TableContainer>

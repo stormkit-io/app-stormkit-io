@@ -1,27 +1,33 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import Modal from "~/components/Modal";
+import Modal, { ModalContextProps } from "~/components/Modal";
+import { RootContextProps } from "~/pages/Root.context";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { setDomain } from "../actions";
+import { useHistory } from "react-router";
 
 const ModalContext = Modal.Context();
 
-const DomainModal = ({
+interface Props extends Pick<RootContextProps, "api"> {
+  app: App;
+  environment: Environment;
+}
+
+const DomainModal: React.FC<Props & ModalContextProps> = ({
   isOpen,
   toggleModal,
   api,
   app,
   environment,
-  history,
 }) => {
+  const history = useHistory();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) {
-    return "";
+    return <></>;
   }
 
   return (
@@ -71,17 +77,8 @@ const DomainModal = ({
   );
 };
 
-DomainModal.propTypes = {
-  isOpen: PropTypes.bool,
-  toggleModal: PropTypes.func,
-  history: PropTypes.object,
-  environment: PropTypes.object,
-  api: PropTypes.object,
-  app: PropTypes.object,
-};
-
 export default Object.assign(
-  connect(DomainModal, [
+  connect<Props, ModalContextProps>(DomainModal, [
     { Context: ModalContext, props: ["toggleModal", "isOpen"] },
   ]),
   ModalContext

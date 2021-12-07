@@ -52,7 +52,8 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-transition-group": "^4.4.1",
-    "tailwindcss": "^2.0.2"
+    "tailwindcss": "^2.0.2",
+    "tldts": "^5.7.56"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

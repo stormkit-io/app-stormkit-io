@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
+import { parse } from "tldts";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -8,9 +8,25 @@ import TableContainer from "@material-ui/core/TableContainer";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 
-const DomainVerificationStatus = ({ domain, onVerify }) => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+interface Props {
+  domain: Domain;
+  onVerifyClick: (arg0: {
+    setLoading: SetLoading;
+    setError: SetError;
+  }) => Promise<void>;
+}
+
+const recordName = (domain: Domain): string => {
+  const parsed = parse(domain.domainName);
+  return `${domain.dns.txt.name}.${parsed.subdomain || parsed.domain}`;
+};
+
+const DomainVerificationStatus: React.FC<Props> = ({
+  domain,
+  onVerifyClick,
+}) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<null | string>(null);
   const isVerified = domain.dns?.verified;
 
   return (
@@ -42,7 +58,7 @@ const DomainVerificationStatus = ({ domain, onVerify }) => {
                       TXT Record Name/Host
                     </TableCell>
                     <TableCell className="font-bold">
-                      {domain.dns.txt.name}
+                      {recordName(domain)}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -67,13 +83,13 @@ const DomainVerificationStatus = ({ domain, onVerify }) => {
                 loading={loading}
                 onClick={() => {
                   setError(null);
-                  onVerify({
+                  onVerifyClick({
                     setLoading,
                     setError,
                   }).then(() => {
                     if (isVerified === false) {
                       setError(
-                        "TXT records still do not match. Please give it a bit time before the DNS records propagate."
+                        `TXT records still do not match. Please give it a bit time before the DNS records propagate. The record we are trying to match is: ${domain.dns.txt.lookup}`
                       );
                     }
                   });
@@ -87,11 +103,6 @@ const DomainVerificationStatus = ({ domain, onVerify }) => {
       </TableCell>
     </TableRow>
   );
-};
-
-DomainVerificationStatus.propTypes = {
-  domain: PropTypes.object,
-  onVerify: PropTypes.func,
 };
 
 export default DomainVerificationStatus;

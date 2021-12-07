@@ -1,13 +1,24 @@
 interface DNS {
-  domainInUse: boolean;
   verified: boolean;
-  cname: string;
-  ips: Array<string>;
-  txt: Record<string, unkown>;
+  txt: {
+    name: string;
+    value: string;
+    lookup: string;
+  };
+}
+
+interface TLS {
+  startDate: number;
+  endDate: number;
+  serialNo: string;
+  signatureAlgorithm: string;
+  issuer?: {
+    name: string;
+  };
 }
 
 declare interface Domain {
-  DNS: DNS;
-  TLS: unknown;
+  tls: TLS;
+  dns: DNS;
   domainName: string;
 }

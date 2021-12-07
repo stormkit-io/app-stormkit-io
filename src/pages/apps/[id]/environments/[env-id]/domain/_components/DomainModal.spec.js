@@ -18,7 +18,6 @@ describe(fileName, () => {
       environment: env,
       toggleModal: jest.fn(),
       isOpen: true,
-      history: { replace: jest.fn() },
     });
   });
 
@@ -37,10 +36,10 @@ describe(fileName, () => {
       fireEvent.click(wrapper.getByText("Start verification process"));
 
       await waitFor(() => {
-        expect(wrapper.injectedProps.history.replace).toHaveBeenCalledWith(
-          expect.objectContaining({ state: { envs: expect.anything() } })
-        );
         expect(scope.isDone()).toBe(true);
+        expect(wrapper.spies.history.replace).toHaveBeenCalledWith({
+          state: { envs: expect.any(Number) },
+        });
       });
     });
   });
@@ -64,8 +63,8 @@ describe(fileName, () => {
         expect(
           wrapper.getByText("Please provide a valid domain name.")
         ).toBeTruthy();
-        expect(wrapper.injectedProps.history.replace).not.toHaveBeenCalled();
         expect(scope.isDone()).toBe(true);
+        expect(wrapper.spies.history.replace).not.toHaveBeenCalled();
       });
     });
 
@@ -87,8 +86,8 @@ describe(fileName, () => {
         expect(
           wrapper.getByText(/You have issued too many requests/)
         ).toBeTruthy();
-        expect(wrapper.injectedProps.history.replace).not.toHaveBeenCalled();
         expect(scope.isDone()).toBe(true);
+        expect(wrapper.spies.history.replace).not.toHaveBeenCalled();
       });
     });
 
@@ -110,8 +109,8 @@ describe(fileName, () => {
         expect(
           wrapper.getByText(/Something went wrong while setting up the domain/)
         ).toBeTruthy();
-        expect(wrapper.injectedProps.history.replace).not.toHaveBeenCalled();
         expect(scope.isDone()).toBe(true);
+        expect(wrapper.spies.history.replace).not.toHaveBeenCalled();
       });
     });
   });
