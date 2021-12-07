@@ -1,8 +1,19 @@
 import { useEffect, useState } from "react";
+import { History } from "history";
+import Api from "~/utils/api/Api";
+
+interface SetDomainProps {
+  app: App;
+  api: Api;
+  history: History;
+  environment: Environment;
+  setError: SetError;
+  setLoading: SetLoading;
+}
 
 export const setDomain =
-  ({ app, api, environment, history, setError, setLoading }) =>
-  ({ domain }) => {
+  ({ app, api, environment, history, setError, setLoading }: SetDomainProps) =>
+  ({ domain }: { domain: string }): void => {
     setLoading(true);
 
     api
@@ -27,6 +38,16 @@ export const setDomain =
       });
   };
 
+interface DeleteDomainProps {
+  api: Api;
+  app: App;
+  environment: Environment;
+  domainName: string;
+  setLoading: SetLoading;
+  setError: SetError;
+  history: History;
+}
+
 export const deleteDomain = ({
   api,
   app,
@@ -35,7 +56,7 @@ export const deleteDomain = ({
   setLoading,
   setError,
   history,
-}) => {
+}: DeleteDomainProps): Promise<void> => {
   setLoading(true);
 
   return api
@@ -59,35 +80,34 @@ export const deleteDomain = ({
     });
 };
 
+interface FetchDomainsInfoProps {
+  api: Api;
+  app: App;
+  environment: Environment;
+  setLoading: SetLoading;
+  setError: SetError;
+  unmounted: boolean;
+  setDomainsInfo: (val: Domain[]) => void;
+}
+
 export const fetchDomainsInfo = ({
   api,
   app,
   environment,
   setLoading,
   setError,
-  setDomainsInfo,
-  withUXFix,
   unmounted = false,
-}) => {
+  setDomainsInfo,
+}: FetchDomainsInfoProps): Promise<void> => {
   setLoading(true);
-  const timeout = withUXFix ? 1000 : 0;
 
   return api
-    .fetch(`/app/${app.id}/envs/${environment.env}/lookup`)
+    .fetch<Domain>(`/app/${app.id}/envs/${environment.env}/lookup`)
     .then(res => {
-      return new Promise(resolve => {
-        // This is a UX fix. Verifying the domain needs to seem like a process
-        // which takes time. It will give the user the feeling that something is happening
-        // behind the scenes.
-        setTimeout(() => {
-          resolve();
-
-          if (!unmounted) {
-            setDomainsInfo([res]);
-            setLoading(false);
-          }
-        }, timeout);
-      });
+      if (!unmounted) {
+        setDomainsInfo([res]);
+        setLoading(false);
+      }
     })
     .catch(() => {
       if (!unmounted) {
@@ -99,27 +119,27 @@ export const fetchDomainsInfo = ({
     });
 };
 
-export const useCertificatePoll = ({ isInUse, cert, onVerify }) => {
-  useEffect(() => {
-    let unmounted = false;
+interface DomainLookupProps {
+  api: Api;
+  app: App;
+  environment: Environment;
+}
 
-    // Allow a bit time to issue a certificate.
-    setTimeout(() => {
-      if (cert === null && isInUse && !unmounted) {
-        onVerify({ setLoading: () => {}, setError: () => {} });
-      }
-    }, 2500);
+interface DomainLookupReturnValue {
+  loading: boolean;
+  error: string | null;
+  domainsInfo: Domain[];
+  setDomainsInfo: (val: Domain[]) => void;
+}
 
-    return () => {
-      unmounted = true;
-    };
-  }, [cert, isInUse, onVerify]);
-};
-
-export const useDomainLookup = ({ api, app, environment }) => {
+export const useDomainLookup = ({
+  api,
+  app,
+  environment,
+}: DomainLookupProps): DomainLookupReturnValue => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [domainsInfo, setDomainsInfo] = useState([]);
+  const [domainsInfo, setDomainsInfo] = useState<Domain[]>([]);
   const domainName = environment.domain.name;
 
   useEffect(() => {

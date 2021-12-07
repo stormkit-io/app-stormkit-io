@@ -13,10 +13,7 @@ export default () => ({
     signatureAlgorithm: "SHA256-RSA",
   },
   dns: {
-    domainInUse: true,
     verified: true,
-    cname: "app.stormkit.dev.",
-    ips: ["35.156.69.62"],
     txt: {
       name: "22c6d6c1871fb4655e2b6e01aa59c8e7",
       value: "3745d5f22e46c8eb4a9b1400f92c8b0d",
