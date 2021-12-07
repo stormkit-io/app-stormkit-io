@@ -83,6 +83,7 @@ export const withMockContext = (...args) => {
 
   const Component = require(path).default;
   const history = createMemoryHistory();
+
   const wrapper = render(
     <Router history={history}>
       <Component {...mockProps} />
@@ -91,6 +92,11 @@ export const withMockContext = (...args) => {
 
   return Object.assign(wrapper, {
     injectedProps: mockProps,
+    spies: {
+      history: {
+        replace: jest.spyOn(history, "replace"),
+      },
+    },
     history,
   });
 };
