@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Api from "~/utils/api/Api";
 import Modal, { ModalContextProps } from "~/components/Modal";
@@ -35,6 +35,10 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
   const [isAutoPublish, setIsAutoPublish] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
   const { meta, loading: metaLoading } = fetchResult;
+
+  useEffect(() => {
+    setError(null);
+  }, [isOpen]);
 
   return (
     <Modal
@@ -75,22 +79,10 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
           environments={environments}
           defaultValue={selectedEnv?.id}
           onSelect={(env: Environment): void => {
-            if (!branch) {
-              setBranch(env.branch);
-            }
-
-            if (!cmd) {
-              setCmd(env.build.cmd);
-            }
-
-            if (!dist && !meta.isFramework) {
-              setDist(env.build.distFolder);
-            }
-
-            if (typeof isAutoPublish === "undefined") {
-              setIsAutoPublish(env.autoPublish);
-            }
-
+            setBranch(env.branch);
+            setCmd(env.build.cmd);
+            setDist(env.build.distFolder);
+            setIsAutoPublish(env.autoPublish);
             setError(null);
             setSelectedEnv(env);
           }}
