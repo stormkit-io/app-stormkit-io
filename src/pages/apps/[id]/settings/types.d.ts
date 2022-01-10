@@ -20,3 +20,12 @@ export interface AppSettings {
     };
   };
 }
+
+export interface OutboundWebhooks {
+  id: string;
+  triggerWhen: "on_deploy" | "on_publish";
+  requestUrl: string;
+  requestMethod: "GET" | "POST" | "HEAD";
+  requestPayload?: string;
+  requestHeaders?: Record<string, string>;
+}

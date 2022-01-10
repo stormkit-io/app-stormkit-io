@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "~/utils/context";
 import RootContext, { RootContextProps } from "~/pages/Root.context";
 import AppContext, { AppContextProps } from "~/pages/apps/App.context";
@@ -6,7 +6,7 @@ import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
 import Spinner from "~/components/Spinner";
 import FormAppSettings from "./_components/FormAppSettings";
 import FormTriggerDeploys from "./_components/FormTriggerDeploys";
-import FormIntegrations from "./_components/FormIntegrations";
+import FormOutboundWebhooks from "./_components/FormOutboundWebhooks";
 import FormDangerZone from "./_components/FormDangerZone";
 import * as actions from "./actions";
 
@@ -23,6 +23,16 @@ const Settings: React.FC<ContextProps> = ({ api, app, environments, user }) => {
     api,
     app,
   });
+
+  useEffect(() => {
+    if (window.location.hash) {
+      setTimeout(() => {
+        document
+          .querySelector(window.location.hash)
+          ?.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+    }
+  }, []);
 
   return (
     <div>
@@ -48,11 +58,7 @@ const Settings: React.FC<ContextProps> = ({ api, app, environments, user }) => {
             />
           </div>
           <div className="rounded bg-white p-8 mb-8">
-            <FormIntegrations
-              api={api}
-              app={app}
-              additionalSettings={settings}
-            />
+            <FormOutboundWebhooks api={api} app={app} />
           </div>
           {isCurrentUserTheOwner && (
             <div className="rounded bg-white p-8 mb-8">
