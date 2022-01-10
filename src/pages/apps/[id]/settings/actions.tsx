@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, RouteComponentProps, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { RouteComponentProps, useLocation } from "react-router-dom";
 import { RootContextProps } from "~/pages/Root.context";
 import { ConfirmModalProps } from "~/components/ConfirmModal";
 import { formatRepo } from "./helpers";
@@ -220,75 +220,5 @@ export const updateAdditionalSettings =
                 "Please try again and if the problem persists contact us from Discord or email."
             );
           });
-      });
-  };
-
-interface UpdateHooksProps
-  extends Pick<RootContextProps, "api">,
-    Pick<RouteComponentProps, "history"> {
-  app: App;
-  setLoading: SetLoading;
-  setError: SetError;
-}
-
-interface HooksFormValues {
-  "slack.webhook": string;
-  "slack.channel"?: string;
-  "slack.onStart": "true" | "false";
-  "slack.onEnd": "true" | "false";
-  "slack.onPublish": "true" | "false";
-}
-
-export const updateHooks =
-  ({ api, app, setLoading, setError, history }: UpdateHooksProps) =>
-  (values: HooksFormValues): void => {
-    const hooks = {
-      slack: {
-        webhook: values["slack.webhook"],
-        channel: values["slack.channel"]?.replace(/^#+/, ""),
-        onStart: values["slack.onStart"] === "true",
-        onEnd: values["slack.onEnd"] === "true",
-        onPublish: values["slack.onPublish"] === "true",
-      },
-    };
-
-    if (
-      hooks.slack.webhook === "" &&
-      (hooks.slack.onStart || hooks.slack.onEnd || hooks.slack.onPublish)
-    ) {
-      return setError("Please provide a valid Slack webhook endpoint.");
-    }
-
-    setLoading(true);
-    setError(null);
-
-    api
-      .put(`/app/hooks`, { hooks, appId: app.id })
-      .then(() => {
-        setLoading(false);
-        history.replace({
-          state: {
-            app: Date.now(), // This will trigger a re-fetch for the app.
-            integrationsSuccess: "Your app has been updated successfully.",
-          },
-        });
-      })
-      .catch(res => {
-        setLoading(false);
-
-        if (res.status === 400) {
-          return setError(
-            "Invalid JSON request has been sent to th server. This is an internal error, please report this."
-          );
-        }
-
-        if (res.status === 402) {
-          return setError(
-            <div>
-              Your current package does not allow setting app hooks. You can
-              always <Link to="/user/account">upgrade</Link> to proceed.
-            </div>
-          );
-        }
       });
   };

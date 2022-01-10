@@ -53,14 +53,3 @@ export const formatRepo = (repo: string): string => {
 
   return "";
 };
-
-/**
- * Prefixes the hashtag (#) to the channel name to follow the Slack naming conventions.
- */
-export const formattedSlackChannelName = (channel: string): string => {
-  if (!channel) {
-    return "";
-  }
-
-  return `#${channel.replace(/^#/, "")}`;
-};

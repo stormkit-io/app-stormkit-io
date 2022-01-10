@@ -24,8 +24,12 @@
   @apply rounded-full;
 }
 
-label.MuiFormLabel-root,
-div.MuiInputBase-root {
+.MuiFormLabel-root {
+  font-size: 0.9rem;
+  top: 2px;
+}
+
+.MuiInputBase-root {
   @apply text-sm;
 }
 
@@ -47,7 +51,8 @@ div.MuiTableContainer-root {
   margin-right: 1rem;
 }
 
-.MuiFilledInput-root {
+.MuiFilledInput-root,
+.MuiOutlinedInput-root {
   @apply bg-gray-90;
 }
 
