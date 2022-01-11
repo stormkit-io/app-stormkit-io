@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import Api from "~/utils/api/Api";
 import Modal, { ModalContextProps } from "~/components/Modal";
 import InfoBox from "~/components/InfoBox";
@@ -24,8 +21,8 @@ const FormNewOutboundWebhookModal: React.FC<Props & ModalContextProps> = ({
   api,
   app,
 }): React.ReactElement => {
-  const history = useHistory();
-  const [selectedEnv, setSelectedEnv] = useState<Environment>();
+  const [showHeaders, setShowHeaders] = useState(false);
+  const [showPayload, setShowPayload] = useState(false);
   const [error, setError] = useState<null | string>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -73,26 +70,83 @@ const FormNewOutboundWebhookModal: React.FC<Props & ModalContextProps> = ({
           name="requestUrl"
           className="bg-gray-90 mb-4"
           label="Request URL"
+          placeholder="https://example.org/webhooks"
+          InputLabelProps={{ shrink: true }}
           inputProps={{
             "aria-label": "Request URL",
           }}
           fullWidth
         />
+        <div className="mb-4">
+          <Form.Switch
+            withWrapper
+            checked={showHeaders}
+            onChange={e => setShowHeaders(e.target.checked)}
+            inputProps={{
+              "aria-label": "Show request headers input",
+            }}
+          >
+            Enable request headers
+          </Form.Switch>
+        </div>
+        {showHeaders && (
+          <Form.Input
+            name="requestHeaders"
+            className="bg-gray-90 mb-4"
+            label="Request Headers"
+            InputLabelProps={{ shrink: true }}
+            inputProps={{
+              "aria-label": "Request headers",
+            }}
+            placeholder={
+              "Content-Type: application/json\nAuthorization: Bearer"
+            }
+            maxRows={4}
+            minRows={4}
+            multiline
+            fullWidth
+          />
+        )}
         <Form.Select
           name="requestMethod"
           className="mb-4"
           label="Request Method"
+          defaultValue="GET"
+          onChange={e => {
+            setShowPayload(e.target.value === "POST");
+          }}
+          shrink
           fullWidth
           required
         >
-          <Form.Option value={"GET"}>GET</Form.Option>
-          <Form.Option value={"POST"}>POST</Form.Option>
-          <Form.Option value={"HEAD"}>HEAD</Form.Option>
+          <Form.Option value={"GET"}>Get</Form.Option>
+          <Form.Option value={"POST"}>Post</Form.Option>
+          <Form.Option value={"HEAD"}>Head</Form.Option>
         </Form.Select>
+        {showPayload && (
+          <div className="mb-4">
+            <Form.Input
+              name="requestPayload"
+              className="bg-gray-90"
+              label="Request Payload"
+              InputLabelProps={{ shrink: true }}
+              placeholder={`{ "hello": "world" }`}
+              inputProps={{
+                "aria-label": "Request payload",
+              }}
+              maxRows={4}
+              minRows={4}
+              multiline
+              fullWidth
+            />
+          </div>
+        )}
         <Form.Select
           name="triggerWhen"
+          label="Trigger this webhook"
+          defaultValue="on_deploy"
           className="mb-6"
-          label="Trigger when"
+          shrink
           fullWidth
           required
         >
