@@ -49,7 +49,10 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
 }): React.ReactElement => {
   const history = useHistory();
 
-  const [isAutoPublish, setIsAutoPublish] = useState(env?.autoPublish || true);
+  const [isAutoPublish, setIsAutoPublish] = useState<boolean>(
+    env?.autoPublish || true
+  );
+
   const [isServerless, setIsServerless] = useState(!!env?.build?.entry);
   const [envVars, setEnvVars] = useState(envVarsToArray(env));
   const [loading, setLoading] = useState(false);
@@ -76,7 +79,7 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={() => toggleModal(false)}
-      className="max-w-screen-lg"
+      className="max-w-screen-sm"
     >
       <Form
         handleSubmit={handleSubmit({
@@ -91,7 +94,7 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
           setError,
         })}
       >
-        <h3 className="mb-8 font-bold">Environment details</h3>
+        <Form.Header className="mb-4">Environment details</Form.Header>
         <div className="mb-8">
           <Form.Input
             name="name"
@@ -104,10 +107,9 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
               "aria-label": "Environment name",
             }}
           />
-          <div className="p-3 text-sm opacity-50">
-            The name which this environment is going to use. You cannot change
-            the name after having created the environment.
-          </div>
+          <Form.Helper>
+            The name that is going to be used for this environment.
+          </Form.Helper>
         </div>
         <div className="mb-8">
           <Form.Input
@@ -121,43 +123,43 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
               "aria-label": "Branch name",
             }}
           />
-          <div className="p-3 text-sm opacity-50">
-            Pushes/merges to this branch will trigger an auto deploy when auto
-            deploys are enabled.
-          </div>
+          <Form.Helper>
+            Pushes/merges to this branch will trigger an auto deployment. You
+            can enable auto deployments from the application's settings page.
+          </Form.Helper>
         </div>
-        <div>
-          <div className="flex w-full border border-solid border-gray-85 rounded py-2 items-center text-sm bg-gray-90">
-            <Form.Switch
-              className="mr"
-              checked={isAutoPublish}
-              onChange={e => setIsAutoPublish(e.target.checked)}
-              inputProps={{
-                "aria-label": "Auto publish toggle",
-              }}
-            />
+        <div className="mb-16">
+          <Form.Switch
+            withWrapper
+            className="mr"
+            checked={isAutoPublish}
+            onChange={e => setIsAutoPublish(e.target.checked)}
+            inputProps={{
+              "aria-label": "Auto publish toggle",
+            }}
+          >
             Auto Publish
-          </div>
-          <div className="p-3 text-sm opacity-50">
+          </Form.Switch>
+          <Form.Helper>
             When auto publish is enabled, successful deployments will be
             published automatically.
-          </div>
+          </Form.Helper>
         </div>
-        <h3 className="my-8 font-bold">Build configuration</h3>
+        <Form.Header className="mb-4">Build configuration</Form.Header>
         <div className="flex flex-col">
           <div className="mb-8">
-            <div className="flex w-full border border-solid border-gray-85 rounded py-2 items-center text-sm bg-gray-90">
-              <Form.Switch
-                className="mr"
-                checked={isServerless}
-                onChange={e => setIsServerless(e.target.checked)}
-              />
+            <Form.Switch
+              withWrapper
+              className="mr"
+              checked={isServerless}
+              onChange={e => setIsServerless(e.target.checked)}
+            >
               Serverless
-            </div>
-            <div className="p-3 text-sm opacity-50">
+            </Form.Switch>
+            <Form.Helper>
               Turn on to enable serverless side rendering. If turned on, your
               application will be served from lambdas.
-            </div>
+            </Form.Helper>
           </div>
           {!isFramework && isServerless && (
             <div className="mb-8 hidden">
@@ -185,13 +187,13 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
                 }}
                 fullWidth
               />
-              <div className="p-3 text-sm opacity-50">
+              <Form.Helper>
                 The output folder that will be uploaded to our CDN. Usually this
                 is either <b>dist</b> or <b>build</b>.
-              </div>
+              </Form.Helper>
             </div>
           )}
-          <div>
+          <div className="mb-16">
             <Form.Input
               name="build.cmd"
               label="Build command"
@@ -205,16 +207,16 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
               }}
               fullWidth
             />
-            <div className="p-3 text-sm opacity-50">
+            <Form.Helper>
               The command to build your application. You can chain multiple
               commands with the <b>&amp;&amp;</b> operator. (i.e. npm run test
               &amp;&amp; npm run build)
-            </div>
+            </Form.Helper>
           </div>
-          <h3 className="mt-8 font-bold">Environment variables</h3>
-          <div className="pt-3 text-sm opacity-50 mb-8">
-            These variables can be used both on client-side and on server-side.
-            Variables not used won't appear in the source code.
+          <Form.Header>Environment variables</Form.Header>
+          <div className="pt-2 text-sm opacity-50 mb-8">
+            Environment variables that will be injected during the build
+            process.
           </div>
           <div className="mb-8" id="env-vars">
             {envVars.map(({ key, value }, i) => (

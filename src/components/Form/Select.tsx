@@ -4,10 +4,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import SelectInput, { SelectProps } from "@material-ui/core/Select";
 
-const Select: React.FC<SelectProps> = ({
+const Select: React.FC<SelectProps & { shrink?: boolean }> = ({
   className,
   variant = "outlined",
   label,
+  shrink = false,
   fullWidth = true,
   displayEmpty = true,
   defaultValue = "",
@@ -16,7 +17,7 @@ const Select: React.FC<SelectProps> = ({
 }): React.ReactElement => {
   return (
     <FormControl variant={variant} fullWidth={fullWidth} required={required}>
-      {label && <InputLabel>{label}</InputLabel>}
+      {label && <InputLabel shrink={shrink}>{label}</InputLabel>}
       <SelectInput
         label={label}
         className={cn({ "w-full": fullWidth }, className)}

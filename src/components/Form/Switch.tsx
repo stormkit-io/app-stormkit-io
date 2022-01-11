@@ -3,6 +3,8 @@ import SwitchUI, { SwitchProps } from "@material-ui/core/Switch";
 
 interface Props extends SwitchProps {
   confirm?: (arg0: (val: boolean) => void) => void;
+  withWrapper?: boolean;
+  children?: React.ReactNode;
 }
 
 /**
@@ -12,6 +14,8 @@ interface Props extends SwitchProps {
 const Switch: FC<Props> = ({
   checked = false,
   confirm,
+  withWrapper,
+  children,
   ...rest
 }: Props): ReactElement => {
   const [isChecked, setChecked] = useState<boolean>(checked);
@@ -20,7 +24,7 @@ const Switch: FC<Props> = ({
     setChecked(checked);
   }, [checked]);
 
-  return (
+  const component = (
     <SwitchUI
       {...rest}
       checked={isChecked}
@@ -33,6 +37,18 @@ const Switch: FC<Props> = ({
         }
       }}
     />
+  );
+
+  return withWrapper ? (
+    <div className="flex w-full border border-solid border-gray-85 rounded py-2 items-center text-sm bg-gray-90">
+      {component}
+      {children}
+    </div>
+  ) : (
+    <>
+      {component}
+      {children}
+    </>
   );
 };
 
