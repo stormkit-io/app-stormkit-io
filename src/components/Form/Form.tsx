@@ -7,6 +7,8 @@ import Select from "./Select";
 import Option from "./Option";
 import Toggler from "./Toggler";
 import Switch from "./Switch";
+import Helper from "./Helper";
+import Header from "./Header";
 import Section from "./components/Section";
 import Description from "./components/Description";
 import CodeMirror from "@uiw/react-codemirror";
@@ -132,5 +134,7 @@ Form.Toggler = Toggler;
 Form.Switch = Switch;
 Form.Section = Section;
 Form.Description = Description;
+Form.Helper = Helper;
+Form.Header = Header;
 
 export default Form;
