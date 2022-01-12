@@ -32,10 +32,13 @@ const AppMenu: React.FC<Props> = ({ app }): React.ReactElement => {
   const url = window?.location.pathname;
 
   return (
-    <div className="flex flex-col h-full p-8 bg-black-o-05">
+    <div className="flex flex-col h-full py-8 pl-8 lg:pr-8 bg-black-o-05">
       <div className="mb-40">
-        <Link to="/" alt="Home Page">
+        <Link to="/" alt="Home Page" className="hidden lg:inline-block">
           <Logo iconSize={8} />
+        </Link>
+        <Link to="/" alt="Home Page" className="inline-block lg:hidden">
+          <Logo iconSize={8} iconOnly />
         </Link>
       </div>
       <ul className="flex-auto">
@@ -50,8 +53,10 @@ const AppMenu: React.FC<Props> = ({ app }): React.ReactElement => {
                 }
               )}
             >
-              <span className={cn(path.icon, "mr-4", "text-base", "fa-fw")} />
-              {path.text}
+              <span
+                className={cn(path.icon, "lg:mr-4", "text-base", "fa-fw")}
+              />
+              <span className="hidden lg:inline-block">{path.text}</span>
             </Link>
           </li>
         ))}
@@ -61,8 +66,8 @@ const AppMenu: React.FC<Props> = ({ app }): React.ReactElement => {
           to={"/"}
           className="text-sm inline-flex items-center hover:bg-blue-20 rounded-lg py-2 px-4 hover:text-white"
         >
-          <span className="fas fa-arrow-alt-circle-left mr-4" />
-          Switch app
+          <span className="fas fa-arrow-alt-circle-left lg:mr-4" />
+          <span className="hidden lg:inline-block">Switch app</span>
         </Link>
       </div>
     </div>
