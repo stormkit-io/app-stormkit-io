@@ -1,4 +1,4 @@
-import { capitalize, parseBoolean, booleanToString } from "./string";
+import { capitalize, parseBoolean, booleanToString, truncate } from "./string";
 
 describe("utils/helpers/string", () => {
   test("capitalize", () => {
@@ -16,5 +16,9 @@ describe("utils/helpers/string", () => {
     expect(booleanToString(true)).toBe("true");
     expect(booleanToString(false)).toBe("false");
     expect(booleanToString()).toBe("");
+  });
+
+  test("truncate", () => {
+    expect(truncate("hello world", 6)).toBe("hello...");
   });
 });
