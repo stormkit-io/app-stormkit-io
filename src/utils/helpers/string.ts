@@ -29,3 +29,10 @@ export const booleanToString = (value?: boolean): string => {
 export const parseBoolean = (value?: string): boolean | undefined => {
   return value === "true" ? true : value === "false" ? false : undefined;
 };
+
+/**
+ * Truncates the given string.
+ */
+export const truncate = (value: string, len = 100): string => {
+  return value.length > len ? value.substring(0, len - 1) + "..." : value;
+};
