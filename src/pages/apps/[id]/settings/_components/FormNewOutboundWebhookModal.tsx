@@ -4,6 +4,7 @@ import Api from "~/utils/api/Api";
 import Modal from "~/components/Modal";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
+import Link from "~/components/Link";
 import Button from "~/components/Button";
 import { createOutboundWebhook } from "../_actions/outbound_webhook_actions";
 import type { FormValues } from "../_actions/outbound_webhook_actions";
@@ -29,6 +30,8 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
 
   useEffect(() => {
     setError(null);
+    setShowPayload(false);
+    setShowHeaders(false);
   }, [isOpen]);
 
   return (
@@ -39,7 +42,17 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
       }}
       className="max-w-screen-sm"
     >
-      <h3 className="mb-8 text-xl font-bold">Create outbound webhook</h3>
+      <h3 className="mb-2 text-xl font-bold">Create outbound webhook</h3>
+      <h4 className="mb-8 text-xs text-gray-50">
+        Check out the{" "}
+        <Link
+          to="https://www.stormkit.io/docs/deployments/outbound-webhooks"
+          secondary
+        >
+          documentation
+        </Link>{" "}
+        for examples
+      </h4>
       <Form
         handleSubmit={(hooks: FormValues) => {
           setLoading(true);
