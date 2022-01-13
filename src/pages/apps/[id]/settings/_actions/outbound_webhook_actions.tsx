@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, RouteComponentProps, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { RootContextProps } from "~/pages/Root.context";
 import type { LocationState, OutboundWebhooks } from "../types";
 
@@ -21,7 +21,7 @@ export const useFetchOutboundWebhooks = ({
 }: FetchOutboundWebhooksProps): Array<OutboundWebhooks> => {
   const location = useLocation<LocationState>();
   const [hooks, setHooks] = useState<Array<OutboundWebhooks>>([]);
-  const refresh = location?.state?.app;
+  const refresh = location?.state?.outboundWebhooksRefresh;
 
   useEffect(() => {
     let unmounted = false;
@@ -61,8 +61,77 @@ interface CreateOutboundWebhookProps extends Pick<RootContextProps, "api"> {
   app: App;
 }
 
+export type FormValues = Omit<OutboundWebhooks, "id" | "requestHeaders"> & {
+  requestHeaders: string;
+};
+
 export const createOutboundWebhook =
   ({ api, app }: CreateOutboundWebhookProps) =>
-  (values: Omit<OutboundWebhooks, "id">): Promise<void> => {
-    return api.post(`/app/outbound-webhooks`, { ...values, appId: app.id });
+  ({
+    requestUrl,
+    requestHeaders,
+    requestMethod,
+    requestPayload,
+    triggerWhen,
+  }: FormValues): Promise<void> => {
+    const hooks: OutboundWebhooks = {
+      requestUrl,
+      requestMethod,
+      requestPayload,
+      triggerWhen,
+      requestHeaders: requestHeaders
+        ? requestHeaders
+            .split("\n")
+            .reduce((obj: Record<string, string>, val: string) => {
+              const [headerName, headerValue] = val.split(":");
+
+              if (headerValue) {
+                obj[headerName.toLowerCase()] = headerValue.replace(/^\s+/, "");
+              }
+
+              return obj;
+            }, {})
+        : undefined,
+    };
+
+    return api.post(`/app/outbound-webhooks`, { ...hooks, appId: app.id });
   };
+
+interface SendSampleRequestProps extends Pick<RootContextProps, "api"> {
+  app: App;
+  whId?: string;
+}
+
+export interface SendSampleRequestResponse {
+  error?: string;
+  result: {
+    status: number;
+    body: string;
+  };
+}
+
+export const sendSampleRequest = ({
+  app,
+  api,
+  whId,
+}: SendSampleRequestProps): Promise<SendSampleRequestResponse> => {
+  return api.fetch<SendSampleRequestResponse>(
+    `/app/${app.id}/outbound-webhooks/${whId}/trigger`
+  );
+};
+
+interface DeleteOutboundWebhookProps extends Pick<RootContextProps, "api"> {
+  app: App;
+  whId?: string;
+}
+
+export const deleteOutboundWebhook = ({
+  app,
+  api,
+  whId,
+}: DeleteOutboundWebhookProps): Promise<void> => {
+  return api.delete(`/app/outbound-webhooks`, {
+    whId,
+    appId: app.id,
+  });
+};

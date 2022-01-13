@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Api from "~/utils/api/Api";
-import Modal, { ModalContextProps } from "~/components/Modal";
+import Modal from "~/components/Modal";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
-import { connect } from "~/utils/context";
 import { createOutboundWebhook } from "../_actions/outbound_webhook_actions";
-import type { OutboundWebhooks } from "../types.d";
+import type { FormValues } from "../_actions/outbound_webhook_actions";
 
 interface Props {
   api: Api;
   app: App;
+  isOpen: boolean;
+  toggleModal: (val: boolean) => void;
 }
 
-const ModalContext = Modal.Context();
-
-const FormNewOutboundWebhookModal: React.FC<Props & ModalContextProps> = ({
+const FormNewOutboundWebhookModal: React.FC<Props> = ({
   isOpen,
   toggleModal,
   api,
   app,
 }): React.ReactElement => {
+  const history = useHistory();
   const [showHeaders, setShowHeaders] = useState(false);
   const [showPayload, setShowPayload] = useState(false);
   const [error, setError] = useState<null | string>(null);
@@ -40,7 +41,7 @@ const FormNewOutboundWebhookModal: React.FC<Props & ModalContextProps> = ({
     >
       <h3 className="mb-8 text-xl font-bold">Create outbound webhook</h3>
       <Form
-        handleSubmit={(hooks: OutboundWebhooks) => {
+        handleSubmit={(hooks: FormValues) => {
           setLoading(true);
           setError(null);
 
@@ -51,8 +52,14 @@ const FormNewOutboundWebhookModal: React.FC<Props & ModalContextProps> = ({
             .then(() => {
               setError(null);
               toggleModal(false);
+              history.replace({
+                state: {
+                  outboundWebhooksRefresh: Date.now(),
+                },
+              });
             })
-            .catch(async e => {
+            .catch(e => {
+              console.log(e);
               if (e.status === 400) {
                 setError("Please make sure to provide a valid URL.");
               } else {
@@ -110,7 +117,7 @@ const FormNewOutboundWebhookModal: React.FC<Props & ModalContextProps> = ({
         <Form.Select
           name="requestMethod"
           className="mb-4"
-          label="Request Method"
+          label="Request method"
           defaultValue="GET"
           onChange={e => {
             setShowPayload(e.target.value === "POST");
@@ -173,9 +180,4 @@ const FormNewOutboundWebhookModal: React.FC<Props & ModalContextProps> = ({
   );
 };
 
-export default Object.assign(
-  connect<Props, ModalContextProps>(FormNewOutboundWebhookModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-  ]),
-  ModalContext
-);
+export default FormNewOutboundWebhookModal;

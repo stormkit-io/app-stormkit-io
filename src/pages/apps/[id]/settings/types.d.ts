@@ -1,6 +1,7 @@
 export interface LocationState extends Location {
   triggerDeploysSuccess: string | null;
   integrationsSuccess: string | null;
+  outboundWebhooksRefresh: number | null;
   app: number | null;
 }
 
@@ -22,7 +23,7 @@ export interface AppSettings {
 }
 
 export interface OutboundWebhooks {
-  id: string;
+  id?: string;
   triggerWhen: "on_deploy" | "on_publish";
   requestUrl: string;
   requestMethod: "GET" | "POST" | "HEAD";
