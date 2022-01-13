@@ -11,15 +11,6 @@ export interface AppSettings {
   envs: Array<string>;
   runtime: Runtime;
   deployTrigger?: boolean;
-  deployHooks?: {
-    slack: {
-      webhook: string;
-      channel: string;
-      onEnd: boolean;
-      onPublish: boolean;
-      onStart: boolean;
-    };
-  };
 }
 
 export interface OutboundWebhooks {
