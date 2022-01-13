@@ -9,6 +9,7 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import Modal from "~/components/Modal";
 import DotDotDot from "~/components/DotDotDot";
+import Spinner from "~/components/Spinner";
 import { RootContextProps } from "~/pages/Root.context";
 import { truncate } from "~/utils/helpers/string";
 import FormNewOutboundWebhookModal from "./FormNewOutboundWebhookModal";
@@ -18,7 +19,6 @@ import {
   deleteOutboundWebhook,
 } from "../_actions/outbound_webhook_actions";
 import type { SendSampleRequestResponse } from "../_actions/outbound_webhook_actions";
-import Spinner from "~/components/Spinner";
 
 interface Props extends Pick<RootContextProps, "api"> {
   app: App;

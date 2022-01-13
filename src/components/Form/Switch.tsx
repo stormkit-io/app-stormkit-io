@@ -41,14 +41,16 @@ const Switch: FC<Props> = ({
 
   return withWrapper ? (
     <div className="flex w-full border border-solid border-gray-85 rounded py-2 items-center text-sm bg-gray-90">
-      {component}
-      {children}
+      <label className="cursor-pointer">
+        {component}
+        {children}
+      </label>
     </div>
   ) : (
-    <>
+    <label className="cursor-pointer">
       {component}
       {children}
-    </>
+    </label>
   );
 };
 
