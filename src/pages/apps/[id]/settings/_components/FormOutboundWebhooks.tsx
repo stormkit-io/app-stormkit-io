@@ -12,13 +12,14 @@ import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
 import { RootContextProps } from "~/pages/Root.context";
 import { truncate } from "~/utils/helpers/string";
-import FormNewOutboundWebhookModal from "./FormNewOutboundWebhookModal";
+import FormNewOutboundWebhookModal from "./FormOutboundWebhookModal";
 import {
   useFetchOutboundWebhooks,
   sendSampleRequest,
   deleteOutboundWebhook,
 } from "../_actions/outbound_webhook_actions";
 import type { SendSampleRequestResponse } from "../_actions/outbound_webhook_actions";
+import { OutboundWebhook } from "../types";
 
 interface Props extends Pick<RootContextProps, "api"> {
   app: App;
@@ -30,6 +31,7 @@ const FormOutboundWebhooks: React.FC<Props> = ({
 }): React.ReactElement => {
   const history = useHistory();
   const [loadingSample, setLoadingSample] = useState(false);
+  const [webhookToEdit, setWebhookToEdit] = useState<OutboundWebhook>();
   const [sampleData, setSampleData] = useState<SendSampleRequestResponse>();
   const [isModalOpen, toggleModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -64,25 +66,13 @@ const FormOutboundWebhooks: React.FC<Props> = ({
                         aria-label={`Outbound webhook ${hook.id} menu`}
                       >
                         <DotDotDot.Item
-                          icon="fas fa-trash-alt text-red-50 mr-2"
                           onClick={close => {
-                            setLoading(true);
-                            deleteOutboundWebhook({
-                              app,
-                              api,
-                              whId: hook.id,
-                            }).then(() => {
-                              history.replace({
-                                state: {
-                                  outboundWebhooksRefresh: Date.now(),
-                                },
-                              });
-
-                              close();
-                            });
+                            setWebhookToEdit(hook);
+                            toggleModal(true);
+                            close();
                           }}
                         >
-                          Delete
+                          Edit
                         </DotDotDot.Item>
                         <DotDotDot.Item
                           onClick={close => {
@@ -107,6 +97,27 @@ const FormOutboundWebhooks: React.FC<Props> = ({
                               height={4}
                             />
                           )}
+                        </DotDotDot.Item>
+                        <DotDotDot.Item
+                          icon="fas fa-trash-alt text-red-50 mr-2"
+                          onClick={close => {
+                            setLoading(true);
+                            deleteOutboundWebhook({
+                              app,
+                              api,
+                              whId: hook.id,
+                            }).then(() => {
+                              history.replace({
+                                state: {
+                                  outboundWebhooksRefresh: Date.now(),
+                                },
+                              });
+
+                              close();
+                            });
+                          }}
+                        >
+                          Delete
                         </DotDotDot.Item>
                       </DotDotDot>
                     </TableCell>
@@ -157,7 +168,11 @@ const FormOutboundWebhooks: React.FC<Props> = ({
         app={app}
         api={api}
         isOpen={isModalOpen}
-        toggleModal={toggleModal}
+        toggleModal={(val: boolean) => {
+          toggleModal(val);
+          setWebhookToEdit(undefined);
+        }}
+        webhook={webhookToEdit}
       />
     </>
   );

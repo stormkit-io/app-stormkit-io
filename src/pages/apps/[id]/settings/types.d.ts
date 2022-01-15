@@ -13,7 +13,7 @@ export interface AppSettings {
   deployTrigger?: boolean;
 }
 
-export interface OutboundWebhooks {
+export interface OutboundWebhook {
   id?: string;
   triggerWhen: "on_deploy" | "on_publish";
   requestUrl: string;

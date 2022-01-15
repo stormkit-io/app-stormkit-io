@@ -16,3 +16,8 @@ export const mockCreateOutboundWebhooks = ({ app, hook, status = 200 }) =>
   nock(endpoint)
     .post(`/app/outbound-webhooks`, { appId: app.id, ...hook })
     .reply(status);
+
+export const mockUpdateOutboundWebhooks = ({ app, whId, hook, status = 200 }) =>
+  nock(endpoint)
+    .put(`/app/outbound-webhooks`, { appId: app.id, whId, ...hook })
+    .reply(status);
