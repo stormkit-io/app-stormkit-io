@@ -2,37 +2,84 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Api from "~/utils/api/Api";
 import Modal from "~/components/Modal";
+import { timeout as animationTimeout } from "~/components/Modal/constants";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import Link from "~/components/Link";
 import Button from "~/components/Button";
-import { createOutboundWebhook } from "../_actions/outbound_webhook_actions";
+import { upsertOutboundWebhook } from "../_actions/outbound_webhook_actions";
 import type { FormValues } from "../_actions/outbound_webhook_actions";
+import { OutboundWebhook } from "../types";
 
 interface Props {
   api: Api;
   app: App;
   isOpen: boolean;
   toggleModal: (val: boolean) => void;
+  webhook?: OutboundWebhook;
 }
+
+const headersToString = (headers?: Record<string, string>) => {
+  return Object.keys(headers || {})
+    .map(name => `${name}: ${headers?.[name]}`)
+    .join("\n");
+};
 
 const FormNewOutboundWebhookModal: React.FC<Props> = ({
   isOpen,
   toggleModal,
   api,
   app,
+  webhook,
 }): React.ReactElement => {
   const history = useHistory();
+
+  const [trigger, setTrigger] = useState("on_deploy");
+  const [method, setMethod] = useState("GET");
+  const [payload, setPayload] = useState("");
+  const [headers, setHeaders] = useState("");
+
   const [showHeaders, setShowHeaders] = useState(false);
   const [showPayload, setShowPayload] = useState(false);
   const [error, setError] = useState<null | string>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setError(null);
-    setShowPayload(false);
-    setShowHeaders(false);
+    let unmounted = false;
+
+    if (isOpen === false) {
+      setTimeout(() => {
+        if (unmounted === false) {
+          setError(null);
+          setShowPayload(false);
+          setShowHeaders(false);
+          setMethod("GET");
+          setTrigger("on_deploy");
+        }
+      }, animationTimeout);
+    }
+
+    return () => {
+      unmounted = true;
+    };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (webhook) {
+      setMethod(webhook.requestMethod);
+      setTrigger(webhook.triggerWhen);
+      setPayload(webhook.requestPayload || "");
+      setHeaders(headersToString(webhook?.requestHeaders));
+    }
+  }, [webhook]);
+
+  useEffect(() => {
+    setShowPayload(method === "POST");
+  }, [method]);
+
+  useEffect(() => {
+    setShowHeaders(Boolean(headers));
+  }, [headers]);
 
   return (
     <Modal
@@ -42,7 +89,9 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
       }}
       className="max-w-screen-sm"
     >
-      <h3 className="mb-2 text-xl font-bold">Create outbound webhook</h3>
+      <h3 className="mb-2 text-xl font-bold">
+        {webhook ? "Update" : "Create"} outbound webhook
+      </h3>
       <h4 className="mb-8 text-xs text-gray-50">
         Check out the{" "}
         <Link
@@ -58,7 +107,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
           setLoading(true);
           setError(null);
 
-          createOutboundWebhook({
+          upsertOutboundWebhook({
             api,
             app,
           })(hooks)
@@ -72,7 +121,6 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
               });
             })
             .catch(e => {
-              console.log(e);
               if (e.status === 400) {
                 setError("Please make sure to provide a valid URL.");
               } else {
@@ -86,11 +134,13 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
             });
         }}
       >
+        <Form.Input type={"hidden"} defaultValue={webhook?.id} name="id" />
         <Form.Input
           name="requestUrl"
           className="bg-gray-90 mb-4"
           label="Request URL"
           placeholder="https://example.org/webhooks"
+          defaultValue={webhook?.requestUrl}
           InputLabelProps={{ shrink: true }}
           inputProps={{
             "aria-label": "Request URL",
@@ -114,6 +164,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
             name="requestHeaders"
             className="bg-gray-90 mb-4"
             label="Request Headers"
+            defaultValue={headers}
             InputLabelProps={{ shrink: true }}
             inputProps={{
               "aria-label": "Request headers",
@@ -131,9 +182,14 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
           name="requestMethod"
           className="mb-4"
           label="Request method"
-          defaultValue="GET"
+          value={method}
           onChange={e => {
-            setShowPayload(e.target.value === "POST");
+            const value = e.target.value as "GET" | "POST" | "HEAD";
+
+            if (["GET", "POST", "HEAD"].indexOf(value) > -1) {
+              setShowPayload(value === "POST");
+              setMethod(value);
+            }
           }}
           shrink
           fullWidth
@@ -149,6 +205,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
               name="requestPayload"
               className="bg-gray-90"
               label="Request Payload"
+              defaultValue={payload}
               InputLabelProps={{ shrink: true }}
               placeholder={`{ "hello": "world" }`}
               inputProps={{
@@ -164,7 +221,12 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
         <Form.Select
           name="triggerWhen"
           label="Trigger this webhook"
-          defaultValue="on_deploy"
+          value={trigger}
+          onChange={e => {
+            if (typeof e.target.value === "string") {
+              setTrigger(e.target.value);
+            }
+          }}
           className="mb-6"
           shrink
           fullWidth
@@ -185,7 +247,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
         )}
         <div className="flex justify-center mt-4 w-full">
           <Button primary loading={loading}>
-            Create outbound webhook
+            {webhook ? "Update" : "Create"} outbound webhook
           </Button>
         </div>
       </Form>

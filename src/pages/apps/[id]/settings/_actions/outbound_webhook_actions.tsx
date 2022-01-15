@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { RootContextProps } from "~/pages/Root.context";
-import type { LocationState, OutboundWebhooks } from "../types";
+import type { LocationState, OutboundWebhook } from "../types";
 
 interface FetchOutboundWebhooksProps extends Pick<RootContextProps, "api"> {
   app: App;
@@ -10,7 +10,7 @@ interface FetchOutboundWebhooksProps extends Pick<RootContextProps, "api"> {
 }
 
 interface FetchOutboundWebhooksRequest {
-  webhooks: Array<OutboundWebhooks>;
+  webhooks: Array<OutboundWebhook>;
 }
 
 export const useFetchOutboundWebhooks = ({
@@ -18,9 +18,9 @@ export const useFetchOutboundWebhooks = ({
   app,
   setLoading,
   setError,
-}: FetchOutboundWebhooksProps): Array<OutboundWebhooks> => {
+}: FetchOutboundWebhooksProps): Array<OutboundWebhook> => {
   const location = useLocation<LocationState>();
-  const [hooks, setHooks] = useState<Array<OutboundWebhooks>>([]);
+  const [hooks, setHooks] = useState<Array<OutboundWebhook>>([]);
   const refresh = location?.state?.outboundWebhooksRefresh;
 
   useEffect(() => {
@@ -57,24 +57,25 @@ export const useFetchOutboundWebhooks = ({
   return hooks;
 };
 
-interface CreateOutboundWebhookProps extends Pick<RootContextProps, "api"> {
+interface UpsertOutboundWebhookProps extends Pick<RootContextProps, "api"> {
   app: App;
 }
 
-export type FormValues = Omit<OutboundWebhooks, "id" | "requestHeaders"> & {
+export type FormValues = Omit<OutboundWebhook, "requestHeaders"> & {
   requestHeaders: string;
 };
 
-export const createOutboundWebhook =
-  ({ api, app }: CreateOutboundWebhookProps) =>
+export const upsertOutboundWebhook =
+  ({ api, app }: UpsertOutboundWebhookProps) =>
   ({
+    id,
     requestUrl,
     requestHeaders,
     requestMethod,
     requestPayload,
     triggerWhen,
   }: FormValues): Promise<void> => {
-    const hooks: OutboundWebhooks = {
+    const hooks: OutboundWebhook = {
       requestUrl,
       requestMethod,
       requestPayload,
@@ -94,7 +95,13 @@ export const createOutboundWebhook =
         : undefined,
     };
 
-    return api.post(`/app/outbound-webhooks`, { ...hooks, appId: app.id });
+    const method = id ? "put" : "post";
+
+    return api[method](`/app/outbound-webhooks`, {
+      ...hooks,
+      whId: id || undefined,
+      appId: app.id,
+    });
   };
 
 interface SendSampleRequestProps extends Pick<RootContextProps, "api"> {
