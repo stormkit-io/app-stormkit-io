@@ -16,7 +16,6 @@ export type ActivePlan = {
 };
 
 export type Subscription = {
-  hasDeployHooks: boolean;
   concurrentBuilds: boolean; // Number of concurrent builds allowed
   maxTeamMembersPerApp: boolean; // -1 for unlimited
   remainingApps: boolean; // -1 for unlimited
