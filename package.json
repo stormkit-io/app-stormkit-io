@@ -37,7 +37,7 @@
     "@stripe/stripe-js": "1.21.1",
     "@types/classnames": "2.3.1",
     "@types/react-router-dom": "5.3.3",
-    "@uiw/react-codemirror": "4.2.3",
+    "@uiw/react-codemirror": "4.3.3",
     "classnames": "2.3.1",
     "dotenv": "7.0.0",
     "flag-icon-css": "3.5.0",
