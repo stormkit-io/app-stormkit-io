@@ -107,6 +107,8 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
               placeholder="e.g. npm run build"
               value={cmd}
               onChange={e => setCmd(e.target.value)}
+              tooltip="The command your frontend framework provides for creating bundled javascript.
+                If your frontend does not require a build, leave this field empty."
               inputProps={{
                 "aria-label": "Cmd to execute",
               }}
@@ -117,6 +119,7 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
                 name="distFolder"
                 className="bg-gray-90 mt-4"
                 label="Build Folder"
+                tooltip="The directory in which your bundled frontend will be located."
                 placeholder="Usually this is the folder created by the build command"
                 value={dist}
                 onChange={e => setDist(e.target.value)}
