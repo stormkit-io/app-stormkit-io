@@ -23,7 +23,9 @@ const Logo: React.FC<Props> = ({
       />
       {!iconOnly && (
         <span className="font-bold text-lg text-secondary hover:text-white">
-          { document.cookie.indexOf("sk_canary=true") > -1 ? "Stormkit (canary)" : "Stormkit" }
+          {document.cookie.indexOf("sk_canary=true") > -1
+            ? "Stormkit (canary)"
+            : "Stormkit"}
         </span>
       )}
     </span>
