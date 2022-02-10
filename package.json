@@ -81,7 +81,7 @@
     "clean-webpack-plugin": "2.0.2",
     "connect-history-api-fallback": "1.6.0",
     "copy-webpack-plugin": "6.4.1",
-    "css-loader": "5.2.7",
+    "css-loader": "6.6.0",
     "esbuild-loader": "2.18.0",
     "eslint": "7.32.0",
     "eslint-plugin-jest": "24.7.0",
