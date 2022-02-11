@@ -9,6 +9,7 @@ import Toggler from "./Toggler";
 import Switch from "./Switch";
 import Helper from "./Helper";
 import Header from "./Header";
+import KeyValue from "./KeyValue";
 import Section from "./components/Section";
 import Description from "./components/Description";
 import CodeMirror from "@uiw/react-codemirror";
@@ -136,5 +137,6 @@ Form.Section = Section;
 Form.Description = Description;
 Form.Helper = Helper;
 Form.Header = Header;
+Form.KeyValue = KeyValue;
 
 export default Form;

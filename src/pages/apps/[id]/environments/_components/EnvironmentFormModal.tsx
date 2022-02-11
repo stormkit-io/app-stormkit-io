@@ -7,7 +7,6 @@ import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
-import { PlusButton } from "~/components/Buttons";
 import { connect } from "~/utils/context";
 import {
   insertEnvironment,
@@ -219,55 +218,16 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
             process.
           </div>
           <div className="mb-8" id="env-vars">
-            {envVars.map(({ key, value }, i) => (
-              <div className="flex justify-between mb-2" key={`${key}${i}`}>
-                <div className="flex-auto mr-2">
-                  <Form.Input
-                    name="build.vars.keys"
-                    label="Key"
-                    multiline
-                    className="bg-gray-90"
-                    defaultValue={key}
-                    fullWidth
-                    inputProps={{
-                      "aria-label": `Environment variable name ${i}`,
-                    }}
-                  />
-                </div>
-                <div className="flex flex-auto items-center max-w-1/2 relative">
-                  <Form.Input
-                    name="build.vars.values"
-                    label="Value"
-                    multiline
-                    className="bg-gray-90"
-                    defaultValue={value}
-                    fullWidth
-                    inputProps={{
-                      "aria-label": `Environment variable value ${i}`,
-                    }}
-                  />
-                  <Button
-                    styled={false}
-                    className="absolute right-0 -mr-6"
-                    type="button"
-                    onClick={() => {
-                      const copy = envVars.slice(0);
-                      copy.splice(i, 1);
-                      setEnvVars(copy);
-                    }}
-                  >
-                    <span className="fas fa-minus-circle red-50" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-            <PlusButton
-              className="mt-2"
-              size="small"
-              aria-label="Add new environment variable"
-              onClick={() => {
-                setEnvVars([...envVars, { key: "", value: "" }]);
-              }}
+            <Form.KeyValue
+              defaultValues={envVars}
+              keyInputName="build.vars.keys"
+              valueInputName="build.vars.values"
+              keyLabel="Key"
+              valueLabel="Value"
+              keyAriaLabel="Environment variable name"
+              valueAriaLabel="Environment variable value"
+              plusButtonAriaLabel="Add new environment variable"
+              onChange={setEnvVars}
             />
           </div>
           {error && (
