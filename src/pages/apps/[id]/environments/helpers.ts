@@ -10,7 +10,9 @@ export const prepareBuildObject = (
   const vals = toArray<string>(values["build.vars.values"]);
 
   keys.forEach((key, i) => {
-    vars[key] = vals[i].replace(/^['"]+|['"]+$/g, "");
+    if (key.trim() !== "") {
+      vars[key.trim()] = vals[i].trim().replace(/^['"]+|['"]+$/g, "");
+    }
   });
 
   const build: BuildConfig = {
