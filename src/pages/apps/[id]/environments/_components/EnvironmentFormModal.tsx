@@ -220,12 +220,20 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
           <div className="mb-8" id="env-vars">
             <Form.KeyValue
               defaultValues={envVars}
-              keyInputName="build.vars.keys"
-              valueInputName="build.vars.values"
-              keyLabel="Key"
-              valueLabel="Value"
-              keyAriaLabel="Environment variable name"
-              valueAriaLabel="Environment variable value"
+              keyProps={{
+                name: "build.vars.keys",
+                label: "Key",
+                inputProps: {
+                  "aria-label": `Environment variable name`,
+                },
+              }}
+              valueProps={{
+                name: "build.vars.values",
+                label: "Value",
+                inputProps: {
+                  "aria-label": `Environment variable value`,
+                },
+              }}
               plusButtonAriaLabel="Add new environment variable"
               onChange={setEnvVars}
             />

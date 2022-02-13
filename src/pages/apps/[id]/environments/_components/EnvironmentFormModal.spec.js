@@ -49,8 +49,8 @@ describe(fileName, () => {
       // Add a new row
       fireEvent.click(wrapper.getByLabelText("Add new environment variable"));
 
-      const envKey = wrapper.getByLabelText("Environment variable name 0");
-      const envVal = wrapper.getByLabelText("Environment variable value 0");
+      const envKey = wrapper.getAllByLabelText("Environment variable name")[0];
+      const envVal = wrapper.getAllByLabelText("Environment variable value")[0];
       const buildCmd = wrapper.getByLabelText("Build command");
 
       userEvent.type(wrapper.getByLabelText("Environment name"), name);
