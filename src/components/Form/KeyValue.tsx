@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { TextFieldProps } from "@material-ui/core/TextField";
 import Input from "./Input";
 import Button from "~/components/Button";
 
@@ -23,25 +24,17 @@ interface KeyValue {
 }
 
 interface Props {
-  keyInputName: string;
-  valueInputName: string;
-  keyLabel: string;
-  valueLabel: string;
-  keyAriaLabel?: string;
-  valueAriaLabel?: string;
+  keyProps: TextFieldProps;
+  valueProps: TextFieldProps;
   defaultValues?: Array<KeyValue>;
   plusButtonAriaLabel?: string;
   onChange: (val: Array<KeyValue>) => void;
 }
 
 const KeyValue: React.FC<Props> = ({
-  keyInputName,
-  valueInputName,
+  keyProps,
+  valueProps,
   defaultValues = [],
-  keyLabel,
-  valueLabel,
-  keyAriaLabel,
-  valueAriaLabel,
   plusButtonAriaLabel,
   onChange,
 }): React.ReactElement => {
@@ -79,8 +72,6 @@ const KeyValue: React.FC<Props> = ({
               </Button>
             )}
             <Input
-              name={keyInputName}
-              label={keyLabel}
               multiline
               className="bg-gray-90"
               defaultValue={key}
@@ -90,19 +81,11 @@ const KeyValue: React.FC<Props> = ({
                 copy[i].key = e.target.value;
                 onChange(copy);
               }}
-              inputProps={
-                keyAriaLabel
-                  ? {
-                      "aria-label": `${keyAriaLabel} ${i}`,
-                    }
-                  : undefined
-              }
+              {...keyProps}
             />
           </div>
           <div className="flex flex-auto items-center max-w-1/2 relative">
             <Input
-              name={valueInputName}
-              label={valueLabel}
               multiline
               className="bg-gray-90"
               defaultValue={value}
@@ -112,13 +95,7 @@ const KeyValue: React.FC<Props> = ({
                 copy[i].value = e.target.value;
                 onChange(copy);
               }}
-              inputProps={
-                valueAriaLabel
-                  ? {
-                      "aria-label": `${valueAriaLabel} ${i}`,
-                    }
-                  : undefined
-              }
+              {...valueProps}
             />
 
             <Button
