@@ -54,9 +54,11 @@ describe(fileName, () => {
     });
 
     test("should trigger a new call when the button is clicked", async () => {
+      const newApps = [{...apps[0], id: '7481841'}];
+
       const scope = mockFetchApps({
         from: 20,
-        response: { apps, hasNextPage: false },
+        response: { apps: newApps, hasNextPage: false },
       });
 
       let button;
