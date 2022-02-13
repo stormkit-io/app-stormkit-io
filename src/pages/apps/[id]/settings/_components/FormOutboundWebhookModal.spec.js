@@ -44,9 +44,13 @@ describe(fileName, () => {
       expect(wrapper.getByLabelText(/Trigger\sthis\swebhook/)).toBeTruthy();
     });
 
-    test("displays request headers when enabled", () => {
+    test("displays request headers when enabled", async () => {
       fireEvent.click(wrapper.getByLabelText("Enable request headers"));
-      expect(wrapper.getByLabelText(/Request headers/)).toBeTruthy();
+
+      await waitFor(() => {
+        expect(wrapper.getByLabelText(/Header name/)).toBeTruthy();
+        expect(wrapper.getByLabelText(/Header value/)).toBeTruthy();
+      })
     });
 
     test("displays request payload when request method is POST", () => {
@@ -62,6 +66,7 @@ describe(fileName, () => {
         hook: {
           requestUrl: "",
           requestMethod: "GET",
+          requestHeaders: {},
           triggerWhen: "on_deploy",
         },
       });
@@ -113,9 +118,21 @@ describe(fileName, () => {
         "https://www.stormkit.io"
       );
 
-      expect(wrapper.getByLabelText(/Request headers/).value).toBe(
-        "Content-Type: application/json\nAuth: Token"
+      expect(wrapper.getAllByLabelText(/Header name/)[0].value).toBe(
+        "Content-Type"
       );
+
+      expect(wrapper.getAllByLabelText(/Header value/)[0].value).toBe(
+        "application/json"
+      )
+
+      expect(wrapper.getAllByLabelText(/Header name/)[1].value).toBe(
+        "Auth"
+      );
+
+      expect(wrapper.getAllByLabelText(/Header value/)[1].value).toBe(
+        "Token"
+      )
 
       expect(getByText(document.body, "Post")).toBeTruthy();
       expect(wrapper.getByLabelText(/Request payload/).value).toBe("");
@@ -134,8 +151,8 @@ describe(fileName, () => {
           requestMethod: "POST",
           requestPayload: "",
           requestHeaders: {
-            "content-type": "application/json",
-            auth: "Token",
+            "Content-Type": "application/json",
+            Auth: "Token",
           },
           triggerWhen: "on_publish",
         },

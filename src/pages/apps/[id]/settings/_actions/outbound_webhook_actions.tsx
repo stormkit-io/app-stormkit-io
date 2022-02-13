@@ -61,10 +61,6 @@ interface UpsertOutboundWebhookProps extends Pick<RootContextProps, "api"> {
   app: App;
 }
 
-export type FormValues = Omit<OutboundWebhook, "requestHeaders"> & {
-  requestHeaders: string;
-};
-
 export const upsertOutboundWebhook =
   ({ api, app }: UpsertOutboundWebhookProps) =>
   ({
@@ -74,25 +70,13 @@ export const upsertOutboundWebhook =
     requestMethod,
     requestPayload,
     triggerWhen,
-  }: FormValues): Promise<void> => {
+  }: OutboundWebhook): Promise<void> => {
     const hooks: OutboundWebhook = {
       requestUrl,
       requestMethod,
       requestPayload,
       triggerWhen,
-      requestHeaders: requestHeaders
-        ? requestHeaders
-            .split("\n")
-            .reduce((obj: Record<string, string>, val: string) => {
-              const [headerName, headerValue] = val.split(":");
-
-              if (headerValue) {
-                obj[headerName.toLowerCase()] = headerValue.replace(/^\s+/, "");
-              }
-
-              return obj;
-            }, {})
-        : undefined,
+      requestHeaders,
     };
 
     const method = id ? "put" : "post";
