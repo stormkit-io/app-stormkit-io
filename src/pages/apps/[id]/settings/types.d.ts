@@ -21,3 +21,16 @@ export interface OutboundWebhook {
   requestPayload?: string;
   requestHeaders?: Record<string, string>;
 }
+
+export interface OutboundWebhookFormHeader {
+  key: string;
+  value: string;
+}
+
+export type OutboundWebhookFormValues = Omit<
+  OutboundWebhook,
+  "requestHeaders"
+> & {
+  headerName: Array<string> | string;
+  headerValue: Array<string> | string;
+};

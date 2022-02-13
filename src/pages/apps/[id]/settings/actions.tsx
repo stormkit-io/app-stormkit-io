@@ -119,7 +119,6 @@ export const useFetchAdditionalSettings = ({
         if (unmounted !== true) {
           setSettings({
             deployTrigger: res.deployTrigger,
-            deployHooks: res.deployHooks,
             runtime: res.runtime,
             envs: res.envs,
           });

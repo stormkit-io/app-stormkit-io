@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Api from "~/utils/api/Api";
+import { toArray } from "~/utils/helpers/array";
 import Modal from "~/components/Modal";
 import { timeout as animationTimeout } from "~/components/Modal/constants";
 import InfoBox from "~/components/InfoBox";
@@ -8,22 +9,27 @@ import Form from "~/components/Form";
 import Link from "~/components/Link";
 import Button from "~/components/Button";
 import { upsertOutboundWebhook } from "../_actions/outbound_webhook_actions";
-import type { FormValues } from "../_actions/outbound_webhook_actions";
-import { OutboundWebhook } from "../types";
+import type * as types from "../types";
+
+const generateRequestHeadersObject = (
+  hooks: types.OutboundWebhookFormValues
+): Record<string, string> => {
+  const headerKeys = toArray<string>(hooks.headerName);
+  const headerValues = toArray<string>(hooks.headerValue);
+
+  return headerKeys.reduce((prev: Record<string, string>, current, index) => {
+    prev[current?.trim()] = headerValues[index]?.trim();
+    return prev;
+  }, {});
+};
 
 interface Props {
   api: Api;
   app: App;
   isOpen: boolean;
   toggleModal: (val: boolean) => void;
-  webhook?: OutboundWebhook;
+  webhook?: types.OutboundWebhook;
 }
-
-const headersToString = (headers?: Record<string, string>) => {
-  return Object.keys(headers || {})
-    .map(name => `${name}: ${headers?.[name]}`)
-    .join("\n");
-};
 
 const FormNewOutboundWebhookModal: React.FC<Props> = ({
   isOpen,
@@ -37,7 +43,9 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
   const [trigger, setTrigger] = useState("on_deploy");
   const [method, setMethod] = useState("GET");
   const [payload, setPayload] = useState("");
-  const [headers, setHeaders] = useState("");
+  const [headers, setHeaders] = useState<
+    Array<types.OutboundWebhookFormHeader>
+  >([]);
 
   const [showHeaders, setShowHeaders] = useState(false);
   const [showPayload, setShowPayload] = useState(false);
@@ -53,6 +61,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
           setError(null);
           setShowPayload(false);
           setShowHeaders(false);
+          setHeaders([]);
           setMethod("GET");
           setTrigger("on_deploy");
         }
@@ -69,7 +78,12 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
       setMethod(webhook.requestMethod);
       setTrigger(webhook.triggerWhen);
       setPayload(webhook.requestPayload || "");
-      setHeaders(headersToString(webhook?.requestHeaders));
+      setHeaders(
+        Object.keys(webhook?.requestHeaders || {}).map(key => ({
+          key,
+          value: webhook?.requestHeaders?.[key] || "",
+        }))
+      );
     }
   }, [webhook]);
 
@@ -78,7 +92,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
   }, [method]);
 
   useEffect(() => {
-    setShowHeaders(Boolean(headers));
+    setShowHeaders(Boolean(headers?.length));
   }, [headers]);
 
   return (
@@ -103,14 +117,17 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
         for examples
       </h4>
       <Form
-        handleSubmit={(hooks: FormValues) => {
+        handleSubmit={(hooks: types.OutboundWebhookFormValues) => {
           setLoading(true);
           setError(null);
 
           upsertOutboundWebhook({
             api,
             app,
-          })(hooks)
+          })({
+            ...hooks,
+            requestHeaders: generateRequestHeadersObject(hooks),
+          })
             .then(() => {
               setError(null);
               toggleModal(false);
@@ -160,23 +177,32 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
           </Form.Switch>
         </div>
         {showHeaders && (
-          <Form.Input
-            name="requestHeaders"
-            className="bg-gray-90 mb-4"
-            label="Request Headers"
-            defaultValue={headers}
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              "aria-label": "Request headers",
-            }}
-            placeholder={
-              "Content-Type: application/json\nAuthorization: Bearer"
-            }
-            maxRows={4}
-            minRows={4}
-            multiline
-            fullWidth
-          />
+          <div className="mb-4">
+            <Form.KeyValue
+              keyProps={{
+                name: "headerName",
+                label: "Header name",
+                placeholder: "Content-Type",
+                inputProps: {
+                  "aria-label": "Header name",
+                },
+                InputLabelProps: { shrink: true },
+              }}
+              valueProps={{
+                name: "headerValue",
+                label: "Header value",
+                placeholder: "application/json; charset=utf8",
+                inputProps: {
+                  "aria-label": "Header value",
+                },
+                InputLabelProps: { shrink: true },
+              }}
+              defaultValues={headers}
+              onChange={headers => {
+                setHeaders(headers);
+              }}
+            />
+          </div>
         )}
         <Form.Select
           name="requestMethod"
