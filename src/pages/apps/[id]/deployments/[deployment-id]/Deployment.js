@@ -59,6 +59,7 @@ const Deployment = ({ api, app, match }) => {
             {deploy.logs?.map(({ title, status, message = "" }, i) => (
               <div
                 key={title}
+                data-testid={`deployment-step-${i}`}
                 className={cn("border border-gray-83 border-solid rounded", {
                   "mb-8": i < deploy.logs.length - 1,
                 })}

@@ -34,7 +34,9 @@ describe(fileName, () => {
       await waitFor(() => {
         const stepWrapper = wrapper.getByText(step);
         expect(stepWrapper).toBeTruthy();
-        expect(stepWrapper.parentNode.innerHTML).toContain("Success");
+        expect(wrapper.getByTestId("deployment-step-1").innerHTML).toContain(
+          '<span class="fas fa-check-circle"></span>'
+        );
       });
     });
 
