@@ -69,13 +69,14 @@ const Deployment = ({ api, app, match }) => {
                   </span>
                   <ExitStatus
                     aria-label={`${title} status`}
+                    iconOnly
                     code={getExitCode({ deploy, index: i, status })}
                   />
                 </div>
                 {message.length ? (
                   <code
-                    className="block font-mono bg-blue-10 p-4 text-white rounded-br rounded-bl leading-relaxed overflow-y-auto"
-                    style={{ maxHeight: "300px" }}
+                    className="block bg-blue-10 text-sm p-4 text-white rounded-br rounded-bl leading-relaxed overflow-y-auto"
+                    style={{ maxHeight: "400px", fontFamily: "monospace" }}
                   >
                     {message.split("\n").map((line, i) => (
                       <div key={i}>{line}</div>
