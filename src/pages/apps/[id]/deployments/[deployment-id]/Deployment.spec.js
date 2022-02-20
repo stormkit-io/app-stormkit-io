@@ -35,7 +35,7 @@ describe(fileName, () => {
         const stepWrapper = wrapper.getByText(step);
         expect(stepWrapper).toBeTruthy();
         expect(wrapper.getByTestId("deployment-step-1").innerHTML).toContain(
-          '<span class="fas fa-check-circle"></span>'
+          '<span class="fas fa-circle"></span>'
         );
       });
     });
