@@ -165,7 +165,7 @@ export default class BitbucketRepositories extends PureComponent {
   }
 
   render() {
-    const { loginOauth, history, api } = this.props;
+    const { loginOauth, history, api, filter } = this.props;
     const {
       accounts = [],
       loading,
@@ -199,7 +199,7 @@ export default class BitbucketRepositories extends PureComponent {
 
     return (
       <>
-        <div className="mt-12 mb-4 w-full">
+        <div className="mt-4 mb-4 w-full">
           {accounts.length > 0 && (
             <Accounts
               selected={login}
@@ -212,7 +212,7 @@ export default class BitbucketRepositories extends PureComponent {
           <RepoList
             api={api}
             history={history}
-            repositories={repositories}
+            repositories={repositories.filter(r => r.name.includes(filter))}
             provider="bitbucket"
             loading={loading}
             onNextPageClick={this.getRepositories}
