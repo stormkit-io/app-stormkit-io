@@ -40,16 +40,20 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
     setError(null);
   }, [isOpen]);
 
+  const clearForm = () => {
+    setCmd("");
+    setDist("");
+    setBranch("");
+    setSelectedEnv(undefined);
+    setIsAutoPublish(undefined);
+  }
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={() => {
         toggleModal(false);
-        setCmd("");
-        setDist("");
-        setBranch("");
-        setSelectedEnv(undefined);
-        setIsAutoPublish(undefined);
+        clearForm();
       }}
       className="max-w-screen-sm"
     >
@@ -79,12 +83,16 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
           environments={environments}
           defaultValue={selectedEnv?.id}
           onSelect={(env: Environment): void => {
-            setBranch(env.branch);
-            setCmd(env.build.cmd);
-            setDist(env.build.distFolder);
-            setIsAutoPublish(env.autoPublish);
-            setError(null);
-            setSelectedEnv(env);
+            if(env) {
+              setBranch(env.branch);
+              setCmd(env.build.cmd);
+              setDist(env.build.distFolder);
+              setIsAutoPublish(env.autoPublish);
+              setError(null);
+              setSelectedEnv(env);
+            } else {
+              clearForm();
+            }
           }}
         />
         {selectedEnv && !metaLoading && (
@@ -148,7 +156,7 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
           </InfoBox>
         )}
         <div className="flex justify-center mt-4 w-full">
-          <Button primary loading={loading}>
+          <Button primary loading={loading} disabled={!selectedEnv}>
             Deploy now
           </Button>
         </div>
