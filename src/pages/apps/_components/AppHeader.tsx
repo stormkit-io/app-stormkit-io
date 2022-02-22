@@ -33,7 +33,9 @@ const AppHeader: React.FC<Props> = ({ app, envs, api }): React.ReactElement => {
             </Link>
           </div>
           <div className="text-secondary text-sm">
-            Last deploy: {formattedDate(app.deployedAt)}
+            {app.deployedAt
+              ? `Last deploy: ${formattedDate(app.deployedAt)}`
+              : "Not yet deployed"}
             <span
               className={`inline-block ml-2 w-2 h-2 rounded-full bg-${
                 app.status ? "green-50" : "red-50"
