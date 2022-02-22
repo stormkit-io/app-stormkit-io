@@ -10,6 +10,8 @@ import ExplanationBox from "~/components/ExplanationBox";
 import GithubRepos from "./Provider.github";
 import BitbucketRepos from "./Provider.bitbucket";
 import GitlabRepos from "./Provider.gitlab";
+import Form from "~/components/Form";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 const Provider = ({
   match,
@@ -21,6 +23,7 @@ const Provider = ({
   loginOauth,
   api,
 }) => {
+  const [filter, setFilter] = React.useState("");
   const { provider } = match.params;
   const popupLogin = () => loginOauth(provider);
 
@@ -40,6 +43,22 @@ const Provider = ({
             <h3 className="font-bold text-lg">
               Step 2 of 2. Choose repository
             </h3>
+
+            <Form.Input
+            className="mt-4"
+              fullWidth
+              value={filter}
+              placeholder={"Filter repos by name"}
+              onChange={e => setFilter(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <span className="fas fa-search" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
             {provider === "github" && (
               <GithubRepos
                 history={history}
@@ -47,6 +66,7 @@ const Provider = ({
                 user={user}
                 api={api}
                 loginOauth={popupLogin}
+                filter={filter}
               />
             )}
 
@@ -56,6 +76,7 @@ const Provider = ({
                 history={history}
                 bitbucket={bitbucket}
                 loginOauth={popupLogin}
+                filter={filter}
               />
             )}
 
@@ -65,6 +86,7 @@ const Provider = ({
                 history={history}
                 gitlab={gitlab}
                 loginOauth={popupLogin}
+                filter={filter}
               />
             )}
           </div>

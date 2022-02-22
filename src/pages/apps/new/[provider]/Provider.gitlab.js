@@ -90,7 +90,7 @@ export default class GitlabRepositories extends PureComponent {
   }
 
   render() {
-    const { loginOauth, api, history } = this.props;
+    const { loginOauth, api, history, filter } = this.props;
     const {
       repositories,
       accounts = [],
@@ -123,7 +123,7 @@ export default class GitlabRepositories extends PureComponent {
 
     return (
       <>
-        <div className="mt-12 mb-4 w-full">
+        <div className="mt-4 mb-4 w-full">
           {accounts.length > 0 && (
             <div className="flex p-4 border border-solid border-gray-80 rounded bg-gray-90">
               {accounts &&
@@ -149,7 +149,7 @@ export default class GitlabRepositories extends PureComponent {
           <RepoList
             api={api}
             history={history}
-            repositories={repositories}
+            repositories={repositories.filter(r => r.name.includes(filter))}
             provider="gitlab"
             loading={loading}
             hasNextPage={!!nextPage}
