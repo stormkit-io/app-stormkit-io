@@ -11,7 +11,7 @@ const CopyBox: FC<Props> = ({ value }: Props): ReactElement => (
     <Form.Input
       multiline
       id="copy-token"
-      defaultValue={value}
+      value={value}
       className="flex-auto"
       inputProps={{
         "aria-label": "Copy token",
