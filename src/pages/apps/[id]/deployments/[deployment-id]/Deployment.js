@@ -12,6 +12,7 @@ import { parseCommit } from "~/utils/helpers/deployments";
 import { useFetchDeployment, useScrollIntoView } from "./actions";
 import { prepareSettings, getExitCode } from "./helpers";
 import ExitStatus from "../_components/ExitStatus";
+import { renderEmojis } from "~/utils/helpers/emojis";
 
 const Deployment = ({ api, app, match }) => {
   const spinnerRef = useRef();
@@ -41,7 +42,9 @@ const Deployment = ({ api, app, match }) => {
           <div className="flex items-center mb-8">
             <ExitStatus code={deploy.exit} iconOnly className="text-2xl mr-4" />
             <div>
-              <div className="text-lg font-bold">{commit.msg}</div>
+              <div className="text-lg font-bold">
+                {renderEmojis(commit.msg)}
+              </div>
               {commit.author && <div>by {commit.author}</div>}
             </div>
           </div>
