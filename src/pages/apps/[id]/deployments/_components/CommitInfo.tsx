@@ -1,4 +1,5 @@
 import React from "react";
+import { emojify } from "node-emoji";
 import Link from "~/components/Link";
 import { parseCommit } from "~/utils/helpers/deployments";
 import type { Commit } from "~/utils/helpers/deployments";
@@ -19,6 +20,10 @@ const CommitMessage: React.FC<CommitMessageProps> = ({
   commit,
 }): React.ReactElement => {
   const isPublished = deployment.published?.length > 0;
+
+  if(typeof commit.msg === "string") {
+    commit.msg = emojify(commit.msg);
+  }
 
   // No need to shorten if it's not published
   if (!isPublished) {

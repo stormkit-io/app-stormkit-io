@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { emojify } from "node-emoji";
 import PropTypes from "prop-types";
 import cn from "classnames";
 import RootContext from "~/pages/Root.context";
@@ -41,7 +42,7 @@ const Deployment = ({ api, app, match }) => {
           <div className="flex items-center mb-8">
             <ExitStatus code={deploy.exit} iconOnly className="text-2xl mr-4" />
             <div>
-              <div className="text-lg font-bold">{commit.msg}</div>
+              <div className="text-lg font-bold">{typeof commit.msg === "string" ? emojify(commit.msg) : commit.msg}</div>
               {commit.author && <div>by {commit.author}</div>}
             </div>
           </div>
