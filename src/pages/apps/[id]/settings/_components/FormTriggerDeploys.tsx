@@ -66,7 +66,7 @@ const FormTriggerDeploys: React.FC<Props> = ({
               defaultValue={defaultValue}
               environments={environments}
               placeholder="Choose a build configuration"
-              onSelect={e => setSelectedEnvironment(e?.env)}
+              onSelect={e => setSelectedEnvironment(e?.id)}
             />
             {selectedEnvironment && (
               <>
