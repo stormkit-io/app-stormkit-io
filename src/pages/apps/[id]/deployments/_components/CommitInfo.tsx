@@ -3,7 +3,6 @@ import Link from "~/components/Link";
 import { parseCommit } from "~/utils/helpers/deployments";
 import type { Commit } from "~/utils/helpers/deployments";
 import PublishedInfo from "./PublishedInfo";
-import { renderEmojis } from "~/utils/helpers/emojis";
 
 interface Props {
   deployment: Deployment;
@@ -20,10 +19,6 @@ const CommitMessage: React.FC<CommitMessageProps> = ({
   commit,
 }): React.ReactElement => {
   const isPublished = deployment.published?.length > 0;
-
-  if(typeof commit.msg === "string") {
-    commit.msg = renderEmojis(commit.msg);
-  }
 
   // No need to shorten if it's not published
   if (!isPublished) {
