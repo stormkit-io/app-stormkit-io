@@ -21,7 +21,7 @@ changes from latest master branch.
 
 ## Contributing
 
-If you'd like to contribute to this project, you can do so by
+If you'd like to contribute to this project, you can do so by:
 
 1. Fork this repo
 2. Clone the fork to your local machine
