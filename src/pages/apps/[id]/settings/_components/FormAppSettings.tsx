@@ -149,6 +149,7 @@ const FormAppSettings: React.FC<Props> = ({
             <Form.Select
               name="defaultEnv"
               label="Default environment"
+              shrink
               displayEmpty
               value={defaultEnv}
               onChange={e => setDefaultEnv(e.target.value as string)}
