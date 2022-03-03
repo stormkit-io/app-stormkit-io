@@ -5,6 +5,7 @@ declare type User = {
   fullName: string;
   displayName: string;
   memberSince: number;
+  isAdmin?: boolean;
 };
 
 declare type ConnectedAccount = {

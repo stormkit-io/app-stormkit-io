@@ -23,7 +23,7 @@ const EnvironmentMenu = ({ environment, app }) => {
         <span className="text-2xl text-white">Environments</span>
       </h1>
       <div className="flex">
-        <Env app={app} environment={environment} isEditable />
+        <Env app={app} environment={environment} />
         <nav className="flex flex-col bg-white rounded ml-4 md:min-w-1/3 md:max-w-1/3 px-4 py-6">
           {menuItems.map(i => (
             <Link

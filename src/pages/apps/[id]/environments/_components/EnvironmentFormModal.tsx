@@ -16,18 +16,18 @@ import {
 } from "../actions";
 
 interface Props
-  extends ConfirmModalProps,
-    Pick<RootContextProps, "api">,
+  extends Pick<RootContextProps, "api">,
     Pick<AppContextProps, "app"> {
-  environment: Environment;
+  environment?: Environment;
+  isOpen: boolean;
+  toggleModal: (val: boolean) => void;
 }
 
 type EnvVar = { key: string; value: string };
 
-const ModalContext = Modal.Context();
 const frameworks = ["angular", "nuxt", "next"];
 
-const envVarsToArray = (environment: Environment): Array<EnvVar> => {
+const envVarsToArray = (environment?: Environment): Array<EnvVar> => {
   if (!environment?.build?.vars) {
     return [];
   }
@@ -38,7 +38,9 @@ const envVarsToArray = (environment: Environment): Array<EnvVar> => {
   }));
 };
 
-const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
+const EnvironmentFormModal: React.FC<
+  Props & ModalContextProps & ConfirmModalProps
+> = ({
   isOpen,
   toggleModal,
   environment: env,
@@ -290,10 +292,7 @@ const EnvironmentFormModal: React.FC<Props & ModalContextProps> = ({
   );
 };
 
-export default Object.assign(
-  connect<Props, ModalContextProps>(EnvironmentFormModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-    { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-  ]),
-  ModalContext
+export default connect<Props, ModalContextProps & ConfirmModalProps>(
+  EnvironmentFormModal,
+  [{ Context: ConfirmModal, props: ["confirmModal"], wrap: true }]
 );

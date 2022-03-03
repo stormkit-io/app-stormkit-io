@@ -26,6 +26,7 @@ describe(fileName, () => {
       props: {
         app,
         environments: envs,
+        user: {},
       },
     });
   });
