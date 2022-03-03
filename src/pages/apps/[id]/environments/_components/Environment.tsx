@@ -54,7 +54,11 @@ const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
 };
 
 const getDomain = (env: Environment): string => {
-  return env.customStorage?.externalUrl || env?.getDomainName?.() || "";
+  return (
+    env.customStorage?.externalUrl?.replace(/^https?:\/\//, "") ||
+    env?.getDomainName?.() ||
+    ""
+  );
 };
 
 const Environment: React.FC<Props & ContextProps> = ({
