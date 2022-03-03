@@ -322,14 +322,13 @@ export const insertEnvironment =
       })
       .then(() => {
         setLoading(false);
-        toggleModal(false, () => {
-          history.replace({
-            state: {
-              envs: Date.now(),
-              message:
-                "Environment has been created successfully. You can now deploy with your new configuration.",
-            },
-          });
+        toggleModal(false);
+        history.replace({
+          state: {
+            envs: Date.now(),
+            message:
+              "Environment has been created successfully. You can now deploy with your new configuration.",
+          },
         });
       })
       .catch(async res => {
@@ -393,14 +392,13 @@ export const editEnvironment =
       })
       .then(() => {
         setLoading(false);
-        toggleModal(false, () => {
-          history.replace({
-            state: {
-              envs: Date.now(),
-              message:
-                "Environment has been updated successfully. You can now deploy with your new configuration.",
-            },
-          });
+        toggleModal(false);
+        history.replace({
+          state: {
+            envs: Date.now(),
+            message:
+              "Environment has been updated successfully. You can now deploy with your new configuration.",
+          },
         });
       })
       .catch(async res => {

@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import cn from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
 import RootContext, { RootContextProps } from "~/pages/Root.context";
+import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
 import { connect } from "~/utils/context";
 import Link from "~/components/Link";
-import Button from "~/components/Button";
 import Spinner from "~/components/Spinner";
-import { ModalContextProps } from "~/components/Modal";
+import DotDotDot from "~/components/DotDotDot";
 import EnvironmentFormModal from "./EnvironmentFormModal";
 import { useFetchStatus, STATUS, STATUSES } from "../actions";
 
@@ -14,14 +14,13 @@ interface Props {
   app: App;
   environment: Environment;
   isClickable?: boolean;
-  isEditable?: boolean;
 }
 
 interface StatusProps {
   status: STATUSES;
 }
 
-interface ContextProps extends RootContextProps, ModalContextProps {}
+interface ContextProps extends RootContextProps, AuthContextProps {}
 
 const InfoMessage404 = () => (
   <>
@@ -57,68 +56,69 @@ const Environment: React.FC<Props & ContextProps> = ({
   environment,
   app,
   api,
+  user,
   isClickable,
-  isEditable,
-  toggleModal,
 }): React.ReactElement => {
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
   const domain = environment.getDomainName ? environment.getDomainName() : "";
   const environmentUrl = `/apps/${app.id}/environments/${environment.id}`;
+  const [isModalOpen, toggleModal] = useState<boolean>();
 
   const { status, loading } = useFetchStatus({ domain, lastDeploy, api, app });
 
   return (
-    <div
-      className={cn(
-        "flex flex-auto py-8 bg-white rounded border-l-8 border-solid",
-        {
-          "border-yellow-50": status === STATUS.NOT_FOUND,
-          "border-green-50": status === STATUS.OK,
-          "border-red-50": (status || "").toString()[0] === "5",
-        }
-      )}
-    >
+    <div className={"flex flex-auto py-8 bg-white rounded border-solid"}>
       <div className="flex flex-col flex-auto">
-        <h2 className="flex items-center text-xl font-bold mb-6 px-8">
-          <span className="flex-auto">
-            {isClickable ? (
-              <Link
-                to={environmentUrl}
-                className="inline-flex items-center text-primary hover:text-pink-50 font-bold"
-              >
-                {name}
-                <span className="fas fa-chevron-right text-base ml-2" />
-              </Link>
-            ) : (
-              name
+        <header className="flex items-center mb-6 px-8">
+          <h2 className="flex-grow text-xl font-bold">
+            <span className="flex-auto">
+              {isClickable ? (
+                <Link
+                  to={environmentUrl}
+                  className="inline-flex items-center text-primary hover:text-pink-50 font-bold"
+                >
+                  {name}
+                  <span className="fas fa-chevron-right text-base ml-2" />
+                </Link>
+              ) : (
+                name
+              )}
+            </span>
+          </h2>
+          <DotDotDot
+            className="font-normal text-sm"
+            aria-label={`Environment ${environment.name} menu`}
+          >
+            <DotDotDot.Item
+              icon="fas fa-pen mr-2"
+              aria-label="Update environment"
+              onClick={close => {
+                toggleModal(true);
+                close();
+              }}
+            >
+              Edit configuration
+            </DotDotDot.Item>
+            {user.isAdmin && (
+              <DotDotDot.Item icon="fas fa-plus mr-2">
+                Add integration
+              </DotDotDot.Item>
             )}
-          </span>
-          {isEditable && (
-            <>
-              <Button
-                styled={false}
-                className="text-xs text-right"
-                onClick={() => toggleModal(true)}
-                aria-label="Update environment"
-                tertiary
-              >
-                <span className="icon-bg bg-gray-90 mr-2">
-                  <i className="fas fa-pen" />
-                </span>
-                <span className="font-normal">Edit</span>
-              </Button>
-              <EnvironmentFormModal
-                environment={environment}
-                app={app}
-                api={api}
-              />
-            </>
+          </DotDotDot>
+          {isModalOpen && (
+            <EnvironmentFormModal
+              environment={environment}
+              app={app}
+              api={api}
+              toggleModal={toggleModal}
+              isOpen
+            />
           )}
-        </h2>
+        </header>
         <div className="flex-auto text-sm bg-gray-90 p-4 px-8">
-          <div className="flex mb-6">
-            <div className="w-32">Endpoint</div>
+          <div className="flex items-center mb-6">
+            <div className="w-16 text-xs mr-1">Endpoint</div>
             <div className="flex items-center">
               <span className="opacity-50 fas fa-fw fa-external-link-square-alt mr-2" />
               <Link tertiary to={`https://${domain}`}>
@@ -126,8 +126,8 @@ const Environment: React.FC<Props & ContextProps> = ({
               </Link>
             </div>
           </div>
-          <div className="flex mb-6">
-            <div className="w-32">Status</div>
+          <div className="flex items-center mb-6">
+            <div className="w-16 text-xs mr-1">Status</div>
             <div className="flex items-center">
               {loading ? (
                 <Spinner primary width={4} height={4} />
@@ -136,8 +136,8 @@ const Environment: React.FC<Props & ContextProps> = ({
               )}
             </div>
           </div>
-          <div className="flex">
-            <div className="w-32">Branch</div>
+          <div className="flex items-center">
+            <div className="w-16 text-xs mr-1">Branch</div>
             <div className="flex items-center ">
               <span className="opacity-50 fas fa-fw fa-code-branch mr-2" />
               {environment.branch}
@@ -151,5 +151,5 @@ const Environment: React.FC<Props & ContextProps> = ({
 
 export default connect<Props, ContextProps>(Environment, [
   { Context: RootContext, props: ["api"] },
-  { Context: EnvironmentFormModal, props: ["toggleModal"] },
+  { Context: AuthContext, props: ["user"] },
 ]);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppContext, { AppContextProps } from "~/pages/apps/App.context";
 import RootContext, { RootContextProps } from "~/pages/Root.context";
 import { PlusButton } from "~/components/Buttons";
@@ -16,31 +16,49 @@ const Environments: React.FC<ContextProps> = ({
   app,
   api,
   environments,
-  toggleModal,
 }): React.ReactElement => {
+  const [isModalOpen, toggleModal] = useState<boolean>(false);
+
   return (
-    <div>
+    <div className="mb-4">
       <div className="flex items-center mb-4">
         <h1 className="flex flex-auto items-center">
           <span className="text-2xl text-white">Environments</span>
         </h1>
-        <div className="flex-shrink-0">
-          <PlusButton
-            onClick={() => toggleModal(true)}
-            className="text-white rounded"
-            size="small"
-            aria-label="Insert environment"
-          />
-        </div>
+        {environments.length > 1 && (
+          <div className="flex-shrink-0">
+            <PlusButton
+              onClick={() => toggleModal(true)}
+              className="text-white rounded"
+              size="small"
+              aria-label="Insert environment"
+            />
+          </div>
+        )}
       </div>
-      <div className="flex flex-col w-full flex-wrap">
+      <div className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-2 gap-3">
         {environments.map(env => (
-          <div className="mb-4" key={env.id}>
+          <div key={env.id}>
             <Environment environment={env} app={app} isClickable />
           </div>
         ))}
-        <EnvironmentFormModal app={app} api={api} />
+        {environments.length === 1 && (
+          <PlusButton
+            onClick={() => toggleModal(true)}
+            className="text-white rounded w-full bg-white-o-05 hover:text-gray-50"
+            size="small"
+            aria-label="Insert environment"
+          />
+        )}
       </div>
+      {isModalOpen && (
+        <EnvironmentFormModal
+          app={app}
+          api={api}
+          toggleModal={toggleModal}
+          isOpen
+        />
+      )}
     </div>
   );
 };
@@ -48,5 +66,4 @@ const Environments: React.FC<ContextProps> = ({
 export default connect<unknown, ContextProps>(Environments, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app", "environments"] },
-  { Context: EnvironmentFormModal, props: ["toggleModal"], wrap: true },
 ]);
