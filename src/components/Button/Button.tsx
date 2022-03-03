@@ -45,6 +45,8 @@ const prepareStyles = (
       "rounded-xl",
       "hover:bg-red-80"
     );
+  } else {
+    classes.push(...commonClasses);
   }
 };
 
