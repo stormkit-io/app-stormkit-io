@@ -44,7 +44,6 @@ const RepoList = ({
               key={r.id || r.name}
             >
               <Button
-                tertiary
                 as="div"
                 styled={false}
                 className="flex items-center w-full p-4 hover:bg-gray-75 rounded cursor-pointer"
