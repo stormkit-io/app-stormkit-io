@@ -14,30 +14,37 @@ interface Props extends React.HTMLProps<HTMLButtonElement> {
   href?: string;
 }
 
+const commonClasses = [
+  "relative",
+  "inline-flex",
+  "p-4",
+  "items-center",
+  "justify-center",
+  "rounded-lg",
+  "button",
+];
+
 const prepareStyles = (
   classes: Array<string>,
   options: { primary?: boolean; secondary?: boolean; tertiary?: boolean }
 ) => {
   const { primary, secondary, tertiary } = options;
 
-  classes.push(
-    ...[
-      "relative",
-      "inline-flex",
-      "p-4",
-      "items-center",
-      "justify-center",
-      "rounded-lg",
-      "button",
-    ]
-  );
-
   if (primary) {
-    classes.push("bg-pink-50", "text-white");
+    classes.push(...commonClasses, "bg-pink-50", "text-white");
   } else if (secondary) {
-    classes.push("bg-blue-20", "text-secondary");
+    classes.push(...commonClasses, "bg-blue-20", "text-secondary");
   } else if (tertiary) {
-    // TODO: Implement me
+    classes.push(
+      "p-1",
+      "border",
+      "text-xs",
+      "border-solid",
+      "border-red-50",
+      "text-red-50",
+      "rounded-xl",
+      "hover:bg-red-80"
+    );
   }
 };
 
