@@ -205,7 +205,7 @@ export const useFetchRepoType = ({
     api
       .fetch<FetchRepoTypeAPIResponse>(`/app/${app.id}/envs/${name}/meta`)
       .then(res => {
-        if (unmounted !== true) {
+        if (unmounted !== true && res.type) {
           setMeta(res);
         }
       })
