@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { RootContextProps } from "~/pages/Root.context";
 import { AppContextProps } from "~/pages/apps/App.context";
-import Modal, { ModalContextProps } from "~/components/Modal";
+import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
@@ -38,9 +38,7 @@ const envVarsToArray = (environment?: Environment): Array<EnvVar> => {
   }));
 };
 
-const EnvironmentFormModal: React.FC<
-  Props & ModalContextProps & ConfirmModalProps
-> = ({
+const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
   isOpen,
   toggleModal,
   environment: env,
@@ -292,7 +290,6 @@ const EnvironmentFormModal: React.FC<
   );
 };
 
-export default connect<Props, ModalContextProps & ConfirmModalProps>(
-  EnvironmentFormModal,
-  [{ Context: ConfirmModal, props: ["confirmModal"], wrap: true }]
-);
+export default connect<Props, ConfirmModalProps>(EnvironmentFormModal, [
+  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
+]);

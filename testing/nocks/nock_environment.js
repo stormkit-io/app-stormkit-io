@@ -67,3 +67,18 @@ export const mockDeleteEnvironment = ({
       env,
     })
     .reply(status, response);
+
+export const mockCustomStorage = ({
+  appId,
+  envId,
+  config,
+  status = 200,
+  response = { ok: true },
+}) =>
+  nock(endpoint)
+    .put(`/app/env/custom-storage`, {
+      appId,
+      envId,
+      config,
+    })
+    .reply(status, response);

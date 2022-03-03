@@ -17,6 +17,14 @@ type LastDeploy = {
   exit: number; // TODO: Typeify this
 };
 
+declare type Integration = "bunny_cdn" | "awss3";
+
+declare type CustomStorage = {
+  integration: Integration;
+  externalUrl: string;
+  settings: Record<string, string>;
+};
+
 declare type Environment = {
   id?: string;
   env: string; // Name of the environment - will be deprecated.
@@ -27,5 +35,6 @@ declare type Environment = {
   build: BuildConfig;
   domain: DomainConfig;
   lastDeploy?: LastDeploy;
+  customStorage?: CustomStorage;
   getDomainName?: () => string;
 };
