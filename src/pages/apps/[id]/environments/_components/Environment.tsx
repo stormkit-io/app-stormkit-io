@@ -8,6 +8,7 @@ import Link from "~/components/Link";
 import Spinner from "~/components/Spinner";
 import DotDotDot from "~/components/DotDotDot";
 import EnvironmentFormModal from "./EnvironmentFormModal";
+import CSFormModal from "./CSFormModal";
 import { useFetchStatus, STATUS, STATUSES } from "../actions";
 
 interface Props {
@@ -52,6 +53,10 @@ const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
   );
 };
 
+const getDomain = (env: Environment): string => {
+  return env.customStorage?.externalUrl || env?.getDomainName?.() || "";
+};
+
 const Environment: React.FC<Props & ContextProps> = ({
   environment,
   app,
@@ -61,9 +66,10 @@ const Environment: React.FC<Props & ContextProps> = ({
 }): React.ReactElement => {
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
-  const domain = environment.getDomainName ? environment.getDomainName() : "";
+  const domain = getDomain(environment);
   const environmentUrl = `/apps/${app.id}/environments/${environment.id}`;
-  const [isModalOpen, toggleModal] = useState<boolean>();
+  const [isEditModalOpen, toggleEditModal] = useState<boolean>();
+  const [isIntegrationModalOpen, toggleIntegrationModal] = useState<boolean>();
 
   const { status, loading } = useFetchStatus({ domain, lastDeploy, api, app });
 
@@ -94,24 +100,39 @@ const Environment: React.FC<Props & ContextProps> = ({
               icon="fas fa-pen mr-2"
               aria-label="Update environment"
               onClick={close => {
-                toggleModal(true);
+                toggleEditModal(true);
                 close();
               }}
             >
               Edit configuration
             </DotDotDot.Item>
             {user.isAdmin && (
-              <DotDotDot.Item icon="fas fa-plus mr-2">
-                Add integration
+              <DotDotDot.Item
+                icon="fa-solid fa-boxes-stacked mr-2"
+                aria-label="Add integration"
+                onClick={close => {
+                  toggleIntegrationModal(true);
+                  close();
+                }}
+              >
+                Custom storage
               </DotDotDot.Item>
             )}
           </DotDotDot>
-          {isModalOpen && (
+          {isIntegrationModalOpen && (
+            <CSFormModal
+              environment={environment}
+              app={app}
+              api={api}
+              toggleModal={toggleIntegrationModal}
+            />
+          )}
+          {isEditModalOpen && (
             <EnvironmentFormModal
               environment={environment}
               app={app}
               api={api}
-              toggleModal={toggleModal}
+              toggleModal={toggleEditModal}
               isOpen
             />
           )}

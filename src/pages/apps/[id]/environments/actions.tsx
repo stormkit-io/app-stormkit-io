@@ -436,3 +436,68 @@ export const editEnvironment =
         setLoading(false);
       });
   };
+
+interface UpdateIntegrationProps
+  extends Pick<ModalContextProps, "toggleModal"> {
+  api: Api;
+  app: App;
+  environmentId: string;
+  history: History;
+  setLoading: SetLoading;
+  setError: SetError;
+}
+
+export const updateIntegration =
+  ({
+    app,
+    api,
+    environmentId,
+    history,
+    toggleModal,
+    setLoading,
+    setError,
+  }: UpdateIntegrationProps) =>
+  (form: Record<string, string>): void => {
+    if (form.integration !== "bunny_cdn") {
+      setError(
+        "Invalid integration provided. Allowed values are: bunny_cdn, awss3"
+      );
+
+      return;
+    }
+
+    const config: CustomStorage = {
+      integration: form.integration,
+      externalUrl: form.externalUrl,
+      settings: {},
+    };
+
+    // We receive the key name in string format: settings.STORAGE_KEY
+    // This snippets creates an object from it.
+    Object.keys(form).forEach(key => {
+      if (key.indexOf(".") === -1) {
+        return;
+      }
+
+      config.settings[key.split(".")[1]] = form[key];
+    });
+
+    setLoading(true);
+
+    api
+      .put(`/app/env/custom-storage`, {
+        appId: app.id,
+        envId: environmentId,
+        config,
+      })
+      .then(() => {
+        setLoading(false);
+        toggleModal(false);
+        history.replace({
+          state: {
+            envs: Date.now(),
+            message: "Custom integration has been updated successfully.",
+          },
+        });
+      });
+  };
