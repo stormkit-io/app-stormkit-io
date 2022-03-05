@@ -185,4 +185,24 @@ export default class Api {
 
     return this.fetch(url, opts);
   }
+
+  async errors(res: Response): Promise<Array<string>> {
+    const unknown = [
+      "Something went wrong while performing operation. Please retry, if the problem persists reach us out on Discord or through email.",
+    ];
+
+    try {
+      const data = await res.json();
+
+      if (data.error) {
+        return [data.error];
+      } else if (data.errors) {
+        return Object.values(data.errors);
+      } else {
+        return unknown;
+      }
+    } catch {
+      return unknown;
+    }
+  }
 }
