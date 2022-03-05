@@ -4,6 +4,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { RootContextProps } from "~/pages/Root.context";
 import { AppContextProps } from "~/pages/apps/App.context";
 import Modal from "~/components/Modal";
+import Link from "~/components/Link";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
@@ -13,6 +14,7 @@ interface Props
   extends Pick<RootContextProps, "api">,
     Pick<AppContextProps, "app"> {
   environment: Environment;
+  user: User;
   toggleModal: (val: boolean) => void;
 }
 
@@ -21,6 +23,7 @@ const CustomStorageFormModal: React.FC<Props> = ({
   environment,
   api,
   app,
+  user,
 }): React.ReactElement => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
@@ -52,6 +55,17 @@ const CustomStorageFormModal: React.FC<Props> = ({
             <span className="fas fa-question-circle ml-2" />
           </Tooltip>
         </Form.Header>
+        {!user.package.customStorage && (
+          <InfoBox className="mb-4">
+            <div>
+              This is a paid feature. Please{" "}
+              <Link secondary to="/user/account" className="text-white">
+                upgrade
+              </Link>{" "}
+              to at least starter package in order to use it.
+            </div>
+          </InfoBox>
+        )}
         <div className="mb-8">
           <Form.Select
             name="integration"
@@ -135,7 +149,7 @@ const CustomStorageFormModal: React.FC<Props> = ({
           <Button
             primary
             className="ml-4"
-            disabled={!integration}
+            disabled={!integration || !user.package.customStorage}
             loading={loading}
           >
             Submit

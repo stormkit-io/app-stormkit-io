@@ -6,6 +6,9 @@ declare type User = {
   displayName: string;
   memberSince: number;
   isAdmin?: boolean;
+  package: {
+    customStorage: boolean;
+  };
 };
 
 declare type ConnectedAccount = {

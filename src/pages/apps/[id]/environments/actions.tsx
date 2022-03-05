@@ -466,6 +466,13 @@ export const updateIntegration =
       return;
     }
 
+    try {
+      new URL(form.externalUrl);
+    } catch {
+      setError("Invalid URL provided. Please provide a valid URL.");
+      return;
+    }
+
     const config: CustomStorage = {
       integration: form.integration,
       externalUrl: form.externalUrl,
@@ -499,5 +506,11 @@ export const updateIntegration =
             message: "Custom integration has been updated successfully.",
           },
         });
+      })
+      .catch(async res => {
+        setLoading(false);
+
+        const errs = await api.errors(res);
+        setError(errs.map(err => <div key={err}>{err}</div>));
       });
   };

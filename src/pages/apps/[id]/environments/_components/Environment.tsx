@@ -110,7 +110,7 @@ const Environment: React.FC<Props & ContextProps> = ({
             >
               Edit configuration
             </DotDotDot.Item>
-            {user.isAdmin && (
+            {user.isAdmin || (
               <DotDotDot.Item
                 icon="fa-solid fa-boxes-stacked mr-2"
                 aria-label="Add integration"
@@ -126,6 +126,7 @@ const Environment: React.FC<Props & ContextProps> = ({
           {isIntegrationModalOpen && (
             <CSFormModal
               environment={environment}
+              user={user}
               app={app}
               api={api}
               toggleModal={toggleIntegrationModal}
