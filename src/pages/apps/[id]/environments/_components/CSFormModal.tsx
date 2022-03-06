@@ -57,7 +57,7 @@ const CustomStorageFormModal: React.FC<Props> = ({
         </Form.Header>
         {!user.package.customStorage && (
           <InfoBox className="mb-4">
-            <div>
+            <div data-testid="paid-tier">
               This is a paid feature. Please{" "}
               <Link secondary to="/user/account" className="text-white">
                 upgrade
