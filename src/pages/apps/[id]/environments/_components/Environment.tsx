@@ -110,7 +110,7 @@ const Environment: React.FC<Props & ContextProps> = ({
             >
               Edit configuration
             </DotDotDot.Item>
-            {user.isAdmin && (
+            {
               <DotDotDot.Item
                 icon="fa-solid fa-boxes-stacked mr-2"
                 aria-label="Add integration"
@@ -121,7 +121,7 @@ const Environment: React.FC<Props & ContextProps> = ({
               >
                 Custom storage
               </DotDotDot.Item>
-            )}
+            }
           </DotDotDot>
           {isIntegrationModalOpen && (
             <CSFormModal
