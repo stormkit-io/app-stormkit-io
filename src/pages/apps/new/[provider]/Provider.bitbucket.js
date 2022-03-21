@@ -38,7 +38,6 @@ export default class BitbucketRepositories extends PureComponent {
 
     try {
       await this.user();
-      await this.teams();
       const selectedAccount = this.state.accounts.find(a => a.selected);
       await this.updateState({ selectedAccount });
       await this.getRepositories();
@@ -67,27 +66,6 @@ export default class BitbucketRepositories extends PureComponent {
     return user;
   };
 
-  teams = async () => {
-    const api = this.props.bitbucket;
-    const teams = await api.teams();
-
-    if (teams.size === 0) {
-      return await this.updateState({ loading: false });
-    }
-
-    const accounts = this.state.accounts.concat(
-      teams.values.map(t => ({
-        login: t.username,
-        avatar: t.links.avatar.href,
-        type: "team",
-        selected: false,
-      }))
-    );
-
-    await this.updateState({ accounts });
-    return accounts;
-  };
-
   getRepositories = async () => {
     // set loading to true to show a spinner until api requests are done
     this.updateState({ loading: true });
@@ -111,10 +89,7 @@ export default class BitbucketRepositories extends PureComponent {
     };
 
     // fetch the repositories
-    // If the account type is a team, we include it in the repo call
-    // to filter the results.
     const res = await api.repositories({
-      team: selectedAccount.type === "team" ? selectedAccount.login : undefined,
       params: { ...defaultParams, ...pageQueryParams },
     });
 

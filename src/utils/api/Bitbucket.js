@@ -62,28 +62,4 @@ export default class Bitbucket {
       });
     });
   }
-
-  /**
-   * Lists all teams which the user belongs.
-   */
-  teams() {
-    return new Promise((resolve, reject) => {
-      const headers = prepareHeaders(this.accessToken);
-      const request = new Request(this.baseurl + "/teams?role=admin", {
-        headers,
-      });
-
-      return fetch(request).then(res => {
-        if (res.status === 401) {
-          reject(errTokenExpired);
-        }
-
-        if (res.status === 403) {
-          reject(errNotEnoughPermissions);
-        }
-
-        resolve(res.json());
-      });
-    });
-  }
 }
