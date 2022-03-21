@@ -276,21 +276,6 @@ describe.skip("pages/apps/new/[provider]", () => {
             },
           },
         });
-
-      nock("https://api.bitbucket.org/2.0")
-        .get("/teams?role=admin")
-        .reply(200, {
-          values: [
-            {
-              username: "stormkit-io",
-              links: {
-                avatar: {
-                  href: "http://localhost/my-team-avatar.jpg",
-                },
-              },
-            },
-          ],
-        });
     });
 
     afterEach(() => {
