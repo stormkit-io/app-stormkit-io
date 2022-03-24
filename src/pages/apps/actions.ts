@@ -202,14 +202,9 @@ export const deploy = ({
         }
       });
     })
-    .catch(res => {
+    .catch(async res => {
       if (res.status === 429) {
-        setError(
-          "You have exceeded the maximum number of concurrent builds " +
-            "allowed for your application. Please wait until your other " +
-            "deployments are completed. You can always upgrade your package " +
-            "if you need more concurrent builds."
-        );
+        setError((await api.errors(res))[0]);
       } else if (res.status === 401) {
         setError(
           "We do not have enough permissions to continue with the deployment. " +
