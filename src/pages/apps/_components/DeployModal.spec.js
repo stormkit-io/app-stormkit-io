@@ -42,7 +42,11 @@ describe(fileName, () => {
     wrapper = null;
   });
 
-  const executeDeployFlow = async ({ id, status = 200 }) => {
+  const executeDeployFlow = async ({
+    id,
+    status = 200,
+    response = { ok: true, id },
+  }) => {
     const scope = nock("http://localhost")
       .post("/app/deploy", {
         appId: `${app.id}`,
@@ -52,7 +56,7 @@ describe(fileName, () => {
         cmd: "echo hi",
         publish: true,
       })
-      .reply(status, { ok: true, id });
+      .reply(status, response);
 
     let deployNow;
 
@@ -111,7 +115,13 @@ describe(fileName, () => {
   });
 
   test("429 errors should display a payment error", async () => {
-    await executeDeployFlow({ id, status: 429 });
+    await executeDeployFlow({
+      id,
+      status: 429,
+      response: {
+        error: "You have exceeded the maximum number of concurrent builds",
+      },
+    });
 
     await waitFor(() => {
       expect(historySpy).not.toHaveBeenCalled();
