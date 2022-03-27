@@ -50,7 +50,7 @@ export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
           }
         })
         .catch(e => {
-          if (!unmounted && e.status !== 403) {
+          if (!unmounted && e.status !== 401) {
             setError("Something went wrong, log in again.");
           }
         })
