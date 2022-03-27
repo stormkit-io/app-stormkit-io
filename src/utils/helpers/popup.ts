@@ -1,7 +1,15 @@
+export interface DataMessage {
+  accessToken: string;
+  sessionToken: string;
+  user: User;
+  success: boolean;
+  email: boolean;
+}
+
 interface OpenPopupProps {
   url: string;
   title: string;
-  onClose?: (data: unknown) => void;
+  onClose?: (data: DataMessage) => void;
   width?: number;
   height?: number;
 }

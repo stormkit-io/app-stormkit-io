@@ -3,7 +3,7 @@ import Api from "~/utils/api/Api";
 import Bitbucket from "~/utils/api/Bitbucket";
 import Github from "~/utils/api/Github";
 import Gitlab from "~/utils/api/Gitlab";
-import openPopup from "~/utils/helpers/popup";
+import openPopup, { DataMessage } from "~/utils/helpers/popup";
 import { LocalStorage } from "~/utils/storage";
 
 const LS_USER = "skit_user";
@@ -80,14 +80,6 @@ export const logout =
     LocalStorage.del(LS_USER);
     window.location.href = "/";
   };
-
-interface DataMessage {
-  accessToken: string;
-  sessionToken: string;
-  user: User;
-  success: boolean;
-  email: boolean;
-}
 
 interface LoginOauthProps {
   api: Api;
