@@ -29,6 +29,7 @@ export default class Api {
     return url?.match(/^(https?|\/\/)/) !== null;
   }
 
+  url = "https://api.stormkit.io";
   baseurl = "";
   headers: Record<string, string> = {};
 

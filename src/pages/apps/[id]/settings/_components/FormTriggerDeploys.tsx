@@ -5,7 +5,6 @@ import Link from "~/components/Link";
 import InfoBox from "~/components/InfoBox";
 import CopyBox from "~/components/CopyBox";
 import Button from "~/components/Button";
-import EnvironmentSelector from "~/components/EnvironmentSelector";
 import { RootContextProps } from "~/pages/Root.context";
 import { updateDeployTrigger } from "../actions";
 import type { AppSettings, LocationState } from "../types.d";
@@ -35,10 +34,8 @@ const FormTriggerDeploys: React.FC<Props> = ({
   const location = useLocation<LocationState>();
 
   const successMessage = location?.state?.triggerDeploysSuccess;
-  const defaultValue = environments?.[0]?.id;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedEnvironment, setSelectedEnvironment] = useState(defaultValue);
 
   return (
     <Form
@@ -50,7 +47,11 @@ const FormTriggerDeploys: React.FC<Props> = ({
         history,
       })}
     >
-      <Form.Section label="Trigger Deploys" marginBottom="mb-4">
+      <Form.Section
+        label="Trigger Deploys"
+        marginBottom="mb-4"
+        paddingTop="pt-0"
+      >
         {!additionalSettings.deployTrigger ? (
           <InfoBox>
             <p>
@@ -61,26 +62,22 @@ const FormTriggerDeploys: React.FC<Props> = ({
           </InfoBox>
         ) : (
           <>
-            <EnvironmentSelector
-              className="mb-4"
-              defaultValue={defaultValue}
-              environments={environments}
-              placeholder="Choose a build configuration"
-              onSelect={e => setSelectedEnvironment(e?.id)}
-            />
-            {selectedEnvironment && (
+            {environments.map(env => (
               <>
-                <div className="flex p-4 rounded bg-gray-85">
+                <p className="mb-4">
+                  <b>{env.env}</b>
+                </p>
+                <div key={env.id} className="flex p-4 rounded bg-gray-85 mb-4">
                   <CopyBox
-                    value={`https://api.stormkit.io/hooks/app/${app.id}/deploy/${additionalSettings.deployTrigger}/${selectedEnvironment}`}
+                    value={`${api.url}/hooks/app/${app.id}/deploy/${additionalSettings.deployTrigger}/${env.id}`}
                   />
                 </div>
-                <Form.Description>
-                  A <b>POST</b> or <b>GET</b> request to this endpoint will
-                  trigger a deployment. <LearnMore />
-                </Form.Description>
               </>
-            )}
+            ))}
+            <Form.Description className="pt-0">
+              A <b>POST</b> or <b>GET</b> request to this endpoint will trigger
+              a deployment. <LearnMore />
+            </Form.Description>
           </>
         )}
       </Form.Section>
