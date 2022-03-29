@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Form from "~/components/Form";
 
 interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
@@ -15,26 +15,15 @@ const EnvironmentSelector: React.FC<Props> = ({
   placeholder,
   ...rest
 }): React.ReactElement => {
-  const [selectedEnvironment, setSelectedEnvironment] =
-    useState<string>(defaultValue);
-
-  useEffect(() => {
-    setSelectedEnvironment(defaultValue);
-  }, [defaultValue]);
-
   return (
     <div {...rest}>
       <Form.Select
         name="envId"
         displayEmpty
-        value={selectedEnvironment}
+        defaultValue={defaultValue}
         onChange={e => {
           const id = e.target.value as string;
-          setSelectedEnvironment(id);
-
-          if (typeof onSelect === "function") {
-            onSelect(environments.filter(e => e.id === id)[0]);
-          }
+          onSelect(environments.filter(e => e.id === id)[0]);
         }}
       >
         <Form.Option disabled value="">
