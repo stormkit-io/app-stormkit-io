@@ -243,9 +243,9 @@ const CustomStorageFormModal: React.FC<Props> = ({
 
 const Explanation = () => (
   <p>
-    Custom storage allows you to benefit Stormkit's powerful developer
-    experience while hosting your application on a different supported platform.
-    Simply provide your access key and Stormkit will integrate seamlessly.
+    Custom storage allows you deploy your application on a different supported
+    platform. Simply provide your access key and Stormkit will integrate
+    seamlessly.
   </p>
 );
 
