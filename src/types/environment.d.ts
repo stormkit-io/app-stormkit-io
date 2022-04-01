@@ -17,7 +17,7 @@ type LastDeploy = {
   exit: number; // TODO: Typeify this
 };
 
-declare type Integration = "bunny_cdn" | "awss3";
+declare type Integration = "bunny_cdn" | "aws_s3";
 
 declare type CustomStorage = {
   integration: Integration;

@@ -458,9 +458,9 @@ export const updateIntegration =
     setError,
   }: UpdateIntegrationProps) =>
   (form: Record<string, string>): void => {
-    if (form.integration !== "bunny_cdn") {
+    if (!(form.integration === "bunny_cdn" || form.integration === "aws_s3")) {
       setError(
-        "Invalid integration provided. Allowed values are: bunny_cdn, awss3"
+        "Invalid integration provided. Allowed values are: bunny_cdn, aws_s3"
       );
 
       return;
