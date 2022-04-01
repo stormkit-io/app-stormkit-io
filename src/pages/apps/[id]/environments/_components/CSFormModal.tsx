@@ -79,28 +79,31 @@ const CustomStorageFormModal: React.FC<Props> = ({
               Integration
             </Form.Option>
             <Form.Option value={"bunny_cdn"}>Bunny CDN</Form.Option>
+            <Form.Option value={"aws_s3"}>AWS S3</Form.Option>
           </Form.Select>
           <Form.Helper>
             Your build artifacts will be uploaded to this provider.
           </Form.Helper>
         </div>
-        <div className="mb-8">
-          <Form.Input
-            name="externalUrl"
-            label="External URL"
-            className="bg-gray-90"
-            required
-            defaultValue={environment.customStorage?.externalUrl}
-            fullWidth
-            tooltip="Your website's URL. This value will also be visible on your Pull request preview links."
-            inputProps={{
-              "aria-label": "External URL",
-            }}
-          />
-          <Form.Helper>
-            Fully qualified URL. e.g. https://www.stormkit.io
-          </Form.Helper>
-        </div>
+        {integration !== undefined && (
+          <div className="mb-8">
+            <Form.Input
+              name="externalUrl"
+              label="External URL"
+              className="bg-gray-90"
+              required
+              defaultValue={environment.customStorage?.externalUrl}
+              fullWidth
+              tooltip="Your website's URL. This value will also be visible on your Pull request preview links."
+              inputProps={{
+                "aria-label": "External URL",
+              }}
+            />
+            <Form.Helper>
+              Fully qualified URL. e.g. https://www.stormkit.io
+            </Form.Helper>
+          </div>
+        )}
         {integration === "bunny_cdn" && (
           <>
             <div className="mb-8">
@@ -117,7 +120,7 @@ const CustomStorageFormModal: React.FC<Props> = ({
                   "aria-label": "Storage key",
                 }}
               />
-              <Form.Helper>The API key of your storage zone.</Form.Helper>
+              <Form.Helper>The API key of your storage zone</Form.Helper>
             </div>
             <div className="mb-8">
               <Form.Input
@@ -133,7 +136,85 @@ const CustomStorageFormModal: React.FC<Props> = ({
                   "aria-label": "Storage zone",
                 }}
               />
-              <Form.Helper>The name of the storage zone.</Form.Helper>
+              <Form.Helper>
+                The name of the Storage zone - it corresponds to the{" "}
+                <b>username</b> under FTP &amp; API Access
+              </Form.Helper>
+            </div>
+          </>
+        )}
+
+        {integration === "aws_s3" && (
+          <>
+            <div className="mb-8">
+              <Form.Input
+                name="settings.ACCESS_KEY_ID"
+                label="Access Key ID"
+                className="bg-gray-90"
+                required
+                defaultValue={
+                  environment.customStorage?.settings?.["ACCESS_KEY_ID"]
+                }
+                fullWidth
+                inputProps={{
+                  "aria-label": "Access key ID",
+                }}
+              />
+              <Form.Helper>
+                AWS Access Key ID obtained from IAM service
+              </Form.Helper>
+            </div>
+            <div className="mb-8">
+              <Form.Input
+                name="settings.SECRET_ACCESS_KEY"
+                label="Secret Access Key"
+                className="bg-gray-90"
+                required
+                defaultValue={
+                  environment.customStorage?.settings?.["SECRET_ACCESS_KEY"]
+                }
+                fullWidth
+                inputProps={{
+                  "aria-label": "Secret Access Key",
+                }}
+              />
+              <Form.Helper>
+                AWS Secret Access Key obtained from IAM service
+              </Form.Helper>
+            </div>
+            <div className="mb-8">
+              <Form.Input
+                name="settings.BUCKET_NAME"
+                label="Bucket Name"
+                className="bg-gray-90"
+                required
+                defaultValue={
+                  environment.customStorage?.settings?.["BUCKET_NAME"]
+                }
+                fullWidth
+                inputProps={{
+                  "aria-label": "Bucket name",
+                }}
+              />
+              <Form.Helper>S3 Bucket Name</Form.Helper>
+            </div>
+            <div className="mb-8">
+              <Form.Input
+                name="settings.KEY_PREFIX"
+                label="Key prefix"
+                className="bg-gray-90"
+                defaultValue={
+                  environment.customStorage?.settings?.["KEY_PREFIX"]
+                }
+                fullWidth
+                inputProps={{
+                  "aria-label": "Key prefix",
+                }}
+              />
+              <Form.Helper>
+                Key prefis is the path to upload the files inside your Bucket.
+                Do not prefix with a forward slash (/).
+              </Form.Helper>
             </div>
           </>
         )}
