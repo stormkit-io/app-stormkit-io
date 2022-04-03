@@ -216,6 +216,22 @@ const CustomStorageFormModal: React.FC<Props> = ({
                 Do not prefix with a forward slash (/).
               </Form.Helper>
             </div>
+            <div className="mb-8">
+              <Form.Input
+                name="settings.REGION"
+                label="AWS Region"
+                className="bg-gray-90"
+                required
+                defaultValue={environment.customStorage?.settings?.["REGION"]}
+                fullWidth
+                inputProps={{
+                  "aria-label": "Region name",
+                }}
+              />
+              <Form.Helper>
+                Region name where there bucket was created - e.g. eu-central-1
+              </Form.Helper>
+            </div>
           </>
         )}
         {error && (
