@@ -221,7 +221,6 @@ const CustomStorageFormModal: React.FC<Props> = ({
                 name="settings.REGION"
                 label="AWS Region"
                 className="bg-gray-90"
-                required
                 defaultValue={environment.customStorage?.settings?.["REGION"]}
                 fullWidth
                 inputProps={{
@@ -229,7 +228,8 @@ const CustomStorageFormModal: React.FC<Props> = ({
                 }}
               />
               <Form.Helper>
-                Region name where there bucket was created - e.g. eu-central-1
+                Region name where there bucket was created. Defaults to{" "}
+                <b>eu-central-1</b>.
               </Form.Helper>
             </div>
           </>
