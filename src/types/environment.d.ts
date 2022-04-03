@@ -33,6 +33,7 @@ declare type Environment = {
   branch: string;
   autoPublish: boolean;
   build: BuildConfig;
+  allowedBranches: string;
   domain: DomainConfig;
   lastDeploy?: LastDeploy;
   customStorage?: CustomStorage;

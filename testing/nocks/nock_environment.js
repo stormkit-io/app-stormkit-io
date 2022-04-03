@@ -30,6 +30,7 @@ export const mockInsertEnvironment = ({
       appId: environment.appId,
       env: environment.name,
       branch: environment.branch,
+      allowedBranches: environment.allowedBranches,
       autoPublish: environment.autoPublish,
       build: {
         ...environment.build,
@@ -48,6 +49,7 @@ export const mockUpdateEnvironment = ({
       id: environment.id,
       env: environment.env,
       branch: environment.branch,
+      allowedBranches: environment.allowedBranches,
       autoPublish: environment.autoPublish,
       build: {
         ...environment.build,

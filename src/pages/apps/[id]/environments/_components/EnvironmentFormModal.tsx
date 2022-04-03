@@ -127,6 +127,22 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             can enable auto deployments from the application's settings page.
           </Form.Helper>
         </div>
+        <div className="mb-8">
+          <Form.Input
+            name="allowedBranches"
+            label="Allowed Branches"
+            className="bg-gray-90"
+            defaultValue={env?.allowedBranches}
+            fullWidth
+            inputProps={{
+              "aria-label": "Allowed Branches",
+            }}
+          />
+          <Form.Helper>
+            Trigger auto-deploy only if changed branch matches with given Regex expression. You can check the syntax <a href="https://github.com/google/re2/wiki/Syntax">here</a>. If no configuration is given
+            all branches will trigger auto-deploy
+          </Form.Helper>
+        </div>
         <div className="mb-16">
           <Form.Switch
             withWrapper

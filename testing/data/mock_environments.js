@@ -4,6 +4,7 @@ export default ({ app }) => [
     env: "production",
     name: "production",
     branch: "master",
+    allowedBranches: "",
     build: {
       entry: "packages/console/server/renderer.js",
       distFolder: "packages/console/dist",

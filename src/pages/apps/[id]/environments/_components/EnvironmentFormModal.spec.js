@@ -30,6 +30,7 @@ describe(fileName, () => {
         env: name,
         name,
         branch: "my-branch",
+        allowedBranches: "",
         autoPublish: true,
         domain: {
           verified: false,
