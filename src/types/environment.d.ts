@@ -34,6 +34,7 @@ declare type Environment = {
   autoPublish: boolean;
   build: BuildConfig;
   domain: DomainConfig;
+  autoDeployBranches?: string;
   lastDeploy?: LastDeploy;
   customStorage?: CustomStorage;
   getDomainName?: () => string;

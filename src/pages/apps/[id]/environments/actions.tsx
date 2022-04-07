@@ -303,7 +303,7 @@ export const insertEnvironment =
     setLoading,
   }: InsertEnvironmentProps) =>
   (values: Record<string, string>): void => {
-    const { name, branch } = values;
+    const { name, branch, autoDeployBranches } = values;
     const build = prepareBuildObject(values, isServerless);
 
     if (!name || !branch) {
@@ -319,6 +319,7 @@ export const insertEnvironment =
         branch,
         build,
         autoPublish: isAutoPublish,
+        autoDeployBranches: autoDeployBranches || null,
       })
       .then(() => {
         setLoading(false);
@@ -372,7 +373,7 @@ export const editEnvironment =
     setLoading,
   }: EditEnvironmentProps) =>
   (values: Record<string, string>): void => {
-    const { name, branch } = values;
+    const { name, branch, autoDeployBranches } = values;
     const build = prepareBuildObject(values, isServerless);
 
     if (!name || !branch) {
@@ -389,6 +390,7 @@ export const editEnvironment =
         branch,
         build,
         autoPublish: isAutoPublish,
+        autoDeployBranches: autoDeployBranches || null,
       })
       .then(() => {
         setLoading(false);
