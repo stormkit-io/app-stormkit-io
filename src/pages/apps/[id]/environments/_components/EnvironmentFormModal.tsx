@@ -127,7 +127,7 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             can enable auto deployments from the application's settings page.
           </Form.Helper>
         </div>
-        <div className="mb-16">
+        <div className="mb-8">
           <Form.Switch
             withWrapper
             className="mr"
@@ -142,6 +142,22 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
           <Form.Helper>
             When auto publish is enabled, successful deployments will be
             published automatically.
+          </Form.Helper>
+        </div>
+        <div className="mb-16">
+          <Form.Input
+            name="autoDeployBranches"
+            label="Auto deploy branches"
+            className="bg-gray-90"
+            defaultValue={env?.autoDeployBranches}
+            fullWidth
+            inputProps={{
+              "aria-label": "Auto deploy branches",
+            }}
+          />
+          <Form.Helper>
+            Glob pattern to specify for which branches auto deployments are
+            enabled.
           </Form.Helper>
         </div>
         <Form.Header className="mb-4">Build configuration</Form.Header>
