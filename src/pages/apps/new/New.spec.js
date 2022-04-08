@@ -17,6 +17,7 @@ describe("pages/apps/new", () => {
   describe("always", () => {
     beforeEach(() => {
       window.open = jest.fn();
+      // TODO: migrate this to withMockContext
       wrapper = withUserContext({ path: "/apps/new" });
     });
 
