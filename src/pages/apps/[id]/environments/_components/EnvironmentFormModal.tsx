@@ -52,12 +52,16 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
     env?.autoPublish || true
   );
 
+  const [showAutoDeployBranchWarning, setShowAutoDeployBranchWarning] =
+    useState(Boolean(env?.autoDeployBranches));
+
   const [isServerless, setIsServerless] = useState(!!env?.build?.entry);
   const [envVars, setEnvVars] = useState(envVarsToArray(env));
   const [loading, setLoading] = useState(false);
   const [buildCmd, setBuildCmd] = useState(env?.build?.cmd || "");
   const [error, setError] = useState(null);
   const { meta } = useFetchRepoType({ api, app, env });
+  const isDefault = app.defaultEnv === (env?.name || env?.env);
   const isFramework = frameworks.indexOf(meta.type) > -1;
   const isEdit = !!env?.id;
   const handleSubmit = isEdit ? editEnvironment : insertEnvironment;
@@ -121,8 +125,8 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             }}
           />
           <Form.Helper>
-            Any merge to this branch will update the published version of this
-            environment when <b>Auto Publish</b> is turned on.
+            When auto deployments are enabled, merges/pushes to this branch will
+            trigger a deployment with this configuration.
           </Form.Helper>
         </div>
         <div className="mb-8">
@@ -138,30 +142,47 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             Auto Publish
           </Form.Switch>
           <Form.Helper>
-            When auto publish is enabled, successful deployments will be
-            published automatically.
+            When auto publish is enabled, successful deployments with the branch
+            name above will be published automatically to the environment
+            endpoint.
           </Form.Helper>
         </div>
-        <div className="mb-16 hidden">
+        <div className="mb-16">
           <Form.Input
             name="autoDeployBranches"
             label="Auto deploy branches"
             className="bg-gray-90"
+            disabled={!app.autoDeploy}
+            onChange={e => {
+              setShowAutoDeployBranchWarning(e.target.value !== "");
+            }}
             defaultValue={env?.autoDeployBranches}
             fullWidth
             tooltip={
               <div>
-                <h3 className="mb-4 font-bold">Examples</h3>
-                <ol>
-                  <li className="mb-2">
-                    <code className="text-white mr-2">^(?!dependabot).+</code>{" "}
-                    Match anything that does not start with <b>dependabot</b>
-                  </li>
-                  <li className="mb-2">
-                    <code className="text-white mr-2">^release-.+</code>
-                    Match anything that starts with <b>release-</b>
-                  </li>
-                </ol>
+                {!app.autoDeploy ? (
+                  <p>
+                    Enable auto deployments from the application's settings page
+                    to use this feature.
+                  </p>
+                ) : (
+                  <>
+                    <h3 className="mb-4 font-bold">Examples</h3>
+                    <ol>
+                      <li className="mb-2">
+                        <code className="text-white mr-2">
+                          ^(?!dependabot).+
+                        </code>{" "}
+                        Match anything that does not start with{" "}
+                        <b>dependabot</b>
+                      </li>
+                      <li className="mb-2">
+                        <code className="text-white mr-2">^release-.+</code>
+                        Match anything that starts with <b>release-</b>
+                      </li>
+                    </ol>
+                  </>
+                )}
               </div>
             }
             InputProps={{
@@ -174,8 +195,19 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
           />
           <Form.Helper>
             Regexp to specify for which branches auto deployments are enabled.{" "}
-            <b>Leaving empty will match all branches.</b> Cases are ignored.
+            {isDefault
+              ? "When left empty all branches will be deployed with this configuration if the auto deployment is enabled."
+              : "When left empty only branches which correspond to the branch field will be deployed with this configuration."}
+            The pattern is case insensitive.
           </Form.Helper>
+          {isDefault && showAutoDeployBranchWarning && Boolean(app.autoDeploy) && (
+            <InfoBox className="mt-4">
+              The <b>Auto Deploy Branches</b> configuration will overwrite the
+              default environment behaviour. If feature branches do not match
+              the <b>Auto Deploy Branches</b> configuration, they won't be
+              deployed.
+            </InfoBox>
+          )}
         </div>
         <Form.Header className="mb-4">Build configuration</Form.Header>
         <div className="flex flex-col">
