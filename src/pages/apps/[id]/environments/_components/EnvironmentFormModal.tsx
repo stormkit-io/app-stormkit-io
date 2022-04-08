@@ -106,9 +106,7 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
               "aria-label": "Environment name",
             }}
           />
-          <Form.Helper>
-            The name that is going to be used for this environment.
-          </Form.Helper>
+          <Form.Helper>The name of the environment.</Form.Helper>
         </div>
         <div className="mb-8">
           <Form.Input
@@ -123,8 +121,8 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             }}
           />
           <Form.Helper>
-            Pushes/merges to this branch will trigger an auto deployment. You
-            can enable auto deployments from the application's settings page.
+            Any merge to this branch will update the published version of this
+            environment when <b>Auto Publish</b> is turned on.
           </Form.Helper>
         </div>
         <div className="mb-8">
@@ -151,13 +149,32 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             className="bg-gray-90"
             defaultValue={env?.autoDeployBranches}
             fullWidth
+            tooltip={
+              <div>
+                <h3 className="mb-4 font-bold">Examples</h3>
+                <ol>
+                  <li className="mb-2">
+                    <code className="text-white mr-2">^(?!dependabot).+</code>{" "}
+                    Match anything that does not start with <b>dependabot</b>
+                  </li>
+                  <li className="mb-2">
+                    <code className="text-white mr-2">^release-.+</code>
+                    Match anything that starts with <b>release-</b>
+                  </li>
+                </ol>
+              </div>
+            }
+            InputProps={{
+              endAdornment: <code className="ml-1 mr-2 text-pink-50">/i</code>,
+              startAdornment: <code className="mr-1 text-pink-50">/</code>,
+            }}
             inputProps={{
               "aria-label": "Auto deploy branches",
             }}
           />
           <Form.Helper>
-            Glob pattern to specify for which branches auto deployments are
-            enabled.
+            Regexp to specify for which branches auto deployments are enabled.{" "}
+            <b>Leaving empty will match all branches.</b> Cases are ignored.
           </Form.Helper>
         </div>
         <Form.Header className="mb-4">Build configuration</Form.Header>
@@ -223,16 +240,16 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
               fullWidth
             />
             <Form.Helper>
-              The command to build your application. You can chain multiple
-              commands with the <b>&amp;&amp;</b> operator. (i.e. npm run test
-              &amp;&amp; npm run build)
+              The build command specified in your <code>package.json</code>.
+              Chain multiple commands with the <b>&amp;&amp;</b> operator - i.e.
+              npm run test &amp;&amp; npm run build
             </Form.Helper>
           </div>
           <Form.Header>Environment variables</Form.Header>
-          <div className="pt-2 text-sm opacity-50 mb-8">
+          <Form.Helper className="pl-0 mb-6">
             Environment variables that will be injected during the build
             process.
-          </div>
+          </Form.Helper>
           <div className="mb-8" id="env-vars">
             <Form.KeyValue
               defaultValues={envVars}

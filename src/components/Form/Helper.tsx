@@ -8,7 +8,7 @@ interface Props {
 
 const Helper: React.FC<Props> = ({ children, className }) => {
   return (
-    <div className={cn("pt-2 px-3 text-sm opacity-50", className)}>
+    <div className={cn("pt-2 px-3 text-sm text-gray-400", className)}>
       {children}
     </div>
   );

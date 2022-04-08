@@ -3,13 +3,14 @@ import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import { Tooltip } from "@material-ui/core";
 
 type Props = TextFieldProps & {
-  tooltip?: string;
+  tooltip?: React.ReactChild;
 };
 
 const Input: React.FC<Props> = ({
   tooltip,
   type = "text",
   variant = "outlined",
+  autoComplete = "off",
   InputProps,
   ...props
 }): React.ReactElement => {
@@ -17,13 +18,19 @@ const Input: React.FC<Props> = ({
     <TextField
       type={type}
       variant={variant}
+      autoComplete={autoComplete}
       InputProps={{
-        endAdornment: tooltip && (
-          <Tooltip title={tooltip} arrow>
-            <span className="fas fa-question-circle" />
-          </Tooltip>
-        ),
         ...InputProps,
+        endAdornment: (InputProps?.endAdornment || tooltip) && (
+          <>
+            {InputProps?.endAdornment}
+            {tooltip && (
+              <Tooltip title={tooltip} arrow className="text-black">
+                <span className="fas fa-question-circle" />
+              </Tooltip>
+            )}
+          </>
+        ),
       }}
       {...props}
     />
