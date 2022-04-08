@@ -86,7 +86,6 @@ const KeyValue: React.FC<Props> = ({
           </div>
           <div className="flex flex-auto items-center max-w-1/2 relative">
             <Input
-              multiline
               className="bg-gray-90"
               defaultValue={value}
               fullWidth

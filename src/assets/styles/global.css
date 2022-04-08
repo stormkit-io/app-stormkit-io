@@ -52,3 +52,11 @@ b {
 i {
   font-style: italic;
 }
+
+code {
+  @apply text-pink-50;
+  @apply bg-white;
+  @apply bg-opacity-10;
+  @apply p-1;
+  @apply rounded-sm;
+}

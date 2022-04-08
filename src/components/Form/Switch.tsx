@@ -1,10 +1,12 @@
 import React, { useState, useEffect, ReactElement, FC } from "react";
+import { Tooltip } from "@material-ui/core";
 import SwitchUI, { SwitchProps } from "@material-ui/core/Switch";
 
 interface Props extends SwitchProps {
   confirm?: (arg0: (val: boolean) => void) => void;
   withWrapper?: boolean;
   children?: React.ReactNode;
+  tooltip?: React.ReactChild;
 }
 
 /**
@@ -16,6 +18,7 @@ const Switch: FC<Props> = ({
   confirm,
   withWrapper,
   children,
+  tooltip,
   ...rest
 }: Props): ReactElement => {
   const [isChecked, setChecked] = useState<boolean>(checked);
@@ -40,11 +43,16 @@ const Switch: FC<Props> = ({
   );
 
   return withWrapper ? (
-    <div className="flex w-full border border-solid border-gray-85 rounded py-2 items-center text-sm bg-gray-90">
-      <label className="cursor-pointer">
+    <div className="flex w-full border border-solid border-gray-85 rounded-sm py-2 items-center text-sm bg-gray-90 pr-3">
+      <label className="cursor-pointer flex-grow">
         {component}
         {children}
       </label>
+      {tooltip && (
+        <Tooltip title={tooltip} arrow className="relative right-px text-black">
+          <span className="fas fa-question-circle" />
+        </Tooltip>
+      )}
     </div>
   ) : (
     <label className="cursor-pointer">
