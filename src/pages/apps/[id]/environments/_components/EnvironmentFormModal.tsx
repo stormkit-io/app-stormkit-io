@@ -142,7 +142,7 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             published automatically.
           </Form.Helper>
         </div>
-        <div className="mb-16">
+        <div className="mb-16 hidden">
           <Form.Input
             name="autoDeployBranches"
             label="Auto deploy branches"
