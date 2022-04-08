@@ -56,7 +56,6 @@ describe(fileName, () => {
         autoDeploy: app.autoDeploy,
         runtime: "nodejs12.x",
         defaultEnv: app.defaultEnv,
-        commitPrefix: app.commitPrefix,
       },
     });
 

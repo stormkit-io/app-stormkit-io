@@ -158,7 +158,6 @@ interface FormValues {
   displayName: string;
   autoDeploy: string;
   defaultEnv: string;
-  commitPrefix: string;
   runtime: Runtime;
 }
 
@@ -174,7 +173,6 @@ export const updateAdditionalSettings =
     repo,
     displayName,
     autoDeploy,
-    commitPrefix,
     runtime,
     defaultEnv,
   }: FormValues): void => {
@@ -190,7 +188,6 @@ export const updateAdditionalSettings =
         autoDeploy,
         runtime,
         defaultEnv,
-        commitPrefix: autoDeploy !== "disabled" ? commitPrefix : undefined,
       })
       .then(() => {
         setLoading(false);

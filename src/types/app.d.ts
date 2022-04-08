@@ -11,7 +11,6 @@ declare type App = {
   autoDeploy: autoDeploy;
   defaultEnv: string;
   displayName: string;
-  commitPrefix?: string;
   provider: "github" | "bitbucket" | "gitlab";
   name?: string;
   meta?: {

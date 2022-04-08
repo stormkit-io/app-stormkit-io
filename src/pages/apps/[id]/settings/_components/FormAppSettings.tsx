@@ -167,26 +167,6 @@ const FormAppSettings: React.FC<Props> = ({
             </Form.Description>
           </div>
         )}
-        {isAutoDeployEnabled && (
-          <div className="mt-4">
-            <Form.Input
-              name="commitPrefix"
-              label="Match prefix"
-              className="bg-gray-90"
-              defaultValue={app.commitPrefix}
-              fullWidth
-              inputProps={{
-                "aria-label": "Match prefix",
-              }}
-            />
-            <Form.Description>
-              The optional prefix that will tell Stormkit to deploy only commits
-              or pull requests starting with the given prefix. This is
-              especially useful if you're using a monorepo and hosting different
-              apps on Stormkit.
-            </Form.Description>
-          </div>
-        )}
       </Form.Section>
       <div className="flex justify-end">
         <Button primary loading={loading} type="submit">
