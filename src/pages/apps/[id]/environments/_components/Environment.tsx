@@ -77,9 +77,9 @@ const DefaultTooltip = ({
         className="ml-1"
         title={
           <p>
-            When auto deployments are turned on, all branches not matching an
-            auto deploy branch configuration or an environment's branch will be
-            deployed using this environment's configuration.
+            Feature branches will be deployed using this environment's
+            configuration. Turning on <b>Auto Deploy Branches</b> config for any
+            environment will make this ineffective.
           </p>
         }
         arrow
