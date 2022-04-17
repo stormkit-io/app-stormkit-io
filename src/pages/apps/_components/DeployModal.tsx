@@ -46,7 +46,7 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
     setBranch("");
     setSelectedEnv(undefined);
     setIsAutoPublish(undefined);
-  }
+  };
 
   return (
     <Modal
@@ -83,7 +83,7 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
           environments={environments}
           defaultValue={selectedEnv?.id}
           onSelect={(env: Environment): void => {
-            if(env) {
+            if (env) {
               setBranch(env.branch);
               setCmd(env.build.cmd);
               setDist(env.build.distFolder);
