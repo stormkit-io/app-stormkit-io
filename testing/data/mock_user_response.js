@@ -6,9 +6,12 @@ export default () => ({
     memberSince: 1551184200,
     id: "1644802351",
     fullName: "Foo Bar",
+    package: {
+      id: "free",
+    },
   },
   accounts: [
-    { provider: "gitlab", url: "", displayName: "Footormkit" },
+    { provider: "gitlab", url: "", displayName: "Stormkit" },
     {
       provider: "bitbucket",
       url: "https://bitbucket.org/%7B6e4d532c-e1b6-4496-90cb-f94f09af2bda%7D/",

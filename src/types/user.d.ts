@@ -7,6 +7,7 @@ declare type User = {
   memberSince: number;
   isAdmin?: boolean;
   package: {
+    id: "enterprise" | "medium" | "starter" | "free";
     customStorage: boolean;
   };
 };
