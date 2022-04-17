@@ -4,7 +4,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { RootContextProps } from "~/pages/Root.context";
 import { AppContextProps } from "~/pages/apps/App.context";
 import Modal from "~/components/Modal";
-import Link from "~/components/Link";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
@@ -55,17 +54,6 @@ const CustomStorageFormModal: React.FC<Props> = ({
             <span className="fas fa-question-circle ml-2" />
           </Tooltip>
         </Form.Header>
-        {!user.package.customStorage && (
-          <InfoBox className="mb-4">
-            <div data-testid="paid-tier">
-              This is a paid feature. Please{" "}
-              <Link secondary to="/user/account" className="text-white">
-                upgrade
-              </Link>{" "}
-              to at least starter package in order to use it.
-            </div>
-          </InfoBox>
-        )}
         <div className="mb-8">
           <Form.Select
             name="integration"

@@ -36,12 +36,6 @@ describe(fileName, () => {
       });
     });
 
-    test("should display a warning", async () => {
-      expect(
-        wrapper.getByTestId("paid-tier").closest("div").innerHTML
-      ).toContain("This is a paid feature. Please");
-    });
-
     test("should not allow submitting the form", async () => {
       selectIntegration("Bunny CDN");
 
