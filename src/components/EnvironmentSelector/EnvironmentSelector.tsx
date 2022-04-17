@@ -20,7 +20,7 @@ const EnvironmentSelector: React.FC<Props> = ({
       <Form.Select
         name="envId"
         displayEmpty
-        defaultValue={defaultValue}
+        value={defaultValue}
         onChange={e => {
           const id = e.target.value as string;
           onSelect(environments.filter(e => e.id === id)[0]);
