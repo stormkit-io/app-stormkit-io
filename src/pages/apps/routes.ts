@@ -35,6 +35,11 @@ const routes: Array<RouteProps> = [
     exact: true,
     component: Async(() => import("~/pages/apps/[id]/settings")),
   },
+  {
+    path: "/apps/:id/usage",
+    exact: true,
+    component: Async(() => import("~/pages/apps/[id]/usage")),
+  },
 ];
 
 export default routes;

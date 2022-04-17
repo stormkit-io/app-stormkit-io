@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pages/apps/[id]/usage/Usage api success should display a spinner 1`] = `
+<div>
+  <div>
+    <h1
+      class="mb-4 text-2xl text-white"
+    >
+      Usage
+    </h1>
+    <div
+      class="spinner rounded-full w-10 h-10 bg-pink-50"
+    >
+      <div
+        class="relative w-full h-full"
+      >
+        <div
+          class="spinner-bounce w-full h-full rounded-full bg-white absolute top-0 left-0"
+        />
+        <div
+          class="spinner-bounce w-full h-full rounded-full bg-white absolute top-0 left-0"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

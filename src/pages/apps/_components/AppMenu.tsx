@@ -26,6 +26,7 @@ const paths = ({ app }: Props): Array<Path> => [
   },
   { path: `/apps/${app.id}/team`, text: "Team", icon: "fas fa-users" },
   { path: `/apps/${app.id}/settings`, text: "Settings", icon: "fas fa-cogs" },
+  { path: `/apps/${app.id}/usage`, text: "Usage", icon: "fas fa-money-bill" },
 ];
 
 const AppMenu: React.FC<Props> = ({ app }): React.ReactElement => {
