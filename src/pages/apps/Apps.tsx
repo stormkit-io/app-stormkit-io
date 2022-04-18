@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Location } from "history";
 import { Redirect, useLocation } from "react-router-dom";
 import { connect } from "~/utils/context";
+import { LocalStorage } from "~/utils/storage";
 import RootContext, { RootContextProps } from "~/pages/Root.context";
 import DefaultLayout from "~/layouts/DefaultLayout";
 import Button from "~/components/Button";
@@ -9,9 +10,10 @@ import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
 import ExplanationBox from "~/components/ExplanationBox";
 import { useFetchAppList } from "./actions";
-import { AppRow, Title } from "./_components";
+import { AppRow, Title, WelcomeModal } from "./_components";
 
 const limit = 20;
+const welcomeModalId = "welcome_modal";
 
 interface LocationState extends Location {
   repoInsert: boolean;
@@ -23,6 +25,9 @@ export const Home: React.FC<RootContextProps> = ({
   const location = useLocation<LocationState>();
   const [from, setFrom] = useState(0);
   const { apps, loading, error, hasNextPage } = useFetchAppList({ api, from });
+  const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(
+    LocalStorage.get(welcomeModalId) !== "shown"
+  );
 
   if (apps.length === 0 && !loading) {
     return <Redirect to="/apps/new" />;
@@ -90,6 +95,13 @@ export const Home: React.FC<RootContextProps> = ({
           </div>
         </div>
       </section>
+      {!isLoadingFirstTime && (
+        <WelcomeModal
+          isOpen={isWelcomeModalOpen}
+          toggleModal={setIsWelcomeModalOpen}
+          welcomeModalId={welcomeModalId}
+        />
+      )}
     </DefaultLayout>
   );
 };
