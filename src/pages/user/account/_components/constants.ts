@@ -46,19 +46,23 @@ export const features: Features = {
   free: [
     "1 app",
     "1 team seat",
-    "1m requests (per app)",
-    "50 GB bandwidth (per app)",
+    "15 deployments per month",
+    "1m requests",
+    "50 GB bandwidth",
     "Unlimited domains",
-    "Unlimited deployments",
     "Unlimited environments",
     "TLS certificates included",
   ],
-  starter: ["Everything in free", "3 apps", "3 team seats"],
-  medium: ["Everything in starter", "10 apps", "10 team seats"],
+  starter: ["Everything in free", "3 team seats", "100 deployments per month"],
+  medium: [
+    "Everything in starter",
+    "10 team seats",
+    "500 deployments per month",
+  ],
   enterprise: [
     "Everything in medium",
-    "Unlimited apps",
     "Unlimited team seats",
+    "1000 deployments per month",
   ],
 };
 
