@@ -22,10 +22,6 @@ export const prepareBuildObject = (
     vars,
   };
 
-  if (!build.cmd) {
-    build.cmd = "echo 'skip build step'";
-  }
-
   if (isServerless && !build.entry) {
     build.entry = "__SSR__";
   }

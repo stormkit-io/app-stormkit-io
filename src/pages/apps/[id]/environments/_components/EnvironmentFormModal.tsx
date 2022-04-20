@@ -261,7 +261,6 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             <Form.Input
               name="build.cmd"
               label="Build command"
-              error={!buildCmd.length}
               className="bg-gray-90"
               onChange={item => setBuildCmd(item.target.value)}
               value={buildCmd}
