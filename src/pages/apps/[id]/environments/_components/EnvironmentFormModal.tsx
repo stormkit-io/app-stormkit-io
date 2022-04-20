@@ -265,7 +265,6 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
               className="bg-gray-90"
               onChange={item => setBuildCmd(item.target.value)}
               value={buildCmd}
-              required={meta.packageJson}
               inputProps={{
                 "aria-label": "Build command",
               }}
