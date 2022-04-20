@@ -115,8 +115,7 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
               placeholder="e.g. npm run build"
               value={cmd}
               onChange={e => setCmd(e.target.value)}
-              tooltip="The command your frontend framework provides for creating bundled javascript.
-                If your frontend does not require a build, leave this field empty."
+              tooltip="Stormkit will run this command to build for your project. i.e npm run build or simply mkdir build && cp index.html build"
               inputProps={{
                 "aria-label": "Cmd to execute",
               }}
@@ -127,7 +126,7 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
                 name="distFolder"
                 className="bg-gray-90 mt-4"
                 label="Build Folder"
-                tooltip="The directory in which your bundled frontend will be located."
+                tooltip="The directory that is going to be uploaded. i.e for npm projects its generally build folder"
                 placeholder="Usually this is the folder created by the build command"
                 value={dist}
                 onChange={e => setDist(e.target.value)}

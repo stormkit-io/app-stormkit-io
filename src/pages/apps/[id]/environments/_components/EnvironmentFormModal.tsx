@@ -274,9 +274,8 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
               fullWidth
             />
             <Form.Helper>
-              The build command specified in your <code>package.json</code>.
-              Chain multiple commands with the <b>&amp;&amp;</b> operator - i.e.
-              npm run test &amp;&amp; npm run build
+              Command to build your project. You can chain multiple commands with the <code>&&</code> operator - like <code>
+              npm run test &amp;&amp; npm run build </code> for npm projects
             </Form.Helper>
           </div>
           <Form.Header>Environment variables</Form.Header>
