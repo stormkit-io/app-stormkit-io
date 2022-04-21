@@ -20,6 +20,9 @@ describe(fileName, () => {
       wrapper = withMockContext(path, {
         app,
         toggleModal: jest.fn(),
+        user: {
+          isAdmin: false,
+        },
       });
     });
 
@@ -30,6 +33,7 @@ describe(fileName, () => {
         env: name,
         name,
         branch: "my-branch",
+        autoDeploy: true,
         autoPublish: true,
         domain: {
           verified: false,
@@ -85,6 +89,9 @@ describe(fileName, () => {
         app,
         toggleModal: jest.fn(),
         environment,
+        user: {
+          isAdmin: false,
+        },
       });
     });
 
@@ -130,6 +137,9 @@ describe(fileName, () => {
           app,
           toggleModal: jest.fn(),
           environment,
+          user: {
+            isAdmin: false,
+          },
         },
       });
     });

@@ -31,6 +31,7 @@ export const mockInsertEnvironment = ({
       env: environment.name,
       branch: environment.branch,
       autoPublish: environment.autoPublish,
+      autoDeploy: environment.autoDeploy,
       autoDeployBranches: environment.autoDeployBranches || null,
       build: {
         ...environment.build,
@@ -50,6 +51,7 @@ export const mockUpdateEnvironment = ({
       env: environment.env,
       branch: environment.branch,
       autoPublish: environment.autoPublish,
+      autoDeploy: environment.autoDeploy,
       autoDeployBranches: environment.autoDeployBranches || null,
       build: {
         ...environment.build,

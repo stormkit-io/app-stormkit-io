@@ -13,6 +13,7 @@ export default ({ app }) => [
         NODE_ENV: "production",
       },
     },
+    autoDeploy: false,
     autoPublish: true,
     appId: app.id,
     lastDeploy: { id: "10556341488718", createdAt: 1588622630, exit: 0 },
