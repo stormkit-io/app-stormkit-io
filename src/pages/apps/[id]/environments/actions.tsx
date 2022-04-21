@@ -287,6 +287,7 @@ interface InsertEnvironmentProps
   history: History;
   isServerless: boolean;
   isAutoPublish: boolean;
+  isAutoDeploy: boolean;
   setError: SetError;
   setLoading: SetLoading;
 }
@@ -298,6 +299,7 @@ export const insertEnvironment =
     history,
     isServerless,
     isAutoPublish,
+    isAutoDeploy,
     toggleModal,
     setError,
     setLoading,
@@ -319,6 +321,7 @@ export const insertEnvironment =
         branch,
         build,
         autoPublish: isAutoPublish,
+        autoDeploy: isAutoDeploy,
         autoDeployBranches: autoDeployBranches || null,
       })
       .then(() => {
@@ -355,6 +358,7 @@ interface EditEnvironmentProps extends Pick<ModalContextProps, "toggleModal"> {
   history: History;
   isServerless: boolean;
   isAutoPublish: boolean;
+  isAutoDeploy: boolean;
   environmentId: string;
   setError: SetErrorWithJSX;
   setLoading: SetLoading;
@@ -367,6 +371,7 @@ export const editEnvironment =
     history,
     isServerless,
     isAutoPublish,
+    isAutoDeploy,
     environmentId,
     toggleModal,
     setError,
@@ -390,6 +395,7 @@ export const editEnvironment =
         branch,
         build,
         autoPublish: isAutoPublish,
+        autoDeploy: isAutoDeploy,
         autoDeployBranches: autoDeployBranches || null,
       })
       .then(() => {

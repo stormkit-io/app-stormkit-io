@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { RootContextProps } from "~/pages/Root.context";
 import { AppContextProps } from "~/pages/apps/App.context";
+import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
@@ -23,6 +24,8 @@ interface Props
   toggleModal: (val: boolean) => void;
 }
 
+interface ContextProps extends ConfirmModalProps, AuthContextProps {}
+
 type EnvVar = { key: string; value: string };
 
 const frameworks = ["angular", "nuxt", "next"];
@@ -38,18 +41,23 @@ const envVarsToArray = (environment?: Environment): Array<EnvVar> => {
   }));
 };
 
-const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
+const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
   isOpen,
   toggleModal,
   environment: env,
   confirmModal,
   api,
   app,
+  user,
 }): React.ReactElement => {
   const history = useHistory();
 
   const [isAutoPublish, setIsAutoPublish] = useState<boolean>(
-    env?.autoPublish || true
+    env?.autoPublish ?? true
+  );
+
+  const [isAutoDeploy, setIsAutoDeploy] = useState<boolean>(
+    env?.autoDeploy ?? true
   );
 
   const [showAutoDeployBranchWarning, setShowAutoDeployBranchWarning] =
@@ -72,6 +80,12 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
     }
   }, [env?.autoPublish]);
 
+  useEffect(() => {
+    if (typeof env?.autoDeploy !== "undefined") {
+      setIsAutoDeploy(env?.autoDeploy);
+    }
+  }, [env?.autoDeploy]);
+
   if (isEdit && !env?.id) {
     throw new Error(
       "Invalid environment object passed. Id is a required field."
@@ -90,6 +104,7 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
           app,
           isServerless,
           isAutoPublish,
+          isAutoDeploy,
           environmentId: env?.id || "",
           history,
           toggleModal,
@@ -129,6 +144,25 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
             trigger a deployment with this configuration.
           </Form.Helper>
         </div>
+        {user.isAdmin && (
+          <div className="mb-8">
+            <Form.Switch
+              withWrapper
+              className="mr"
+              checked={isAutoDeploy}
+              onChange={e => setIsAutoDeploy(e.target.checked)}
+              inputProps={{
+                "aria-label": "Auto deploy toggle",
+              }}
+            >
+              Auto Deploy
+            </Form.Switch>
+            <Form.Helper>
+              When enabled any push that matches <b>Auto Deploy Branches</b>{" "}
+              configuration will be deployed.
+            </Form.Helper>
+          </div>
+        )}
         <div className="mb-8">
           <Form.Switch
             withWrapper
@@ -353,6 +387,7 @@ const EnvironmentFormModal: React.FC<Props & ConfirmModalProps> = ({
   );
 };
 
-export default connect<Props, ConfirmModalProps>(EnvironmentFormModal, [
+export default connect<Props, ContextProps>(EnvironmentFormModal, [
   { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
+  { Context: AuthContext, props: ["user"] },
 ]);
