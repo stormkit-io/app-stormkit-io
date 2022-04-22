@@ -4,5 +4,5 @@ import * as data from "../data";
 export const mockUpdateSettingsCall = ({
   payload,
   status = 200,
-  response = data.mockDeploymentResponse(),
+  response = { ok: true },
 }) => nock(process.env.API_DOMAIN).put("/app", payload).reply(status, response);
