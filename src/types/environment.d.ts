@@ -1,5 +1,4 @@
 declare type BuildConfig = {
-  entry: string;
   distFolder: string;
   cmd: string;
   vars: Record<string, string>;

@@ -1,8 +1,7 @@
 import { toArray } from "~/utils/helpers/array";
 
 export const prepareBuildObject = (
-  values: Record<string, string>,
-  isServerless: boolean
+  values: Record<string, string>
 ): BuildConfig => {
   const vars: Record<string, string> = {};
 
@@ -17,14 +16,9 @@ export const prepareBuildObject = (
 
   const build: BuildConfig = {
     cmd: values["build.cmd"],
-    entry: values["build.entry"] || "",
     distFolder: values["build.distFolder"] || "",
     vars,
   };
-
-  if (isServerless && !build.entry) {
-    build.entry = "__SSR__";
-  }
 
   return build;
 };

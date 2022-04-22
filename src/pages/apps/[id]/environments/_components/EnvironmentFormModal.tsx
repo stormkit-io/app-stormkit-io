@@ -63,7 +63,6 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
   const [showAutoDeployBranchWarning, setShowAutoDeployBranchWarning] =
     useState(Boolean(env?.autoDeployBranches));
 
-  const [isServerless, setIsServerless] = useState(!!env?.build?.entry);
   const [envVars, setEnvVars] = useState(envVarsToArray(env));
   const [loading, setLoading] = useState(false);
   const [buildCmd, setBuildCmd] = useState(env?.build?.cmd || "");
@@ -102,7 +101,6 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
         handleSubmit={handleSubmit({
           api,
           app,
-          isServerless,
           isAutoPublish,
           isAutoDeploy,
           environmentId: env?.id || "",
@@ -245,34 +243,6 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
         </div>
         <Form.Header className="mb-4">Build configuration</Form.Header>
         <div className="flex flex-col">
-          <div className="mb-8">
-            <Form.Switch
-              withWrapper
-              className="mr"
-              checked={isServerless}
-              onChange={e => setIsServerless(e.target.checked)}
-            >
-              Serverless
-            </Form.Switch>
-            <Form.Helper>
-              Turn on to enable serverless side rendering. If turned on, your
-              application will be served from lambdas.
-            </Form.Helper>
-          </div>
-          {!isFramework && isServerless && (
-            <div className="mb-8 hidden">
-              <Form.Input
-                name="build.entry"
-                label="Serverless entry file"
-                className="bg-gray-90"
-                defaultValue={env?.build?.entry || ""}
-                fullWidth
-                inputProps={{
-                  "aria-label": "Serverless entry file",
-                }}
-              />
-            </div>
-          )}
           {!isFramework && (
             <div className="mb-8">
               <Form.Input

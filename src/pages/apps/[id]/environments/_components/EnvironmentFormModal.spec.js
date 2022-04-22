@@ -39,7 +39,6 @@ describe(fileName, () => {
           verified: false,
         },
         build: {
-          entry: "",
           distFolder: "",
           cmd: "npm run build",
           vars: {

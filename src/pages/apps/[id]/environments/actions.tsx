@@ -285,7 +285,6 @@ interface InsertEnvironmentProps
   api: Api;
   app: App;
   history: History;
-  isServerless: boolean;
   isAutoPublish: boolean;
   isAutoDeploy: boolean;
   setError: SetError;
@@ -297,7 +296,6 @@ export const insertEnvironment =
     api,
     app,
     history,
-    isServerless,
     isAutoPublish,
     isAutoDeploy,
     toggleModal,
@@ -306,7 +304,7 @@ export const insertEnvironment =
   }: InsertEnvironmentProps) =>
   (values: Record<string, string>): void => {
     const { name, branch, autoDeployBranches } = values;
-    const build = prepareBuildObject(values, isServerless);
+    const build = prepareBuildObject(values);
 
     if (!name || !branch) {
       return setError("Environment and branch names are required.");
@@ -356,7 +354,6 @@ interface EditEnvironmentProps extends Pick<ModalContextProps, "toggleModal"> {
   api: Api;
   app: App;
   history: History;
-  isServerless: boolean;
   isAutoPublish: boolean;
   isAutoDeploy: boolean;
   environmentId: string;
@@ -369,7 +366,6 @@ export const editEnvironment =
     api,
     app,
     history,
-    isServerless,
     isAutoPublish,
     isAutoDeploy,
     environmentId,
@@ -379,7 +375,7 @@ export const editEnvironment =
   }: EditEnvironmentProps) =>
   (values: Record<string, string>): void => {
     const { name, branch, autoDeployBranches } = values;
-    const build = prepareBuildObject(values, isServerless);
+    const build = prepareBuildObject(values);
 
     if (!name || !branch) {
       return setError("Environment and branch names are required.");

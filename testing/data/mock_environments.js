@@ -5,7 +5,6 @@ export default ({ app }) => [
     name: "production",
     branch: "master",
     build: {
-      entry: "packages/console/server/renderer.js",
       distFolder: "packages/console/dist",
       cmd: "yarn test \u0026\u0026 yarn run build:console",
       vars: {
