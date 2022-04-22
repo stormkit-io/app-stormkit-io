@@ -75,6 +75,7 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
   const [showAutoDeployBranchWarning, setShowAutoDeployBranchWarning] =
     useState(Boolean(env?.autoDeployBranches));
 
+  const [branchName, setBranchName] = useState(env?.branch || "");
   const [envVars, setEnvVars] = useState(envVarsToArray(env));
   const [loading, setLoading] = useState(false);
   const [buildCmd, setBuildCmd] = useState(env?.build?.cmd || "");
@@ -144,6 +145,9 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
             className="bg-gray-90"
             required
             defaultValue={env?.branch}
+            onChange={e => {
+              setBranchName(e.target.value);
+            }}
             fullWidth
             inputProps={{
               "aria-label": "Branch name",
@@ -188,10 +192,12 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
             <Form.Option value="all">All branches</Form.Option>
             <Form.Option value="custom">Custom branches</Form.Option>
           </Form.Select>
-          <Form.Helper>
-            When enabled any push that matches <b>Auto Deploy Branches</b>{" "}
-            configuration will be deployed.
-          </Form.Helper>
+          {autoDeploy === "all" && (
+            <Form.Helper>
+              All Pull Requests and pushes to {branchName || ":branch"} will be
+              deployed.
+            </Form.Helper>
+          )}
         </div>
         {autoDeploy === "custom" && (
           <div className="mb-16">
@@ -206,29 +212,17 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
               fullWidth
               tooltip={
                 <div>
-                  {!app.autoDeploy ? (
-                    <p>
-                      Enable auto deployments from the application's settings
-                      page to use this feature.
-                    </p>
-                  ) : (
-                    <>
-                      <h3 className="mb-4 font-bold">Examples</h3>
-                      <ol>
-                        <li className="mb-2">
-                          <code className="text-white mr-2">
-                            ^(?!dependabot).+
-                          </code>{" "}
-                          Match anything that does not start with{" "}
-                          <b>dependabot</b>
-                        </li>
-                        <li className="mb-2">
-                          <code className="text-white mr-2">^release-.+</code>
-                          Match anything that starts with <b>release-</b>
-                        </li>
-                      </ol>
-                    </>
-                  )}
+                  <h3 className="mb-4 font-bold">Examples</h3>
+                  <ol>
+                    <li className="mb-2">
+                      <code className="text-white mr-2">^(?!dependabot).+</code>{" "}
+                      Match anything that does not start with <b>dependabot</b>
+                    </li>
+                    <li className="mb-2">
+                      <code className="text-white mr-2">^release-.+</code>
+                      Match anything that starts with <b>release-</b>
+                    </li>
+                  </ol>
                 </div>
               }
               InputProps={{
@@ -242,11 +236,8 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
               }}
             />
             <Form.Helper>
-              Regexp to specify for which branches auto deployments are enabled.{" "}
-              {isDefault
-                ? "When left empty all branches will be deployed with this configuration if the auto deployment is enabled."
-                : "When left empty only branches which correspond to the branch field will be deployed with this configuration."}
-              The pattern is case insensitive.
+              Branch names matching regex and pushes to{" "}
+              {branchName || ":branch"} will be deployed.
             </Form.Helper>
             {isDefault &&
               showAutoDeployBranchWarning &&
@@ -293,8 +284,10 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
               fullWidth
             />
             <Form.Helper>
-              Command to build your project. You can chain multiple commands with the <code>&&</code> operator - like <code>
-              npm run test &amp;&amp; npm run build </code> for npm projects
+              Command to build your project. You can chain multiple commands
+              with the <code>&&</code> operator - like{" "}
+              <code>npm run test &amp;&amp; npm run build </code> for npm
+              projects
             </Form.Helper>
           </div>
           <Form.Header>Environment variables</Form.Header>
