@@ -61,35 +61,6 @@ const getDomain = (env: Environment): string => {
   );
 };
 
-const DefaultTooltip = ({
-  isDefault,
-}: {
-  isDefault: boolean;
-}): React.ReactElement => {
-  if (!isDefault) {
-    return <></>;
-  }
-
-  return (
-    <span className="text-xs ml-2 inline-block font-normal">
-      <span className="opacity-75">default</span>{" "}
-      <Tooltip
-        className="ml-1"
-        title={
-          <p>
-            Feature branches will be deployed using this environment's
-            configuration. Turning on <b>Auto Deploy Branches</b> config for any
-            environment will make this ineffective.
-          </p>
-        }
-        arrow
-      >
-        <span className="fas fa-question-circle" />
-      </Tooltip>
-    </span>
-  );
-};
-
 const Environment: React.FC<Props & ContextProps> = ({
   environment,
   app,
@@ -101,7 +72,6 @@ const Environment: React.FC<Props & ContextProps> = ({
   const name = environment.name || environment.env;
   const domain = getDomain(environment);
   const environmentUrl = `/apps/${app.id}/environments/${environment.id}`;
-  const isDefault = app.defaultEnv === name && Boolean(app.autoDeploy);
   const [isEditModalOpen, toggleEditModal] = useState<boolean>();
   const [isIntegrationModalOpen, toggleIntegrationModal] = useState<boolean>();
 
@@ -118,13 +88,11 @@ const Environment: React.FC<Props & ContextProps> = ({
                   to={environmentUrl}
                   className="inline-flex items-baseline text-primary hover:text-pink-50 font-bold"
                 >
-                  {name} <DefaultTooltip isDefault={isDefault} />
+                  {name}
                   <span className="fas fa-chevron-right text-base ml-2" />
                 </Link>
               ) : (
-                <>
-                  {name} <DefaultTooltip isDefault={isDefault} />
-                </>
+                <>{name}</>
               )}
             </span>
           </h2>

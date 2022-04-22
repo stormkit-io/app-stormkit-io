@@ -41,9 +41,6 @@ describe(fileName, () => {
         "gitlab.com:stormkit-io/frontend.git"
       );
       expect(wrapper.getByLabelText("Runtime").innerHTML).toBe("NodeJS 12.x");
-      expect(wrapper.getByLabelText("Auto deploy").innerHTML).toBe(
-        "On pull request"
-      );
     });
   });
 
@@ -53,9 +50,7 @@ describe(fileName, () => {
         appId: app.id,
         displayName: app.displayName,
         repo: app.repo,
-        autoDeploy: app.autoDeploy,
         runtime: "nodejs12.x",
-        defaultEnv: app.defaultEnv,
       },
     });
 

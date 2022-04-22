@@ -46,7 +46,6 @@ const Settings: React.FC<ContextProps> = ({ api, app, environments, user }) => {
               api={api}
               app={app}
               additionalSettings={settings}
-              environments={environments}
             />
           </div>
           <div className="rounded bg-white p-8 mb-8">

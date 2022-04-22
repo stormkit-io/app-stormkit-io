@@ -12,19 +12,9 @@ import type { Runtime, AppSettings } from "../types.d";
 const NodeJS14 = "nodejs14.x";
 const NodeJS12 = "nodejs12.x";
 
-const AutoDeployCommit = "commit";
-const AutoDeployPullRequest = "pull_request";
-const AutoDeployDisabled = "disabled";
-
-type AutoDeploy =
-  | typeof AutoDeployCommit
-  | typeof AutoDeployPullRequest
-  | typeof AutoDeployDisabled;
-
 interface Props {
   api: Api;
   app: App;
-  environments: Array<Environment>;
   additionalSettings: AppSettings;
 }
 
@@ -33,22 +23,12 @@ interface LocationState extends Location {
   app: null | number;
 }
 
-const FormAppSettings: React.FC<Props> = ({
-  api,
-  app,
-  environments,
-  additionalSettings,
-}) => {
+const FormAppSettings: React.FC<Props> = ({ api, app, additionalSettings }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [runtime, setRuntime] = useState<Runtime>(additionalSettings.runtime);
-  const [autoDeploy, setAutoDeploy] = useState<AutoDeploy>(
-    app.autoDeploy || "disabled"
-  );
-  const [defaultEnv, setDefaultEnv] = useState(app.defaultEnv);
-  const isAutoDeployEnabled = autoDeploy !== "disabled";
   const successMessage = location?.state?.settingsSuccess;
 
   useEffect(() => {
@@ -124,49 +104,6 @@ const FormAppSettings: React.FC<Props> = ({
               This change will only be applied to your new deployments.
             </InfoBox>
           )}
-      </Form.Section>
-      <Form.Section label="Auto deploys" marginBottom="mb-4">
-        <Form.Select
-          name="autoDeploy"
-          displayEmpty
-          value={autoDeploy}
-          onChange={e => setAutoDeploy(e.target.value as AutoDeploy)}
-          inputProps={{
-            "aria-label": "Auto deploy",
-          }}
-        >
-          <Form.Option value={AutoDeployDisabled}>Disabled</Form.Option>
-          <Form.Option value={AutoDeployCommit}>On commit</Form.Option>
-          <Form.Option value={AutoDeployPullRequest}>
-            On pull request
-          </Form.Option>
-        </Form.Select>
-        <Form.Description>
-          Specify whether automatic deployments are enabled or not.
-        </Form.Description>
-        {isAutoDeployEnabled && (
-          <div className="mt-4">
-            <Form.Select
-              name="defaultEnv"
-              label="Default environment"
-              shrink
-              displayEmpty
-              value={defaultEnv}
-              onChange={e => setDefaultEnv(e.target.value as string)}
-            >
-              {environments.map(({ env }) => (
-                <Form.Option value={env} key={env}>
-                  {env}
-                </Form.Option>
-              ))}
-            </Form.Select>
-            <Form.Description>
-              Specify which environment configuration should feature branches
-              use. Any branch that has no corresponding environment will default
-              to this configuration.
-            </Form.Description>
-          </div>
-        )}
       </Form.Section>
       <div className="flex justify-end">
         <Button primary loading={loading} type="submit">

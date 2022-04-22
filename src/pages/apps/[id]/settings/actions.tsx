@@ -156,8 +156,6 @@ interface UpdateAdditionalSettingsProps
 interface FormValues {
   repo: string;
   displayName: string;
-  autoDeploy: string;
-  defaultEnv: string;
   runtime: Runtime;
 }
 
@@ -169,13 +167,7 @@ export const updateAdditionalSettings =
     setError,
     history,
   }: UpdateAdditionalSettingsProps) =>
-  ({
-    repo,
-    displayName,
-    autoDeploy,
-    runtime,
-    defaultEnv,
-  }: FormValues): void => {
+  ({ repo, displayName, runtime }: FormValues): void => {
     repo = formatRepo(repo);
     setLoading(true);
     setError(null);
@@ -185,9 +177,7 @@ export const updateAdditionalSettings =
         appId: app.id,
         displayName,
         repo,
-        autoDeploy,
         runtime,
-        defaultEnv,
       })
       .then(() => {
         setLoading(false);
