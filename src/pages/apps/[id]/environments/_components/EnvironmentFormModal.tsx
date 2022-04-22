@@ -144,6 +144,24 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
             trigger a deployment with this configuration.
           </Form.Helper>
         </div>
+        <div className="mb-8">
+          <Form.Switch
+            withWrapper
+            className="mr"
+            checked={isAutoPublish}
+            onChange={e => setIsAutoPublish(e.target.checked)}
+            inputProps={{
+              "aria-label": "Auto publish toggle",
+            }}
+          >
+            Auto Publish
+          </Form.Switch>
+          <Form.Helper>
+            When auto publish is enabled, successful deployments with the branch
+            name above will be published automatically to the environment
+            endpoint.
+          </Form.Helper>
+        </div>
         {user.isAdmin && (
           <div className="mb-8">
             <Form.Switch
@@ -163,30 +181,12 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
             </Form.Helper>
           </div>
         )}
-        <div className="mb-8">
-          <Form.Switch
-            withWrapper
-            className="mr"
-            checked={isAutoPublish}
-            onChange={e => setIsAutoPublish(e.target.checked)}
-            inputProps={{
-              "aria-label": "Auto publish toggle",
-            }}
-          >
-            Auto Publish
-          </Form.Switch>
-          <Form.Helper>
-            When auto publish is enabled, successful deployments with the branch
-            name above will be published automatically to the environment
-            endpoint.
-          </Form.Helper>
-        </div>
         <div className="mb-16">
           <Form.Input
             name="autoDeployBranches"
             label="Auto deploy branches"
             className="bg-gray-90"
-            disabled={!app.autoDeploy}
+            disabled={!(app.autoDeploy || isAutoDeploy)}
             onChange={e => {
               setShowAutoDeployBranchWarning(e.target.value !== "");
             }}
