@@ -72,16 +72,12 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
     computeAutoDeployValue(env)
   );
 
-  const [showAutoDeployBranchWarning, setShowAutoDeployBranchWarning] =
-    useState(Boolean(env?.autoDeployBranches));
-
   const [branchName, setBranchName] = useState(env?.branch || "");
   const [envVars, setEnvVars] = useState(envVarsToArray(env));
   const [loading, setLoading] = useState(false);
   const [buildCmd, setBuildCmd] = useState(env?.build?.cmd || "");
   const [error, setError] = useState(null);
   const { meta } = useFetchRepoType({ api, app, env });
-  const isDefault = app.defaultEnv === (env?.name || env?.env);
   const isFramework = frameworks.indexOf(meta.type) > -1;
   const isEdit = !!env?.id;
   const handleSubmit = isEdit ? editEnvironment : insertEnvironment;
@@ -205,9 +201,6 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
               name="autoDeployBranches"
               label="Auto deploy branches"
               className="bg-gray-90"
-              onChange={e => {
-                setShowAutoDeployBranchWarning(e.target.value !== "");
-              }}
               defaultValue={env?.autoDeployBranches}
               fullWidth
               tooltip={
@@ -239,16 +232,6 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
               Branch names matching regex and pushes to{" "}
               {branchName || ":branch"} will be deployed.
             </Form.Helper>
-            {isDefault &&
-              showAutoDeployBranchWarning &&
-              Boolean(app.autoDeploy) && (
-                <InfoBox className="mt-4">
-                  The <b>Auto Deploy Branches</b> configuration will overwrite
-                  the default environment behaviour. If feature branches do not
-                  match the <b>Auto Deploy Branches</b> configuration, they
-                  won't be deployed.
-                </InfoBox>
-              )}
           </div>
         )}
         <Form.Header className="mb-4">Build configuration</Form.Header>
