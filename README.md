@@ -2,7 +2,7 @@
   <img src="https://github.com/stormkit-io/www-stormkit-io/blob/master/assets/images/stormkit-logo.png?raw=true" height="90"/>
 </p>
 <p align="center">
-  <i>Stormkit is an infrastructure provider for modern javascript applications. It perfectly integrates with popular Git solutions.<br/>Try out Stormkit using our hosted version at <a href="https://app.stormkit.io">app.stormkit.io</a>.</i>
+  <i>Stormkit is an infrastructure provider for jamstack applications. It perfectly integrates with popular Git solutions.<br/>Try out Stormkit using our hosted version at <a href="https://app.stormkit.io">app.stormkit.io</a>.</i>
   <br/>
   <br/>
   <img src="./src/assets/images/deployments-screenshot.png" alt="Stormkit" width="800" />
@@ -12,7 +12,7 @@ This repository contains code related to the application frontend. You're more t
 
 ## What is Stormkit?
 
-Stormkit is an infrastructure provider for modern javascript applications. It supports either server-less side rendered applications or JAMStack websites. You can deploy, host and manage your applications/websites using Stormkit.
+Stormkit helps developers build, deploy and manage their jamstack applications. It also supports serverless applications. 
 
 ## Latest development
 
