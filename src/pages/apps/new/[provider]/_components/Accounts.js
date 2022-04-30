@@ -16,7 +16,8 @@ const Accounts = ({ onAccountChange, accounts, selected }) => {
               src={account.avatar}
               alt={account.login}
               className="w-8 h-8 mr-4 rounded-full"
-            />{" "}
+              style={{ display: "inline" }}
+            />
             {account.login}
           </Form.Option>
         ))}
