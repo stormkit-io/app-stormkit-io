@@ -10,6 +10,9 @@ import DotDotDot from "~/components/DotDotDot";
 import EnvironmentFormModal from "./EnvironmentFormModal";
 import CSFormModal from "./CSFormModal";
 import { useFetchStatus, STATUS, STATUSES } from "../actions";
+import { deleteEnvironment } from "../actions";
+import { useHistory } from "react-router";
+import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
 
 interface Props {
   app: App;
@@ -21,7 +24,10 @@ interface StatusProps {
   status: STATUSES;
 }
 
-interface ContextProps extends RootContextProps, AuthContextProps {}
+interface ContextProps
+  extends RootContextProps,
+    AuthContextProps,
+    ConfirmModalProps {}
 
 const InfoMessage404 = () => (
   <>
@@ -65,9 +71,11 @@ const Environment: React.FC<Props & ContextProps> = ({
   environment,
   app,
   api,
+  confirmModal,
   user,
   isClickable,
 }): React.ReactElement => {
+  const history = useHistory();
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
   const domain = getDomain(environment);
@@ -76,6 +84,25 @@ const Environment: React.FC<Props & ContextProps> = ({
   const [isIntegrationModalOpen, toggleIntegrationModal] = useState<boolean>();
 
   const { status, loading } = useFetchStatus({ domain, lastDeploy, api, app });
+
+  const handleDelete = () => {
+    confirmModal(
+      "This will completely remove the environment and all associated deployments.",
+      {
+        onConfirm: ({ closeModal, setLoading, setError }) => {
+          deleteEnvironment({
+            api,
+            app,
+            environment,
+            history,
+            setLoading,
+            setError,
+            closeModal,
+          });
+        },
+      }
+    );
+  };
 
   return (
     <div className={"flex flex-auto py-8 bg-white rounded border-solid"}>
@@ -110,18 +137,30 @@ const Environment: React.FC<Props & ContextProps> = ({
             >
               Edit configuration
             </DotDotDot.Item>
-            {
+
+            <DotDotDot.Item
+              icon="fa-solid fa-boxes-stacked mr-2"
+              aria-label="Add integration"
+              onClick={close => {
+                toggleIntegrationModal(true);
+                close();
+              }}
+            >
+              Custom storage
+            </DotDotDot.Item>
+
+            {environment.env !== "production" && (
               <DotDotDot.Item
-                icon="fa-solid fa-boxes-stacked mr-2"
-                aria-label="Add integration"
+                icon="fa-solid fa-trash mr-2"
+                aria-label="Delete environment"
                 onClick={close => {
-                  toggleIntegrationModal(true);
+                  handleDelete();
                   close();
                 }}
               >
-                Custom storage
+                Delete
               </DotDotDot.Item>
-            }
+            )}
           </DotDotDot>
           {isIntegrationModalOpen && (
             <CSFormModal
@@ -178,4 +217,5 @@ const Environment: React.FC<Props & ContextProps> = ({
 export default connect<Props, ContextProps>(Environment, [
   { Context: RootContext, props: ["api"] },
   { Context: AuthContext, props: ["user"] },
+  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
 ]);
