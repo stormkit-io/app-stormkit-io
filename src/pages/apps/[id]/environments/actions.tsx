@@ -334,14 +334,35 @@ export const insertEnvironment =
         });
       })
       .catch(async res => {
-        setLoading(false);
-        const data = await res.json();
+        let data: {
+          code?: "duplicate";
+          errors?: Record<string, string>;
+          error?: string;
+        };
 
-        if (data.errors.env) {
-          setError(data.errors.env);
-        } else {
-          return Promise.reject();
+        try {
+          data = await res.json();
+        } catch {
+          data = {};
         }
+
+        let message;
+
+        if (res.status === 400) {
+          if (data.errors) {
+            message = Object.keys(data.errors).map(k => (
+              <div key={k}>{data.errors?.[k]}</div>
+            ));
+          } else {
+            message = data.error;
+          }
+        } else if (res.status === 404) {
+          message =
+            "The environment is not found. Refresh the page and check that it's not deleted.";
+        }
+
+        setError(message);
+        setLoading(false);
       })
       .catch(() => {
         setError(
@@ -420,10 +441,7 @@ export const editEnvironment =
 
         let message;
 
-        if (data.code === "duplicate") {
-          message =
-            "You can't have duplicate environments or branch names for the same application.";
-        } else if (res.status === 400) {
+        if (res.status === 400) {
           if (data.errors) {
             message = Object.keys(data.errors).map(k => (
               <div key={k}>{data.errors?.[k]}</div>
