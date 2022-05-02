@@ -63,16 +63,16 @@ const FormTriggerDeploys: React.FC<Props> = ({
         ) : (
           <>
             {environments.map(env => (
-              <>
+              <React.Fragment key={env.id}>
                 <p className="mb-4">
                   <b>{env.env}</b>
                 </p>
-                <div key={env.id} className="flex p-4 rounded bg-gray-85 mb-4">
+                <div className="flex p-4 rounded bg-gray-85 mb-4">
                   <CopyBox
                     value={`${api.url}/hooks/app/${app.id}/deploy/${additionalSettings.deployTrigger}/${env.id}`}
                   />
                 </div>
-              </>
+              </React.Fragment>
             ))}
             <Form.Description className="pt-0">
               A <b>POST</b> or <b>GET</b> request to this endpoint will trigger
