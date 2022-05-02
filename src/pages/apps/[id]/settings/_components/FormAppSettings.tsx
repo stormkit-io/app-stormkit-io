@@ -68,6 +68,7 @@ const FormAppSettings: React.FC<Props> = ({ api, app, additionalSettings }) => {
       </Form.Section>
       <Form.Section label="Repository">
         <Form.Input
+          key={toRepoAddr(app.repo)}
           name="repo"
           className="bg-gray-90"
           required
