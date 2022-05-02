@@ -41,7 +41,7 @@ const RemoteConfig = ({
     <div className="flex flex-col mt-4">
       <div className="flex bg-white rounded mb-4 p-8">
         <div className="flex-auto">
-          <h2 className="text-lg font-bold mb-1 flex">
+          <h2 className="text-lg font-bold mb-1 flex flex-auto items-center">
             Remote config
             <Tooltip title={<Explanation />} placement="top" arrow>
               <span className="fas fa-question-circle ml-2" />
