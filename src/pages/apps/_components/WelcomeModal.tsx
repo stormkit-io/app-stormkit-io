@@ -14,16 +14,14 @@ const Welcome: React.FC<Props> = ({
   toggleModal,
   welcomeModalId,
 }): React.ReactElement => {
+  const close = () => {
+    toggleModal(false);
+    LocalStorage.set(welcomeModalId, "shown");
+  };
+
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={() => {
-        toggleModal(false);
-        LocalStorage.set(welcomeModalId, "shown");
-      }}
-      className="max-w-screen-sm"
-    >
-      <h1 className="font-bold text-xl text-center mb-8">
+    <Modal isOpen={isOpen} onClose={close} className="max-w-screen-sm">
+      <h1 className="font-bold text-xl text-center mb-8 mt-12 lg:mt-0">
         Welcome to Stormkit 🎉
       </h1>
       <Button
@@ -60,6 +58,11 @@ const Welcome: React.FC<Props> = ({
         </div>
         <span className="fas fa-chevron-right text-base ml" />
       </Button>
+      <div className="lg:hidden mt-8 flex justify-center w-full">
+        <Button secondary onClick={close}>
+          Close
+        </Button>
+      </div>
     </Modal>
   );
 };

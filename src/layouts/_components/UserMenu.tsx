@@ -71,7 +71,7 @@ const UserMenu: React.FC = (): React.ReactElement => {
         <section
           role="menu"
           className={cn(
-            "flex flex-col absolute right-0 shadow-2xl p-8 rounded bg-white border border-black z-10",
+            "flex flex-col fixed left-0 lg:left-auto lg:absolute right-0 shadow-2xl p-8 rounded bg-white border border-black z-10",
             {
               hidden: !isMenuOpen,
             }

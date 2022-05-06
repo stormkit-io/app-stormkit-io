@@ -15,9 +15,9 @@ const Row: React.FC<Props> = ({ app }): React.ReactElement => {
       as="div"
       href={`/apps/${id}`}
       styled={false}
-      className="flex w-full items-center p-4 hover:bg-gray-75 rounded-lg cursor-pointer"
+      className="flex w-full items-center p-3 lg:p-4 hover:bg-gray-75 rounded-lg cursor-pointer max-w-full overflow-hidden"
     >
-      <div className="mr-4">
+      <div className="mr-4 hidden lg:block">
         <Browser mood="happy" size={50} color="#BCBED0" />
       </div>
       <div className="flex-auto">

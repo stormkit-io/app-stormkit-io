@@ -106,7 +106,7 @@ class Modal extends PureComponent<Props> {
             onMouseDown={e => e.stopPropagation()}
           >
             <div
-              className="bg-white sm:rounded-lg overflow-y-auto p-12 h-full w-full"
+              className="bg-white sm:rounded-lg overflow-y-auto p-2 lg:p-12 h-full w-full"
               style={{ maxHeight: "90vh" }}
             >
               {children}

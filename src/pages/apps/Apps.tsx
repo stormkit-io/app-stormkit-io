@@ -49,8 +49,8 @@ export const Home: React.FC<RootContextProps> = ({
           <Title.Main>My apps</Title.Main>
           <Title.Sub>Overview</Title.Sub>
         </Title>
-        <div className="flex flex-auto">
-          <div className="page-section mr-6 flex flex-col">
+        <div className="flex flex-auto flex-col-reverse lg:flex-row">
+          <div className="page-section mt-3 lg:mt-0 lg:mr-6 flex flex-col">
             {!loading && error && (
               <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
             )}
@@ -80,7 +80,7 @@ export const Home: React.FC<RootContextProps> = ({
               </>
             )}
           </div>
-          <div className="w-1/3">
+          <div className="lg:w-1/3">
             <ExplanationBox title="Did you know?">
               <p>
                 We keep a running instance of every one of your deploy versions
@@ -89,7 +89,7 @@ export const Home: React.FC<RootContextProps> = ({
                 Whenever you push, we build it!
               </p>
             </ExplanationBox>
-            <Button href="/apps/new" className="w-full mt-6" primary>
+            <Button href="/apps/new" className="w-full mt-3 lg:mt-6" primary>
               New App
             </Button>
           </div>

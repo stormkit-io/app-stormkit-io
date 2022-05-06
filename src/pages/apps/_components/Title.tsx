@@ -11,7 +11,7 @@ Title.Main = ({ children }): React.ReactElement => {
 };
 
 Title.Sub = ({ children }) => {
-  return <h2 className="text-2xl text-white mb-6">{children}</h2>;
+  return <h2 className="text-2xl text-white mb-2 lg:mb-6">{children}</h2>;
 };
 
 export default Title;
