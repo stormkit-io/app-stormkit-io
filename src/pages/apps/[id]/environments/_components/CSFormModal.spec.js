@@ -17,42 +17,6 @@ describe(fileName, () => {
     fireEvent.click(getByText(document.body, name));
   };
 
-  describe("when user is not in paid tier", () => {
-    beforeEach(() => {
-      app = data.mockApp();
-      env = data.mockEnvironments({ app })[0];
-      wrapper = withMockContext(path, {
-        app,
-        environment: env,
-        toggleModal: jest.fn(),
-        user: {
-          package: {
-            customStorage: false,
-          },
-        },
-        history: {
-          replace: jest.fn(),
-        },
-      });
-    });
-
-    test("should not allow submitting the form", async () => {
-      selectIntegration("Bunny CDN");
-
-      const externalUrl = wrapper.getByLabelText("External URL");
-      const storageZone = wrapper.getByLabelText("Storage zone");
-      const storageKey = wrapper.getByLabelText("Storage key");
-
-      userEvent.type(externalUrl, "https://www.stormkit.ko");
-      userEvent.type(storageKey, "asdf-123");
-      userEvent.type(storageZone, "test-zone");
-
-      expect(
-        wrapper.getByText("Submit").closest("button").getAttribute("disabled")
-      ).toBe("");
-    });
-  });
-
   describe("bunny cdn", () => {
     beforeEach(() => {
       app = data.mockApp();

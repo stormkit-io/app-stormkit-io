@@ -234,7 +234,7 @@ const CustomStorageFormModal: React.FC<Props> = ({
           <Button
             primary
             className="ml-4"
-            disabled={!integration || !user.package.customStorage}
+            disabled={!integration}
             loading={loading}
           >
             Submit
