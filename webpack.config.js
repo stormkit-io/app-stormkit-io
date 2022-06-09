@@ -26,7 +26,7 @@ module.exports = {
   },
 
   output: {
-    filename: isDev ? undefined : "client.[hash].js",
+    filename: isDev ? undefined : "client.[fullhash].js",
     chunkFilename: "[name].[chunkhash].js",
     path: path.join(root, "dist"), // The path to the bundle directory
     publicPath: process.env.PUBLIC_URL || "/", // Tell webpack to server always from the root
