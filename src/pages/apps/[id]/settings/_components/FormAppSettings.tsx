@@ -9,6 +9,7 @@ import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
 import type { Runtime, AppSettings } from "../types.d";
 
+const NodeJS16 = "nodejs16.x";
 const NodeJS14 = "nodejs14.x";
 const NodeJS12 = "nodejs12.x";
 
@@ -94,6 +95,7 @@ const FormAppSettings: React.FC<Props> = ({ api, app, additionalSettings }) => {
         >
           <Form.Option value={NodeJS12}>NodeJS 12.x</Form.Option>
           <Form.Option value={NodeJS14}>NodeJS 14.x</Form.Option>
+          <Form.Option value={NodeJS16}>NodeJS 16.x</Form.Option>
         </Form.Select>
         <Form.Description>
           The application runtime for deployments and server side environment.
