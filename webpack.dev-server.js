@@ -11,11 +11,7 @@ const config = {
   port: process.env.PORT || 3000,
   host: process.env.IP || "localhost",
 
-  // Enable https with a self-signed certificate.
-  https: {
-    key: fs.readFileSync(path.resolve(__dirname, "./certs/localhost.key")),
-    cert: fs.readFileSync(path.resolve(__dirname, "./certs/localhost.cert")),
-  },
+  server: "https",
 
   proxy: {},
 };
