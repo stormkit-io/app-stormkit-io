@@ -1,32 +1,35 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import ReferralForm from "~/pages/user/referrals/_components/ReferralForm";
 import Modal from "~/components/Modal";
 import CopyBox from "~/components/CopyBox";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
-import { connect } from "~/utils/context";
+import Api from "~/utils/api/Api";
 import { handleInvite } from "../actions";
 
-const ModalContext = Modal.Context();
-
-const getLinkFromToken = token =>
+const getLinkFromToken = (token: string) =>
   `${window.location.origin}/app/invitation/accept?token=${encodeURIComponent(
     token
   )}`;
 
-const NewMemberModal = ({ isOpen, toggleModal, api, app }) => {
+interface Props {
+  api: Api;
+  app: App;
+  onClose: () => void;
+}
+
+const NewMemberModal: React.FC<Props> = ({ api, app, onClose }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState(null);
-  const link = getLinkFromToken(token);
+  const [token, setToken] = useState<string | null>(null);
+  const link = token ? getLinkFromToken(token) : "";
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen
       onClose={() => {
         setError(null);
-        toggleModal(false);
+        onClose();
       }}
       className="max-w-screen-md"
     >
@@ -38,7 +41,6 @@ const NewMemberModal = ({ isOpen, toggleModal, api, app }) => {
             step you'll get a link to share.
           </InfoBox>
           <ReferralForm
-            api={api}
             error={error}
             loading={loading}
             onSubmit={handleInvite({
@@ -70,16 +72,4 @@ const NewMemberModal = ({ isOpen, toggleModal, api, app }) => {
   );
 };
 
-NewMemberModal.propTypes = {
-  isOpen: PropTypes.bool,
-  toggleModal: PropTypes.func,
-  api: PropTypes.object,
-  app: PropTypes.object,
-};
-
-export default Object.assign(
-  connect(NewMemberModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-  ]),
-  ModalContext
-);
+export default NewMemberModal;

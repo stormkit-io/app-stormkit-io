@@ -25,9 +25,20 @@ describe(fileName, () => {
     });
 
     test("should contain a button to click to invite a new member", async () => {
+      expect(() =>
+        wrapper.getByText(
+          /Enter the username to invite your colleague to the team./
+        )
+      ).toThrow();
+
+      fireEvent.click(wrapper.getByLabelText("Invite new member"));
+
       await waitFor(() => {
-        fireEvent.click(wrapper.getByLabelText("Invite new member"));
-        expect(wrapper.injectedProps.toggleModal).toHaveBeenCalledWith(true);
+        expect(
+          wrapper.getByText(
+            /Enter the username to invite your colleague to the team./
+          )
+        ).toBeTruthy();
       });
     });
   });

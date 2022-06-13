@@ -1,33 +1,38 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import cn from "classnames";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableContainer from "@material-ui/core/TableContainer";
-import RootContext from "~/pages/Root.context";
-import AppContext from "~/pages/apps/App.context";
-import AuthContext from "~/pages/auth/Auth.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
+import AppContext, { AppContextProps } from "~/pages/apps/App.context";
+import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
 import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
-import ConfirmModal from "~/components/ConfirmModal";
+import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
 import { PlusButton } from "~/components/Buttons";
 import { connect } from "~/utils/context";
 import { useFetchMembers, handleDelete } from "./actions";
 import NewMemberModal from "./_components/NewMemberModal";
 
-const Team = ({
+interface ContextProps
+  extends Pick<RootContextProps, "api">,
+    Pick<AppContextProps, "app">,
+    Pick<AuthContextProps, "user">,
+    Pick<ConfirmModalProps, "confirmModal"> {}
+
+const Team: React.FC<ContextProps> = ({
   api,
   app,
   user,
   confirmModal,
-  toggleModal,
-  history,
-  location,
-}) => {
-  const { members, loading, error } = useFetchMembers({ api, app, location });
+}): React.ReactElement => {
+  const history = useHistory();
+  const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const { members, loading, error } = useFetchMembers({ api, app });
   const isCurrentUserTheOwner = app.userId === user.id;
 
   return (
@@ -35,9 +40,15 @@ const Team = ({
       <h1 className="mb-4 flex items-center justify-between">
         <span className="text-2xl text-white">Members</span>
         <div className="flex-shrink-0">
-          <NewMemberModal api={api} app={app} />
+          {isNewModalOpen && (
+            <NewMemberModal
+              api={api}
+              app={app}
+              onClose={() => setIsNewModalOpen(false)}
+            />
+          )}
           <PlusButton
-            onClick={() => toggleModal(true)}
+            onClick={() => setIsNewModalOpen(true)}
             className="text-white rounded"
             text="Invite new member"
             size="small"
@@ -125,20 +136,9 @@ const Team = ({
   );
 };
 
-Team.propTypes = {
-  api: PropTypes.object,
-  app: PropTypes.object,
-  user: PropTypes.object,
-  toggleModal: PropTypes.func,
-  confirmModal: PropTypes.func,
-  history: PropTypes.object,
-  location: PropTypes.object,
-};
-
-export default connect(Team, [
+export default connect<unknown, ContextProps>(Team, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app"] },
   { Context: AuthContext, props: ["user"] },
   { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-  { Context: NewMemberModal, props: ["toggleModal"], wrap: true },
 ]);
