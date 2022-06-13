@@ -22,7 +22,6 @@ const CustomStorageFormModal: React.FC<Props> = ({
   environment,
   api,
   app,
-  user,
 }): React.ReactElement => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
