@@ -1,66 +1,9 @@
 
-import React, { useState } from "react";
-import cn from "classnames";
-import Link from "~/components/Link";
+import React from "react";
 import OutsideClick from "~/components/OutsideClick";
-import { Box, Popper } from "@material-ui/core";
-import CampaignIcon from '@mui/icons-material/Campaign';
+import { Popper } from "@material-ui/core";
 
 
-interface SubItem {
-  to: string;
-  text: string;
-}
-
-interface MenuItem {
-  title: string;
-  children: Array<SubItem>;
-}
-
-const menuItems: Array<MenuItem> = [
-  {
-    title: "Apps",
-    children: [
-      { to: "/", text: "My Apps" },
-      { to: "/apps/new", text: "New App" },
-    ],
-  },
-  {
-    title: "User",
-    children: [
-      { to: "/user/account", text: "Account" },
-      // { to: "/user/referral", text: "Free Credits" }, TODO: Implement this part
-      {
-        to: "https://www.stormkit.io/docs",
-        text: "Docs",
-      },
-      { to: "/logout", text: "Logout" },
-    ],
-  },
-  {
-    title: "Get in touch",
-    children: [
-      {
-        to: "https://discord.gg/6yQWhyY",
-        text: "Discord",
-      },
-      { to: "mailto:hello@stormkit.io", text: "Email" },
-    ],
-  },
-  {
-    title: "Legal",
-    children: [
-      {
-        to: "https://www.stormkit.io/policies/privacy",
-        text: "Privacy Policy",
-      },
-      {
-        to: "https://www.stormkit.io/policies/terms",
-        text: "Terms of Service",
-      },
-    ],
-  },
-];
 
 const News: React.FC = (): React.ReactElement => {
     const [anchorEl, setAnchorEl] = React.useState(null);
