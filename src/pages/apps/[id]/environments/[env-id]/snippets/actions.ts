@@ -3,7 +3,6 @@ import { useLocation } from "react-router";
 import { Location } from "history";
 import Api from "~/utils/api/Api";
 import { ConfirmModalProps } from "~/components/ConfirmModal";
-import { ModalContextProps } from "~/components/Modal";
 import { normalize, isUndef } from "./helpers";
 
 type SetSnippets = (val: Snippets) => void;
@@ -117,7 +116,7 @@ export const useFetchSnippets = ({
   return { loading, error, snippets, setSnippets };
 };
 
-interface UpsertSnippetsProps extends Partial<ModalContextProps> {
+interface UpsertSnippetsProps {
   api: Api;
   app: App;
   environment: Environment;
@@ -125,10 +124,11 @@ interface UpsertSnippetsProps extends Partial<ModalContextProps> {
   setLoading: SetLoading;
   setSnippets: SetSnippets;
   snippets: Snippets;
-  index: number;
-  injectLocation: "head" | "body";
+  index?: number;
+  injectLocation?: "head" | "body";
   isEnabled: boolean;
   isPrepend?: boolean;
+  closeModal?: () => void;
 }
 
 export const upsertSnippets =
@@ -140,9 +140,9 @@ export const upsertSnippets =
     setLoading,
     snippets,
     setSnippets,
-    toggleModal,
+    closeModal,
     index = -1,
-    injectLocation,
+    injectLocation = "head",
     isEnabled,
     isPrepend,
   }: UpsertSnippetsProps) =>
@@ -189,7 +189,7 @@ export const upsertSnippets =
       setLoading,
       setSnippets,
       setError,
-      onSuccess: () => toggleModal && toggleModal(false),
+      onSuccess: () => closeModal && closeModal(),
     });
   };
 
@@ -237,7 +237,7 @@ export const deleteSnippet = ({
 
 type ExtendedUpsertSnippetProps = Omit<
   UpsertSnippetsProps,
-  "setError" | "setLoading" | "injectLocation" | "isPrepend" | "toggleModal"
+  "setError" | "setLoading" | "injectLocation" | "isPrepend" | "closeModal"
 >;
 
 interface EnableOrDisableProps

@@ -34,11 +34,11 @@ const Snippets: React.FC<Props & ModalContextProps> = ({
   api,
   app,
   environment: env,
-  toggleModal,
 }): React.ReactElement => {
   const location = useLocation();
   const fetchOpts = { api, app, env, location };
   const { loading, error, snippets, setSnippets } = useFetchSnippets(fetchOpts);
+  const [isSnippetModalOpen, setIsSnipperModalOpen] = useState(false);
   const [selectedSnippet, setSelectedSnippet] = useState<Snippet | undefined>();
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const Snippets: React.FC<Props & ModalContextProps> = ({
             size="small"
             onClick={() => {
               setSelectedSnippet(undefined);
-              toggleModal(true);
+              setIsSnipperModalOpen(true);
             }}
             className="p-2 rounded"
             aria-label="Insert snippet"
@@ -78,11 +78,14 @@ const Snippets: React.FC<Props & ModalContextProps> = ({
         {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
         {!loading && snippets && (
           <div className="w-full relative">
-            <SnippetModal
-              snippets={snippets}
-              setSnippets={setSnippets}
-              snippet={selectedSnippet}
-            />
+            {isSnippetModalOpen && (
+              <SnippetModal
+                snippets={snippets}
+                setSnippets={setSnippets}
+                snippet={selectedSnippet}
+                closeModal={() => setIsSnipperModalOpen(false)}
+              />
+            )}
             <SnippetTable
               snippets={snippets}
               api={api}
@@ -91,7 +94,7 @@ const Snippets: React.FC<Props & ModalContextProps> = ({
               setSnippets={setSnippets}
               setSelectedSnippet={(args: Snippet) => {
                 setSelectedSnippet(args);
-                toggleModal(true);
+                setIsSnipperModalOpen(true);
               }}
             />
           </div>
@@ -105,5 +108,4 @@ export default connect<Props, ModalContextProps>(Snippets, [
   { Context: RootContext, props: ["api"] },
   { Context: AppContext, props: ["app"] },
   { Context: EnvironmentContext, props: ["environment"] },
-  { Context: SnippetModal, props: ["toggleModal"], wrap: true },
 ]);

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
-import RootContext from "~/pages/Root.context";
-import AppContext from "~/pages/apps/App.context";
+import RootContext, { RootContextProps } from "~/pages/Root.context";
+import AppContext, { AppContextProps } from "~/pages/apps/App.context";
 import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
@@ -10,21 +8,30 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { connect } from "~/utils/context";
 import { upsertSnippets } from "../actions";
-import { javascript } from "@codemirror/lang-javascript";
 import { html } from "@codemirror/lang-html";
 
-const ModalContext = Modal.Context();
+interface Props {
+  snippet?: Snippet;
+  snippets: Snippets;
+  closeModal: () => void;
+  setSnippets: (snippets: Snippets) => void;
+}
 
-const SnippetModal = ({
-  isOpen,
-  toggleModal,
+interface ContextProps
+  extends Pick<AppContextProps, "app">,
+    Pick<RootContextProps, "api"> {
+  environment: Environment;
+}
+
+const SnippetModal: React.FC<Props & ContextProps> = ({
+  closeModal,
   snippets,
   snippet,
   api,
   app,
   environment,
   setSnippets,
-}) => {
+}): React.ReactElement => {
   const isSnippetEnabled = snippet?.enabled || false;
   const isSnippetPrepend = snippet?.prepend || false;
   const [error, setError] = useState(null);
@@ -38,16 +45,8 @@ const SnippetModal = ({
     setIsPrepend(isSnippetPrepend);
   }, [isSnippetEnabled, isSnippetPrepend]);
 
-  if (!isOpen) {
-    return "";
-  }
-
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={() => toggleModal(false)}
-      className="max-w-screen-md"
-    >
+    <Modal isOpen onClose={closeModal} className="max-w-screen-md">
       <h2 className="mb-8 text-xl font-bold">
         {snippet?.title ? "Edit snippet" : "Create snippet"}
       </h2>
@@ -62,7 +61,7 @@ const SnippetModal = ({
           setSnippets,
           isEnabled,
           isPrepend,
-          toggleModal,
+          closeModal,
           injectLocation: snippet?._injectLocation,
           index: snippet?._i,
         })}
@@ -86,17 +85,11 @@ const SnippetModal = ({
         <div className="mb-8 p-4 rounded bg-gray-85">
           <Form.Code
             height="200px"
-            className="bg-white"
+            className="bg-white p-4"
             value={snippet?.content}
-            extensions={[javascript(), html()]}
+            extensions={[html()]}
             onChange={value => setCodeContent(value)}
-            options={{
-              name: "content",
-              theme: "idea",
-              tabSize: 2,
-              keyMap: "sublime",
-              mode: "html",
-            }}
+            theme="light"
           />
           <p className="opacity-50 text-sm pt-2">
             The content that will be injected to document on server response.
@@ -107,6 +100,7 @@ const SnippetModal = ({
             <Form.Toggler
               name="_injectLocation"
               className="mr-4"
+              onSelect={() => {}}
               defaultSelected={
                 snippet?._injectLocation === "body" ? "body" : "head"
               }
@@ -147,7 +141,7 @@ const SnippetModal = ({
           </InfoBox>
         )}
         <div className="flex justify-center items-center mt-8">
-          <Button secondary onClick={() => toggleModal(false)}>
+          <Button secondary onClick={closeModal}>
             Cancel
           </Button>
           <Button primary className="ml-4" loading={loading}>
@@ -159,23 +153,8 @@ const SnippetModal = ({
   );
 };
 
-SnippetModal.propTypes = {
-  isOpen: PropTypes.bool,
-  toggleModal: PropTypes.func,
-  snippet: PropTypes.object,
-  snippets: PropTypes.object,
-  setSnippets: PropTypes.func,
-  environment: PropTypes.object,
-  api: PropTypes.object,
-  app: PropTypes.object,
-};
-
-export default Object.assign(
-  connect(withRouter(SnippetModal), [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-    { Context: RootContext, props: ["api"] },
-    { Context: AppContext, props: ["app"] },
-    { Context: EnvironmentContext, props: ["environment"] },
-  ]),
-  ModalContext
-);
+export default connect<Props, ContextProps>(SnippetModal, [
+  { Context: RootContext, props: ["api"] },
+  { Context: AppContext, props: ["app"] },
+  { Context: EnvironmentContext, props: ["environment"] },
+]);

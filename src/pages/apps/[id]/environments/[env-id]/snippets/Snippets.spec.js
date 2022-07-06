@@ -7,14 +7,12 @@ const fileName = `pages/apps/[id]/environments/[env-id]/snippets/Snippets`;
 
 describe(fileName, () => {
   let wrapper;
-  let toggleModal;
   let snippets;
 
   const app = data.mockApp();
   const env = data.mockEnvironments({ app }).slice(0, 1)[0];
 
   beforeEach(() => {
-    toggleModal = jest.fn();
     snippets = data.mockSnippets();
 
     nock(process.env.API_DOMAIN)
@@ -26,7 +24,6 @@ describe(fileName, () => {
       props: {
         app,
         environment: env,
-        toggleModal,
       },
     });
   });
@@ -44,9 +41,5 @@ describe(fileName, () => {
     });
 
     fireEvent.click(wrapper.getByLabelText("Insert snippet"));
-
-    await waitFor(() => {
-      expect(toggleModal).toHaveBeenCalled();
-    });
   });
 });
