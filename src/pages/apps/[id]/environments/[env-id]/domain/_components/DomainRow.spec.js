@@ -74,7 +74,7 @@ describe(fileName, () => {
         "Recommended: Setting up CNAME",
         `${app.displayName}.stormkit.dev`,
         "Alternative: Setting up A Record",
-        "35.156.69.62",
+        "3.64.188.62",
       ].forEach(text => expect(wrapper.getByText(text)).toBeTruthy());
     });
   });

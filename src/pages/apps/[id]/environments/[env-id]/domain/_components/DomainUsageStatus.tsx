@@ -51,7 +51,7 @@ const DomainUsageStatus: React.FC<Props> = ({ domain, app, onVerifyClick }) => {
             <div className="mt-2">
               Name: <span className="font-bold">{recordName(domain)}</span>
               <br />
-              Value: <span className="font-bold">35.156.69.62</span>
+              Value: <span className="font-bold">3.64.188.62</span>
             </div>
           </div>
         </div>
