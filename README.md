@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/stormkit-io/www-stormkit-io/blob/master/assets/images/stormkit-logo.png?raw=true" height="90"/>
+  <img src="./src/assets/logos/stormkit-logo-text-h-white.svg?raw=true" height="90"/>
 </p>
 <p align="center">
   <i>Stormkit is an infrastructure provider for jamstack applications. It perfectly integrates with popular Git solutions.<br/>Try out Stormkit using our hosted version at <a href="https://app.stormkit.io">app.stormkit.io</a>.</i>

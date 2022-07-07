@@ -8,7 +8,7 @@ describe("layouts/DefaultLayout", () => {
 
   const findMenu = () => wrapper.getByRole("menu");
   const findMenuToggler = () => wrapper.getByText("Menu");
-  const findStormkitLogo = () => wrapper.getByText("Stormkit");
+  const findStormkitLogo = () => wrapper.getByAltText("Stormkit Logo");
   const findMadeWith = () => wrapper.getByText("Made with");
 
   beforeEach(() => {
