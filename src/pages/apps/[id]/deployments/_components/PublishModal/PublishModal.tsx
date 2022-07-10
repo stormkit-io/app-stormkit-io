@@ -50,6 +50,7 @@ const PublishModal: React.FC<Props & ModalContextProps> = ({
           className="mb-8"
           environments={environments}
           placeholder="Select an environment to publish"
+          defaultValue={selectedEnvironment}
           onSelect={e => e.id && setSelectedEnvironment(e.id)}
         />
       </Form>
