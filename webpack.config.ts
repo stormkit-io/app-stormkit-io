@@ -1,20 +1,21 @@
-// imports
-const path = require("path");
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { ESBuildMinifyPlugin } = require("esbuild-loader");
-const config = require("dotenv").config();
+import path from "path";
+import webpack, { Configuration } from "webpack";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import CleanWebpackPlugin from "clean-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { ESBuildMinifyPlugin } from "esbuild-loader";
+import dotenv from "dotenv";
+const config = dotenv.config();
 
 // Helper variables
-const env = process.env.NODE_ENV || "production";
+type envs = "development" | "production";
+const env = (process.env.NODE_ENV as envs) || "production";
 const isDev = env === "development";
 const parsed = (config && config.parsed) || {};
 const root = __dirname;
 
-module.exports = {
+const webpackConfig: Configuration = {
   // Providing the mode configuration option tells webpack to use its built-in optimizations accordingly.
   // @see https://webpack.js.org/concepts/mode/
   mode: env,
@@ -61,7 +62,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          { loader: MiniCssExtractPlugin.loader, options: { hmr: isDev } },
+          { loader: MiniCssExtractPlugin.loader },
           { loader: "css-loader" },
           { loader: "postcss-loader" },
         ],
@@ -95,7 +96,7 @@ module.exports = {
       "process.env.SENTRY": JSON.stringify(process.env.SENTRY),
 
       // Merge dotenv config
-      ...Object.keys(parsed).reduce((obj, key) => {
+      ...Object.keys(parsed).reduce((obj: Record<string, string>, key) => {
         obj[`process.env.${key}`] = JSON.stringify(parsed[key]);
         return obj;
       }, {}),
@@ -127,4 +128,10 @@ module.exports = {
       ? [new ESBuildMinifyPlugin({ target: "es2015", css: true })]
       : undefined,
   },
+
+  performance: {
+    hints: false,
+  },
 };
+
+export default webpackConfig;

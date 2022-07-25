@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "module": "esnext",
+    "module": "commonjs",
     "target": "es2019",
     "outDir": "./dist",
     "baseUrl": "./",
