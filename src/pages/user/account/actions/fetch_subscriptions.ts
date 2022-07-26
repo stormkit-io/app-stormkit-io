@@ -17,7 +17,6 @@ export type ActivePlan = {
 
 export type Subscription = {
   concurrentBuilds: boolean; // Number of concurrent builds allowed
-  maxTeamMembersPerApp: boolean; // -1 for unlimited
   remainingApps: boolean; // -1 for unlimited
   activePlans: Array<ActivePlan>;
   currentPlan: {
