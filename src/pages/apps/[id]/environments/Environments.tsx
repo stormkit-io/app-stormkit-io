@@ -39,7 +39,7 @@ const Environments: React.FC<ContextProps> = ({
       <div className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-2 gap-3">
         {environments.map(env => (
           <div key={env.id}>
-            <Environment environment={env} app={app} isClickable />
+            <Environment environment={env} app={app}  isClickable />
           </div>
         ))}
         {environments.length === 1 && (

@@ -15,11 +15,11 @@ import {
 const Context = createContext({});
 
 export interface AuthContextProps {
-  error: string | null;
-  user: User;
-  accounts: Array<ConnectedAccount>;
-  loginOauth: (p: Provider) => Promise<LoginOauthReturnValue>;
-  logout: () => void;
+  error?: string | null;
+  user?: User;
+  accounts?: Array<ConnectedAccount>;
+  loginOauth?: (p: Provider) => Promise<LoginOauthReturnValue>;
+  logout?: () => void;
 }
 
 interface Props {

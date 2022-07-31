@@ -31,7 +31,6 @@ const paths = ({ app }: Props): Array<Path> => [
 
 const AppMenu: React.FC<Props> = ({ app }): React.ReactElement => {
   const url = window?.location.pathname;
-
   return (
     <div className="flex flex-col h-full py-8 pl-8 lg:pr-8 bg-black-o-05">
       <div className="mb-40">

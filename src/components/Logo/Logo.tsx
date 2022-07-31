@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import cn from "classnames";
 import logoText from "~/assets/logos/stormkit-logo-text-h-white.svg";
 import logoIcon from "~/assets/logos/stormkit-logo-circle.svg";
-interface Props {
+import { connect } from "~/utils/context";
+import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
+
+interface Props extends AuthContextProps {
   iconOnly?: boolean;
   iconSize?: number;
   className?: string;
@@ -12,6 +15,7 @@ const Logo: React.FC<Props> = ({
   iconOnly = false,
   className,
   iconSize = 16,
+  user,
   ...rest
 }: Props): React.ReactElement => {
 
@@ -40,7 +44,7 @@ const Logo: React.FC<Props> = ({
             "w-8": iconOnly,
           })}
         />
-        {!iconOnly && (
+        {user?.isAdmin == true && !iconOnly && (
           <div>
             <div
               style={{ padding: "10px" }}
@@ -55,4 +59,7 @@ const Logo: React.FC<Props> = ({
   );
 };
 
-export default Logo;
+export default connect<Props, AuthContextProps>(Logo, [
+  { Context: AuthContext, props: ["user"] },
+]);
+
