@@ -6,3 +6,6 @@ app:
       - from: /*
         to: /index.html
         assets: false
+      - from: "/auth*"
+        to: "/auth"
+        assets": false

@@ -1,7 +1,7 @@
 import { fireEvent, waitFor } from "@testing-library/react";
 import { withUserContext } from "~/testing/helpers";
 
-describe("pages/apps/new", () => {
+xdescribe("pages/apps/new", () => {
   let wrapper;
 
   const findGithubButton = () => wrapper.getByText("GitHub");
