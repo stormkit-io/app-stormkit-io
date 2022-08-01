@@ -96,6 +96,20 @@ export interface LoginOauthReturnValue {
   sessionToken: string;
 }
 
+function getCookie(cname: string) {
+  const name = cname + "=";
+  const ca = document.cookie.split(';');
+  let res = ""
+
+  ca.forEach(pair => {
+    if (pair.includes(name)) {
+      res = pair.substring(name.length);
+    }
+  });
+
+  return res
+}
+
 // This one returns a function that returns another function.
 // The first function is used to inject the api props. The second
 // function produces an oauthlogin function based on the provider.
@@ -109,7 +123,12 @@ export const loginOauth = ({
 }: LoginOauthProps) => {
   return (provider: Provider): Promise<LoginOauthReturnValue> => {
     return new Promise(resolve => {
-      const url = api.baseurl + `/auth/${provider}`;
+      let url = api.baseurl + `/auth/${provider}`;
+      const referral = LocalStorage.get('referral')
+      if(referral !== ""){
+        url = `${url}?referral=${referral}`
+      }
+
       const title = "oauthWindow";
 
       const onClose = (data: DataMessage) => {
