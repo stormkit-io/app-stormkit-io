@@ -4,8 +4,5 @@ app:
         to: /manifest.json
         cdn: true
       - from: /*
-        to: /index.html
+        to: /index
         assets: false
-      - from: "/auth*"
-        to: "/auth"
-        assets": false
