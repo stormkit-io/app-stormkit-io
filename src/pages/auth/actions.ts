@@ -110,9 +110,9 @@ export const loginOauth = ({
   return (provider: Provider): Promise<LoginOauthReturnValue> => {
     return new Promise(resolve => {
       let url = api.baseurl + `/auth/${provider}`;
-      const referral = LocalStorage.get('referral')
-      if(referral !== ""){
-        url = `${url}?referral=${referral}`
+      const referral = LocalStorage.get("referral") || "";
+      if (referral !== "") {
+        url = `${url}?referral=${referral}`;
       }
 
       const title = "oauthWindow";

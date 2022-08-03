@@ -222,8 +222,6 @@ export default class GithubRepos extends PureComponent {
       );
     }
 
-
-
     return (
       <>
         <div className="mt-4 mb-4 w-full">

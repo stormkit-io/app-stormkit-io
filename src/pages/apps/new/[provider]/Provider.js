@@ -45,7 +45,7 @@ const Provider = ({
             </h3>
 
             <Form.Input
-            className="mt-4"
+              className="mt-4"
               fullWidth
               value={filter}
               placeholder={"Filter repos by name"}

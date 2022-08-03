@@ -1,7 +1,8 @@
 import { fireEvent, waitFor } from "@testing-library/react";
 import { withUserContext } from "~/testing/helpers";
+import { LocalStorage } from "~/utils/storage";
 
-xdescribe("pages/apps/new", () => {
+describe("pages/apps/new", () => {
   let wrapper;
 
   const findGithubButton = () => wrapper.getByText("GitHub");
@@ -45,6 +46,7 @@ xdescribe("pages/apps/new", () => {
   `("For provider", ({ provider, human, selector }) => {
     describe(provider, () => {
       beforeEach(() => {
+        LocalStorage.clear("referral");
         window.open = jest.fn().mockImplementation(() => {
           window.postMessage(
             {

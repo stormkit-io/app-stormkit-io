@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, useLocation} from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import qs from "query-string";
 import { connect } from "~/utils/context";
 import CenterLayout from "~/layouts/CenterLayout";
@@ -8,7 +8,6 @@ import AuthContext from "./Auth.context";
 import OauthLogin from "./_components/OauthLogin";
 import "./Auth.css";
 import { LocalStorage } from "~/utils/storage";
-
 
 interface ContextProps {
   user: User;
@@ -25,16 +24,13 @@ const Auth: React.FC<ContextProps> = ({ user }): React.ReactElement => {
     }
   }
 
-
   const queryString = location.search;
   const urlParams = new URLSearchParams(queryString);
-  const referral = urlParams.get('referral')
+  const referral = urlParams.get("referral");
   if (referral !== null) {
     // set cookie for a week
-    LocalStorage.set("referral", referral)
+    LocalStorage.set("referral", referral);
   }
-
-
 
   return (
     <CenterLayout>
