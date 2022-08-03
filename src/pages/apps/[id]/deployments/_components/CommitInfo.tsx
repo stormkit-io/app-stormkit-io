@@ -21,7 +21,7 @@ const CommitMessage: React.FC<CommitMessageProps> = ({
 }): React.ReactElement => {
   const isPublished = deployment.published?.length > 0;
 
-  if(typeof commit.msg === "string") {
+  if (typeof commit.msg === "string") {
     commit.msg = emojify(commit.msg);
   }
 

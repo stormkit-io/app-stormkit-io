@@ -50,7 +50,7 @@ describe(fileName, () => {
       await waitFor(() => {
         expect(wrapper.getByLabelText(/Header name/)).toBeTruthy();
         expect(wrapper.getByLabelText(/Header value/)).toBeTruthy();
-      })
+      });
     });
 
     test("displays request payload when request method is POST", () => {
@@ -124,15 +124,11 @@ describe(fileName, () => {
 
       expect(wrapper.getAllByLabelText(/Header value/)[0].value).toBe(
         "application/json"
-      )
-
-      expect(wrapper.getAllByLabelText(/Header name/)[1].value).toBe(
-        "Auth"
       );
 
-      expect(wrapper.getAllByLabelText(/Header value/)[1].value).toBe(
-        "Token"
-      )
+      expect(wrapper.getAllByLabelText(/Header name/)[1].value).toBe("Auth");
+
+      expect(wrapper.getAllByLabelText(/Header value/)[1].value).toBe("Token");
 
       expect(getByText(document.body, "Post")).toBeTruthy();
       expect(wrapper.getByLabelText(/Request payload/).value).toBe("");

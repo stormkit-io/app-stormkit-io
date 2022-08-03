@@ -10,8 +10,8 @@ const Header: FC = (): ReactElement => (
       <Logo iconSize={8} />
     </Link>
     <div className="flex flex-auto items-center justify-end">
-     <News />
-     <UserMenu />
+      <News />
+      <UserMenu />
     </div>
   </header>
 );

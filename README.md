@@ -12,7 +12,7 @@ This repository contains code related to the application frontend. You're more t
 
 ## What is Stormkit?
 
-Stormkit helps developers build, deploy and manage their jamstack applications. It also supports serverless applications. 
+Stormkit helps developers build, deploy and manage their jamstack applications. It also supports serverless applications.
 
 ## Latest development
 
