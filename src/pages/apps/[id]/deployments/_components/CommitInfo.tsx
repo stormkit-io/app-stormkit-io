@@ -52,7 +52,12 @@ const CommitInfo: React.FC<Props> = ({
 
   const linkByProvider= () => {
     let link = ""
-    const shortSha = deployment.commit.sha!== undefined ? deployment.commit.sha.slice(0,8) : ""
+
+    if (deployment.commit === null || deployment.commit === undefined) {
+      return null;
+    }
+
+    const shortSha = deployment?.commit.sha!== undefined ? deployment.commit.sha.slice(0,8) : ""
     if (app.provider == "github") {
       link = `${app.repo.replace("github", "https://github.com")}/commit/${deployment.commit.sha}`
     } else if (app.provider == "gitlab") {
