@@ -59,7 +59,7 @@ const Deployment: React.FC<Props & ContextProps> = ({
           <ExitStatus code={deployment.exit} className="text-lg" iconOnly />
         </div>
         <div className="flex flex-col flex-auto leading-loose text-sm">
-          <CommitInfo deployment={deployment} environments={environments} />
+          <CommitInfo app={app} deployment={deployment} environments={environments} />
         </div>
         <div className="flex flex-col">
           <div className="flex flex-auto justify-end">

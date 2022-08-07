@@ -6,6 +6,7 @@ import type { Commit } from "~/utils/helpers/deployments";
 import PublishedInfo from "./PublishedInfo";
 
 interface Props {
+  app: App;
   deployment: Deployment;
   environments: Array<Environment>;
 }
@@ -38,6 +39,7 @@ const CommitMessage: React.FC<CommitMessageProps> = ({
 };
 
 const CommitInfo: React.FC<Props> = ({
+  app,
   deployment,
   environments,
 }): React.ReactElement => {
@@ -47,6 +49,23 @@ const CommitInfo: React.FC<Props> = ({
     environment: `/apps/${deployment.appId}/environments/${env?.id}`,
     deployment: `/apps/${deployment.appId}/deployments/${deployment.id}`,
   };
+
+  const linkByProvider= () => {
+    let link = ""
+    const shortSha = deployment.commit.sha!== undefined ? deployment.commit.sha.slice(0,8) : ""
+    if (app.provider == "github") {
+      link = `${app.repo.replace("github", "https://github.com")}/commit/${deployment.commit.sha}`
+    } else if (app.provider == "gitlab") {
+      link = `${app.repo.replace("gitlab", "https://gitlab.com")}/-/commit/${deployment.commit.sha}`
+      // bitbucket
+    } else {
+      link = `${app.repo.replace("bitbucket", "https://bitbucket.org")}/commits/${deployment.commit.sha}`
+    }
+
+    return(
+       <Link to={link}>{shortSha}</Link>
+    )
+  }
 
   return (
     <>
@@ -63,7 +82,8 @@ const CommitInfo: React.FC<Props> = ({
             {commit.branch},{" "}
           </span>
         )}
-        {commit.author && <span>by {commit.author}</span>}
+        {linkByProvider()}
+        {commit.author && <span> by {commit.author}</span>}
         {commit.branch && (
           <div className="">
             Using{" "}
