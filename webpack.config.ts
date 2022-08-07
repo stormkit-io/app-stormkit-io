@@ -109,7 +109,7 @@ const webpackConfig: Configuration = {
           globOptions: {
             ignore: ["**/index.html"],
           },
-          to: "[name].[ext]",
+          to: "[name][ext]",
         },
       ],
     }),
