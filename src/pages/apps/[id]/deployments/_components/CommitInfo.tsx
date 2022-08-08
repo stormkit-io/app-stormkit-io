@@ -38,6 +38,48 @@ const CommitMessage: React.FC<CommitMessageProps> = ({
   return <span>{commit.msg}</span>;
 };
 
+interface ShaLinkProps {
+  app: App;
+  deployment: Deployment;
+}
+
+const ShaLink: React.FC<ShaLinkProps> = ({ app, deployment }) => {
+  let link = "";
+
+  if (deployment.commit === null || deployment.commit === undefined) {
+    return null;
+  }
+
+  const shortSha =
+    deployment?.commit.sha !== undefined
+      ? deployment.commit.sha.slice(0, 8)
+      : "";
+
+  if (!shortSha) {
+    return null;
+  }
+
+  if (app.provider == "github") {
+    link = `${app.repo.replace("github", "https://github.com")}/commit/${
+      deployment.commit.sha
+    }`;
+  } else if (app.provider == "gitlab") {
+    link = `${app.repo.replace("gitlab", "https://gitlab.com")}/-/commit/${
+      deployment.commit.sha
+    }`;
+  } else {
+    link = `${app.repo.replace("bitbucket", "https://bitbucket.org")}/commits/${
+      deployment.commit.sha
+    }`;
+  }
+
+  return (
+    <Link to={link} secondary>
+      {shortSha}
+    </Link>
+  );
+};
+
 const CommitInfo: React.FC<Props> = ({
   app,
   deployment,
@@ -50,28 +92,6 @@ const CommitInfo: React.FC<Props> = ({
     deployment: `/apps/${deployment.appId}/deployments/${deployment.id}`,
   };
 
-  const linkByProvider= () => {
-    let link = ""
-
-    if (deployment.commit === null || deployment.commit === undefined) {
-      return null;
-    }
-
-    const shortSha = deployment?.commit.sha!== undefined ? deployment.commit.sha.slice(0,8) : ""
-    if (app.provider == "github") {
-      link = `${app.repo.replace("github", "https://github.com")}/commit/${deployment.commit.sha}`
-    } else if (app.provider == "gitlab") {
-      link = `${app.repo.replace("gitlab", "https://gitlab.com")}/-/commit/${deployment.commit.sha}`
-      // bitbucket
-    } else {
-      link = `${app.repo.replace("bitbucket", "https://bitbucket.org")}/commits/${deployment.commit.sha}`
-    }
-
-    return(
-       <Link to={link}>{shortSha}</Link>
-    )
-  }
-
   return (
     <>
       <div className="font-bold max-w-128 truncate">
@@ -80,17 +100,17 @@ const CommitInfo: React.FC<Props> = ({
         </Link>
         <PublishedInfo deployment={deployment} environments={environments} />
       </div>
-      <div className="opacity-75">
+      <div className="text-sm text-gray-500">
         {commit.branch && (
           <span>
             <span className="fas fa-code-branch mr-1" />
             {commit.branch},{" "}
           </span>
         )}
-        {linkByProvider()}
+        <ShaLink app={app} deployment={deployment} />,
         {commit.author && <span> by {commit.author}</span>}
         {commit.branch && (
-          <div className="">
+          <div className="mt-1">
             Using{" "}
             <Link tertiary to={urls.environment}>
               {deployment.config.env}
