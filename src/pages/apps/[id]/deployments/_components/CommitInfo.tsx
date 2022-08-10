@@ -1,14 +1,19 @@
 import React from "react";
 import { emojify } from "node-emoji";
 import Link from "~/components/Link";
+import AppContext from "~/pages/apps/App.context";
+import { connect } from "~/utils/context";
 import { parseCommit } from "~/utils/helpers/deployments";
 import type { Commit } from "~/utils/helpers/deployments";
 import PublishedInfo from "./PublishedInfo";
 
 interface Props {
-  app: App;
   deployment: Deployment;
   environments: Array<Environment>;
+}
+
+interface ContextProps {
+  app: App;
 }
 
 interface CommitMessageProps {
@@ -71,16 +76,16 @@ const ShaLink: React.FC<ShaLinkProps> = ({ app, deployment }) => {
   }
 
   return (
-    <Link to={link} secondary>
+    <Link to={link} tertiary>
       {shortSha}
     </Link>
   );
 };
 
-const CommitInfo: React.FC<Props> = ({
-  app,
+const CommitInfo: React.FC<Props & ContextProps> = ({
   deployment,
   environments,
+  app,
 }): React.ReactElement => {
   const commit = parseCommit(deployment);
   const env = environments.filter(e => e.env === deployment.config.env)[0];
@@ -120,4 +125,6 @@ const CommitInfo: React.FC<Props> = ({
   );
 };
 
-export default CommitInfo;
+export default connect<Props, ContextProps>(CommitInfo, [
+  { Context: AppContext, props: ["app"] },
+]);
