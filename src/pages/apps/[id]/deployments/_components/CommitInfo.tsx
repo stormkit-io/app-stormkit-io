@@ -46,14 +46,11 @@ interface ShaLinkProps {
 const ShaLink: React.FC<ShaLinkProps> = ({ app, deployment }) => {
   let link = "";
 
-  if (deployment.commit === null || deployment.commit === undefined) {
+  if (!deployment.commit || !deployment.commit.sha) {
     return null;
   }
 
-  const shortSha =
-    deployment?.commit.sha !== undefined
-      ? deployment.commit.sha.slice(0, 8)
-      : "";
+  const shortSha = deployment.commit.sha.slice(0, 8);
 
   if (!shortSha) {
     return null;
