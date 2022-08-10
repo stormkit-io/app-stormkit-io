@@ -112,7 +112,7 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
               name="cmd"
               className="bg-gray-90 mt-4"
               label="Build Command"
-              placeholder="Default is `npm run build` or `yarn build`"
+              placeholder="Default is `npm run build`, `pnpm build` or `yarn build`"
               value={cmd}
               onChange={e => setCmd(e.target.value)}
               tooltip="Stormkit will run this command to build for your project. i.e npm run build or simply mkdir build && cp index.html build"
