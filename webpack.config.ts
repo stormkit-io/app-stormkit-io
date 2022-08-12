@@ -47,13 +47,16 @@ const webpackConfig: Configuration = {
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: "esbuild-loader",
-          options: {
-            loader: "jsx",
-            target: "es2015",
+        use: [
+          {
+            loader: "esbuild-loader",
+            options: {
+              loader: "jsx",
+              target: "es2015",
+            },
           },
-        },
+          { loader: "source-map-loader" },
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -70,11 +73,16 @@ const webpackConfig: Configuration = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: "esbuild-loader",
-        options: {
-          loader: "tsx",
-          target: "es2015",
-        },
+        use: [
+          {
+            loader: "esbuild-loader",
+            options: {
+              loader: "tsx",
+              target: "es2015",
+            },
+          },
+          { loader: "source-map-loader" },
+        ],
       },
     ],
   },
