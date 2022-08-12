@@ -15,9 +15,9 @@ export default [
     ),
   },
   {
-    path: "/apps/:id/environments/:envId/remote-config",
+    path: "/apps/:id/environments/:envId/feature-flags",
     component: Async(() =>
-      import("~/pages/apps/[id]/environments/[env-id]/remote-config")
+      import("~/pages/apps/[id]/environments/[env-id]/feature-flags")
     ),
   },
   {

@@ -8,6 +8,7 @@ import Env from "~/pages/apps/[id]/environments/_components/Environment";
 const menuItems = [
   { icon: "far fa-chart-bar", text: "Logs", path: "/logs" },
   { icon: "fas fa-code", text: "Snippets", path: "/snippets" },
+  { icon: "fas fa-flag", text: "Feature Flags", path: "/feature-flags" },
   { icon: "fas fa-globe", text: "Configure domain", path: "/domain" },
 ];
 
