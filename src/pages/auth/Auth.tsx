@@ -57,8 +57,7 @@ const Auth: React.FC<ContextProps> = ({ user }): React.ReactElement => {
               automated SSL
             </li>
             <li>
-              <i className="fas fa-cloud mr-3" /> Serverless functions and
-              more...
+              <i className="fas fa-cloud mr-3" /> Serverless functions
             </li>
           </ul>
         </div>
