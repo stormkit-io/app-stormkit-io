@@ -5,7 +5,7 @@ export default class Gitlab {
   baseurl = "https://gitlab.com/api/v4";
 
   // This value will be üp-dated by Auth.context.
-  accessToken = global.GITLAB_ACCESS_TOKEN;
+  accessToken = "";
 
   /**
    * User returns the currently logged in user.
