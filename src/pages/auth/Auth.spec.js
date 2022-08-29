@@ -59,8 +59,8 @@ describe(fileName, () => {
     test("displays some text", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(/SSL/)).toBeTruthy();
-        expect(wrapper.getByText(/Serverless CI Platform/)).toBeTruthy();
-        expect(wrapper.getByText(/dev-ops/)).toBeTruthy();
+        expect(wrapper.getByText(/automated SSL/)).toBeTruthy();
+        expect(wrapper.getByText(/Serverless functions/)).toBeTruthy();
       });
     });
 
