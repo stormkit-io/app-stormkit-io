@@ -9,7 +9,7 @@ export default class Bitbucket {
   baseurl = "https://api.bitbucket.org/2.0";
 
   // This value will be üp-dated by Auth.context.
-  accessToken = global.BITBUCKET_ACCESS_TOKEN;
+  accessToken = "";
 
   /**
    * User returns the currently logged in user object.
