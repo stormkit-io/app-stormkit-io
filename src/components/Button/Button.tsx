@@ -17,10 +17,11 @@ interface Props extends React.HTMLProps<HTMLButtonElement> {
 const commonClasses = [
   "relative",
   "inline-flex",
-  "p-4",
+  "px-2",
+  "py-3",
   "items-center",
   "justify-center",
-  "rounded-lg",
+  "rounded-sm",
   "button",
 ];
 
@@ -33,7 +34,12 @@ const prepareStyles = (
   if (primary) {
     classes.push(...commonClasses, "bg-pink-50", "text-white");
   } else if (secondary) {
-    classes.push(...commonClasses, "bg-blue-20", "text-secondary");
+    classes.push(
+      ...commonClasses,
+      "bg-blue-60",
+      "text-gray-80",
+      "border-black"
+    );
   } else if (tertiary) {
     classes.push(
       "p-1",

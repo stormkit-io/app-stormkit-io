@@ -49,16 +49,16 @@ const Start: React.FC<ContextProps> = ({
             <h3 className="font-bold text-lg">
               Step 1 of 2. Where can we find your codebase?
             </h3>
-            <div className="flex flex-auto items-center py-24">
+            <div className="flex flex-auto flex-col items-center py-24">
               <btn.GithubButton
                 onClick={() => login("github")}
-                className="mr-4"
+                className="mb-4"
               />
-              <btn.BitbucketButton
-                onClick={() => login("bitbucket")}
-                className="mr-4"
+              <btn.GitlabButton
+                onClick={() => login("gitlab")}
+                className="mb-4"
               />
-              <btn.GitlabButton onClick={() => login("gitlab")} />
+              <btn.BitbucketButton onClick={() => login("bitbucket")} />
             </div>
             <p>
               Having issues setting up your project? Create {}

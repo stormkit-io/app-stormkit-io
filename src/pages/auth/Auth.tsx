@@ -35,37 +35,36 @@ const Auth: React.FC<ContextProps> = ({ user }): React.ReactElement => {
   return (
     <CenterLayout>
       <div className="mb-16 text-center pt-6 sm:pt-0">
-        <Logo />
+        <Logo iconOnly iconSize={20} />
       </div>
-      <div className="flex flex-col-reverse sm:flex-row px-6">
-        <div className="flex flex-col text-white sm:max-w-sm sm:mr-16 pt-12 mb-4 sm:mb-0">
-          <p className="leading-loose text-lg">
+      <div className="flex flex-col-reverse sm:flex-row px-6 text-gray-80">
+        <div className="flex flex-col sm:max-w-sm sm:mr-16 pt-12 mb-4 sm:mb-0">
+          <p className="leading-loose text-base">
             /def/ <span className="text-pink-50">Noun.</span>
             <br />
-            1. Serverless CI Platform.
+            1. Serverless application development platform.
             <br />
             2. A set of tools built to save dev-ops time for your Javascript
             application.
           </p>
-          <ul className="p-4 bg-white-o-05 mt-8 rounded leading-loose">
+          <ul className="mt-8 rounded leading-loose">
             <li>
               <i className="fas fa-undo-alt mr-4" /> Environments with instant
               rollbacks
             </li>
             <li>
-              <i className="fas fa-shield-alt mr-4" /> Custom domains &amp; SSL
+              <i className="fas fa-shield-alt mr-4" /> Custom domains &amp;
+              automated SSL
             </li>
             <li>
-              <i className="fas fa-robot mr-4" /> Support for Server-Side
-              Rendering
+              <i className="fas fa-cloud mr-3" /> Serverless functions and
+              more...
             </li>
           </ul>
         </div>
-        <div className="auth-box bg-white rounded p-6 sm:p-12">
-          <h1 className="text-pink-50 font-bold text-2xl">Authentication</h1>
-          <p className="mt-4 mb-12 text-base">
-            Log in with your favorite provider
-          </p>
+        <div className="auth-box p-6 py-12 bg-blue-50 text-center">
+          <h1 className="font-bold text-xl">Authentication</h1>
+          <p className="mt-2 mb-12 text-base">Log in with your provider</p>
           <OauthLogin />
         </div>
       </div>
