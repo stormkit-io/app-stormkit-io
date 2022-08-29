@@ -31,7 +31,7 @@ module.exports = {
           "border-red-50",
 
           // Regexp
-          /^(w|h)-/,
+          /^(w|h|bg)-/,
         ],
       },
     },
