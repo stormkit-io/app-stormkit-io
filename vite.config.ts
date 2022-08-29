@@ -1,8 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import path from "path";
-import envCompatible from "vite-plugin-env-compatible";
 import { createHtmlPlugin } from "vite-plugin-html";
-import { viteCommonjs } from "@originjs/vite-plugin-commonjs";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import basicSsl from "@vitejs/plugin-basic-ssl";
@@ -49,16 +47,7 @@ export default defineConfig(({ mode }) => {
       extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
     },
     publicDir: "./public",
-    plugins: [
-      basicSsl(),
-      viteCommonjs(),
-      envCompatible(),
-      createHtmlPlugin({}),
-      svgr(),
-      react({
-        include: "**/*.{jsx,tsx}",
-      }),
-    ],
+    plugins: [basicSsl(), createHtmlPlugin({}), svgr(), react()],
     build: {
       outDir: "../dist",
     },
