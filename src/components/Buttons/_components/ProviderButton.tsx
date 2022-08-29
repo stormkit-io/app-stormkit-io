@@ -3,18 +3,20 @@ import cn from "classnames";
 import Button from "~/components/Button";
 
 export interface Props extends React.HTMLProps<HTMLButtonElement> {
-  provider: Provider;
+  itemsCenter?: boolean;
   text: ProviderText;
+  logo: string;
 }
 
-export type OmittedProps = Omit<Props, "provider" | "text">;
+export type OmittedProps = Omit<Props, "logo" | "text">;
 
 const ProviderButton: React.FC<Props> = ({
-  provider,
   text,
   type = "button",
-  children,
+  logo,
+  itemsCenter,
   className,
+  children,
   ...rest
 }): React.ReactElement => {
   return (
@@ -23,22 +25,23 @@ const ProviderButton: React.FC<Props> = ({
       ref={undefined}
       as="button"
       type={type}
+      secondary
       className={cn(
-        [
-          `button-${provider}`,
-          "w-full",
-          "items-center",
-          "border",
-          `hover:border-${provider}`,
-          `hover:text-${provider}`,
-          "rounded-xl",
-        ],
+        ["items-center", "border", "w-full", "mx-auto", "max-w-72"],
         className
       )}
     >
       {children}
-      <span className={`text-xl mr-3 fab fa-${provider}`} />
-      <span>{text}</span>
+      <span className="flex w-full">
+        <span
+          className={cn("flex flex-0 ml-6", {
+            "justify-end min-w-1/3": !itemsCenter,
+          })}
+        >
+          <img src={logo} className="text-xl" />
+        </span>
+        <span className="flex flex-1 justify-start ml-3">{text}</span>
+      </span>
     </Button>
   );
 };

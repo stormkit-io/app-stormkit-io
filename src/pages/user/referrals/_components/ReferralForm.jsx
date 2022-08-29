@@ -14,27 +14,31 @@ export const ReferralForm = ({ onSubmit, loading, error }) => {
   return (
     <Form handleSubmit={onSubmit}>
       <div className="flex justify-around">
-        <GithubButton onClick={() => setChecked("github")}>
+        <GithubButton onClick={() => setChecked("github")} className="mr-4" itemsCenter>
           <Form.Radio
             value="github"
             name="provider"
+            style={{ background: checked !== "github" ? "white" : "" }}
             checked={checked === "github"}
           />
         </GithubButton>
         <BitbucketButton
           onClick={() => setChecked("bitbucket")}
-          className="mx-4"
+          className="mr-4"
+          itemsCenter
         >
           <Form.Radio
             value="bitbucket"
             name="provider"
+            style={{ background: checked !== "bitbucket" ? "white" : "" }}
             checked={checked === "bitbucket"}
           />
         </BitbucketButton>
-        <GitlabButton onClick={() => setChecked("gitlab")}>
+        <GitlabButton onClick={() => setChecked("gitlab")} itemsCenter>
           <Form.Radio
             value="gitlab"
             name="provider"
+            style={{ background: checked !== "gitlab" ? "white" : "" }}
             checked={checked === "gitlab"}
           />
         </GitlabButton>
