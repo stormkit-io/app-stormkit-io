@@ -7,10 +7,6 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta name="theme-color" content="#000000" />
-    <!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
-    -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700"
@@ -21,10 +17,12 @@
       integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
       crossorigin="anonymous"
     />
-    <link rel="manifest" href="/manifest.json" />
+    <link
+      rel="manifest"
+      href="/manifest.json" />
     <link
       rel="shortcut icon"
-      href="<%= htmlWebpackPlugin.options.publicFolder %>favicon.png"
+      href="/favicon.png"
     />
     <title>Stormkit - Console</title>
   </head>
@@ -32,5 +30,6 @@
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <div id="root"></div>
     <div id="modal-root" role="dialog" aria-modal="true"></div>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
