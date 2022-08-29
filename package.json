@@ -64,7 +64,6 @@
     "@babel/preset-env": "7.16.11",
     "@babel/preset-react": "7.16.7",
     "@babel/preset-typescript": "7.16.7",
-    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@react-mock/xhr": "0.2.0",
     "@testing-library/dom": "8.11.3",
     "@testing-library/react": "12.1.2",
@@ -104,7 +103,6 @@
     "ts-node": "^10.9.1",
     "typescript": "^3.9.10",
     "vite": "^3.0.9",
-    "vite-plugin-env-compatible": "^1.1.1",
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-svgr": "^2.2.1"
   }
