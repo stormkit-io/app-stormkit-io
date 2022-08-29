@@ -42,7 +42,7 @@ const AppMenu: React.FC<Props> = ({ app }): React.ReactElement => {
           <Logo iconSize={8} iconOnly />
         </Link>
       </div>
-      <ul className="flex-auto">
+      <ul className="flex-auto text-gray-80">
         {paths({ app }).map(path => (
           <li key={path.text} className="text-sm mb-4 -ml-2">
             <Link
