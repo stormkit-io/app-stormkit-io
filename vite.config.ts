@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => {
       "process.env.API_DOMAIN": JSON.stringify(env.API_DOMAIN),
       "process.env.API_PROXY_DOMAIN": JSON.stringify(env.API_PROXY_DOMAIN),
       "process.env.SENTRY": JSON.stringify(env.SENTRY),
+      "process.env.STORMKIT_ENV": JSON.stringify(env.STORMKIT_ENV),
     },
 
     server: {
