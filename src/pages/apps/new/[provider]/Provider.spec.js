@@ -35,17 +35,11 @@ describe.skip("pages/apps/new/[provider]", () => {
     const provider = "github";
 
     beforeEach(() => {
-      global.GITHUB_ACCESS_TOKEN = "access-token";
-
       nock("https://api.github.com").get("/user").reply(200, {
         username: "stormkit-dev",
         avatar_url: "http://localhost/my-avatar.jpg",
         id: "151851",
       });
-    });
-
-    afterEach(() => {
-      delete global.GITHUB_ACCESS_TOKEN;
     });
 
     describe("when user is authenticated and has no repos", () => {
@@ -157,8 +151,6 @@ describe.skip("pages/apps/new/[provider]", () => {
     const provider = "gitlab";
 
     beforeEach(() => {
-      global.GITLAB_ACCESS_TOKEN = "access-token";
-
       nock("https://gitlab.com/api/v4").get("/user").reply(200, {
         username: "stormkit-dev",
         avatar_url: "http://localhost/my-avatar.jpg",
@@ -166,17 +158,11 @@ describe.skip("pages/apps/new/[provider]", () => {
       });
     });
 
-    afterEach(() => {
-      delete global.GITLAB_ACCESS_TOKEN;
-    });
-
     describe("when user is authenticated and has no repos", () => {
       beforeEach(() => {
         nock("https://gitlab.com/api/v4")
           .get("/projects?membership=true&order_by=id&per_page=20")
           .reply(200, []);
-
-        global.GITLAB_ACCESS_TOKEN = "access-token";
 
         wrapper = withUserContext({
           path: `/apps/new/${provider}`,
@@ -264,8 +250,6 @@ describe.skip("pages/apps/new/[provider]", () => {
     const provider = "bitbucket";
 
     beforeEach(() => {
-      global.BITBUCKET_ACCESS_TOKEN = "access-token";
-
       nock("https://api.bitbucket.org/2.0")
         .get("/user")
         .reply(200, {
@@ -276,10 +260,6 @@ describe.skip("pages/apps/new/[provider]", () => {
             },
           },
         });
-    });
-
-    afterEach(() => {
-      delete global.BITBUCKET_ACCESS_TOKEN;
     });
 
     describe("when user is authenticated and has no repos", () => {
