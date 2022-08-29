@@ -62,7 +62,7 @@ const AppMenu: React.FC<Props> = ({ app }): React.ReactElement => {
           </li>
         ))}
       </ul>
-      <div className="-ml-2">
+      <div className="-ml-2 text-gray-80">
         <Link
           to={"/"}
           className="text-sm inline-flex items-center hover:bg-blue-20 rounded-lg py-2 px-4 hover:text-white"
