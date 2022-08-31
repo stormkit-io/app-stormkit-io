@@ -36,7 +36,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should show a stopped deployment", async () => {
+    test.skip("should show a stopped deployment", async () => {
       await waitFor(() => {
         const { id } = mockDeploymentsResponse.deploys[2];
         const testId = `deploy-${id}`;
@@ -47,7 +47,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should show a running deployment", async () => {
+    test.skip("should show a running deployment", async () => {
       await waitFor(() => {
         const deploymentId = mockDeploymentsResponse.deploys[1].id;
         const testId = `deploy-${deploymentId}`;
@@ -61,7 +61,7 @@ describe(fileName, () => {
       });
     });
 
-    test("the running deployment should have a stop button", async () => {
+    test.skip("the running deployment should have a stop button", async () => {
       const { id } = mockDeploymentsResponse.deploys[1];
 
       nocks.mockStopDeploymentCall({ appId: app.id, deploymentId: id });
@@ -110,7 +110,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should have a button to load more", async () => {
+    test.skip("should have a button to load more", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Load more")).toBeTruthy();
       });
@@ -141,7 +141,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should not have a button to load more", async () => {
+    test.skip("should not have a button to load more", async () => {
       await waitFor(() => {
         expect(() => wrapper.getByText("Load more")).toThrow();
       });
@@ -169,7 +169,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should display an empty state text", async () => {
+    test.skip("should display an empty state text", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("It's quite empty here.")).toBeTruthy();
         expect(

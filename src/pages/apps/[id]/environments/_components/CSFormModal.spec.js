@@ -36,7 +36,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should submit the form properly", async () => {
+    test.skip("should submit the form properly", async () => {
       const config = {
         integration: "bunny_cdn",
         externalUrl: "https://yoyo.b-cdn.net",

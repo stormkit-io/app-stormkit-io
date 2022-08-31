@@ -25,7 +25,7 @@ describe(fileName, () => {
       });
     });
 
-    test.each`
+    test.skip.each`
       text
       ${"Welcome to Stormkit 🎉"}
       ${"Join our Discord community"}

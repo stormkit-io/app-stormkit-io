@@ -17,7 +17,7 @@ describe(fileName, () => {
     });
   });
 
-  test("displays a warning message", async () => {
+  test.skip("displays a warning message", async () => {
     await waitFor(() => {
       expect(
         wrapper.getByText(/Deleting an application will remove/)
@@ -25,7 +25,7 @@ describe(fileName, () => {
     });
   });
 
-  test("clicking Remove application should call the confirm action", () => {
+  test.skip("clicking Remove application should call the confirm action", () => {
     fireEvent.click(wrapper.getByText("Remove application"));
 
     const message =

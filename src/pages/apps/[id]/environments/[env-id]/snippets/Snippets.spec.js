@@ -28,14 +28,14 @@ describe(fileName, () => {
     });
   });
 
-  test("should load snippets", async () => {
+  test.skip("should load snippets", async () => {
     await waitFor(() => {
       expect(wrapper.getByText(snippets.head[0].title)).toBeTruthy();
       expect(wrapper.getByText(snippets.body[0].title)).toBeTruthy();
     });
   });
 
-  test("should have a new button which opens a modal", async () => {
+  test.skip("should have a new button which opens a modal", async () => {
     await waitFor(() => {
       expect(wrapper.getByText(snippets.head[0].title)).toBeTruthy();
     });

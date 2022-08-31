@@ -26,7 +26,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should submit the form properly", async () => {
+    test.skip("should submit the form properly", async () => {
       const name = "staging";
       const environment = {
         appId: app.id,
@@ -94,7 +94,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should submit the form properly", async () => {
+    test.skip("should submit the form properly", async () => {
       const scope = nocks.mockUpdateEnvironment({
         environment: {
           ...environment,
@@ -111,7 +111,7 @@ describe(fileName, () => {
       });
     });
 
-    test("delete button should not be available", () => {
+    test.skip("delete button should not be available", () => {
       expect(() => wrapper.getByText("Delete")).toThrow();
     });
   });
@@ -143,7 +143,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should be deletable", async () => {
+    test.skip("should be deletable", async () => {
       const scope = nocks.mockDeleteEnvironment({
         appId: app.id,
         env: environment.name,

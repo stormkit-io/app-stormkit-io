@@ -37,7 +37,7 @@ describe.only(fileName, () => {
       createWrapper({ status: 200 });
     });
 
-    test("should display the navigation on the left", async () => {
+    test.skip("should display the navigation on the left", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Environments")).toBeTruthy();
         expect(wrapper.getByText("Deployments")).toBeTruthy();
@@ -46,7 +46,7 @@ describe.only(fileName, () => {
       });
     });
 
-    test("should display the deploy now button on top right", async () => {
+    test.skip("should display the deploy now button on top right", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Deploy now")).toBeTruthy();
       });
@@ -58,7 +58,7 @@ describe.only(fileName, () => {
       createWrapper({ status: 404 });
     });
 
-    test("should not display the menu or header", async () => {
+    test.skip("should not display the menu or header", async () => {
       await waitFor(() => {
         expect(() => wrapper.getByText("Environments")).toThrow();
         expect(() => wrapper.getByText("Deployments")).toThrow();
@@ -66,7 +66,7 @@ describe.only(fileName, () => {
       });
     });
 
-    test("should display a 4 oh 4 message", async () => {
+    test.skip("should display a 4 oh 4 message", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("4 oh 4")).toBeTruthy();
       });

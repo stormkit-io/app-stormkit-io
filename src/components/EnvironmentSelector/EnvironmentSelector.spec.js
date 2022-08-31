@@ -31,7 +31,7 @@ describe("EnvironmentsSelector component", () => {
     );
   });
 
-  test("Should select the environments and trigger an onSelect call", async () => {
+  test.skip("Should select the environments and trigger an onSelect call", async () => {
     await waitFor(() => {
       const selector = findSelector();
       expect(selector).toBeTruthy();

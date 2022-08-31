@@ -64,11 +64,6 @@ export const withMockContext = (...args) => {
   // This is a tiny little hack to update mock props object for each test.
   global.__MOCK_PROPS__ = mockProps;
 
-  jest.mock("~/utils/context", () => ({
-    connect: Component => props =>
-      <Component {...props} {...global.__MOCK_PROPS__} />,
-  }));
-
   mockProps.confirmModal = jest.fn().mockImplementation((_, { onConfirm }) => {
     onConfirm({
       setLoading: jest.fn(),

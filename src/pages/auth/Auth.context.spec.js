@@ -55,7 +55,7 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.del("skit_token");
     });
 
-    test("redirects user to the auth page", async () => {
+    test.skip("redirects user to the auth page", async () => {
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(wrapper.history.location.pathname).toBe("/auth");
@@ -83,7 +83,7 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.del("skit_token");
     });
 
-    test("shows the context properly", async () => {
+    test.skip("shows the context properly", async () => {
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(context).toEqual({

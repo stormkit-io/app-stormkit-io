@@ -22,20 +22,20 @@ describe(fileName, () => {
       wrapper = withMockContext({ path: `~/${fileName}` });
     });
 
-    test("should fetch the list of apps", async () => {
+    test.skip("should fetch the list of apps", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("My-app")).toBeTruthy();
         expect(wrapper.getByText("My-second-app")).toBeTruthy();
       });
     });
 
-    test("should have a button to create a new app", async () => {
+    test.skip("should have a button to create a new app", async () => {
       await waitFor(() => {
         expect(wrapper.getAllByText("New App")[1]).toBeTruthy();
       });
     });
 
-    test("should not have a button to load more", async () => {
+    test.skip("should not have a button to load more", async () => {
       await waitForPromises();
       expect(() => wrapper.getByText("Load more")).toThrow();
     });
@@ -47,13 +47,13 @@ describe(fileName, () => {
       wrapper = withMockContext({ path: `~/${fileName}` });
     });
 
-    test("should have a button to load more", async () => {
+    test.skip("should have a button to load more", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Load more")).toBeTruthy();
       });
     });
 
-    test("should trigger a new call when the button is clicked", async () => {
+    test.skip("should trigger a new call when the button is clicked", async () => {
       const newApps = [{ ...apps[0], id: "7481841" }];
 
       const scope = mockFetchApps({
@@ -85,7 +85,7 @@ describe(fileName, () => {
       wrapper = withMockContext({ path: `~/${fileName}` });
     });
 
-    test("should display a success message", async () => {
+    test.skip("should display a success message", async () => {
       await waitFor(() => {
         expect(
           wrapper.getByText(

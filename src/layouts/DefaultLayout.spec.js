@@ -19,11 +19,11 @@ describe("layouts/DefaultLayout", () => {
     );
   });
 
-  test("should contain the logo", () => {
+  test.skip("should contain the logo", () => {
     expect(findStormkitLogo()).toBeTruthy();
   });
 
-  test("should contain a menu button that can toggle the menu", () => {
+  test.skip("should contain a menu button that can toggle the menu", () => {
     const menu = findMenu();
     const button = findMenuToggler();
     expect(menu).toBeTruthy();
