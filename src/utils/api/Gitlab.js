@@ -1,7 +1,7 @@
 import { prepareHeaders, errTokenExpired } from "./helpers";
 import qs from "query-string";
 
-export default class Gitlab {
+class Gitlab {
   baseurl = "https://gitlab.com/api/v4";
 
   // This value will be üp-dated by Auth.context.
@@ -35,8 +35,8 @@ export default class Gitlab {
   /**
    * Installations retrieves a list of installations.
    *
-   * @param {Number} page The page number to fetch.
-   * @param {Number} size The number of items to fetch.
+   * @param {object.Number} page The page number to fetch.
+   * @param {object.Number} size The number of items to fetch.
    */
   repositories({ page, size = 20 } = {}) {
     return new Promise((resolve, reject) => {
@@ -67,3 +67,5 @@ export default class Gitlab {
     });
   }
 }
+
+export default new Gitlab();

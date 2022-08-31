@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Location } from "history";
-import Api from "~/utils/api/Api";
-import { ConfirmModalProps } from "~/components/ConfirmModal";
+import api from "~/utils/api/Api";
 import { normalize, isUndef } from "./helpers";
 
 type SetSnippets = (val: Snippets) => void;
 
 interface PutSnippetsProps {
   snippets: Snippets;
-  api: Api;
   app: App;
   environment: Environment;
   setLoading: SetLoading;
@@ -20,7 +18,6 @@ interface PutSnippetsProps {
 
 const putSnippets = ({
   snippets,
-  api,
   app,
   environment,
   setLoading,
@@ -51,7 +48,6 @@ const putSnippets = ({
 };
 
 interface FetchSnippetsProps {
-  api: Api;
   app: App;
   env: Environment;
 }
@@ -72,7 +68,6 @@ interface FetchSnippetsAPIResponse {
 }
 
 export const useFetchSnippets = ({
-  api,
   app,
   env,
 }: FetchSnippetsProps): FetchSnippetsReturnValue => {
@@ -111,13 +106,12 @@ export const useFetchSnippets = ({
     return () => {
       unmounted = true;
     };
-  }, [app.id, env.env, api, refresh]);
+  }, [app.id, env.env, refresh]);
 
   return { loading, error, snippets, setSnippets };
 };
 
 interface UpsertSnippetsProps {
-  api: Api;
   app: App;
   environment: Environment;
   setError: SetError;
@@ -133,7 +127,6 @@ interface UpsertSnippetsProps {
 
 export const upsertSnippets =
   ({
-    api,
     app,
     environment,
     setError,
@@ -183,7 +176,7 @@ export const upsertSnippets =
 
     return putSnippets({
       snippets: clone,
-      api,
+
       app,
       environment,
       setLoading,
@@ -193,10 +186,12 @@ export const upsertSnippets =
     });
   };
 
-interface DeleteSnippetProps extends ConfirmModalProps {
+interface DeleteSnippetProps {
   snippets: Snippets;
   setSnippets: SetSnippets;
-  api: Api;
+  setLoading: SetLoading;
+  setError: SetError;
+  closeModal: () => void;
   app: App;
   environment: Environment;
   injectLocation: "head" | "body";
@@ -204,35 +199,28 @@ interface DeleteSnippetProps extends ConfirmModalProps {
 }
 
 export const deleteSnippet = ({
-  confirmModal,
   index,
   snippets,
   setSnippets,
-  api,
+  setLoading,
+  setError,
+  closeModal,
   app,
   environment,
   injectLocation,
 }: DeleteSnippetProps): void => {
-  confirmModal(
-    `This will delete the snippet and it won't be injected anymore.`,
-    {
-      onConfirm: ({ closeModal, setError, setLoading }) => {
-        const clone = JSON.parse(JSON.stringify(snippets));
-        clone[injectLocation].splice(index, 1);
+  const clone = JSON.parse(JSON.stringify(snippets));
+  clone[injectLocation].splice(index, 1);
 
-        putSnippets({
-          api,
-          app,
-          environment,
-          snippets: clone,
-          setLoading,
-          setSnippets,
-          setError,
-          onSuccess: closeModal,
-        });
-      },
-    }
-  );
+  putSnippets({
+    app,
+    environment,
+    snippets: clone,
+    setLoading,
+    setSnippets,
+    setError,
+    onSuccess: closeModal,
+  });
 };
 
 type ExtendedUpsertSnippetProps = Omit<
@@ -240,49 +228,28 @@ type ExtendedUpsertSnippetProps = Omit<
   "setError" | "setLoading" | "injectLocation" | "isPrepend" | "closeModal"
 >;
 
-interface EnableOrDisableProps
-  extends ConfirmModalProps,
-    ExtendedUpsertSnippetProps {
-  id: string;
+interface EnableOrDisableProps extends ExtendedUpsertSnippetProps {
   snippet: Snippet;
+  setError: SetError;
+  setLoading: SetLoading;
 }
 
 export const enableOrDisable = ({
-  confirmModal,
   isEnabled,
-  id: formSwitchSelector,
   index,
   snippet,
   setSnippets,
+  setError,
+  setLoading,
   ...rest
-}: EnableOrDisableProps): void => {
-  const enableOrDisable = isEnabled ? "enable" : "disable";
-
-  confirmModal(
-    `This will ${enableOrDisable} the snippet and the changes will be effective immediately.`,
-    {
-      onConfirm: ({ closeModal, setError, setLoading }) => {
-        upsertSnippets({
-          ...rest,
-          index,
-          isEnabled,
-          setError,
-          setLoading,
-          injectLocation: snippet._injectLocation || "body",
-          setSnippets,
-        })(snippet).then(closeModal);
-      },
-      onCancel: close => {
-        const el = document.querySelector<HTMLButtonElement>(
-          `#${formSwitchSelector}`
-        );
-
-        if (el) {
-          el.click();
-        }
-
-        close();
-      },
-    }
-  );
+}: EnableOrDisableProps): Promise<void> => {
+  return upsertSnippets({
+    ...rest,
+    index,
+    isEnabled,
+    setError,
+    setLoading,
+    injectLocation: snippet._injectLocation || "body",
+    setSnippets,
+  })(snippet);
 };

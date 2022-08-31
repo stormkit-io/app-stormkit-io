@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Location, History } from "history";
 import { useLocation } from "react-router-dom";
-import Api from "~/utils/api/Api";
-import { ModalContextProps } from "~/components/Modal";
+import api from "~/utils/api/Api";
 import { prepareBuildObject } from "./helpers";
 
 interface FetchEnvironmentsProps {
-  api: Api;
   app?: App;
 }
 
@@ -27,7 +25,6 @@ interface LocationState extends Location {
 }
 
 export const useFetchEnvironments = ({
-  api,
   app,
 }: FetchEnvironmentsProps): FetchEnvironmentsReturnValue => {
   const location = useLocation<LocationState>();
@@ -75,7 +72,7 @@ export const useFetchEnvironments = ({
     return () => {
       unmounted = true;
     };
-  }, [api, app?.id, app?.displayName, refresh]);
+  }, [app?.id, app?.displayName, refresh]);
 
   return { environments, error, loading, hasNextPage };
 };
@@ -97,7 +94,6 @@ export const STATUS: Record<string, STATUSES> = {
 };
 
 interface FetchStatusProps {
-  api: Api;
   app: App;
   domain: string;
   lastDeploy?: { id: string };
@@ -113,7 +109,6 @@ interface FetchStatusAPIResponse {
 }
 
 export const useFetchStatus = ({
-  api,
   app,
   domain,
   lastDeploy,
@@ -166,7 +161,6 @@ interface Meta {
 }
 
 interface FetchRepoTypeProps {
-  api: Api;
   app: App;
   env?: Environment;
 }
@@ -180,7 +174,7 @@ type FetchRepoTypeAPIResponse = Meta;
 
 export const useFetchRepoType = ({
   app,
-  api,
+
   env,
 }: FetchRepoTypeProps): FetchRepoTypeReturnValue => {
   const [meta, setMeta] = useState<Meta>({ type: "-" });
@@ -223,23 +217,21 @@ export const useFetchRepoType = ({
     return () => {
       unmounted = true;
     };
-  }, [api, app.id, name]);
+  }, [app.id, name]);
 
   return { meta, loading };
 };
 
 interface DeleteEnvironmentProps {
-  api: Api;
   app: App;
   environment: Environment;
   history: History;
-  closeModal: CloseModal;
+  closeModal: () => void;
   setLoading: SetLoading;
   setError: SetError;
 }
 
 export const deleteEnvironment = ({
-  api,
   app,
   environment,
   history,
@@ -262,14 +254,13 @@ export const deleteEnvironment = ({
     })
     .then(() => {
       setLoading(false);
-      closeModal(() => {
-        history.push({
-          pathname: `/apps/${app.id}/environments`,
-          state: {
-            envs: Date.now(),
-            message: "Environment has been removed successfully.",
-          },
-        });
+      closeModal();
+      history.push({
+        pathname: `/apps/${app.id}/environments`,
+        state: {
+          envs: Date.now(),
+          message: "Environment has been removed successfully.",
+        },
       });
     })
     .catch(() => {
@@ -280,20 +271,18 @@ export const deleteEnvironment = ({
     });
 };
 
-interface InsertEnvironmentProps
-  extends Pick<ModalContextProps, "toggleModal"> {
-  api: Api;
+interface InsertEnvironmentProps {
   app: App;
   history: History;
   isAutoPublish: boolean;
   isAutoDeploy: boolean;
   setError: SetError;
   setLoading: SetLoading;
+  toggleModal: (val: boolean) => void;
 }
 
 export const insertEnvironment =
   ({
-    api,
     app,
     history,
     isAutoPublish,
@@ -371,8 +360,7 @@ export const insertEnvironment =
       });
   };
 
-interface EditEnvironmentProps extends Pick<ModalContextProps, "toggleModal"> {
-  api: Api;
+interface EditEnvironmentProps {
   app: App;
   history: History;
   isAutoPublish: boolean;
@@ -380,11 +368,11 @@ interface EditEnvironmentProps extends Pick<ModalContextProps, "toggleModal"> {
   environmentId: string;
   setError: SetErrorWithJSX;
   setLoading: SetLoading;
+  toggleModal: (val: boolean) => void;
 }
 
 export const editEnvironment =
   ({
-    api,
     app,
     history,
     isAutoPublish,
@@ -459,20 +447,19 @@ export const editEnvironment =
       });
   };
 
-interface UpdateIntegrationProps
-  extends Pick<ModalContextProps, "toggleModal"> {
-  api: Api;
+interface UpdateIntegrationProps {
   app: App;
   environmentId: string;
   history: History;
   setLoading: SetLoading;
   setError: SetError;
+  toggleModal: (val: boolean) => void;
 }
 
 export const updateIntegration =
   ({
     app,
-    api,
+
     environmentId,
     history,
     toggleModal,

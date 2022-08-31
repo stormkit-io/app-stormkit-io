@@ -1,8 +1,7 @@
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 import { History } from "history";
 
 type RemoveCardProps = {
-  api: Api;
   history: History;
   cardId: string;
   setError: (value: string | null) => void;
@@ -11,7 +10,6 @@ type RemoveCardProps = {
 };
 
 export const handleRemovePaymentMethod = async ({
-  api,
   history,
   cardId,
   setError,
@@ -28,12 +26,13 @@ export const handleRemovePaymentMethod = async ({
   } catch (e) {
     setLoading(false);
 
-    if (e.status === 401) {
+    if (e instanceof Response && e.status === 401) {
       return setError(
         "Please downgrade your subscription to free plan in order to remove a card."
       );
     } else {
-      console.log(e.message || e);
+      console.log(e instanceof Error ? e.message : e);
+
       return setError(
         "Something went wrong while removing card. Please try again later."
       );

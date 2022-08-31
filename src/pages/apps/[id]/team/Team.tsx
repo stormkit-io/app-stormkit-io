@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import cn from "classnames";
 import Table from "@material-ui/core/Table";
@@ -6,34 +6,24 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableContainer from "@material-ui/core/TableContainer";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
-import AppContext, { AppContextProps } from "~/pages/apps/App.context";
-import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
+import { AppContext } from "~/pages/apps/App.context";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
-import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
+import ConfirmModal from "~/components/ConfirmModal";
 import { PlusButton } from "~/components/Buttons";
-import { connect } from "~/utils/context";
 import { useFetchMembers, handleDelete } from "./actions";
 import NewMemberModal from "./_components/NewMemberModal";
 
-interface ContextProps
-  extends Pick<RootContextProps, "api">,
-    Pick<AppContextProps, "app">,
-    Pick<AuthContextProps, "user">,
-    Pick<ConfirmModalProps, "confirmModal"> {}
-
-const Team: React.FC<ContextProps> = ({
-  api,
-  app,
-  user,
-  confirmModal,
-}): React.ReactElement => {
+const Team: React.FC = (): React.ReactElement => {
   const history = useHistory();
+  const [deleteMember, setDeleteMember] = useState<User>();
+  const { app } = useContext(AppContext);
+  const { user } = useContext(AuthContext);
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
-  const { members, loading, error } = useFetchMembers({ api, app });
-  const isCurrentUserTheOwner = app.userId === user.id;
+  const { members, loading, error } = useFetchMembers({ app });
+  const isCurrentUserTheOwner = app.userId === user!.id;
 
   return (
     <div>
@@ -42,7 +32,6 @@ const Team: React.FC<ContextProps> = ({
         <div className="flex-shrink-0">
           {isNewModalOpen && (
             <NewMemberModal
-              api={api}
               app={app}
               onClose={() => setIsNewModalOpen(false)}
             />
@@ -113,13 +102,9 @@ const Team: React.FC<ContextProps> = ({
                           aria-label={`Delete ${
                             member.fullName || member.displayName
                           }`}
-                          onClick={handleDelete({
-                            userId: member.id,
-                            app,
-                            api,
-                            history,
-                            confirmModal,
-                          })}
+                          onClick={() => {
+                            setDeleteMember(member);
+                          }}
                         >
                           Delete
                         </DotDotDot.Item>
@@ -132,13 +117,29 @@ const Team: React.FC<ContextProps> = ({
           </TableContainer>
         ))
       )}
+      {deleteMember && (
+        <ConfirmModal
+          onCancel={() => {
+            setDeleteMember(undefined);
+          }}
+          onConfirm={({ setError, setLoading }) => {
+            handleDelete({
+              setError,
+              setLoading,
+              userId: deleteMember.id,
+              app,
+              history,
+            }).then(() => {
+              setDeleteMember(undefined);
+            });
+          }}
+        >
+          Your are about to remove a member from this app. You will need to
+          re-invite if the user needs access again.
+        </ConfirmModal>
+      )}
     </div>
   );
 };
 
-export default connect<unknown, ContextProps>(Team, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
-  { Context: AuthContext, props: ["user"] },
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-]);
+export default Team;

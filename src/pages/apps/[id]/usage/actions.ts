@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 
 interface Stats {
   remainingDeploymentsThisMonth: number;
@@ -7,7 +7,6 @@ interface Stats {
 }
 
 interface FetchStatsProps {
-  api: Api;
   app: App;
 }
 
@@ -18,7 +17,6 @@ interface FetchStatsReturnValue {
 }
 
 export const useFetchStats = ({
-  api,
   app,
 }: FetchStatsProps): FetchStatsReturnValue => {
   const [loading, setLoading] = useState(true);

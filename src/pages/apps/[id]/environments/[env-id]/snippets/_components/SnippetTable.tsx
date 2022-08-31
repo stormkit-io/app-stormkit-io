@@ -1,18 +1,16 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableContainer from "@material-ui/core/TableContainer";
-import { connect } from "~/utils/context";
 import Form from "~/components/Form";
 import DotDotDot from "~/components/DotDotDot";
-import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
-import { RootContextProps } from "~/pages/Root.context";
+import ConfirmModal from "~/components/ConfirmModal";
 import { enableOrDisable, deleteSnippet } from "../actions";
 
-interface Props extends Pick<RootContextProps, "api"> {
+interface Props {
   snippets: Snippets;
   app: App;
   environment: Environment;
@@ -20,15 +18,16 @@ interface Props extends Pick<RootContextProps, "api"> {
   setSelectedSnippet: (val: Snippet) => void;
 }
 
-const SnippetTable: React.FC<Props & ConfirmModalProps> = ({
+const SnippetTable: React.FC<Props> = ({
   snippets,
-  confirmModal,
-  api,
   app,
   environment,
   setSnippets,
   setSelectedSnippet,
 }): React.ReactElement => {
+  const [deleteRow, setDeleteRow] = useState<Snippet>();
+  const [toggleRow, setToggleRow] = useState<Snippet & { enabled: boolean }>();
+
   const rows = useMemo<Array<Snippet>>(
     () => [...snippets.head, ...snippets.body],
     [snippets]
@@ -71,22 +70,11 @@ const SnippetTable: React.FC<Props & ConfirmModalProps> = ({
                 </TableCell>
                 <TableCell align="right">
                   <Form.Switch
-                    id={`snippet-enable-${i}`}
+                    id={`snippet-enable-${row._i}`}
                     checked={row.enabled}
-                    onChange={e =>
-                      enableOrDisable({
-                        api,
-                        app,
-                        environment,
-                        snippets,
-                        id: `snippet-enable-${i}`,
-                        index: row._i,
-                        isEnabled: e.target.checked,
-                        confirmModal,
-                        snippet: row,
-                        setSnippets,
-                      })
-                    }
+                    onChange={e => {
+                      setToggleRow({ ...row, enabled: e.target.checked });
+                    }}
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -104,18 +92,9 @@ const SnippetTable: React.FC<Props & ConfirmModalProps> = ({
                     <DotDotDot.Item
                       aria-label="Delete snippet"
                       icon="fas fa-times text-red-50 mr-2"
-                      onClick={() =>
-                        deleteSnippet({
-                          confirmModal,
-                          index: row._i,
-                          snippets,
-                          setSnippets,
-                          api,
-                          app,
-                          environment,
-                          injectLocation: row._injectLocation,
-                        })
-                      }
+                      onClick={() => {
+                        setDeleteRow(row);
+                      }}
                     >
                       Delete
                     </DotDotDot.Item>
@@ -126,10 +105,65 @@ const SnippetTable: React.FC<Props & ConfirmModalProps> = ({
           </TableBody>
         </Table>
       </TableContainer>
+      {deleteRow && (
+        <ConfirmModal
+          onCancel={() => {
+            setDeleteRow(undefined);
+          }}
+          onConfirm={({ setError, setLoading }) => {
+            deleteSnippet({
+              index: deleteRow._i,
+              snippets,
+              setSnippets,
+              setError,
+              setLoading,
+              closeModal: () => {
+                setDeleteRow(undefined);
+              },
+              app,
+              environment,
+              injectLocation: deleteRow._injectLocation,
+            });
+          }}
+        >
+          This will delete the snippet and it won't be injected anymore.
+        </ConfirmModal>
+      )}
+      {toggleRow && (
+        <ConfirmModal
+          onCancel={() => {
+            const el = document.querySelector<HTMLButtonElement>(
+              `#snippet-enable-${toggleRow._i}`
+            );
+
+            if (el) {
+              el.click();
+            }
+
+            setToggleRow(undefined);
+          }}
+          onConfirm={({ setLoading, setError }) => {
+            enableOrDisable({
+              app,
+              environment,
+              snippets,
+              index: toggleRow._i,
+              isEnabled: toggleRow.enabled,
+              snippet: toggleRow,
+              setSnippets,
+              setError,
+              setLoading,
+            }).then(() => {
+              setToggleRow(undefined);
+            });
+          }}
+        >
+          This will {enableOrDisable} the snippet and the changes will be
+          effective immediately.
+        </ConfirmModal>
+      )}
     </div>
   );
 };
 
-export default connect<Props, ConfirmModalProps>(SnippetTable, [
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-]);
+export default SnippetTable;

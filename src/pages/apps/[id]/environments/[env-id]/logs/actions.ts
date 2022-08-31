@@ -1,7 +1,22 @@
 import { useState, useEffect } from "react";
+import api from "~/utils/api/Api";
 import qs from "query-string";
 
-export const useFetchLogs = ({ api, environment, app }) => {
+interface FetchLogsProps {
+  environment: Environment;
+  app: App;
+}
+
+interface FetchLogsResponse {
+  error: string | null;
+  loading: boolean;
+  logs: any[];
+}
+
+export const useFetchLogs = ({
+  environment,
+  app,
+}: FetchLogsProps): FetchLogsResponse => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [logs, setLogs] = useState([]);
@@ -12,8 +27,11 @@ export const useFetchLogs = ({ api, environment, app }) => {
     setLoading(true);
     setError(null);
 
+    // TODO: define an interface for logs
     api
-      .fetch(`/app/${app.id}/logs?${qs.stringify({ env: environment.env })}`)
+      .fetch<any>(
+        `/app/${app.id}/logs?${qs.stringify({ env: environment.env })}`
+      )
       .then(({ logs }) => {
         if (unmounted !== true) {
           setLogs(logs);

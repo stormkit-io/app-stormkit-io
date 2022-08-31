@@ -1,70 +1,26 @@
-import React, { useMemo, createContext } from "react";
+import React, { createContext } from "react";
 import { Redirect, useLocation } from "react-router-dom";
 import Spinner from "~/components/Spinner";
-import Api from "~/utils/api/Api";
-import Gitlab from "~/utils/api/Gitlab";
-import Github from "~/utils/api/Github";
-import Bitbucket from "~/utils/api/Bitbucket";
 import {
   loginOauth,
-  logout,
   useFetchUser,
   LoginOauthReturnValue,
+  logout,
 } from "./actions";
 
-const Context = createContext({});
-
 export interface AuthContextProps {
-  error: string | null;
-  user: User;
-  accounts: Array<ConnectedAccount>;
-  loginOauth: (p: Provider) => Promise<LoginOauthReturnValue>;
-  logout: () => void;
+  user?: User;
+  authError?: string | null;
+  accounts?: Array<ConnectedAccount>;
+  logout?: () => void;
+  loginOauth?: (p: Provider) => Promise<LoginOauthReturnValue>;
 }
 
-interface Props {
-  api: Api;
-  gitlab: Gitlab;
-  github: Github;
-  bitbucket: Bitbucket;
-  children: React.ReactNode;
-}
+export const AuthContext = createContext<AuthContextProps>({});
 
-interface RedirectProps {
-  pathname: string;
-  search: string;
-}
-
-const RedirectUserToAuth: React.FC<RedirectProps> = ({
-  pathname,
-  search,
-}): React.ReactElement => {
-  const encoded =
-    pathname !== "/" && pathname !== "/logout"
-      ? encodeURIComponent(`${pathname}${search}`)
-      : undefined;
-
-  return <Redirect to={`/auth${encoded ? `?redirect=${encoded}` : ""}`} />;
-};
-
-const AuthContext: React.FC<Props> = ({
-  api,
-  children,
-  ...providerApi
-}): React.ReactElement => {
+const ContextProvider: React.FC = ({ children }): React.ReactElement => {
   const { pathname, search } = useLocation();
-  const { error, loading, user, accounts, ...fns } = useFetchUser({ api });
-
-  const context = useMemo(
-    () => ({
-      user,
-      accounts,
-      error,
-      logout: logout({ api }),
-      loginOauth: loginOauth({ api, ...providerApi, ...fns }),
-    }),
-    [user, accounts, error]
-  );
+  const { error, loading, user, accounts, ...fns } = useFetchUser();
 
   if (loading) {
     return <Spinner primary pageCenter />;
@@ -73,13 +29,27 @@ const AuthContext: React.FC<Props> = ({
   // Redirect the user to the console login if he/she
   // is not logged in and the pathname is not auth.
   if (!user && pathname.indexOf("/auth") === -1) {
-    return <RedirectUserToAuth pathname={pathname} search={search} />;
+    const encoded =
+      pathname !== "/" && pathname !== "/logout"
+        ? encodeURIComponent(`${pathname}${search}`)
+        : undefined;
+
+    return <Redirect to={`/auth${encoded ? `?redirect=${encoded}` : ""}`} />;
   }
 
-  return <Context.Provider value={context}>{children}</Context.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        accounts,
+        authError: error,
+        logout: logout(), // This function can be removed, it's no longer being injected something.
+        loginOauth: loginOauth({ ...fns }),
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export default Object.assign(AuthContext, {
-  Consumer: Context.Consumer,
-  Provider: AuthContext,
-});
+export default ContextProvider;

@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Tooltip from "@material-ui/core/Tooltip";
-import { connect } from "~/utils/context";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
-import AppContext, { AppContextProps } from "~/pages/apps/App.context";
-import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
+import { AppContext } from "~/pages/apps/App.context";
+import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
+import Error404 from "~/components/Errors/Error404";
 import { PlusButton } from "~/components/Buttons";
-import Api from "~/utils/api/Api";
 import FeatureFlagModal from "./_components/FeatureFlagModal";
 import FeatureFlagTable from "./_components/FeatureFlagTable";
 import { useFetchFeatureFlags } from "./actions";
@@ -19,31 +17,20 @@ const Explanation = () => (
   </p>
 );
 
-interface Props {
-  api: Api;
-  app: App;
-  environment: Environment;
-}
-
-interface ContextProps
-  extends Pick<AppContextProps, "app">,
-    Pick<RootContextProps, "api"> {
-  environment: Environment;
-}
-
-const FeatureFlags: React.FC<Props & ContextProps> = ({
-  api,
-  app,
-  environment,
-}) => {
+const FeatureFlags: React.FC = () => {
+  const { app } = useContext(AppContext);
+  const { environment } = useContext(EnvironmentContext);
   const [selectedFlag, setSelectedFlag] = useState<FeatureFlag>();
   const [isFeatureFlagModalOpen, setFeatureFlagModal] = useState(false);
   const { error, loading, flags, setError, setLoading, setReload } =
     useFetchFeatureFlags({
-      api,
       app,
-      environment,
+      environment: environment!,
     });
+
+  if (!environment) {
+    return <Error404 />;
+  }
 
   return (
     <div className="flex flex-col mt-4">
@@ -77,7 +64,6 @@ const FeatureFlags: React.FC<Props & ContextProps> = ({
           <div className="w-full relative">
             {isFeatureFlagModalOpen && (
               <FeatureFlagModal
-                api={api}
                 app={app}
                 environment={environment}
                 flag={selectedFlag}
@@ -90,7 +76,6 @@ const FeatureFlags: React.FC<Props & ContextProps> = ({
             )}
             <FeatureFlagTable
               featureFlags={flags}
-              api={api}
               app={app}
               setReload={setReload}
               setError={setError}
@@ -108,8 +93,4 @@ const FeatureFlags: React.FC<Props & ContextProps> = ({
   );
 };
 
-export default connect<Props, ContextProps>(FeatureFlags, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
-  { Context: EnvironmentContext, props: ["environment"] },
-]);
+export default FeatureFlags;

@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { RouteComponentProps, useLocation } from "react-router-dom";
-import { RootContextProps } from "~/pages/Root.context";
-import { ConfirmModalProps } from "~/components/ConfirmModal";
 import { formatRepo } from "./helpers";
+import api from "~/utils/api/Api";
 import type { AppSettings, LocationState, Runtime } from "./types.d";
 
-interface DeleteAppProps
-  extends Pick<RootContextProps, "api">,
-    Pick<ConfirmModalProps, "confirmModal">,
-    Pick<RouteComponentProps, "history"> {
+interface DeleteAppProps extends Pick<RouteComponentProps, "history"> {
   app: App;
+  setLoading: SetLoading;
+  setError: SetError;
 }
 
 type voidFn = () => void;
@@ -17,49 +15,37 @@ type voidFn = () => void;
 /**
  * Action to delete an application.
  */
-export const deleteApp =
-  ({ api, app, confirmModal, history }: DeleteAppProps): voidFn =>
-  () => {
-    confirmModal(
-      "This will completely remove the application. All associated files and endpoints will be gone. Remember there is no going back from here.",
-      {
-        typeConfirmationText: "permanently delete application",
-        onConfirm: ({ closeModal, setError, setLoading }) => {
-          setLoading(true);
-          api
-            .delete("/app", { appId: app.id })
-            .then(() => {
-              setLoading(false);
-              closeModal();
-              history.push("/");
-            })
-            .catch(() => {
-              setLoading(false);
-              setError(
-                "Something went wrong on our side. Please try again. If the problem persists reach us out through Discord or email."
-              );
-            });
-        },
-      }
-    );
-  };
+export const deleteApp = ({
+  app,
+  history,
+  setLoading,
+  setError,
+}: DeleteAppProps): Promise<void> => {
+  setLoading(true);
+
+  return api
+    .delete("/app", { appId: app.id })
+    .then(() => {
+      setLoading(false);
+      history.push("/");
+    })
+    .catch(() => {
+      setLoading(false);
+      setError(
+        "Something went wrong on our side. Please try again. If the problem persists reach us out through Discord or email."
+      );
+    });
+};
 
 interface UpdateDeployTriggerProps
-  extends Pick<RootContextProps, "api">,
-    Pick<RouteComponentProps, "history"> {
+  extends Pick<RouteComponentProps, "history"> {
   app: App;
   setLoading: SetLoading;
   setError: SetError;
 }
 
 export const updateDeployTrigger =
-  ({
-    api,
-    app,
-    setLoading,
-    setError,
-    history,
-  }: UpdateDeployTriggerProps): voidFn =>
+  ({ app, setLoading, setError, history }: UpdateDeployTriggerProps): voidFn =>
   () => {
     setLoading(true);
     setError(null);
@@ -83,7 +69,7 @@ export const updateDeployTrigger =
       });
   };
 
-interface UseFetchAdditionalSettings extends Pick<RootContextProps, "api"> {
+interface UseFetchAdditionalSettings {
   app: App;
 }
 
@@ -94,7 +80,6 @@ interface UseFetchAdditionalSettingsReturnValue {
 }
 
 export const useFetchAdditionalSettings = ({
-  api,
   app,
 }: UseFetchAdditionalSettings): UseFetchAdditionalSettingsReturnValue => {
   const location = useLocation<LocationState>();
@@ -146,8 +131,7 @@ export const useFetchAdditionalSettings = ({
 };
 
 interface UpdateAdditionalSettingsProps
-  extends Pick<RootContextProps, "api">,
-    Pick<RouteComponentProps, "history"> {
+  extends Pick<RouteComponentProps, "history"> {
   setError: SetError;
   setLoading: SetLoading;
   app: App;
@@ -160,13 +144,7 @@ interface FormValues {
 }
 
 export const updateAdditionalSettings =
-  ({
-    api,
-    app,
-    setLoading,
-    setError,
-    history,
-  }: UpdateAdditionalSettingsProps) =>
+  ({ app, setLoading, setError, history }: UpdateAdditionalSettingsProps) =>
   ({ repo, displayName, runtime }: FormValues): void => {
     repo = formatRepo(repo);
     setLoading(true);

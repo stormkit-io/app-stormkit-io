@@ -6,12 +6,15 @@ import { createMemoryHistory } from "history";
 import { waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
 import Api from "~/utils/api/Api";
-import AuthContext from "~/pages/auth/Auth.context";
+import * as Auth from "~/pages/auth/Auth.context";
 import * as nocks from "~/testing/nocks";
+
+const { AuthContext, default: ContextProvider } = Auth;
 
 describe("pages/auth/Auth.context", () => {
   let wrapper;
   let scope;
+  let context;
 
   const createWrapper = () => {
     const history = createMemoryHistory();
@@ -21,11 +24,13 @@ describe("pages/auth/Auth.context", () => {
 
     wrapper = render(
       <Router history={history}>
-        <AuthContext.Provider api={api}>
+        <ContextProvider api={api}>
           <AuthContext.Consumer>
-            {ctx => JSON.stringify(ctx)}
+            {ctx => {
+              context = ctx;
+            }}
           </AuthContext.Consumer>
-        </AuthContext.Provider>
+        </ContextProvider>
       </Router>
     );
 
@@ -81,11 +86,33 @@ describe("pages/auth/Auth.context", () => {
     test("shows the context properly", async () => {
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
-        expect(
-          wrapper.getByText(
-            `{"user":{"displayName":"stormkit","avatar":"https://avatars2.githubusercontent.com/u/3321893?v=4","email":"foo@bar","memberSince":1551184200,"id":"1644802351","fullName":"Foo Bar","package":{"id":"free"}},"accounts":[{"provider":"gitlab","url":"","displayName":"Stormkit"},{"provider":"bitbucket","url":"https://bitbucket.org/%7B6e4d532c-e1b6-4496-90cb-f94f09af2bda%7D/","displayName":"stormkit"},{"provider":"github","url":"https://api.github.com/users/stormkit","displayName":"stormkit"}],"error":null}`
-          )
-        ).not.toBe(null);
+        expect(context).toEqual({
+          user: {
+            displayName: "stormkit",
+            avatar: "https://avatars2.githubusercontent.com/u/3321893?v=4",
+            email: "foo@bar",
+            memberSince: 1551184200,
+            id: "1644802351",
+            fullName: "Foo Bar",
+            package: { id: "free" },
+          },
+          accounts: [
+            { provider: "gitlab", url: "", displayName: "Stormkit" },
+            {
+              provider: "bitbucket",
+              url: "https://bitbucket.org/%7B6e4d532c-e1b6-4496-90cb-f94f09af2bda%7D/",
+              displayName: "stormkit",
+            },
+            {
+              provider: "github",
+              url: "https://api.github.com/users/stormkit",
+              displayName: "stormkit",
+            },
+          ],
+          authError: null,
+          loginOauth: expect.any(Function),
+          logout: expect.any(Function),
+        });
       });
     });
   });

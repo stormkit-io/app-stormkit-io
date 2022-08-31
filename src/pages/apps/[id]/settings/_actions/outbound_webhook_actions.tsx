@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { RootContextProps } from "~/pages/Root.context";
+import api from "~/utils/api/Api";
 import type { LocationState, OutboundWebhook } from "../types";
 
-interface FetchOutboundWebhooksProps extends Pick<RootContextProps, "api"> {
+interface FetchOutboundWebhooksProps {
   app: App;
   setLoading: SetLoading;
   setError: SetError;
@@ -14,7 +14,6 @@ interface FetchOutboundWebhooksRequest {
 }
 
 export const useFetchOutboundWebhooks = ({
-  api,
   app,
   setLoading,
   setError,
@@ -57,12 +56,12 @@ export const useFetchOutboundWebhooks = ({
   return hooks;
 };
 
-interface UpsertOutboundWebhookProps extends Pick<RootContextProps, "api"> {
+interface UpsertOutboundWebhookProps {
   app: App;
 }
 
 export const upsertOutboundWebhook =
-  ({ api, app }: UpsertOutboundWebhookProps) =>
+  ({ app }: UpsertOutboundWebhookProps) =>
   ({
     id,
     requestUrl,
@@ -88,7 +87,7 @@ export const upsertOutboundWebhook =
     });
   };
 
-interface SendSampleRequestProps extends Pick<RootContextProps, "api"> {
+interface SendSampleRequestProps {
   app: App;
   whId?: string;
 }
@@ -103,7 +102,6 @@ export interface SendSampleRequestResponse {
 
 export const sendSampleRequest = ({
   app,
-  api,
   whId,
 }: SendSampleRequestProps): Promise<SendSampleRequestResponse> => {
   return api.fetch<SendSampleRequestResponse>(
@@ -111,14 +109,13 @@ export const sendSampleRequest = ({
   );
 };
 
-interface DeleteOutboundWebhookProps extends Pick<RootContextProps, "api"> {
+interface DeleteOutboundWebhookProps {
   app: App;
   whId?: string;
 }
 
 export const deleteOutboundWebhook = ({
   app,
-  api,
   whId,
 }: DeleteOutboundWebhookProps): Promise<void> => {
   return api.delete(`/app/outbound-webhooks`, {

@@ -1,22 +1,11 @@
-import React, { useState } from "react";
-import AppContext, { AppContextProps } from "~/pages/apps/App.context";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
+import React, { useContext, useState } from "react";
+import { AppContext } from "~/pages/apps/App.context";
 import { PlusButton } from "~/components/Buttons";
-import { ModalContextProps } from "~/components/Modal";
 import Environment from "./_components/Environment";
 import EnvironmentFormModal from "./_components/EnvironmentFormModal";
-import { connect } from "~/utils/context";
 
-interface ContextProps
-  extends ModalContextProps,
-    RootContextProps,
-    AppContextProps {}
-
-const Environments: React.FC<ContextProps> = ({
-  app,
-  api,
-  environments,
-}): React.ReactElement => {
+const Environments: React.FC = (): React.ReactElement => {
+  const { app, environments } = useContext(AppContext);
   const [isModalOpen, toggleModal] = useState<boolean>(false);
 
   return (
@@ -52,18 +41,10 @@ const Environments: React.FC<ContextProps> = ({
         )}
       </div>
       {isModalOpen && (
-        <EnvironmentFormModal
-          app={app}
-          api={api}
-          toggleModal={toggleModal}
-          isOpen
-        />
+        <EnvironmentFormModal app={app} toggleModal={toggleModal} isOpen />
       )}
     </div>
   );
 };
 
-export default connect<unknown, ContextProps>(Environments, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app", "environments"] },
-]);
+export default Environments;

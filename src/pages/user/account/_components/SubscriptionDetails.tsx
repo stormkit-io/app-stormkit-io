@@ -5,14 +5,12 @@ import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
-import { ConfirmModalProps } from "~/components/ConfirmModal";
-import Api from "~/utils/api/Api";
+import ConfirmModal from "~/components/ConfirmModal";
 import { useFetchSubscription, handleUpdateSubscriptionPlan } from "../actions";
 import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
 import { packages, features } from "./constants";
 
-interface Props extends ConfirmModalProps {
-  api: Api;
+interface Props {
   location: Location;
   history: History;
 }
@@ -39,13 +37,11 @@ const SubscriptionDowngrade: FC<SubscriptionDowngradePros> = ({
 };
 
 const SubscriptionDetails: FC<Props> = ({
-  api,
-  confirmModal,
   history,
   location,
 }: Props): ReactElement => {
+  const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
   const { loading, error, subscription } = useFetchSubscription({
-    api,
     location,
   });
 
@@ -73,27 +69,9 @@ const SubscriptionDetails: FC<Props> = ({
             )}
             <Form
               className="w-full"
-              handleSubmit={() =>
-                confirmModal(
-                  "You're about to change your subscription plan. This may incur in additional costs.",
-                  {
-                    onConfirm: props => {
-                      if (!selected) {
-                        return props.setError(
-                          "Subscription name is not valid."
-                        );
-                      }
-
-                      handleUpdateSubscriptionPlan({
-                        api,
-                        history,
-                        name: selected,
-                        ...props,
-                      });
-                    },
-                  }
-                )
-              }
+              handleSubmit={() => {
+                toggleConfirmModal(true);
+              }}
             >
               <div className="flex flex-wrap">
                 {packages.map((p, i) => (
@@ -165,6 +143,31 @@ const SubscriptionDetails: FC<Props> = ({
           </div>
         )}
       </div>
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          onCancel={() => {
+            toggleConfirmModal(false);
+          }}
+          onConfirm={({ setError, setLoading }) => {
+            if (!selected) {
+              return setError("Subscription name is not valid.");
+            }
+
+            handleUpdateSubscriptionPlan({
+              history,
+              name: selected,
+              setError,
+              setLoading,
+              closeModal: () => {
+                toggleConfirmModal(false);
+              },
+            });
+          }}
+        >
+          You're about to change your subscription plan. This may incur in
+          additional costs.
+        </ConfirmModal>
+      )}
     </div>
   );
 };

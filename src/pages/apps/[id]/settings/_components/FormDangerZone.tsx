@@ -1,22 +1,17 @@
-import React from "react";
-import { connect } from "~/utils/context";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
+import ConfirmModal from "~/components/ConfirmModal";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
-import { RootContextProps } from "~/pages/Root.context";
 import { deleteApp } from "../actions";
 
-interface Props extends Pick<RootContextProps, "api"> {
+interface Props {
   app: App;
 }
 
-const FormDangerZone: React.FC<Props & ConfirmModalProps> = ({
-  confirmModal,
-  api,
-  app,
-}): React.ReactElement => {
+const FormDangerZone: React.FC<Props> = ({ app }): React.ReactElement => {
+  const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
   const history = useHistory();
 
   return (
@@ -32,15 +27,29 @@ const FormDangerZone: React.FC<Props & ConfirmModalProps> = ({
         <Button
           primary
           type="submit"
-          onClick={deleteApp({ api, app, confirmModal, history })}
+          onClick={() => {
+            toggleConfirmModal(true);
+          }}
         >
           Remove application
         </Button>
       </div>
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          typeConfirmationText="permanently delete application"
+          onCancel={() => {
+            toggleConfirmModal(false);
+          }}
+          onConfirm={({ setLoading, setError }) => {
+            deleteApp({ app, history, setLoading, setError });
+          }}
+        >
+          This will completely remove the application. All associated files and
+          endpoints will be gone. Remember there is no going back from here.
+        </ConfirmModal>
+      )}
     </Form.Section>
   );
 };
 
-export default connect<Props, ConfirmModalProps>(FormDangerZone, [
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-]);
+export default FormDangerZone;

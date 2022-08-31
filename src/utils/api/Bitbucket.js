@@ -5,7 +5,7 @@ import {
   errNotEnoughPermissions,
 } from "./helpers";
 
-export default class Bitbucket {
+class Bitbucket {
   baseurl = "https://api.bitbucket.org/2.0";
 
   // This value will be üp-dated by Auth.context.
@@ -32,7 +32,8 @@ export default class Bitbucket {
   /**
    * Lists all the repositories the user is an admin.
    *
-   * @param {String} team The name of the team.
+   * @param {object.String} team The name of the team.
+   * @param {object.Object} params The parameters to be passed.
    */
   repositories({ team, params = {} } = {}) {
     const url = team ? `/repositories/${team}` : "/repositories";
@@ -63,3 +64,5 @@ export default class Bitbucket {
     });
   }
 }
+
+export default new Bitbucket();

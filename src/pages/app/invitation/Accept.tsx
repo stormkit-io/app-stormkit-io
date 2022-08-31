@@ -1,14 +1,10 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import { connect } from "~/utils/context";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
 import Error404 from "~/components/Errors/Error404";
 import { useParseAppId } from "./actions";
 
-const InvitationAccept: React.FC<RootContextProps> = ({
-  api,
-}): React.ReactElement => {
-  const appId = useParseAppId({ api });
+const InvitationAccept: React.FC = (): React.ReactElement => {
+  const appId = useParseAppId();
 
   if (appId) {
     return <Redirect to={`/apps/${appId}/team`} />;
@@ -22,6 +18,4 @@ const InvitationAccept: React.FC<RootContextProps> = ({
   );
 };
 
-export default connect<unknown, RootContextProps>(InvitationAccept, [
-  { Context: RootContext, props: ["api"] },
-]);
+export default InvitationAccept;

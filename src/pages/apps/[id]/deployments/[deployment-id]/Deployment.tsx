@@ -1,27 +1,31 @@
-import React, { useRef } from "react";
+import React, { useContext } from "react";
 import { emojify } from "node-emoji";
-import PropTypes from "prop-types";
 import cn from "classnames";
-import RootContext from "~/pages/Root.context";
-import AppContext from "~/pages/apps/App.context";
+import { useRouteMatch } from "react-router";
+import { AppContext } from "~/pages/apps/App.context";
 import Spinner from "~/components/Spinner";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
+import Error404 from "~/components/Errors/Error404";
 import { BackButton } from "~/components/Buttons";
-import { connect } from "~/utils/context";
 import { parseCommit } from "~/utils/helpers/deployments";
 import { useFetchDeployment, useScrollIntoView } from "./actions";
 import { prepareSettings, getExitCode } from "./helpers";
 import ExitStatus from "../_components/ExitStatus";
 
-const Deployment = ({ api, app, match }) => {
-  const spinnerRef = useRef();
-  const deployId = match.params.deploymentId;
-  const { deploy, error, loading } = useFetchDeployment({ api, app, deployId });
-  const commit = parseCommit(deploy);
-  const settings = deploy.id ? prepareSettings({ deploy, commit }) : [];
+interface RouteMatchParams {
+  deploymentId: string;
+}
 
-  useScrollIntoView({ ref: spinnerRef, loading });
+const Deployment = () => {
+  const match = useRouteMatch<RouteMatchParams>();
+  const { app } = useContext(AppContext);
+  const deployId = match.params.deploymentId;
+  const { deploy, error, loading } = useFetchDeployment({ app, deployId });
+  const commit = parseCommit(deploy);
+  const settings = deploy?.id ? prepareSettings({ deploy, commit }) : [];
+
+  useScrollIntoView({ loading });
 
   return (
     <div>
@@ -37,6 +41,8 @@ const Deployment = ({ api, app, match }) => {
         <div className="flex justify-center bg-white rounded p-4">
           <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
         </div>
+      ) : !deploy ? (
+        <Error404 />
       ) : (
         <div className="flex flex-col justify-center bg-white rounded p-8 mb-4">
           <div className="flex items-center mb-8">
@@ -94,13 +100,11 @@ const Deployment = ({ api, app, match }) => {
               </div>
             ))}
             {deploy.isRunning && (
-              <div className="flex justify-center mt-4" ref={spinnerRef}>
+              <div
+                className="flex justify-center mt-4"
+                id="deploy-spinner-running"
+              >
                 <Spinner primary />
-              </div>
-            )}
-            {!deploy.isRunning && deploy.tip && (
-              <div className="mt-4" ref={spinnerRef}>
-                <InfoBox type={InfoBox.WARNING}>{deploy.tip?.msg}</InfoBox>
               </div>
             )}
             {!deploy.isRunning && deploy.exit === 0 && (
@@ -117,13 +121,4 @@ const Deployment = ({ api, app, match }) => {
   );
 };
 
-Deployment.propTypes = {
-  app: PropTypes.object,
-  api: PropTypes.object,
-  match: PropTypes.object,
-};
-
-export default connect(Deployment, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
-]);
+export default Deployment;

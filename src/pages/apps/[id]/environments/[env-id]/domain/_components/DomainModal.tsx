@@ -1,47 +1,31 @@
-import React, { useState } from "react";
-import Modal, { ModalContextProps } from "~/components/Modal";
-import { RootContextProps } from "~/pages/Root.context";
+import React, { useContext, useState } from "react";
+import { AppContext } from "~/pages/apps/App.context";
+import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
-import { connect } from "~/utils/context";
 import { setDomain } from "../actions";
 import { useHistory } from "react-router";
 
-const ModalContext = Modal.Context();
-
-interface Props extends Pick<RootContextProps, "api"> {
-  app: App;
-  environment: Environment;
+interface Props {
+  onClose: () => void;
 }
 
-const DomainModal: React.FC<Props & ModalContextProps> = ({
-  isOpen,
-  toggleModal,
-  api,
-  app,
-  environment,
-}) => {
+const DomainModal: React.FC<Props> = ({ onClose }) => {
   const history = useHistory();
+  const { app } = useContext(AppContext);
+  const { environment } = useContext(EnvironmentContext);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  if (!isOpen) {
-    return <></>;
-  }
-
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={() => toggleModal(false)}
-      className="max-w-screen-md"
-    >
+    <Modal isOpen onClose={onClose} className="max-w-screen-md">
       <h2 className="mb-8 text-xl font-bold">Set up a new domain</h2>
       <Form
         handleSubmit={setDomain({
           setError,
           setLoading,
-          api,
           app,
           environment,
           history,
@@ -77,9 +61,4 @@ const DomainModal: React.FC<Props & ModalContextProps> = ({
   );
 };
 
-export default Object.assign(
-  connect<Props, ModalContextProps>(DomainModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-  ]),
-  ModalContext
-);
+export default DomainModal;

@@ -1,7 +1,7 @@
 import qs from "query-string";
 import { prepareHeaders, errTokenExpired } from "./helpers";
 
-export default class Github {
+class Github {
   baseurl = "https://api.github.com";
 
   // This is required to enable the preview api for github.
@@ -68,8 +68,8 @@ export default class Github {
    * it is required to pass the installation id, which can obtained from
    * installations endpoint (the method above).
    *
-   * @param {Number} installationId The id of the installation we'd like to show the repositories.
-   * @param {Number} page The page number.
+   * @param {Object.string} installationId The id of the installation we'd like to show the repositories.
+   * @param {Object.Number} page The page number.
    */
   repositories({ installationId, params = {} } = {}) {
     return new Promise((resolve, reject) => {
@@ -103,3 +103,5 @@ export default class Github {
     });
   }
 }
+
+export default new Github();

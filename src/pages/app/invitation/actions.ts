@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import qs from "query-string";
-import Api from "~/utils/api/Api";
-
-interface EnrollProps {
-  api: Api;
-}
+import api from "~/utils/api/Api";
 
 interface EnrollResponse {
   appId: string;
 }
 
-export const useParseAppId = ({ api }: EnrollProps): string => {
+export const useParseAppId = (): string => {
   const location = useLocation();
   const { token } = qs.parse(location.search);
   const [appId, setAppId] = useState<string>("");

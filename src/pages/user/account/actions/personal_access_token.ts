@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RootContextProps } from "~/pages/Root.context";
+import api from "~/utils/api/Api";
 
 type LoadingState = "delete" | "submit" | null;
 
@@ -8,8 +8,7 @@ interface Message {
   content: string;
 }
 
-interface UsePersonalAccessTokenStateProps
-  extends Pick<RootContextProps, "api"> {
+interface UsePersonalAccessTokenStateProps {
   hasToken: boolean;
 }
 
@@ -24,7 +23,6 @@ interface UsePersonalAccessTokenStateReturnValue {
 
 export const usePersonalAccessTokenState = ({
   hasToken,
-  api,
 }: UsePersonalAccessTokenStateProps): UsePersonalAccessTokenStateReturnValue => {
   const [loading, setLoading] = useState<LoadingState>(null);
   const [token, setToken] = useState("");

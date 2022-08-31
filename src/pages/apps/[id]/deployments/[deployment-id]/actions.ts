@@ -1,10 +1,29 @@
 import { useState, useEffect } from "react";
+import api from "~/utils/api/Api";
 
-export const useFetchDeployment = ({ api, app, deployId }) => {
-  const [error, setError] = useState(null);
+interface FetchDeploymentProps {
+  app: App;
+  deployId: string;
+}
+
+interface FetchDeployResponse {
+  deploy?: Deployment;
+  loading: boolean;
+  error: string | null;
+}
+
+interface FetchDeployAPIResponse {
+  deploy: Deployment;
+}
+
+export const useFetchDeployment = ({
+  app,
+  deployId,
+}: FetchDeploymentProps): FetchDeployResponse => {
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [deploy, setDeploy] = useState({});
-  const [time, setTime] = useState(null);
+  const [deploy, setDeploy] = useState<Deployment>();
+  const [time, setTime] = useState<number | null>(null);
 
   useEffect(() => {
     let unmounted = false;
@@ -16,7 +35,7 @@ export const useFetchDeployment = ({ api, app, deployId }) => {
     }
 
     api
-      .fetch(`/app/${app.id}/deploy/${deployId}`)
+      .fetch<FetchDeployAPIResponse>(`/app/${app.id}/deploy/${deployId}`)
       .then(res => {
         if (unmounted !== true) {
           setDeploy(res.deploy);
@@ -48,10 +67,16 @@ export const useFetchDeployment = ({ api, app, deployId }) => {
   return { deploy, loading, error };
 };
 
-export const useScrollIntoView = ({ ref, loading }) => {
+interface ScrollIntoViewProps {
+  loading: boolean;
+}
+
+export const useScrollIntoView = ({ loading }: ScrollIntoViewProps) => {
   useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
+    const el = document.getElementById("deploy-spinner-running");
+
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
     }
-  }, [ref, loading]);
+  }, [loading]);
 };

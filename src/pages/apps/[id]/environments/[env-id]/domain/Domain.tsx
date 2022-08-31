@@ -1,21 +1,14 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { connect } from "~/utils/context";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
-import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
-import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
-import { ModalContextProps } from "~/components/Modal";
+import { AppContext } from "~/pages/apps/App.context";
+import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import ConfirmModal from "~/components/ConfirmModal";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import { PlusButton } from "~/components/Buttons";
 import { useDomainLookup, deleteDomain, fetchDomainsInfo } from "./actions";
 import DomainModal from "./_components/DomainModal";
 import DomainRow from "./_components/DomainRow";
-
-interface ContextProps
-  extends RootContextProps,
-    ConfirmModalProps,
-    ModalContextProps {}
 
 interface Props {
   app: App;
@@ -27,16 +20,14 @@ interface HandleVerifyProps {
   setError: SetError;
 }
 
-const Domain: React.FC<Props & ContextProps> = ({
-  api,
-  environment,
-  app,
-  toggleModal,
-  confirmModal,
-}) => {
+const Domain: React.FC<Props> = () => {
   const history = useHistory();
-
-  const info = useDomainLookup({ api, app, environment });
+  const { app } = useContext(AppContext);
+  const { environment } = useContext(EnvironmentContext);
+  const [domainName, setDomainName] = useState("");
+  const [isDomainModalOpen, toggleDomainModal] = useState(false);
+  const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
+  const info = useDomainLookup({ app, environment });
   const { loading, error, domainsInfo, setDomainsInfo } = info;
 
   const handleVerify = ({
@@ -44,7 +35,6 @@ const Domain: React.FC<Props & ContextProps> = ({
     setError,
   }: HandleVerifyProps): Promise<void> => {
     return fetchDomainsInfo({
-      api,
       app,
       unmounted: false,
       environment,
@@ -55,22 +45,8 @@ const Domain: React.FC<Props & ContextProps> = ({
   };
 
   const handleDelete = (domainName: string) => {
-    return confirmModal(
-      "This will completely remove the domain and it won't be reachable anymore.",
-      {
-        onConfirm: ({ setLoading, setError, closeModal }) => {
-          deleteDomain({
-            api,
-            app,
-            environment,
-            domainName,
-            setLoading,
-            setError,
-            history,
-          }).then(closeModal);
-        },
-      }
-    );
+    setDomainName(domainName);
+    toggleConfirmModal(true);
   };
 
   return (
@@ -79,12 +55,14 @@ const Domain: React.FC<Props & ContextProps> = ({
         <h2 className="text-lg font-bold flex flex-auto">Domain information</h2>
         {domainsInfo.length === 0 && !loading && (
           <div className="flex-shrink-0">
-            <DomainModal app={app} environment={environment} api={api} />
+            {isDomainModalOpen && (
+              <DomainModal onClose={() => toggleDomainModal(false)} />
+            )}
             <PlusButton
               size="small"
               text="New domain"
               onClick={() => {
-                toggleModal(true);
+                toggleDomainModal(true);
               }}
               className="p-2 rounded"
               aria-label="Insert snippet"
@@ -115,13 +93,26 @@ const Domain: React.FC<Props & ContextProps> = ({
           isLastRow={domainsInfo.length - 1 === i}
         />
       ))}
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          onCancel={() => toggleConfirmModal(false)}
+          onConfirm={({ setLoading, setError }) => {
+            deleteDomain({
+              app,
+              environment,
+              domainName,
+              setLoading,
+              setError,
+              history,
+            }).then(() => toggleConfirmModal(false));
+          }}
+        >
+          This will completely remove the domain and it won't be reachable
+          anymore.
+        </ConfirmModal>
+      )}
     </div>
   );
 };
 
-export default connect<Props, ContextProps>(Domain, [
-  { Context: RootContext, props: ["api"] },
-  { Context: EnvironmentContext, props: ["environment", "app"] },
-  { Context: DomainModal, props: ["toggleModal"], wrap: true },
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-]);
+export default Domain;

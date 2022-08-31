@@ -4,7 +4,6 @@ import Modal from "~/components/Modal";
 import CopyBox from "~/components/CopyBox";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
-import Api from "~/utils/api/Api";
 import { handleInvite } from "../actions";
 
 const getLinkFromToken = (token: string) =>
@@ -13,12 +12,11 @@ const getLinkFromToken = (token: string) =>
   )}`;
 
 interface Props {
-  api: Api;
   app: App;
   onClose: () => void;
 }
 
-const NewMemberModal: React.FC<Props> = ({ api, app, onClose }) => {
+const NewMemberModal: React.FC<Props> = ({ app, onClose }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<string | null>(null);
@@ -45,7 +43,6 @@ const NewMemberModal: React.FC<Props> = ({ api, app, onClose }) => {
             loading={loading}
             onSubmit={handleInvite({
               app,
-              api,
               setLoading,
               setToken,
               setError,

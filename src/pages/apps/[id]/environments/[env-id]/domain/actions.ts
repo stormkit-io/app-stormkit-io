@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { History } from "history";
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 
 interface SetDomainProps {
   app: App;
-  api: Api;
   history: History;
   environment: Environment;
   setError: SetError;
@@ -12,7 +11,7 @@ interface SetDomainProps {
 }
 
 export const setDomain =
-  ({ app, api, environment, history, setError, setLoading }: SetDomainProps) =>
+  ({ app, environment, history, setError, setLoading }: SetDomainProps) =>
   ({ domain }: { domain: string }): void => {
     setLoading(true);
 
@@ -39,7 +38,6 @@ export const setDomain =
   };
 
 interface DeleteDomainProps {
-  api: Api;
   app: App;
   environment: Environment;
   domainName: string;
@@ -49,7 +47,6 @@ interface DeleteDomainProps {
 }
 
 export const deleteDomain = ({
-  api,
   app,
   environment,
   domainName,
@@ -81,7 +78,6 @@ export const deleteDomain = ({
 };
 
 interface FetchDomainsInfoProps {
-  api: Api;
   app: App;
   environment: Environment;
   setLoading: SetLoading;
@@ -91,7 +87,6 @@ interface FetchDomainsInfoProps {
 }
 
 export const fetchDomainsInfo = ({
-  api,
   app,
   environment,
   setLoading,
@@ -120,7 +115,6 @@ export const fetchDomainsInfo = ({
 };
 
 interface DomainLookupProps {
-  api: Api;
   app: App;
   environment: Environment;
 }
@@ -133,7 +127,6 @@ interface DomainLookupReturnValue {
 }
 
 export const useDomainLookup = ({
-  api,
   app,
   environment,
 }: DomainLookupProps): DomainLookupReturnValue => {
@@ -150,7 +143,6 @@ export const useDomainLookup = ({
     }
 
     fetchDomainsInfo({
-      api,
       app,
       environment,
       unmounted,
@@ -162,7 +154,7 @@ export const useDomainLookup = ({
     return () => {
       unmounted = true;
     };
-  }, [api, app, environment, domainName]);
+  }, [app, environment, domainName]);
 
   return { loading, error, domainsInfo, setDomainsInfo };
 };

@@ -1,28 +1,25 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import Modal, { ModalContextProps } from "~/components/Modal";
+import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
-import { RootContextProps } from "~/pages/Root.context";
 import { AppContextProps } from "~/pages/apps/App.context";
-import { connect } from "~/utils/context";
 import { useFetchDeployments, publishDeployments } from "../../actions";
 import DeploymentToBePublished from "./DeploymentRow";
 import PreviouslyPublishedDeployments from "./PreviouslyPublishedDeployments";
 
-const ModalContext = Modal.Context();
-
-interface Props extends Pick<RootContextProps, "api">, AppContextProps {
+interface Props extends AppContextProps {
   deployment: Deployment;
+  isOpen: boolean;
+  toggleModal: (val: boolean) => void;
 }
 
-const PublishModal: React.FC<Props & ModalContextProps> = ({
+const PublishModal: React.FC<Props> = ({
   isOpen,
   toggleModal,
   environments,
   deployment: deploymentToBePublished,
-  api,
   app,
 }): React.ReactElement => {
   const skipQuery = !isOpen;
@@ -31,7 +28,7 @@ const PublishModal: React.FC<Props & ModalContextProps> = ({
   const [publishError, setPublishError] = useState<string | null>(null);
   const [isInSync, setIsInSync] = useState(true);
   const filters = { envId: selectedEnvironment, published: true };
-  const result = useFetchDeployments({ api, app, filters, skipQuery, from: 0 });
+  const result = useFetchDeployments({ app, filters, skipQuery, from: 0 });
   const { deployments, loading, error } = result;
 
   const previouslyPublishedDeployments = deployments.filter(
@@ -72,7 +69,6 @@ const PublishModal: React.FC<Props & ModalContextProps> = ({
               displaySlider={previouslyPublishedDeployments.length > 0}
               isInSync={isInSync}
               handlePublishClick={publishDeployments({
-                api,
                 app,
                 history,
                 setPublishError,
@@ -93,9 +89,4 @@ const PublishModal: React.FC<Props & ModalContextProps> = ({
   );
 };
 
-export default Object.assign(
-  connect<Props, ModalContextProps>(PublishModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-  ]),
-  ModalContext
-);
+export default PublishModal;

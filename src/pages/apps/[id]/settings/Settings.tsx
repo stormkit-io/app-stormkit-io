@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
-import { connect } from "~/utils/context";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
-import AppContext, { AppContextProps } from "~/pages/apps/App.context";
-import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
+import React, { useContext, useEffect } from "react";
+import { AppContext } from "~/pages/apps/App.context";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import Spinner from "~/components/Spinner";
 import FormAppSettings from "./_components/FormAppSettings";
 import FormTriggerDeploys from "./_components/FormTriggerDeploys";
@@ -12,15 +10,11 @@ import * as actions from "./actions";
 
 const { useFetchAdditionalSettings } = actions;
 
-interface ContextProps
-  extends Pick<RootContextProps, "api">,
-    Pick<AppContextProps, "app" | "environments">,
-    Pick<AuthContextProps, "user"> {}
-
-const Settings: React.FC<ContextProps> = ({ api, app, environments, user }) => {
-  const isCurrentUserTheOwner = app.userId === user.id;
+const Settings: React.FC = () => {
+  const { app, environments } = useContext(AppContext);
+  const { user } = useContext(AuthContext);
+  const isCurrentUserTheOwner = app.userId === user!.id;
   const { settings, loading } = useFetchAdditionalSettings({
-    api,
     app,
   });
 
@@ -42,26 +36,21 @@ const Settings: React.FC<ContextProps> = ({ api, app, environments, user }) => {
       ) : (
         <>
           <div className="rounded bg-white p-8 mb-8">
-            <FormAppSettings
-              api={api}
-              app={app}
-              additionalSettings={settings}
-            />
+            <FormAppSettings app={app} additionalSettings={settings} />
           </div>
           <div className="rounded bg-white p-8 mb-8">
             <FormTriggerDeploys
-              api={api}
               app={app}
               additionalSettings={settings}
               environments={environments}
             />
           </div>
           <div className="rounded bg-white p-8 mb-8">
-            <FormOutboundWebhooks api={api} app={app} />
+            <FormOutboundWebhooks app={app} />
           </div>
           {isCurrentUserTheOwner && (
             <div className="rounded bg-white p-8 mb-8">
-              <FormDangerZone api={api} app={app} />
+              <FormDangerZone app={app} />
             </div>
           )}
         </>
@@ -70,8 +59,4 @@ const Settings: React.FC<ContextProps> = ({ api, app, environments, user }) => {
   );
 };
 
-export default connect<unknown, ContextProps>(Settings, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app", "environments"] },
-  { Context: AuthContext, props: ["user"] },
-]);
+export default Settings;

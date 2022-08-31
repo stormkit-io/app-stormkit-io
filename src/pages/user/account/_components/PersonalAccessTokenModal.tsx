@@ -1,29 +1,24 @@
 import React from "react";
-import Modal, { ModalContextProps } from "~/components/Modal";
+import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
-import { connect } from "~/utils/context";
 import { usePersonalAccessTokenState as usePATState } from "../actions";
 
 interface Props {
   hasToken: boolean;
+  toggleModal: (val: boolean) => void;
 }
 
-interface ContextProps extends ModalContextProps, RootContextProps {}
-
-const PersonalAccessTokenModal: React.FC<Props & ContextProps> = ({
+const PersonalAccessTokenModal: React.FC<Props> = ({
   hasToken,
-  isOpen,
-  api,
   toggleModal,
 }): React.ReactElement => {
-  const state = usePATState({ hasToken, api });
+  const state = usePATState({ hasToken });
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen
       onClose={() => toggleModal(false)}
       className="max-w-screen-sm"
     >
@@ -74,12 +69,4 @@ const PersonalAccessTokenModal: React.FC<Props & ContextProps> = ({
   );
 };
 
-const ModalContext = Modal.Context();
-
-export default Object.assign(
-  connect<Props, ContextProps>(PersonalAccessTokenModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-    { Context: RootContext, props: ["api"] },
-  ]),
-  ModalContext
-);
+export default PersonalAccessTokenModal;

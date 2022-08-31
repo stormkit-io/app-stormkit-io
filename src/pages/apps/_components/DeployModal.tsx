@@ -1,33 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import Api from "~/utils/api/Api";
-import Modal, { ModalContextProps } from "~/components/Modal";
+import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
-import { connect } from "~/utils/context";
 import { deploy } from "../actions";
 import { useFetchRepoType } from "../[id]/environments/actions";
 
 interface Props {
-  api: Api;
   app: App;
   environments: Array<Environment>;
+  toggleModal: (val: boolean) => void;
 }
 
-const ModalContext = Modal.Context();
-
-const DeployModal: React.FC<Props & ModalContextProps> = ({
-  isOpen,
+const DeployModal: React.FC<Props> = ({
   toggleModal,
   environments,
-  api,
   app,
 }): React.ReactElement => {
   const history = useHistory();
   const [selectedEnv, setSelectedEnv] = useState<Environment>();
-  const fetchResult = useFetchRepoType({ api, app, env: selectedEnv });
+  const fetchResult = useFetchRepoType({ app, env: selectedEnv });
   const [branch, setBranch] = useState("");
   const [cmd, setCmd] = useState("");
   const [dist, setDist] = useState("");
@@ -35,10 +29,6 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
   const [isAutoPublish, setIsAutoPublish] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
   const { meta, loading: metaLoading } = fetchResult;
-
-  useEffect(() => {
-    setError(null);
-  }, [isOpen]);
 
   const clearForm = () => {
     setCmd("");
@@ -50,10 +40,10 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen
       onClose={() => {
-        toggleModal(false);
         clearForm();
+        toggleModal(false);
       }}
       className="max-w-screen-sm"
     >
@@ -61,7 +51,6 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
       <Form
         handleSubmit={() =>
           deploy({
-            api,
             app,
             environment: selectedEnv,
             toggleModal,
@@ -170,9 +159,4 @@ const DeployModal: React.FC<Props & ModalContextProps> = ({
   );
 };
 
-export default Object.assign(
-  connect<Props, ModalContextProps>(DeployModal, [
-    { Context: ModalContext, props: ["toggleModal", "isOpen"] },
-  ]),
-  ModalContext
-);
+export default DeployModal;

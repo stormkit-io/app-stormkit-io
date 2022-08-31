@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { History, Location } from "history";
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 
 export type setLoadingArgs = null | "delete" | "stop";
 type setLoadingFunc = (value: setLoadingArgs) => void;
 type setDeploymentsFunc = (value: Array<Deployment>) => void;
 
 interface DeleteForeverProps {
-  api: Api;
   appId: string;
   deploymentId: string;
   deployments: Array<Deployment>;
@@ -17,7 +16,6 @@ interface DeleteForeverProps {
 }
 
 export const deleteForever = ({
-  api,
   appId,
   deploymentId,
   deployments,
@@ -32,7 +30,6 @@ export const deleteForever = ({
 };
 
 interface PublishDeploymentsProps {
-  api: Api;
   app: App;
   history: History;
   setPublishError: (value: string | null) => void;
@@ -44,7 +41,7 @@ interface PublishInfo {
 }
 
 export const publishDeployments =
-  ({ api, app, history, setPublishError }: PublishDeploymentsProps) =>
+  ({ app, history, setPublishError }: PublishDeploymentsProps) =>
   (
     sliders: Record<string, { percentage: number }>,
     envId: string
@@ -102,7 +99,6 @@ export type Filters = {
 };
 
 interface UseFetchDeploymentsProps {
-  api: Api;
   app: App;
   from?: number;
   skipQuery?: boolean;
@@ -130,7 +126,6 @@ interface FetchDeploymentsAPIResponse {
 }
 
 export const useFetchDeployments = ({
-  api,
   app,
   from,
   skipQuery,
@@ -194,17 +189,7 @@ export const useFetchDeployments = ({
     return () => {
       unmounted = true;
     };
-  }, [
-    api,
-    app.id,
-    envId,
-    published,
-    branch,
-    status,
-    refreshTime,
-    from,
-    skipQuery,
-  ]);
+  }, [app.id, envId, published, branch, status, refreshTime, from, skipQuery]);
 
   return {
     deployments,
@@ -217,7 +202,6 @@ export const useFetchDeployments = ({
 };
 
 interface StopDeploymentProps {
-  api: Api;
   appId: string;
   deploymentId: string;
   deployments: Array<Deployment>;
@@ -226,7 +210,6 @@ interface StopDeploymentProps {
 }
 
 export const stopDeployment = ({
-  api,
   appId,
   deploymentId,
   deployments,

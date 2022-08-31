@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Location } from "history";
 import { useHistory, useLocation } from "react-router";
-import Api from "~/utils/api/Api";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
@@ -14,7 +13,6 @@ const NodeJS14 = "nodejs14.x";
 const NodeJS12 = "nodejs12.x";
 
 interface Props {
-  api: Api;
   app: App;
   additionalSettings: AppSettings;
 }
@@ -24,7 +22,7 @@ interface LocationState extends Location {
   app: null | number;
 }
 
-const FormAppSettings: React.FC<Props> = ({ api, app, additionalSettings }) => {
+const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
@@ -42,7 +40,6 @@ const FormAppSettings: React.FC<Props> = ({ api, app, additionalSettings }) => {
     <Form
       handleSubmit={updateAdditionalSettings({
         app,
-        api,
         setLoading,
         setError,
         history,

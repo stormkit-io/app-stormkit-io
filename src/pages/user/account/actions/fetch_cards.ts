@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Location } from "history";
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 
 type CardTypeData = {
   last4: string;
@@ -34,7 +34,6 @@ type LocationState = {
 };
 
 interface FetchCardsProps {
-  api: Api;
   location: Location;
 }
 
@@ -43,7 +42,6 @@ interface FetchCardsAPIResponse {
 }
 
 export const useFetchCards = ({
-  api,
   location,
 }: FetchCardsProps): FetchCardsReturnValue => {
   const [cards, setCards] = useState<Cards>([]);
