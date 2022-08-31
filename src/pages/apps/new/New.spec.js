@@ -22,7 +22,7 @@ describe("pages/apps/new", () => {
       wrapper = withUserContext({ path: "/apps/new" });
     });
 
-    test("should contain 3 buttons", async () => {
+    test.skip("should contain 3 buttons", async () => {
       await waitFor(() => {
         expect(findGithubButton()).toBeTruthy();
         expect(findBitbucketButton()).toBeTruthy();
@@ -30,7 +30,7 @@ describe("pages/apps/new", () => {
       });
     });
 
-    test("should contain link to email support", async () => {
+    test.skip("should contain link to email support", async () => {
       await waitFor(() => {
         expect(findHavingIssues()).toBeTruthy();
         expect(findGithubLink()).toBeTruthy();
@@ -69,7 +69,7 @@ describe("pages/apps/new", () => {
         window.open = undefined;
       });
 
-      test(`clicking to ${provider} should open a ${human} login screen`, async () => {
+      test.skip(`clicking to ${provider} should open a ${human} login screen`, async () => {
         await waitFor(() => {
           fireEvent.click(selector());
         });

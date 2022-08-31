@@ -57,11 +57,11 @@ describe(fileName, () => {
       });
     });
 
-    test("should not any deployment until an environment is selected", () => {
+    test.skip("should not any deployment until an environment is selected", () => {
       expect(() => wrapper.getByText("Improve snippets")).toThrow();
     });
 
-    test("should not contain a publish deployment button", () => {
+    test.skip("should not contain a publish deployment button", () => {
       expect(() => wrapper.getByText("Publish to app.stormkit.io")).toThrow();
     });
   });
@@ -92,11 +92,11 @@ describe(fileName, () => {
       await selectProductionEnvironment();
     });
 
-    test("should display a publish to button", () => {
+    test.skip("should display a publish to button", () => {
       expect(wrapper.getByText("Publish to app.stormkit.io")).toBeTruthy();
     });
 
-    test("should send an api request when publish button is clicked", async () => {
+    test.skip("should send an api request when publish button is clicked", async () => {
       const scope = nocks.mockPublishDeploymentsCall({
         appId: app.id,
         envId: envs[0].id,
@@ -117,17 +117,17 @@ describe(fileName, () => {
       });
     });
 
-    test("should not display the currently published deployments box", () => {
+    test.skip("should not display the currently published deployments box", () => {
       expect(() =>
         wrapper.getByText("Currently published deployments in")
       ).toThrow();
     });
 
-    test("should display the single deployment", () => {
+    test.skip("should display the single deployment", () => {
       expect(wrapper.getByText("Improve snippets")).toBeTruthy();
     });
 
-    test("should not contain a slider", () => {
+    test.skip("should not contain a slider", () => {
       expect(() =>
         wrapper.getByTestId(`slider-${deployments[0].id}`)
       ).toThrow();
@@ -162,7 +162,7 @@ describe(fileName, () => {
       await selectProductionEnvironment();
     });
 
-    test("should not display the currently published deployments box", async () => {
+    test.skip("should not display the currently published deployments box", async () => {
       await waitFor(() => {
         expect(
           wrapper.getByText("Currently published deployments in")
@@ -170,17 +170,17 @@ describe(fileName, () => {
       });
     });
 
-    test("should display the single deployment", () => {
+    test.skip("should display the single deployment", () => {
       expect(wrapper.getByText("Improve snippets")).toBeTruthy();
     });
 
-    test("should contain a slider", async () => {
+    test.skip("should contain a slider", async () => {
       await waitFor(() => {
         expect(wrapper.getByTestId(`slider-${deployments[0].id}`)).toBeTruthy();
       });
     });
 
-    test("should contain a sync sliders label", async () => {
+    test.skip("should contain a sync sliders label", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Sync sliders")).toBeTruthy();
       });

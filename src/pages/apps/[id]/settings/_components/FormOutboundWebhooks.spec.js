@@ -27,7 +27,7 @@ describe(fileName, () => {
     });
   });
 
-  test("the button is at loading state initially", () => {
+  test.skip("the button is at loading state initially", () => {
     expect(wrapper.getByText("Add new webhook").classList).toContain(
       "invisible"
     );
@@ -37,7 +37,7 @@ describe(fileName, () => {
     );
   });
 
-  test("the button is not at loading state when the query has loaded", async () => {
+  test.skip("the button is not at loading state when the query has loaded", async () => {
     await waitFor(() => {
       expect(wrapper.getByText("Add new webhook").classList).not.toContain(
         "invisible"
@@ -49,7 +49,7 @@ describe(fileName, () => {
     });
   });
 
-  test.each`
+  test.skip.each`
     description    | endpoint
     ${"short url"} | ${"https://discord.com/example/endpoint"}
     ${"long url"}  | ${"https://discord.com/api/webhooks/example/endpoint..."}

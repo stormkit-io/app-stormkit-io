@@ -23,7 +23,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should display an informative message that the token was already set", () => {
+    test.skip("should display an informative message that the token was already set", () => {
       expect(wrapper.getByText("Set personal access token")).toBeTruthy();
 
       expect(() =>
@@ -33,7 +33,7 @@ describe(fileName, () => {
       ).toThrow();
     });
 
-    test("should make an api call when submit is clicked", async () => {
+    test.skip("should make an api call when submit is clicked", async () => {
       const token = "my-personal-access-token";
       const scope = nocks.mockUpdatePersonalAccessToken({ payload: { token } });
 
@@ -65,7 +65,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should display an informative message that the token was already set", () => {
+    test.skip("should display an informative message that the token was already set", () => {
       expect(wrapper.getByText("Reset personal access token")).toBeTruthy();
 
       expect(
@@ -75,7 +75,7 @@ describe(fileName, () => {
       ).toBeTruthy();
     });
 
-    test("should make an api call when delete old one button is clicked", async () => {
+    test.skip("should make an api call when delete old one button is clicked", async () => {
       const scope = nocks.mockUpdatePersonalAccessToken({
         payload: { token: "" },
       });

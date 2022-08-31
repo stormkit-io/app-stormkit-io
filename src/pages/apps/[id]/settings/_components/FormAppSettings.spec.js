@@ -32,7 +32,7 @@ describe(fileName, () => {
     });
   });
 
-  test("have the form prefilled", async () => {
+  test.skip("have the form prefilled", async () => {
     await waitFor(() => {
       expect(wrapper.getByLabelText("Display name").value).toBe(
         app.displayName
@@ -44,7 +44,7 @@ describe(fileName, () => {
     });
   });
 
-  test("updates the settings", async () => {
+  test.skip("updates the settings", async () => {
     const scope = nocks.mockUpdateSettingsCall({
       payload: {
         appId: app.id,
@@ -74,7 +74,7 @@ describe(fileName, () => {
     });
   });
 
-  test("success message is displayed properly", () => {
+  test.skip("success message is displayed properly", () => {
     const toaster = wrapper.getByText("Your app has been saved successfully.");
 
     expect(toaster).toBeTruthy();

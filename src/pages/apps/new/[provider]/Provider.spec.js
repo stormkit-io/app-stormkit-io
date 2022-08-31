@@ -19,7 +19,7 @@ describe.skip("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should show a login screen", async () => {
+      test.skip("should show a login screen", async () => {
         await waitFor(() => {
           expect(
             wrapper.getByText(
@@ -53,7 +53,7 @@ describe.skip("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should show an error when no repo is found", async () => {
+      test.skip("should show an error when no repo is found", async () => {
         await waitFor(() => {
           expect(
             wrapper.getByText(
@@ -63,7 +63,7 @@ describe.skip("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should display connect repositories and no load more", async () => {
+      test.skip("should display connect repositories and no load more", async () => {
         await waitFor(() => {
           expect(wrapper.getByText("Connect repositories")).toBeTruthy();
           expect(() => wrapper.getByText("Load more")).toThrow();
@@ -110,13 +110,13 @@ describe.skip("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should display stormkit-dev as the selected account", async () => {
+      test.skip("should display stormkit-dev as the selected account", async () => {
         await waitFor(() => {
           expect(wrapper.getByText(/stormkit-dev/)).toBeTruthy();
         });
       });
 
-      test("should display a list of repositories", async () => {
+      test.skip("should display a list of repositories", async () => {
         await waitFor(() => {
           expect(wrapper.getByText(/my-repo-1\b/)).toBeTruthy();
           expect(wrapper.getByText(/my-repo-2\b/)).toBeTruthy();
@@ -169,7 +169,7 @@ describe.skip("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should show an error when no repo is found", async () => {
+      test.skip("should show an error when no repo is found", async () => {
         await waitFor(() => {
           expect(
             wrapper.getByText(
@@ -212,7 +212,7 @@ describe.skip("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should not display load more", async () => {
+      test.skip("should not display load more", async () => {
         await waitFor(() => {
           expect(() => wrapper.getByText("Load more")).toThrow();
         });
@@ -238,7 +238,7 @@ describe.skip("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should display load more", async () => {
+      test.skip("should display load more", async () => {
         await waitFor(() => {
           expect(wrapper.getByText("Load more")).toBeTruthy();
         });
@@ -275,13 +275,13 @@ describe.skip("pages/apps/new/[provider]", () => {
         });
       });
 
-      test("should show the selected account", async () => {
+      test.skip("should show the selected account", async () => {
         await waitFor(() => {
           expect(wrapper.getByText("stormkit-dev")).toBeTruthy();
         });
       });
 
-      test("should show an error when no repo is found", async () => {
+      test.skip("should show an error when no repo is found", async () => {
         await waitFor(() => {
           expect(
             wrapper.getByText(

@@ -22,7 +22,7 @@ describe(fileName, () => {
       });
     });
 
-    test.each`
+    test.skip.each`
       step
       ${"0. checkout master"}
       ${"1. node --version"}
@@ -40,20 +40,20 @@ describe(fileName, () => {
       });
     });
 
-    test("should contain a preview link", async () => {
+    test.skip("should contain a preview link", async () => {
       const { preview } = deploy;
       await waitFor(() => {
         expect(wrapper.getByText(preview).getAttribute("href")).toBe(preview);
       });
     });
 
-    test("should contain a preview button at the bottom of the view", async () => {
+    test.skip("should contain a preview button at the bottom of the view", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Preview")).toBeTruthy();
       });
     });
 
-    test("should contain the deployment information", async () => {
+    test.skip("should contain the deployment information", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Branch")).toBeTruthy();
         expect(wrapper.getByText("master")).toBeTruthy();
@@ -78,7 +78,7 @@ describe(fileName, () => {
       });
     });
 
-    test("should not contain a preview link", async () => {
+    test.skip("should not contain a preview link", async () => {
       const { preview } = deploy;
       await waitFor(() => {
         expect(wrapper.getByText("master")).toBeTruthy();
@@ -86,14 +86,14 @@ describe(fileName, () => {
       });
     });
 
-    test("should not contain a preview button at the bottom of the view", async () => {
+    test.skip("should not contain a preview button at the bottom of the view", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("master")).toBeTruthy();
         expect(() => wrapper.getByText("Preview")).toThrow();
       });
     });
 
-    test("should contain the deployment information", async () => {
+    test.skip("should contain the deployment information", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Branch")).toBeTruthy();
         expect(wrapper.getByText("master")).toBeTruthy();

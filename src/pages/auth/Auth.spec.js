@@ -17,7 +17,7 @@ describe(fileName, () => {
       wrapper = withMockContext(path, { user: { id: 1 } });
     });
 
-    test("redirects user to the given page", async () => {
+    test.skip("redirects user to the given page", async () => {
       await waitFor(() => {
         expect(wrapper.history.location.pathname).toBe("/apps");
       });
@@ -33,7 +33,7 @@ describe(fileName, () => {
       wrapper = withMockContext(path, { user: { id: 1 } });
     });
 
-    test("redirects user to the home page", async () => {
+    test.skip("redirects user to the home page", async () => {
       await waitFor(() => {
         expect(wrapper.history.location.pathname).toBe("/");
       });
@@ -56,7 +56,7 @@ describe(fileName, () => {
       });
     });
 
-    test("displays some text", async () => {
+    test.skip("displays some text", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(/SSL/)).toBeTruthy();
         expect(wrapper.getByText(/automated SSL/)).toBeTruthy();
@@ -64,7 +64,7 @@ describe(fileName, () => {
       });
     });
 
-    test("displays three buttons", async () => {
+    test.skip("displays three buttons", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("GitHub")).toBeTruthy();
         expect(wrapper.getByText("Bitbucket")).toBeTruthy();

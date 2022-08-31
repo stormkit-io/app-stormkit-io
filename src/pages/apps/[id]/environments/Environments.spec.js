@@ -31,7 +31,7 @@ describe(fileName, () => {
     });
   });
 
-  test("should list environments", async () => {
+  test.skip("should list environments", async () => {
     await waitFor(() => {
       envs.forEach(env => {
         expect(wrapper.getByText(env.branch)).toBeTruthy();

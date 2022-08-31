@@ -25,7 +25,7 @@ describe(fileName, () => {
     wrapper.unmount();
   });
 
-  test("Should render the app repo as a link", () => {
+  test.skip("Should render the app repo as a link", () => {
     const el = wrapper.getByLabelText("Repository URL");
     const url = "https://gitlab.com/stormkit-io/frontend";
 

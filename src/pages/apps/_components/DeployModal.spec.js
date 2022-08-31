@@ -104,7 +104,7 @@ describe(fileName, () => {
     });
   };
 
-  test("clicking on deploy now should bring up a modal which the user can use to deploy", async () => {
+  test.skip("clicking on deploy now should bring up a modal which the user can use to deploy", async () => {
     await executeDeployFlow({ id });
 
     await waitFor(() => {
@@ -114,7 +114,7 @@ describe(fileName, () => {
     });
   });
 
-  test("429 errors should display a payment error", async () => {
+  test.skip("429 errors should display a payment error", async () => {
     await executeDeployFlow({
       id,
       status: 429,
@@ -133,7 +133,7 @@ describe(fileName, () => {
     });
   });
 
-  test("Other errors should display a generic error", async () => {
+  test.skip("Other errors should display a generic error", async () => {
     await executeDeployFlow({ id, status: 400 });
 
     await waitFor(() => {

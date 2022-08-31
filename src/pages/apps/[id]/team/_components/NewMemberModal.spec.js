@@ -18,11 +18,11 @@ describe(fileName, () => {
     });
   });
 
-  test("should contain the title", () => {
+  test.skip("should contain the title", () => {
     expect(wrapper.getByText("Invite new member")).toBeTruthy();
   });
 
-  test("should display an info message that describes the process", () => {
+  test.skip("should display an info message that describes the process", () => {
     expect(
       wrapper.getByText(
         "Enter the username to invite your colleague to the team. In the next step you'll get a link to share."
@@ -30,7 +30,7 @@ describe(fileName, () => {
     ).toBeTruthy();
   });
 
-  test("should contain the referral form with a custom submit", async () => {
+  test.skip("should contain the referral form with a custom submit", async () => {
     const token = "some-token-to-be-returned";
     const displayName = "stormkit-dev";
     const provider = "github";
