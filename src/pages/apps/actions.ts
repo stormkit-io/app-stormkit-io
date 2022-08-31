@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { Location, History } from "history";
 import { useLocation } from "react-router-dom";
-import { ModalContextProps } from "~/components/Modal";
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 
 interface FetchAppListProps {
-  api: Api;
   from?: number;
 }
 
@@ -22,7 +20,6 @@ interface FetchAppListAPIResponse {
 }
 
 export const useFetchAppList = ({
-  api,
   from = 0,
 }: FetchAppListProps): FetchAppListReturnValue => {
   const [apps, setApps] = useState<Array<App>>([]);
@@ -60,7 +57,6 @@ export const useFetchAppList = ({
 };
 
 interface FetchAppProps {
-  api: Api;
   appId: string;
 }
 
@@ -80,10 +76,7 @@ interface FetchAppAPIResponse {
 
 const appCache: Record<string, App> = {};
 
-export const useFetchApp = ({
-  api,
-  appId,
-}: FetchAppProps): FetchAppReturnValue => {
+export const useFetchApp = ({ appId }: FetchAppProps): FetchAppReturnValue => {
   const location = useLocation<LocationState>();
   const [app, setApp] = useState<App | undefined>(appCache[appId]);
   const [loading, setLoading] = useState(true);
@@ -154,8 +147,7 @@ export const useFetchApp = ({
   return { app, loading, error };
 };
 
-interface DeployProps extends Pick<ModalContextProps, "toggleModal"> {
-  api: Api;
+interface DeployProps {
   app: App;
   config?: {
     cmd: string;
@@ -167,6 +159,7 @@ interface DeployProps extends Pick<ModalContextProps, "toggleModal"> {
   environment?: Environment;
   setError: SetError;
   setLoading: SetLoading;
+  toggleModal: (val: boolean) => void;
 }
 
 interface DeployAPIResponse {
@@ -174,7 +167,6 @@ interface DeployAPIResponse {
 }
 
 export const deploy = ({
-  api,
   app,
   config,
   setLoading,
@@ -196,11 +188,11 @@ export const deploy = ({
       ...config,
     })
     .then(deploy => {
-      toggleModal(false, () => {
-        if (deploy && deploy.id) {
-          history.push(`/apps/${app.id}/deployments/${deploy.id}`);
-        }
-      });
+      toggleModal(false);
+
+      if (deploy && deploy.id) {
+        history.push(`/apps/${app.id}/deployments/${deploy.id}`);
+      }
     })
     .catch(async res => {
       if (res.status === 429) {

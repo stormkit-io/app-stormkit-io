@@ -1,25 +1,48 @@
-import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
+import React from "react";
+import { History } from "history";
+import gitlabApi from "~/utils/api/Gitlab";
+import api from "~/utils/api/Api";
 import Spinner from "~/components/Spinner";
 import { GitlabButton } from "~/components/Buttons";
 import { login as loginUser } from "./actions";
 import LoginScreen from "./_components/LoginScreen";
 import RepoList from "./_components/RepoList";
 
-export default class GitlabRepositories extends PureComponent {
-  static propTypes = {
-    api: PropTypes.object,
-    gitlab: PropTypes.object,
-    history: PropTypes.object,
-    user: PropTypes.object,
-  };
+interface Account {
+  login: string;
+  avatar: string;
+}
 
-  state = {
+interface Repository {
+  name: string;
+}
+
+interface Props {
+  history: History;
+  filter?: string;
+  loginOauth: () => void;
+}
+
+interface State {
+  repositories?: Repository[];
+  accounts?: Account[];
+  loading?: boolean;
+  requiresLogin?: boolean;
+  error?: string | null;
+  nextPage?: number;
+}
+
+export default class GitlabRepositories extends React.PureComponent<
+  Props,
+  State
+> {
+  unmounted = false;
+
+  state: State = {
     accounts: [],
     repositories: [],
     loading: true,
-    errors: {},
-    nextPage: null,
+    error: null,
   };
 
   componentDidMount() {
@@ -27,7 +50,7 @@ export default class GitlabRepositories extends PureComponent {
   }
 
   init = async () => {
-    if (!this.props.gitlab.accessToken) {
+    if (!gitlabApi.accessToken) {
       return this.updateState({ requiresLogin: true });
     }
 
@@ -35,7 +58,7 @@ export default class GitlabRepositories extends PureComponent {
       await this.user();
       await this.repositories();
     } catch (res) {
-      if (res.message === "unauthorized") {
+      if (res instanceof Error && res.message === "unauthorized") {
         this.updateState({ requiresLogin: true });
       } else {
         this.updateState({ error: "Something unexpected occurred." });
@@ -44,8 +67,7 @@ export default class GitlabRepositories extends PureComponent {
   };
 
   user = async () => {
-    const api = this.props.gitlab;
-    const glUser = await api.user();
+    const glUser = await gitlabApi.user();
 
     // Normalize the user and make it look like an account.
     const user = {
@@ -65,23 +87,22 @@ export default class GitlabRepositories extends PureComponent {
    *
    * @memberof GithubRepositories
    */
-  repositories = async page => {
+  repositories = async (page?: number) => {
     this.updateState({ loading: true });
 
-    const api = this.props.gitlab;
     const { repositories } = this.state;
-    const { repos, nextPage } = await api.repositories({ page });
+    const { repos, nextPage } = await gitlabApi.repositories({ page });
 
     this.updateState({
-      repositories: [...repositories, ...repos],
+      repositories: [...repositories!, ...repos],
       loading: false,
       nextPage,
     });
   };
 
-  updateState = (...args) => {
+  updateState = (args: State) => {
     if (this.unmounted !== true) {
-      this.setState(...args);
+      this.setState(args);
     }
   };
 
@@ -90,7 +111,7 @@ export default class GitlabRepositories extends PureComponent {
   }
 
   render() {
-    const { loginOauth, api, history, filter } = this.props;
+    const { loginOauth, history, filter } = this.props;
     const {
       repositories,
       accounts = [],
@@ -105,7 +126,7 @@ export default class GitlabRepositories extends PureComponent {
           <GitlabButton
             onClick={loginUser({
               loginOauth,
-              updateState: (...args) => this.updateState(...args),
+              updateState: (args: State) => this.updateState(args),
               init: () => this.init(),
             })}
           />
@@ -128,11 +149,7 @@ export default class GitlabRepositories extends PureComponent {
             <div className="flex p-4 border border-solid border-gray-80 rounded bg-gray-90">
               {accounts &&
                 accounts.map(account => (
-                  <div
-                    key={account.login}
-                    value={account.login}
-                    className="flex items-center"
-                  >
+                  <div key={account.login} className="flex items-center">
                     <img
                       src={account.avatar}
                       alt={account.login}
@@ -149,7 +166,7 @@ export default class GitlabRepositories extends PureComponent {
           <RepoList
             api={api}
             history={history}
-            repositories={repositories.filter(r => r.name.includes(filter))}
+            repositories={repositories?.filter(r => r.name.includes(filter!))}
             provider="gitlab"
             loading={loading}
             hasNextPage={!!nextPage}

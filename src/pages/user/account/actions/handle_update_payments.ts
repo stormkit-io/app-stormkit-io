@@ -6,12 +6,11 @@ import {
   StripeError,
 } from "@stripe/stripe-js";
 import { CardNumberElement } from "@stripe/react-stripe-js";
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 
 type UpdatePaymentMethodProps = {
   stripe: Stripe | null;
   elements: StripeElements | null;
-  api: Api;
   setLoading: (value: boolean) => void;
   setError: (value: string | null) => void;
   history: History;
@@ -50,7 +49,7 @@ interface UpdatePaymentMethodAPIResponse {
 export const handleUpdatePaymentMethod =
   (props: UpdatePaymentMethodProps) =>
   async (formValues: UpdatePaymentMethodFormValues): Promise<void> => {
-    const { api, stripe, elements, setLoading, setError, history } = props;
+    const { stripe, elements, setLoading, setError, history } = props;
     const name = formValues.name?.trim();
 
     if (!stripe || !elements) {
@@ -104,7 +103,10 @@ export const handleUpdatePaymentMethod =
         "Your card seems not to be chargeable. Please try using a different card."
       );
     } catch (e) {
-      console.error(e.message);
+      if (e instanceof Error) {
+        console.error(e.message);
+      }
+
       setLoading(false);
       setError(
         "We were not able to create a payment source on Stripe. Please contact us on Discord or through email."

@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import cn from "classnames";
 import { formattedDate } from "~/utils/helpers/deployments";
-import { connect } from "~/utils/context";
 import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
-import { ModalContextProps } from "~/components/Modal";
-import { RootContextProps } from "~/pages/Root.context";
 import ExitStatus from "./ExitStatus";
 import PublishModal from "./PublishModal";
 import CommitInfo from "./CommitInfo";
 import { deleteForever, stopDeployment, setLoadingArgs } from "../actions";
 
-interface Props extends Pick<RootContextProps, "api"> {
+interface Props {
   deployment: Deployment;
   deployments: Array<Deployment>;
   environments: Array<Environment>;
@@ -20,20 +17,15 @@ interface Props extends Pick<RootContextProps, "api"> {
   setDeployments: (value: Array<Deployment>) => void;
 }
 
-interface ContextProps
-  extends Pick<RootContextProps, "api">,
-    ModalContextProps {}
-
-const Deployment: React.FC<Props & ContextProps> = ({
+const Deployment: React.FC<Props> = ({
   deployment,
   deployments,
   environments,
   index,
-  api,
   app,
-  toggleModal,
   setDeployments,
 }): React.ReactElement => {
+  const [isPublishModalOpen, togglePublishModal] = useState(false);
   const [loading, setLoading] = useState<setLoadingArgs>(null);
 
   const urls = {
@@ -66,7 +58,7 @@ const Deployment: React.FC<Props & ContextProps> = ({
             <DotDotDot aria-label={`Deployment ${deployment.id} menu`}>
               <DotDotDot.Item
                 onClick={close => {
-                  toggleModal(true);
+                  togglePublishModal(true);
                   close();
                 }}
                 disabled={isDisabled}
@@ -90,7 +82,6 @@ const Deployment: React.FC<Props & ContextProps> = ({
                   onClick={close => {
                     stopDeployment({
                       appId: app.id,
-                      api,
                       setDeployments,
                       setLoading,
                       deployments,
@@ -111,7 +102,6 @@ const Deployment: React.FC<Props & ContextProps> = ({
                 icon="fas fa-trash-alt text-red-50 mr-2"
                 onClick={() => {
                   deleteForever({
-                    api,
                     appId: app.id,
                     deploymentId: deployment.id,
                     setLoading,
@@ -132,7 +122,8 @@ const Deployment: React.FC<Props & ContextProps> = ({
         </div>
       </div>
       <PublishModal
-        api={api}
+        isOpen={isPublishModalOpen}
+        toggleModal={togglePublishModal}
         app={app}
         environments={environments}
         deployment={deployment}
@@ -141,6 +132,4 @@ const Deployment: React.FC<Props & ContextProps> = ({
   );
 };
 
-export default connect<Props, ContextProps>(Deployment, [
-  { Context: PublishModal, props: ["toggleModal"], wrap: true },
-]);
+export default Deployment;

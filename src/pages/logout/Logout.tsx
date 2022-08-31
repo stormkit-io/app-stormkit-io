@@ -1,15 +1,14 @@
-import { useEffect, FC } from "react";
-import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
-import { connect } from "~/utils/context";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "~/pages/auth/Auth.context";
 
-const Logout: FC<AuthContextProps> = ({ logout }): null => {
+const Logout: React.FC = (): null => {
+  const { logout } = useContext(AuthContext);
+
   useEffect(() => {
-    logout();
+    logout?.();
   }, [logout]);
 
   return null;
 };
 
-export default connect<unknown, AuthContextProps>(Logout, [
-  { Context: AuthContext, props: ["logout"] },
-]);
+export default Logout;

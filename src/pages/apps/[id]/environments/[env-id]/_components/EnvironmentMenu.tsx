@@ -1,9 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import cn from "classnames";
 import Link from "~/components/Link";
+import { AppContext } from "~/pages/apps/App.context";
 import { BackButton } from "~/components/Buttons";
 import Env from "~/pages/apps/[id]/environments/_components/Environment";
+import { EnvironmentContext } from "../../Environment.context";
 
 const menuItems = [
   { icon: "far fa-chart-bar", text: "Logs", path: "/logs" },
@@ -12,7 +13,9 @@ const menuItems = [
   { icon: "fas fa-globe", text: "Configure domain", path: "/domain" },
 ];
 
-const EnvironmentMenu = ({ environment, app }) => {
+const EnvironmentMenu: React.FC = () => {
+  const { app } = useContext(AppContext);
+  const { environment } = useContext(EnvironmentContext);
   const url = `/apps/${app.id}/environments/${environment.id}`;
   const path = window?.location?.pathname;
 
@@ -47,10 +50,6 @@ const EnvironmentMenu = ({ environment, app }) => {
       </div>
     </div>
   );
-};
-
-EnvironmentMenu.propTypes = {
-  environment: PropTypes.object,
 };
 
 export default EnvironmentMenu;

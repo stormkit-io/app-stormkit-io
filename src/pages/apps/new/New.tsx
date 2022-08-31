@@ -1,26 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router";
-import { connect } from "~/utils/context";
 import DefaultLayout from "~/layouts/DefaultLayout";
-import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import { Title } from "~/pages/apps/_components";
 import { useFetchAppList } from "~/pages/apps/actions";
 import ExplanationBox from "~/components/ExplanationBox";
 import Link from "~/components/Link";
 import * as btn from "~/components/Buttons";
 
-interface ContextProps extends AuthContextProps, RootContextProps {}
-
-const Start: React.FC<ContextProps> = ({
-  loginOauth,
-  api,
-}): React.ReactElement => {
+const Start: React.FC = (): React.ReactElement => {
+  const { loginOauth } = useContext(AuthContext);
   const history = useHistory();
-  const { apps, loading } = useFetchAppList({ api });
+  const { apps, loading } = useFetchAppList({});
 
   const login = (provider: Provider) => {
-    return loginOauth(provider).then(({ accessToken }) => {
+    return loginOauth?.(provider).then(({ accessToken }) => {
       if (accessToken) {
         history.push(`/apps/new/${provider}`);
       }
@@ -87,7 +81,4 @@ const Start: React.FC<ContextProps> = ({
   );
 };
 
-export default connect<unknown, ContextProps>(Start, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AuthContext, props: ["loginOauth"] },
-]);
+export default Start;

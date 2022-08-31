@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Location } from "history";
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 
 export type StatusName = "trialing" | "active";
 export type SubscriptionName = "enterprise" | "medium" | "starter" | "free";
@@ -35,7 +35,6 @@ type LocationState = {
 };
 
 type FetchSubscriptionProps = {
-  api: Api;
   location: Location;
 };
 
@@ -50,7 +49,6 @@ interface FetchSubscriptionAPIResponse {
 }
 
 export const useFetchSubscription = ({
-  api,
   location,
 }: FetchSubscriptionProps): FetchSubscriptionReturnValue => {
   const [loading, setLoading] = useState(false);

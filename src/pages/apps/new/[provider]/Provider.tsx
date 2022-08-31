@@ -1,9 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "~/utils/context";
+import React, { useContext, useState } from "react";
+import { useRouteMatch, useHistory } from "react-router-dom";
 import DefaultLayout from "~/layouts/DefaultLayout";
-import AuthContext from "~/pages/auth/Auth.context";
-import RootContext from "~/pages/Root.context";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import { Title } from "~/pages/apps/_components";
 import { BackButton } from "~/components/Buttons";
 import ExplanationBox from "~/components/ExplanationBox";
@@ -13,19 +11,26 @@ import GitlabRepos from "./Provider.gitlab";
 import Form from "~/components/Form";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
-const Provider = ({
-  match,
-  github,
-  gitlab,
-  bitbucket,
-  history,
-  user,
-  loginOauth,
-  api,
-}) => {
-  const [filter, setFilter] = React.useState("");
-  const { provider } = match.params;
-  const popupLogin = () => loginOauth(provider);
+interface RouteMatchParams {
+  provider: string;
+}
+
+const Provider: React.FC = () => {
+  const { user, loginOauth } = useContext(AuthContext);
+  const [filter, setFilter] = useState<string>("");
+  const history = useHistory();
+  const match = useRouteMatch<RouteMatchParams>();
+  const provider = match.params.provider;
+
+  if (
+    provider !== "github" &&
+    provider !== "gitlab" &&
+    provider !== "bitbucket"
+  ) {
+    return <>Provider is not supported.</>;
+  }
+
+  const popupLogin = () => loginOauth?.(provider);
 
   return (
     <DefaultLayout>
@@ -62,9 +67,7 @@ const Provider = ({
             {provider === "github" && (
               <GithubRepos
                 history={history}
-                github={github}
-                user={user}
-                api={api}
+                user={user!}
                 loginOauth={popupLogin}
                 filter={filter}
               />
@@ -72,9 +75,7 @@ const Provider = ({
 
             {provider === "bitbucket" && (
               <BitbucketRepos
-                api={api}
                 history={history}
-                bitbucket={bitbucket}
                 loginOauth={popupLogin}
                 filter={filter}
               />
@@ -82,9 +83,7 @@ const Provider = ({
 
             {provider === "gitlab" && (
               <GitlabRepos
-                api={api}
                 history={history}
-                gitlab={gitlab}
                 loginOauth={popupLogin}
                 filter={filter}
               />
@@ -108,16 +107,4 @@ const Provider = ({
   );
 };
 
-Provider.propTypes = {
-  user: PropTypes.object,
-  bitbucket: PropTypes.object,
-  github: PropTypes.object,
-  gitlab: PropTypes.object,
-  api: PropTypes.object,
-  match: PropTypes.object,
-};
-
-export default connect(Provider, [
-  { Context: RootContext, props: ["bitbucket", "github", "gitlab", "api"] },
-  { Context: AuthContext, props: ["user", "loginOauth"] },
-]);
+export default Provider;

@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
-import AppContext, { AppContextProps } from "~/pages/apps/App.context";
-import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
+import React, { useState, useEffect, useContext } from "react";
+import { AppContext } from "~/pages/apps/App.context";
+import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
-import { connect } from "~/utils/context";
 import { upsertSnippets } from "../actions";
 import { html } from "@codemirror/lang-html";
 
@@ -17,19 +15,10 @@ interface Props {
   setSnippets: (snippets: Snippets) => void;
 }
 
-interface ContextProps
-  extends Pick<AppContextProps, "app">,
-    Pick<RootContextProps, "api"> {
-  environment: Environment;
-}
-
-const SnippetModal: React.FC<Props & ContextProps> = ({
+const SnippetModal: React.FC<Props> = ({
   closeModal,
   snippets,
   snippet,
-  api,
-  app,
-  environment,
   setSnippets,
 }): React.ReactElement => {
   const isSnippetEnabled = snippet?.enabled || false;
@@ -39,6 +28,8 @@ const SnippetModal: React.FC<Props & ContextProps> = ({
   const [isEnabled, setIsEnabled] = useState(isSnippetEnabled);
   const [isPrepend, setIsPrepend] = useState(isSnippetPrepend);
   const [codeContent, setCodeContent] = useState(snippet?.content || "");
+  const { app } = useContext(AppContext);
+  const { environment } = useContext(EnvironmentContext);
 
   useEffect(() => {
     setIsEnabled(isSnippetEnabled);
@@ -52,7 +43,6 @@ const SnippetModal: React.FC<Props & ContextProps> = ({
       </h2>
       <Form
         handleSubmit={upsertSnippets({
-          api,
           app,
           environment,
           snippets,
@@ -153,8 +143,4 @@ const SnippetModal: React.FC<Props & ContextProps> = ({
   );
 };
 
-export default connect<Props, ContextProps>(SnippetModal, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
-  { Context: EnvironmentContext, props: ["environment"] },
-]);
+export default SnippetModal;

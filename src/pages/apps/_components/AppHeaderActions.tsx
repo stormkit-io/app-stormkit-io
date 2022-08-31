@@ -1,21 +1,15 @@
-import React from "react";
-import { connect } from "~/utils/context";
+import React, { useState } from "react";
 import Button from "~/components/Button";
-import { ModalContextProps } from "~/components/Modal";
-import { RootContextProps } from "~/pages/Root.context";
 import DeployModal from "./DeployModal";
 
-interface Props extends Pick<RootContextProps, "api"> {
+interface Props {
   app: App;
   environments: Array<Environment>;
 }
 
-const HeaderActions: React.FC<Props & ModalContextProps> = ({
-  api,
-  app,
-  environments,
-  toggleModal,
-}) => {
+const HeaderActions: React.FC<Props> = ({ app, environments }) => {
+  const [isOpen, toggleModal] = useState(false);
+
   return (
     <div className="mr-6">
       <Button
@@ -26,15 +20,15 @@ const HeaderActions: React.FC<Props & ModalContextProps> = ({
         <span className="fas fa-rocket mr-4 text-lg" />
         <span className="text-sm">Deploy now</span>
       </Button>
-      <DeployModal api={api} app={app} environments={environments} />
+      {isOpen && (
+        <DeployModal
+          app={app}
+          environments={environments}
+          toggleModal={toggleModal}
+        />
+      )}
     </div>
   );
 };
 
-export default connect<Props, ModalContextProps>(HeaderActions, [
-  {
-    Context: DeployModal,
-    props: ["toggleModal"],
-    wrap: true,
-  },
-]);
+export default HeaderActions;

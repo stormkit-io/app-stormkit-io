@@ -22,7 +22,7 @@ interface FetchOptions extends Record<string, unknown> {
   params?: Body; // alias for body
 }
 
-export default class Api {
+class Api {
   static STORAGE_TOKEN_KEY = "skit_token";
 
   static isAbsolute(url: string): boolean {
@@ -207,3 +207,5 @@ export default class Api {
     }
   }
 }
+
+export default new Api({ baseurl: process.env.API_DOMAIN || "" });

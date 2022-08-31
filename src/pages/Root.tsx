@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import { StylesProvider } from "@material-ui/core/styles";
-import RootContext from "./Root.context";
+import AuthContext from "./auth/Auth.context";
 import routes from "./routes";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 const Root: React.FC<Props> = ({ Router }): React.ReactElement => (
   <StylesProvider injectFirst>
     <Router>
-      <RootContext.Provider>
+      <AuthContext>
         <Switch>
           {routes.map(route => (
             <Route
@@ -20,7 +20,7 @@ const Root: React.FC<Props> = ({ Router }): React.ReactElement => (
             />
           ))}
         </Switch>
-      </RootContext.Provider>
+      </AuthContext>
     </Router>
   </StylesProvider>
 );

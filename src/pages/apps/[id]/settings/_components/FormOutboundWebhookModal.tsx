@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import Api from "~/utils/api/Api";
 import { toArray } from "~/utils/helpers/array";
 import Modal from "~/components/Modal";
 import { timeout as animationTimeout } from "~/components/Modal/constants";
@@ -24,7 +23,6 @@ const generateRequestHeadersObject = (
 };
 
 interface Props {
-  api: Api;
   app: App;
   isOpen: boolean;
   toggleModal: (val: boolean) => void;
@@ -34,7 +32,6 @@ interface Props {
 const FormNewOutboundWebhookModal: React.FC<Props> = ({
   isOpen,
   toggleModal,
-  api,
   app,
   webhook,
 }): React.ReactElement => {
@@ -122,7 +119,6 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
           setError(null);
 
           upsertOutboundWebhook({
-            api,
             app,
           })({
             ...hooks,

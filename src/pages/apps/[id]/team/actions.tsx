@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Location, History } from "history";
 import { useLocation } from "react-router-dom";
 import Link from "~/components/Link";
-import Api from "~/utils/api/Api";
-import { ConfirmModalProps } from "~/components/ConfirmModal";
+import api from "~/utils/api/Api";
 
 interface FetchMemberProps {
-  api: Api;
   app: App;
 }
 
@@ -14,7 +12,7 @@ interface LocationState extends Location {
   members: number;
 }
 
-interface Member {
+export interface Member {
   appId: string;
   isOwner: Boolean;
   createdAt: number | null;
@@ -32,7 +30,6 @@ interface FetchMemberReturnValue {
 }
 
 export const useFetchMembers = ({
-  api,
   app,
 }: FetchMemberProps): FetchMemberReturnValue => {
   const location = useLocation<LocationState>();
@@ -72,7 +69,6 @@ export const useFetchMembers = ({
 };
 
 interface HandleInviteProps {
-  api: Api;
   app: App;
   setToken: (v: string) => void;
   setError: SetError;
@@ -89,7 +85,7 @@ interface HandleInviteResponse {
 }
 
 export const handleInvite =
-  ({ api, app, setToken, setError, setLoading }: HandleInviteProps) =>
+  ({ app, setToken, setError, setLoading }: HandleInviteProps) =>
   ({ displayName, provider }: InviteFormValues) => {
     setLoading(true);
 
@@ -128,39 +124,36 @@ export const handleInvite =
       });
   };
 
-interface HandleDeleteProps extends Pick<ConfirmModalProps, "confirmModal"> {
+interface HandleDeleteProps {
   userId: string;
-  api: Api;
   app: App;
   history: History;
+  setError: SetError;
+  setLoading: SetLoading;
 }
 
-export const handleDelete =
-  ({ userId, api, app, history, confirmModal }: HandleDeleteProps) =>
-  () => {
-    confirmModal(
-      "Your are about to remove a member from this app. You will need to re-invite if the user needs access again.",
-      {
-        onConfirm: ({ setError, setLoading, closeModal }) => {
-          setLoading(true);
+export const handleDelete = ({
+  userId,
+  app,
+  history,
+  setError,
+  setLoading,
+}: HandleDeleteProps): Promise<void> => {
+  setLoading(true);
 
-          api
-            .delete(`/app/member`, { appId: app.id, userId })
-            .then(() => {
-              setLoading(false);
-              closeModal();
-              setTimeout(() => {
-                history.replace({ state: { members: Date.now() } });
-              }, 250);
-            })
-            .catch(res => {
-              setLoading(false);
-              setError(
-                res.error ||
-                  "An unknown error occurred. Please try again and if the problem persists contact us from Discord or email."
-              );
-            });
-        },
-      }
-    );
-  };
+  return api
+    .delete(`/app/member`, { appId: app.id, userId })
+    .then(() => {
+      setLoading(false);
+      setTimeout(() => {
+        history.replace({ state: { members: Date.now() } });
+      }, 250);
+    })
+    .catch(res => {
+      setLoading(false);
+      setError(
+        res.error ||
+          "An unknown error occurred. Please try again and if the problem persists contact us from Discord or email."
+      );
+    });
+};

@@ -2,10 +2,9 @@ import React from "react";
 import UserMenu from "~/layouts/_components/UserMenu";
 import Link from "~/components/Link";
 import { formattedDate } from "~/utils/helpers/deployments";
-import { RootContextProps } from "~/pages/Root.context";
 import AppHeaderActions from "./AppHeaderActions";
 
-interface Props extends Pick<RootContextProps, "api"> {
+interface Props {
   app: App;
   envs: Array<Environment>;
 }
@@ -16,7 +15,7 @@ const providerHosts: Record<Provider, string> = {
   gitlab: "gitlab.com",
 };
 
-const AppHeader: React.FC<Props> = ({ app, envs, api }): React.ReactElement => {
+const AppHeader: React.FC<Props> = ({ app, envs }): React.ReactElement => {
   const repoPath = app.repo.substring(app.repo.indexOf("/") + 1);
 
   return (
@@ -45,7 +44,7 @@ const AppHeader: React.FC<Props> = ({ app, envs, api }): React.ReactElement => {
         </div>
       </div>
       <div className="flex flex-auto items-center justify-end">
-        <AppHeaderActions app={app} api={api} environments={envs} />
+        <AppHeaderActions app={app} environments={envs} />
         <UserMenu />
       </div>
     </header>

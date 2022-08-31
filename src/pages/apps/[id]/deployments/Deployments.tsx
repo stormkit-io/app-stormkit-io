@@ -1,27 +1,20 @@
-import React, { useState } from "react";
-import AppContext, { AppContextProps } from "~/pages/apps/App.context";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
+import React, { useContext, useState } from "react";
+import { AppContext } from "~/pages/apps/App.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
-import { connect } from "~/utils/context";
 import { useFetchDeployments, Filters as IFilters } from "./actions";
 import Deployment from "./_components/Deployment";
 import Filters from "./_components/Filters";
 import EmptyState from "./_components/EmptyState";
 
-type ContextProps = RootContextProps & AppContextProps;
-
-const Deployments: React.FC<ContextProps> = ({
-  app,
-  environments,
-  api,
-}): React.ReactElement => {
+const Deployments: React.FC = (): React.ReactElement => {
+  const { app, environments } = useContext(AppContext);
   const [from, setFrom] = useState(0);
   const [filters, setFilters] = useState<IFilters>({});
 
   const { deployments, success, hasNextPage, setDeployments, loading, error } =
-    useFetchDeployments({ app, api, from, setFrom, filters });
+    useFetchDeployments({ app, from, setFrom, filters });
 
   setDeployments;
   if (error) {
@@ -65,7 +58,6 @@ const Deployments: React.FC<ContextProps> = ({
                 setDeployments={setDeployments}
                 index={i}
                 app={app}
-                api={api}
                 key={d.id}
               />
             ))
@@ -88,7 +80,4 @@ const Deployments: React.FC<ContextProps> = ({
   );
 };
 
-export default connect<unknown, ContextProps>(Deployments, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app", "environments"] },
-]);
+export default Deployments;

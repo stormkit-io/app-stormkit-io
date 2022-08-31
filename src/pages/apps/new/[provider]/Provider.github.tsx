@@ -1,6 +1,7 @@
-import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
-import g from "lodash.get";
+import React from "react";
+import { History } from "history";
+import api from "~/utils/api/Api";
+import githubApi from "~/utils/api/Github";
 import Spinner from "~/components/Spinner";
 import Link from "~/components/Link";
 import { GithubButton } from "~/components/Buttons";
@@ -15,33 +16,56 @@ const URL = {
   staging: "https://github.com/apps/stormkit-io-staging/installations/new",
   test: "https://github.com/apps/stormkit-io-dev/installations/new",
   local: "https://github.com/apps/stormkit-io-dev/installations/new",
-}[process.env.STORMKIT_ENV];
+}[process.env.STORMKIT_ENV as "production" | "staging" | "test" | "local"];
 
 const defaultPageQueryParams = {
   page: 1,
   per_page: 25,
 };
 
-export default class GithubRepos extends PureComponent {
-  static propTypes = {
-    github: PropTypes.object,
-    history: PropTypes.object,
-    loginOauth: PropTypes.func,
-    user: PropTypes.object,
-    api: PropTypes.object,
-  };
+interface Repository {
+  name: string;
+}
 
-  state = {
-    selectedAccount: null,
+interface Account {
+  login: string;
+  installationId: string;
+  avatar: string;
+}
+
+interface Props {
+  user: User;
+  history: History;
+  filter?: string;
+  loginOauth: () => void;
+}
+
+interface State {
+  accounts?: Account[];
+  repositories?: Repository[];
+  selectedAccount?: Account;
+  loading?: boolean;
+  requiresLogin?: boolean;
+  loadingInsert?: boolean;
+  hasNextPage?: boolean;
+  pageQueryParams?: {
+    page: number;
+    per_page: number;
+  };
+}
+
+export default class GithubRepos extends React.PureComponent<Props, State> {
+  state: State = {
     accounts: [],
     repositories: [],
     loading: true,
-    errors: {},
     requiresLogin: false,
     loadingInsert: false,
     hasNextPage: false,
     pageQueryParams: defaultPageQueryParams,
   };
+
+  unmounted = false;
 
   async componentDidMount() {
     this.init();
@@ -49,9 +73,7 @@ export default class GithubRepos extends PureComponent {
 
   init = async () => {
     try {
-      const { github } = this.props;
-
-      if (!github.accessToken) {
+      if (!githubApi.accessToken) {
         return this.updateState({ requiresLogin: true });
       }
 
@@ -59,36 +81,38 @@ export default class GithubRepos extends PureComponent {
       await this.updateState({ accounts, selectedAccount });
       this.getRepositories();
     } catch (e) {
-      if (e.message === "unauthorized") {
+      if (e instanceof Error && e.message === "unauthorized") {
         this.updateState({ requiresLogin: true });
       } else {
-        this.updateState({ errors: e, loading: false });
+        this.updateState({ loading: false });
       }
     }
   };
 
-  getInstallations = async () => {
-    const api = this.props.github;
-    const insts = await api.installations();
+  getInstallations = async (): Promise<{
+    accounts?: Account[];
+    selectedAccount?: Account;
+  }> => {
+    const insts = await githubApi.installations();
 
     if (insts.total_count === 0) {
       this.updateState({ repositories: [], loading: false });
       return {};
     }
 
-    const accounts = [];
+    const accounts: Account[] = [];
     const { user } = this.props;
     let selectedAccount;
 
     // List installations. From these installations we will be able to fetch the accounts.
-    insts.installations.forEach(inst => {
+    insts.installations.forEach((inst: any) => {
       const acc = {
         login: inst.account.login,
         installationId: inst.id,
         avatar: inst.account.avatar_url,
       };
 
-      if (g(inst, "account.login") === user.displayName) {
+      if (inst?.account?.login === user.displayName) {
         selectedAccount = acc;
       }
 
@@ -110,7 +134,7 @@ export default class GithubRepos extends PureComponent {
     return { accounts, selectedAccount };
   };
 
-  connectRepo = e => {
+  connectRepo = (e: React.MouseEvent) => {
     e.preventDefault();
 
     openPopup({
@@ -133,32 +157,35 @@ export default class GithubRepos extends PureComponent {
       return;
     }
 
-    const api = this.props.github;
     const { repositories, pageQueryParams } = this.state;
 
     this.updateState({ loading: true });
 
-    const res = await api.repositories({
+    const res = await githubApi.repositories({
       installationId: selectedAccount.installationId,
       params: pageQueryParams,
     });
 
     const hasNextPage =
-      res.total_count > pageQueryParams.page * pageQueryParams.per_page;
+      res.total_count > pageQueryParams!.page * pageQueryParams!.per_page;
 
     this.updateState({
-      repositories: [...repositories, ...res.repositories],
+      repositories: [...repositories!, ...res.repositories],
       loading: false,
       hasNextPage,
       pageQueryParams: hasNextPage
-        ? { ...pageQueryParams, page: pageQueryParams.page + 1 }
+        ? {
+            per_page:
+              pageQueryParams?.per_page || defaultPageQueryParams.per_page,
+            page: pageQueryParams!.page + 1,
+          }
         : pageQueryParams,
     });
   };
 
-  onAccountChange = async login => {
-    const selectedAccount = this.state.accounts.find(a => a.login === login);
-    const accounts = [...this.state.accounts].map(a => ({
+  onAccountChange = async (login: string) => {
+    const selectedAccount = this.state.accounts?.find(a => a.login === login);
+    const accounts = [...this.state.accounts!].map(a => ({
       ...a,
       selected: a.login === login,
     }));
@@ -170,11 +197,11 @@ export default class GithubRepos extends PureComponent {
     }
   };
 
-  updateState = (...args) => {
+  updateState = (args: State) => {
     // wait for the callback to be triggered to resolve the promise to avoid side effects (too) slowly mutating the state
     return new Promise(resolve => {
       if (this.unmounted !== true) {
-        this.setState(...args, () => {
+        this.setState(args, () => {
           resolve(true);
         });
       } else {
@@ -188,7 +215,7 @@ export default class GithubRepos extends PureComponent {
   }
 
   render() {
-    const { loginOauth, api, history, filter } = this.props;
+    const { loginOauth, history, filter } = this.props;
     const {
       repositories,
       accounts = [],
@@ -206,7 +233,7 @@ export default class GithubRepos extends PureComponent {
           <GithubButton
             onClick={loginUser({
               loginOauth,
-              updateState: (...args) => this.updateState(...args),
+              updateState: (args: State) => this.updateState(args),
               init: () => this.init(),
             })}
           />
@@ -238,7 +265,7 @@ export default class GithubRepos extends PureComponent {
           <RepoList
             api={api}
             history={history}
-            repositories={repositories.filter(r => r.name.includes(filter))}
+            repositories={repositories?.filter(r => r.name.includes(filter!))}
             provider="github"
             loading={loading}
             onNextPageClick={this.getRepositories}
@@ -249,7 +276,7 @@ export default class GithubRepos extends PureComponent {
         <div className="w-full text-center mt-12">
           Can't see what you're looking for?{" "}
           <Link to={URL} onClick={this.connectRepo} secondary>
-            {repositories.length
+            {repositories?.length
               ? "Connect more repositories"
               : "Connect repositories"}
           </Link>

@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import cn from "classnames";
 import Link from "~/components/Link";
-import { ModalContextProps } from "~/components/Modal";
-import { connect } from "~/utils/context";
 import PersonalAccessTokenModal from "./PersonalAccessTokenModal";
 
 interface Props {
@@ -19,10 +17,11 @@ const showPersonalAccessButton = (provider: Provider): boolean => {
   return provider === "gitlab";
 };
 
-const ConnectedAccounts: React.FC<Props & ModalContextProps> = ({
+const ConnectedAccounts: React.FC<Props> = ({
   accounts,
-  toggleModal,
 }): React.ReactElement => {
+  const [isOpen, toggleModal] = useState(false);
+
   return (
     <div className="mt-12">
       <h2 className="font-bold text-lg">Connected Accounts</h2>
@@ -56,7 +55,12 @@ const ConnectedAccounts: React.FC<Props & ModalContextProps> = ({
                   {hasPersonalAccessToken ? "Reset" : "Set"} personal access
                   token
                 </Link>
-                <PersonalAccessTokenModal hasToken={hasPersonalAccessToken} />
+                {isOpen && (
+                  <PersonalAccessTokenModal
+                    hasToken={hasPersonalAccessToken}
+                    toggleModal={toggleModal}
+                  />
+                )}
               </span>
             ) : undefined}
           </div>
@@ -66,6 +70,4 @@ const ConnectedAccounts: React.FC<Props & ModalContextProps> = ({
   );
 };
 
-export default connect<Props, ModalContextProps>(ConnectedAccounts, [
-  { Context: PersonalAccessTokenModal, props: ["toggleModal"], wrap: true },
-]);
+export default ConnectedAccounts;

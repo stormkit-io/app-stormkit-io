@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Redirect, useLocation } from "react-router-dom";
 import qs from "query-string";
-import { connect } from "~/utils/context";
 import CenterLayout from "~/layouts/CenterLayout";
 import Logo from "~/components/Logo";
-import AuthContext from "./Auth.context";
-import OauthLogin from "./_components/OauthLogin";
+import { AuthContext } from "./Auth.context";
+import InfoBox from "~/components/InfoBox";
+import * as buttons from "~/components/Buttons";
 import "./Auth.css";
 import { LocalStorage } from "~/utils/storage";
 
@@ -13,7 +13,8 @@ interface ContextProps {
   user: User;
 }
 
-const Auth: React.FC<ContextProps> = ({ user }): React.ReactElement => {
+const Auth: React.FC<ContextProps> = (): React.ReactElement => {
+  const { user, authError, loginOauth } = useContext(AuthContext);
   const location = useLocation();
 
   if (user) {
@@ -24,9 +25,8 @@ const Auth: React.FC<ContextProps> = ({ user }): React.ReactElement => {
     }
   }
 
-  const queryString = location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const referral = urlParams.get("referral");
+  const referral = new URLSearchParams(location.search).get("referral");
+
   if (referral !== null) {
     // set cookie for a week
     LocalStorage.set("referral", referral);
@@ -64,13 +64,25 @@ const Auth: React.FC<ContextProps> = ({ user }): React.ReactElement => {
         <div className="auth-box p-6 py-12 bg-blue-50 text-center">
           <h1 className="font-bold text-xl">Authentication</h1>
           <p className="mt-2 mb-12 text-base">Log in with your provider</p>
-          <OauthLogin />
+          <div>
+            <buttons.GithubButton
+              onClick={() => loginOauth?.("github")}
+              className="mb-8 mx-12"
+            />
+            <buttons.GitlabButton
+              onClick={() => loginOauth?.("gitlab")}
+              className="mb-8 mx-12"
+            />
+            <buttons.BitbucketButton
+              onClick={() => loginOauth?.("bitbucket")}
+              className="mx-12"
+            />
+            {authError && <InfoBox className="mt-4">{authError}</InfoBox>}
+          </div>
         </div>
       </div>
     </CenterLayout>
   );
 };
 
-export default connect<unknown, ContextProps>(Auth, [
-  { Context: AuthContext, props: ["user"] },
-]);
+export default Auth;

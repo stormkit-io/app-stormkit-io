@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-import Api from "~/utils/api/Api";
-import Bitbucket from "~/utils/api/Bitbucket";
-import Github from "~/utils/api/Github";
-import Gitlab from "~/utils/api/Gitlab";
+import api from "~/utils/api/Api";
+import bitbucketApi from "~/utils/api/Bitbucket";
+import githubApi from "~/utils/api/Github";
+import gitlabApi from "~/utils/api/Gitlab";
 import openPopup, { DataMessage } from "~/utils/helpers/popup";
 import { LocalStorage } from "~/utils/storage";
 
 const LS_USER = "skit_user";
-
-interface FetchUserProps {
-  api: Api;
-}
 
 interface FetchUserReturnValue {
   error: string | null;
@@ -27,7 +23,7 @@ interface FetchUserResponse {
   ok: boolean;
 }
 
-export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
+export const useFetchUser = (): FetchUserReturnValue => {
   const token = api.getAuthToken();
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User>();
@@ -69,23 +65,13 @@ export const useFetchUser = ({ api }: FetchUserProps): FetchUserReturnValue => {
   return { error, user, accounts, loading, setError, setUser };
 };
 
-interface LogoutProps {
-  api: Api;
-}
-
-export const logout =
-  ({ api }: LogoutProps) =>
-  (): void => {
-    api.removeAuthToken();
-    LocalStorage.del(LS_USER);
-    window.location.href = "/";
-  };
+export const logout = () => (): void => {
+  api.removeAuthToken();
+  LocalStorage.del(LS_USER);
+  window.location.href = "/";
+};
 
 interface LoginOauthProps {
-  api: Api;
-  bitbucket: Bitbucket;
-  gitlab: Gitlab;
-  github: Github;
   setUser: (u: User) => void;
   setError: SetError;
 }
@@ -99,14 +85,7 @@ export interface LoginOauthReturnValue {
 // This one returns a function that returns another function.
 // The first function is used to inject the api props. The second
 // function produces an oauthlogin function based on the provider.
-export const loginOauth = ({
-  api,
-  bitbucket,
-  gitlab,
-  github,
-  setUser,
-  setError,
-}: LoginOauthProps) => {
+export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
   return (provider: Provider): Promise<LoginOauthReturnValue> => {
     return new Promise(resolve => {
       let url = api.baseurl + `/auth/${provider}`;
@@ -123,9 +102,9 @@ export const loginOauth = ({
           setUser(data.user);
 
           // Persist it for this session
-          bitbucket.accessToken = data.accessToken;
-          github.accessToken = data.accessToken;
-          gitlab.accessToken = data.accessToken;
+          bitbucketApi.accessToken = data.accessToken;
+          githubApi.accessToken = data.accessToken;
+          gitlabApi.accessToken = data.accessToken;
 
           resolve({
             user: data.user,

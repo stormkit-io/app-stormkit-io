@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { RootContextProps } from "~/pages/Root.context";
 import { AppContextProps } from "~/pages/apps/App.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
-import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
-import { connect } from "~/utils/context";
+import ConfirmModal from "~/components/ConfirmModal";
 import {
   insertEnvironment,
   editEnvironment,
@@ -15,15 +13,11 @@ import {
   deleteEnvironment,
 } from "../actions";
 
-interface Props
-  extends Pick<RootContextProps, "api">,
-    Pick<AppContextProps, "app"> {
+interface Props extends Pick<AppContextProps, "app"> {
   environment?: Environment;
   isOpen: boolean;
   toggleModal: (val: boolean) => void;
 }
-
-interface ContextProps extends ConfirmModalProps {}
 
 type EnvVar = { key: string; value: string };
 
@@ -54,12 +48,10 @@ const computeAutoDeployValue = (env?: Environment): autoDeployValues => {
     : "disabled";
 };
 
-const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
+const EnvironmentFormModal: React.FC<Props> = ({
   isOpen,
   toggleModal,
   environment: env,
-  confirmModal,
-  api,
   app,
 }): React.ReactElement => {
   const history = useHistory();
@@ -72,12 +64,13 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
     computeAutoDeployValue(env)
   );
 
+  const [isDeleteConfirmModalOpen, toggleDeleteConfirmModal] = useState(false);
   const [branchName, setBranchName] = useState(env?.branch || "");
   const [envVars, setEnvVars] = useState(envVarsToArray(env));
   const [loading, setLoading] = useState(false);
   const [buildCmd, setBuildCmd] = useState(env?.build?.cmd || "");
   const [error, setError] = useState(null);
-  const { meta } = useFetchRepoType({ api, app, env });
+  const { meta } = useFetchRepoType({ app, env });
   const isFramework = frameworks.indexOf(meta.type) > -1;
   const isEdit = !!env?.id;
   const handleSubmit = isEdit ? editEnvironment : insertEnvironment;
@@ -108,7 +101,6 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
     >
       <Form
         handleSubmit={handleSubmit({
-          api,
           app,
           isAutoPublish,
           isAutoDeploy: autoDeploy !== "disabled",
@@ -310,24 +302,9 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
                 secondary
                 type="button"
                 aria-label="Delete environment"
-                onClick={() =>
-                  confirmModal(
-                    "This will completely remove the environment and all associated deployments.",
-                    {
-                      onConfirm: ({ closeModal, setLoading, setError }) => {
-                        deleteEnvironment({
-                          api,
-                          app,
-                          environment: env,
-                          history,
-                          setLoading,
-                          setError,
-                          closeModal,
-                        });
-                      },
-                    }
-                  )
-                }
+                onClick={() => {
+                  toggleDeleteConfirmModal(true);
+                }}
               >
                 Delete
               </Button>
@@ -347,10 +324,26 @@ const EnvironmentFormModal: React.FC<Props & ContextProps> = ({
           </div>
         </div>
       </Form>
+      {env && isDeleteConfirmModalOpen && (
+        <ConfirmModal
+          onCancel={() => toggleDeleteConfirmModal(false)}
+          onConfirm={({ setLoading, setError }) => {
+            deleteEnvironment({
+              app,
+              environment: env,
+              history,
+              setLoading,
+              setError,
+              closeModal: () => toggleDeleteConfirmModal(false),
+            });
+          }}
+        >
+          This will completely remove the environment and all associated
+          deployments. confirmModal
+        </ConfirmModal>
+      )}
     </Modal>
   );
 };
 
-export default connect<Props, ContextProps>(EnvironmentFormModal, [
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-]);
+export default EnvironmentFormModal;

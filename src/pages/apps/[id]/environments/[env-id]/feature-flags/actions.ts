@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { ConfirmModalProps } from "~/components/ConfirmModal";
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 
 interface FetchFeatureFlagsArgs {
-  api: Api;
   app: App;
   environment: Environment;
 }
@@ -18,7 +16,6 @@ interface FetchFeatureFlagsReturnValue {
 }
 
 export const useFetchFeatureFlags = ({
-  api,
   app,
   environment,
 }: FetchFeatureFlagsArgs): FetchFeatureFlagsReturnValue => {
@@ -57,50 +54,47 @@ export const useFetchFeatureFlags = ({
   return { flags, loading, error, setError, setLoading, setReload };
 };
 
-interface DeleteFeatureFlagArgs
-  extends Pick<ConfirmModalProps, "confirmModal"> {
-  api: Api;
+interface DeleteFeatureFlagArgs {
   app: App;
   environment: Environment;
   flagName: string;
   setReload: (val: number) => void;
+  setLoading: SetLoading;
+  setError: SetError;
+  closeModal: () => void;
 }
 
 export function deleteFeatureFlag({
-  api,
   app,
   environment,
-  confirmModal,
   setReload,
+  setLoading,
+  setError,
+  closeModal,
   flagName,
 }: DeleteFeatureFlagArgs): void {
-  confirmModal(`Feature flag will be deleted`, {
-    onConfirm: ({ closeModal, setError, setLoading }): void => {
-      setLoading(true);
-      api
-        .delete(`/apps/flags`, {
-          appId: app.id,
-          envId: environment.id,
-          flagName: flagName,
-        })
-        .then(() => {
-          setReload(Date.now());
-          closeModal();
-        })
-        .catch(() => {
-          setError(
-            "Something went wrong while deleting the feature flag. Please try again, if the problem persists contact us from Discord or email."
-          );
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    },
-  });
+  setLoading(true);
+  api
+    .delete(`/apps/flags`, {
+      appId: app.id,
+      envId: environment.id,
+      flagName: flagName,
+    })
+    .then(() => {
+      setReload(Date.now());
+      closeModal();
+    })
+    .catch(() => {
+      setError(
+        "Something went wrong while deleting the feature flag. Please try again, if the problem persists contact us from Discord or email."
+      );
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 }
 
 interface UpdateFeatureFlagStatus {
-  api: Api;
   app: App;
   environment: Environment;
   flag: FeatureFlag;
@@ -109,7 +103,6 @@ interface UpdateFeatureFlagStatus {
 }
 
 export function updateFeatureFlagStatus({
-  api,
   app,
   environment,
   setError,
@@ -143,7 +136,6 @@ export function updateFeatureFlagStatus({
 }
 
 interface UpsertFeatureFlagArgs {
-  api: Api;
   app: App;
   environment: Environment;
   setError: SetError;
@@ -159,7 +151,6 @@ interface FormValues {
 
 export const upsertFeatureFlag =
   ({
-    api,
     app,
     environment,
     setError,

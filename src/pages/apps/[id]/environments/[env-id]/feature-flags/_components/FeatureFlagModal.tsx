@@ -3,12 +3,10 @@ import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
-import Api from "~/utils/api/Api";
 import { upsertFeatureFlag } from "../actions";
 
 interface Props {
   flag?: FeatureFlag;
-  api: Api;
   app: App;
   environment: Environment;
   closeModal: () => void;
@@ -19,7 +17,6 @@ const FeatureFlagModal: React.FC<Props> = ({
   closeModal,
   setReload,
   flag,
-  api,
   app,
   environment,
 }) => {
@@ -33,7 +30,6 @@ const FeatureFlagModal: React.FC<Props> = ({
       </h2>
       <Form
         handleSubmit={upsertFeatureFlag({
-          api,
           app,
           environment,
           setError,

@@ -7,7 +7,7 @@ const exitStoppedManually = -1;
 interface ExitStatusProps {
   code: number | null;
   iconOnly: boolean;
-  className: string;
+  className?: string;
 }
 
 const ExitStatus = ({

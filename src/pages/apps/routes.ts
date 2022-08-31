@@ -8,9 +8,13 @@ const routes: Array<RouteProps> = [
     component: Async(() => import("~/pages/apps/[id]")),
   },
   {
+    path: "/apps/:id/environments/:envId",
+    component: Async(() => import("~/pages/apps/[id]/environments/[env-id]")),
+  },
+  {
     path: "/apps/:id/environments",
     component: Async(
-      () => import("~/pages/apps/[id]/environments/Environments.context")
+      () => import("~/pages/apps/[id]/environments/Environments")
     ),
   },
   {

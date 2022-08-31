@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import cn from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
-import AuthContext, { AuthContextProps } from "~/pages/auth/Auth.context";
-import { connect } from "~/utils/context";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import Link from "~/components/Link";
 import Spinner from "~/components/Spinner";
 import DotDotDot from "~/components/DotDotDot";
@@ -12,7 +10,7 @@ import CSFormModal from "./CSFormModal";
 import { useFetchStatus, STATUS, STATUSES } from "../actions";
 import { deleteEnvironment } from "../actions";
 import { useHistory } from "react-router";
-import ConfirmModal, { ConfirmModalProps } from "~/components/ConfirmModal";
+import ConfirmModal from "~/components/ConfirmModal";
 
 interface Props {
   app: App;
@@ -23,11 +21,6 @@ interface Props {
 interface StatusProps {
   status: STATUSES;
 }
-
-interface ContextProps
-  extends RootContextProps,
-    AuthContextProps,
-    ConfirmModalProps {}
 
 const InfoMessage404 = () => (
   <>
@@ -67,42 +60,22 @@ const getDomain = (env: Environment): string => {
   );
 };
 
-const Environment: React.FC<Props & ContextProps> = ({
+const Environment: React.FC<Props> = ({
   environment,
   app,
-  api,
-  confirmModal,
-  user,
   isClickable,
 }): React.ReactElement => {
   const history = useHistory();
+  const { user } = useContext(AuthContext);
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
   const domain = getDomain(environment);
   const environmentUrl = `/apps/${app.id}/environments/${environment.id}`;
+  const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
   const [isEditModalOpen, toggleEditModal] = useState<boolean>();
   const [isIntegrationModalOpen, toggleIntegrationModal] = useState<boolean>();
 
-  const { status, loading } = useFetchStatus({ domain, lastDeploy, api, app });
-
-  const handleDelete = () => {
-    confirmModal(
-      "This will completely remove the environment and all associated deployments.",
-      {
-        onConfirm: ({ closeModal, setLoading, setError }) => {
-          deleteEnvironment({
-            api,
-            app,
-            environment,
-            history,
-            setLoading,
-            setError,
-            closeModal,
-          });
-        },
-      }
-    );
-  };
+  const { status, loading } = useFetchStatus({ domain, lastDeploy, app });
 
   return (
     <div className={"flex flex-auto py-8 bg-white rounded border-solid"}>
@@ -154,7 +127,7 @@ const Environment: React.FC<Props & ContextProps> = ({
                 icon="fa-solid fa-trash mr-2"
                 aria-label="Delete environment"
                 onClick={close => {
-                  handleDelete();
+                  toggleConfirmModal(true);
                   close();
                 }}
               >
@@ -165,9 +138,8 @@ const Environment: React.FC<Props & ContextProps> = ({
           {isIntegrationModalOpen && (
             <CSFormModal
               environment={environment}
-              user={user}
+              user={user!}
               app={app}
-              api={api}
               toggleModal={toggleIntegrationModal}
             />
           )}
@@ -175,7 +147,6 @@ const Environment: React.FC<Props & ContextProps> = ({
             <EnvironmentFormModal
               environment={environment}
               app={app}
-              api={api}
               toggleModal={toggleEditModal}
               isOpen
             />
@@ -210,12 +181,28 @@ const Environment: React.FC<Props & ContextProps> = ({
           </div>
         </div>
       </div>
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          onCancel={() => {
+            toggleConfirmModal(false);
+          }}
+          onConfirm={({ setLoading, setError }) => {
+            deleteEnvironment({
+              app,
+              environment,
+              history,
+              setLoading,
+              setError,
+              closeModal: () => toggleConfirmModal(false),
+            });
+          }}
+        >
+          This will completely remove the environment and all associated
+          deployments.
+        </ConfirmModal>
+      )}
     </div>
   );
 };
 
-export default connect<Props, ContextProps>(Environment, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AuthContext, props: ["user"] },
-  { Context: ConfirmModal, props: ["confirmModal"], wrap: true },
-]);
+export default Environment;

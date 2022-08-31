@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
-import { RootContextProps } from "~/pages/Root.context";
 import { AppContextProps } from "~/pages/apps/App.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
@@ -9,9 +8,7 @@ import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import { updateIntegration } from "../actions";
 
-interface Props
-  extends Pick<RootContextProps, "api">,
-    Pick<AppContextProps, "app"> {
+interface Props extends Pick<AppContextProps, "app"> {
   environment: Environment;
   user: User;
   toggleModal: (val: boolean) => void;
@@ -20,7 +17,6 @@ interface Props
 const CustomStorageFormModal: React.FC<Props> = ({
   toggleModal,
   environment,
-  api,
   app,
 }): React.ReactElement => {
   const history = useHistory();
@@ -38,7 +34,6 @@ const CustomStorageFormModal: React.FC<Props> = ({
     >
       <Form
         handleSubmit={updateIntegration({
-          api,
           app,
           environmentId: environment.id || "",
           history,

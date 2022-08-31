@@ -1,8 +1,6 @@
 import React, { createContext } from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-import { connect } from "~/utils/context";
 import MenuLayout from "~/layouts/MenuLayout";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Link from "~/components/Link";
@@ -20,18 +18,18 @@ export interface AppContextProps {
 
 interface MatchParams {
   id: string;
+  envId: string;
 }
 
-const Context = createContext<AppContextProps>({
+export const AppContext = createContext<AppContextProps>({
   app: {} as App,
   environments: [],
 });
 
-const AppContext: React.FC<RootContextProps> = ({ api }) => {
+const Provider: React.FC = () => {
   const match = useRouteMatch<MatchParams>();
-  const { id } = match.params;
-  const { app, error, loading } = useFetchApp({ api, appId: id });
-  const envs = useFetchEnvironments({ api, app });
+  const { app, error, loading } = useFetchApp({ appId: match.params.id });
+  const envs = useFetchEnvironments({ app });
 
   if (loading) {
     return <Spinner primary pageCenter />;
@@ -62,10 +60,15 @@ const AppContext: React.FC<RootContextProps> = ({ api }) => {
   }
 
   return (
-    <Context.Provider value={{ app, environments: envs.environments }}>
+    <AppContext.Provider
+      value={{
+        app,
+        environments: envs.environments,
+      }}
+    >
       <MenuLayout menu={<AppMenu app={app} />}>
         <div className="flex flex-grow-0 max-w-screen-lg m-auto w-full mb-24">
-          <AppHeader app={app} api={api} envs={envs.environments} />
+          <AppHeader app={app} envs={envs.environments} />
         </div>
         <div className="flex flex-auto max-w-screen-lg m-auto w-full">
           {envs.loading && <Spinner primary />}
@@ -81,15 +84,8 @@ const AppContext: React.FC<RootContextProps> = ({ api }) => {
           )}
         </div>
       </MenuLayout>
-    </Context.Provider>
+    </AppContext.Provider>
   );
 };
 
-const enhanced = connect<unknown, RootContextProps>(AppContext, [
-  { Context: RootContext, props: ["api"] },
-]);
-
-export default Object.assign(enhanced, {
-  Consumer: Context.Consumer,
-  Provider: enhanced,
-});
+export default Provider;

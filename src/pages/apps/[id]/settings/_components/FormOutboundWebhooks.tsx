@@ -10,7 +10,6 @@ import Button from "~/components/Button";
 import Modal from "~/components/Modal";
 import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
-import { RootContextProps } from "~/pages/Root.context";
 import { truncate } from "~/utils/helpers/string";
 import FormNewOutboundWebhookModal from "./FormOutboundWebhookModal";
 import {
@@ -21,14 +20,11 @@ import {
 import type { SendSampleRequestResponse } from "../_actions/outbound_webhook_actions";
 import { OutboundWebhook } from "../types";
 
-interface Props extends Pick<RootContextProps, "api"> {
+interface Props {
   app: App;
 }
 
-const FormOutboundWebhooks: React.FC<Props> = ({
-  api,
-  app,
-}): React.ReactElement => {
+const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
   const history = useHistory();
   const [loadingSample, setLoadingSample] = useState(false);
   const [webhookToEdit, setWebhookToEdit] = useState<OutboundWebhook>();
@@ -39,7 +35,6 @@ const FormOutboundWebhooks: React.FC<Props> = ({
 
   const hooks = useFetchOutboundWebhooks({
     app,
-    api,
     setError,
     setLoading,
   });
@@ -78,7 +73,7 @@ const FormOutboundWebhooks: React.FC<Props> = ({
                           onClick={close => {
                             setLoadingSample(true);
 
-                            sendSampleRequest({ app, api, whId: hook.id })
+                            sendSampleRequest({ app, whId: hook.id })
                               .then(res => {
                                 setLoadingSample(false);
                                 setSampleData(res);
@@ -104,7 +99,6 @@ const FormOutboundWebhooks: React.FC<Props> = ({
                             setLoading(true);
                             deleteOutboundWebhook({
                               app,
-                              api,
                               whId: hook.id,
                             }).then(() => {
                               history.replace({
@@ -166,7 +160,6 @@ const FormOutboundWebhooks: React.FC<Props> = ({
 
       <FormNewOutboundWebhookModal
         app={app}
-        api={api}
         isOpen={isModalOpen}
         toggleModal={(val: boolean) => {
           toggleModal(val);

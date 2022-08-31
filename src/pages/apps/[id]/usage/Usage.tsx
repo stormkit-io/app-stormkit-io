@@ -1,28 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Tooltip } from "@material-ui/core";
-import Api from "~/utils/api/Api";
-import { connect } from "~/utils/context";
-import RootContext from "~/pages/Root.context";
-import AppContext from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/App.context";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
 import UsageBar from "~/components/UsageBar";
 import Link from "~/components/Link";
 import { useFetchStats } from "./actions";
-import { AuthContext } from "~/pages/auth";
 
-interface ContextProps {
-  api: Api;
-  app: App;
-  user: User;
-}
+const Usage: React.FC = (): React.ReactElement => {
+  const { app } = useContext(AppContext);
+  const { user } = useContext(AuthContext);
 
-const Usage: React.FC<ContextProps> = ({
-  api,
-  app,
-  user,
-}): React.ReactElement => {
-  const { stats, error, loading } = useFetchStats({ api, app });
+  const { stats, error, loading } = useFetchStats({ app });
 
   if (error) {
     return (
@@ -49,7 +39,7 @@ const Usage: React.FC<ContextProps> = ({
     <div>
       <h1 className="mb-4 text-2xl text-white flex justify-between">
         <div>Usage</div>
-        {user.package.id !== "enterprise" ? (
+        {user!.package.id !== "enterprise" ? (
           <Link to="/user/account" className="text-sm self-end">
             Upgrade account
             <span className="fas fa-arrow-right ml-2 inline-block" />
@@ -89,8 +79,4 @@ const Usage: React.FC<ContextProps> = ({
   );
 };
 
-export default connect<unknown, ContextProps>(Usage, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
-  { Context: AuthContext, props: ["user"] },
-]);
+export default Usage;

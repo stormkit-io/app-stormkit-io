@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Location } from "history";
 import { Redirect, useLocation } from "react-router-dom";
-import { connect } from "~/utils/context";
 import { LocalStorage } from "~/utils/storage";
-import RootContext, { RootContextProps } from "~/pages/Root.context";
 import DefaultLayout from "~/layouts/DefaultLayout";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
@@ -19,12 +17,10 @@ interface LocationState extends Location {
   repoInsert: boolean;
 }
 
-export const Home: React.FC<RootContextProps> = ({
-  api,
-}): React.ReactElement => {
+export const Home: React.FC = (): React.ReactElement => {
   const location = useLocation<LocationState>();
   const [from, setFrom] = useState(0);
-  const { apps, loading, error, hasNextPage } = useFetchAppList({ api, from });
+  const { apps, loading, error, hasNextPage } = useFetchAppList({ from });
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(
     LocalStorage.get(welcomeModalId) !== "shown"
   );
@@ -106,6 +102,4 @@ export const Home: React.FC<RootContextProps> = ({
   );
 };
 
-export default connect<unknown, RootContextProps>(Home, [
-  { Context: RootContext, props: ["api"] },
-]);
+export default Home;

@@ -1,9 +1,8 @@
-import Api from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 import { History } from "history";
 import { SubscriptionName } from "./fetch_subscriptions";
 
 type HandleUpdateSubscriptionPlanProps = {
-  api: Api;
   name: SubscriptionName;
   setError: (err: string | null) => void;
   setLoading: (val: boolean) => void;
@@ -12,7 +11,6 @@ type HandleUpdateSubscriptionPlanProps = {
 };
 
 export const handleUpdateSubscriptionPlan = async ({
-  api,
   name,
   history,
   setError,
@@ -27,20 +25,22 @@ export const handleUpdateSubscriptionPlan = async ({
     history.push({ state: { subscription: Date.now() } });
     return;
   } catch (res) {
-    if (res.status === 401) {
-      setError(
-        "Selected package is too small for current usage. " +
-          "Please first remove some of your apps from your account to " +
-          "continue with the package selection."
-      );
-    } else if (res.status === 402) {
-      setError(
-        "Seems like your payment method is missing. Please first provide a payment menthod below."
-      );
-    } else {
-      setError(
-        "Something wrong happened while updating your subscription. Please reach out to us using Discord or email."
-      );
+    if (res instanceof Response) {
+      if (res.status === 401) {
+        setError(
+          "Selected package is too small for current usage. " +
+            "Please first remove some of your apps from your account to " +
+            "continue with the package selection."
+        );
+      } else if (res.status === 402) {
+        setError(
+          "Seems like your payment method is missing. Please first provide a payment menthod below."
+        );
+      } else {
+        setError(
+          "Something wrong happened while updating your subscription. Please reach out to us using Discord or email."
+        );
+      }
     }
 
     setLoading(false);

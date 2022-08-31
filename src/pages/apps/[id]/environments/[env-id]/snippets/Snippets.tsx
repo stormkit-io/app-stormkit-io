@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router";
 import Tooltip from "@material-ui/core/Tooltip";
-import { connect } from "~/utils/context";
-import Api from "~/utils/api/Api";
-import RootContext from "~/pages/Root.context";
-import AppContext from "~/pages/apps/App.context";
-import EnvironmentContext from "~/pages/apps/[id]/environments/[env-id]/Environment.context";
+import { AppContext } from "~/pages/apps/App.context";
+import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
-import { ModalContextProps } from "~/components/Modal";
 import { PlusButton } from "~/components/Buttons";
 import { useFetchSnippets } from "./actions";
 import SnippetModal from "./_components/SnippetModal";
 import SnippetTable from "./_components/SnippetTable";
-
-interface Props {
-  api: Api;
-  app: App;
-  environment: Environment;
-}
 
 const Explanation = () => (
   <p>
@@ -30,13 +20,11 @@ const Explanation = () => (
   </p>
 );
 
-const Snippets: React.FC<Props & ModalContextProps> = ({
-  api,
-  app,
-  environment: env,
-}): React.ReactElement => {
+const Snippets: React.FC = (): React.ReactElement => {
+  const { app } = useContext(AppContext);
+  const { environment: env } = useContext(EnvironmentContext);
   const location = useLocation();
-  const fetchOpts = { api, app, env, location };
+  const fetchOpts = { app, env, location };
   const { loading, error, snippets, setSnippets } = useFetchSnippets(fetchOpts);
   const [isSnippetModalOpen, setIsSnipperModalOpen] = useState(false);
   const [selectedSnippet, setSelectedSnippet] = useState<Snippet | undefined>();
@@ -88,7 +76,6 @@ const Snippets: React.FC<Props & ModalContextProps> = ({
             )}
             <SnippetTable
               snippets={snippets}
-              api={api}
               app={app}
               environment={env}
               setSnippets={setSnippets}
@@ -104,8 +91,4 @@ const Snippets: React.FC<Props & ModalContextProps> = ({
   );
 };
 
-export default connect<Props, ModalContextProps>(Snippets, [
-  { Context: RootContext, props: ["api"] },
-  { Context: AppContext, props: ["app"] },
-  { Context: EnvironmentContext, props: ["environment"] },
-]);
+export default Snippets;

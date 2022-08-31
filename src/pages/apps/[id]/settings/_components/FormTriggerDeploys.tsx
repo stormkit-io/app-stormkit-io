@@ -5,11 +5,11 @@ import Link from "~/components/Link";
 import InfoBox from "~/components/InfoBox";
 import CopyBox from "~/components/CopyBox";
 import Button from "~/components/Button";
-import { RootContextProps } from "~/pages/Root.context";
+import api from "~/utils/api/Api";
 import { updateDeployTrigger } from "../actions";
 import type { AppSettings, LocationState } from "../types.d";
 
-interface Props extends Pick<RootContextProps, "api"> {
+interface Props {
   additionalSettings: AppSettings;
   app: App;
   environments: Array<Environment>;
@@ -25,7 +25,6 @@ const LearnMore: React.FC = (): React.ReactElement => (
 );
 
 const FormTriggerDeploys: React.FC<Props> = ({
-  api,
   app,
   environments,
   additionalSettings,
@@ -41,7 +40,6 @@ const FormTriggerDeploys: React.FC<Props> = ({
     <Form
       handleSubmit={updateDeployTrigger({
         app,
-        api,
         setLoading,
         setError,
         history,
