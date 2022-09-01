@@ -14,7 +14,10 @@ module.exports = {
   ],
   coverageDirectory: "coverage/",
   coverageReporters: ["html", "lcov"],
-  testURL: "http://localhost",
+  testEnvironment: "jsdom",
+  testEnvironmentOptions: {
+    url: "http://localhost",
+  },
   testMatch: ["**/?(*.)+(spec).[jt]s?(x)"],
   setupFilesAfterEnv: ["<rootDir>/testing/setup.js"],
   clearMocks: true,

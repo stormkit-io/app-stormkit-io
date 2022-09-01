@@ -9,11 +9,7 @@ import * as buttons from "~/components/Buttons";
 import "./Auth.css";
 import { LocalStorage } from "~/utils/storage";
 
-interface ContextProps {
-  user: User;
-}
-
-const Auth: React.FC<ContextProps> = (): React.ReactElement => {
+const Auth: React.FC = (): React.ReactElement => {
   const { user, authError, loginOauth } = useContext(AuthContext);
   const location = useLocation();
 
