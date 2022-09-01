@@ -1,5 +1,6 @@
 export { default as mockEnvironments } from "./mock_environments";
 export { default as mockApp } from "./mock_app";
+export { default as mockUser } from "./mock_user";
 export { default as mockSnippets } from "./mock_snippets";
 export { default as mockDomainInfo } from "./mock_domain_info";
 export { default as mockDeploymentsResponse } from "./mock_deployments_response";
