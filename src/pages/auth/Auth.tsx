@@ -4,7 +4,7 @@ import qs from "query-string";
 import CenterLayout from "~/layouts/CenterLayout";
 import Logo from "~/components/Logo";
 import { AuthContext } from "./Auth.context";
-import InfoBox from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBoxV2";
 import * as buttons from "~/components/Buttons";
 import "./Auth.css";
 import { LocalStorage } from "~/utils/storage";
@@ -73,7 +73,7 @@ const Auth: React.FC = (): React.ReactElement => {
               onClick={() => loginOauth?.("bitbucket")}
               className="mx-12"
             />
-            {authError && <InfoBox className="mt-4">{authError}</InfoBox>}
+            {authError && <InfoBox className="mt-8 mx-10">{authError}</InfoBox>}
           </div>
         </div>
       </div>

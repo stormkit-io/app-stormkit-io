@@ -82,4 +82,22 @@ describe("~/pages/auth/Auth.tsx", () => {
       });
     });
   });
+
+  describe("when there is a login error", () => {
+    beforeEach(() => {
+      mockUseLocation();
+      createWrapper({
+        user: undefined,
+        authError: "Something went wrong while logging in.",
+      });
+    });
+
+    test("displays an infobox with the authError", async () => {
+      await waitFor(() => {
+        expect(
+          wrapper.getByText("Something went wrong while logging in.")
+        ).toBeTruthy();
+      });
+    });
+  });
 });
