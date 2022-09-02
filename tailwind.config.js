@@ -30,6 +30,9 @@ module.exports = {
           "border-green-50",
           "border-red-50",
 
+          "lg:max-w-128",
+          "lg:max-w-72",
+
           // Regexp
           /^(w|h|bg)-/,
         ],
