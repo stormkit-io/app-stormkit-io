@@ -38,7 +38,7 @@ const ProviderButton: React.FC<Props> = ({
             "justify-end min-w-1/3": !itemsCenter,
           })}
         >
-          <img src={logo} className="text-xl" />
+          <img src={logo} alt={text} />
         </span>
         <span className="flex flex-1 justify-start ml-3">{text}</span>
       </span>
