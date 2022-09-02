@@ -1,0 +1,15 @@
+.sk-button {
+  @apply transition-all;
+  @apply ease-in;
+}
+
+.sk-button-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sk-button:hover {
+  filter: brightness(120%);
+}

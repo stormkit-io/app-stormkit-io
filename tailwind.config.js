@@ -115,6 +115,7 @@ module.exports = {
         "gray-00": "#000000",
 
         "pink-50": "#f6005c",
+        "pink-10": "#78193B", // v2
 
         "blue-90": "#e2f2ff",
         "blue-80": "#c9e3f9",

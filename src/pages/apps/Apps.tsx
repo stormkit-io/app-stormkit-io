@@ -1,24 +1,20 @@
 import React, { useState } from "react";
-import { Location } from "history";
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
-import DefaultLayout from "~/layouts/DefaultLayout";
-import Button from "~/components/Button";
+import CenterLayout from "~/layouts/CenterLayout";
+import Container from "~/components/Container";
+import AppName from "~/components/AppName";
+import Button from "~/components/ButtonV2";
 import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
-import ExplanationBox from "~/components/ExplanationBox";
 import { useFetchAppList } from "./actions";
-import { AppRow, Title, WelcomeModal } from "./_components";
+import { WelcomeModal } from "./_components";
 
 const limit = 20;
 const welcomeModalId = "welcome_modal";
 
-interface LocationState extends Location {
-  repoInsert: boolean;
-}
-
 export const Home: React.FC = (): React.ReactElement => {
-  const location = useLocation<LocationState>();
+  const history = useHistory();
   const [from, setFrom] = useState(0);
   const { apps, loading, error, hasNextPage } = useFetchAppList({ from });
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(
@@ -32,21 +28,18 @@ export const Home: React.FC = (): React.ReactElement => {
   const isLoadingFirstTime = loading && apps.length === 0;
 
   return (
-    <DefaultLayout>
-      {location.state?.repoInsert && (
-        <InfoBox type={InfoBox.SUCCESS} toaster dismissable>
-          <p className="flex-auto">
-            Great, your app has been created! You can now start deploying.
-          </p>
-        </InfoBox>
-      )}
-      <section className="flex flex-col w-full mb-4">
-        <Title>
-          <Title.Main>My apps</Title.Main>
-          <Title.Sub>Overview</Title.Sub>
-        </Title>
-        <div className="flex flex-auto flex-col-reverse lg:flex-row">
-          <div className="page-section mt-3 lg:mt-0 lg:mr-6 flex flex-col">
+    <CenterLayout>
+      <Container
+        className={"flex-1"}
+        title="My apps"
+        actions={
+          <Button href="/apps/new" category="action">
+            Create new app
+          </Button>
+        }
+      >
+        <div className="flex flex-auto text-gray-80">
+          <div className="w-full px-4">
             {!loading && error && (
               <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
             )}
@@ -57,15 +50,35 @@ export const Home: React.FC = (): React.ReactElement => {
             )}
             {!isLoadingFirstTime && !error && (
               <>
-                <div className="flex-auto">
+                <div className="flex-1 w-full">
                   {apps.map(app => (
-                    <AppRow key={app.id} app={app} />
+                    <div
+                      key={app.id}
+                      className="px-4 py-6 mb-4 bg-blue-10 w-full cursor-pointer hover:bg-black transition-colors"
+                      tabIndex={0}
+                      role="button"
+                      onKeyPress={e => {
+                        if (e.key === "Enter") {
+                          history.push(`/apps/${app.id}`);
+                        }
+                      }}
+                      onClick={() => {
+                        history.push(`/apps/${app.id}`);
+                      }}
+                    >
+                      <div className="flex">
+                        <div className="flex-1">
+                          <AppName app={app} withDisplayName />
+                        </div>
+                        <span className="fas fa-chevron-right text-base ml-2" />
+                      </div>
+                    </div>
                   ))}
                 </div>
                 {hasNextPage && (
-                  <div className="mt-4 flex justify-center">
+                  <div className="my-4 flex justify-center">
                     <Button
-                      secondary
+                      category="action"
                       loading={loading}
                       onClick={() => setFrom(from + limit)}
                     >
@@ -76,21 +89,8 @@ export const Home: React.FC = (): React.ReactElement => {
               </>
             )}
           </div>
-          <div className="lg:w-1/3">
-            <ExplanationBox title="Did you know?">
-              <p>
-                We keep a running instance of every one of your deploy versions
-                across all your branches.
-                <br />
-                Whenever you push, we build it!
-              </p>
-            </ExplanationBox>
-            <Button href="/apps/new" className="w-full mt-3 lg:mt-6" primary>
-              New App
-            </Button>
-          </div>
         </div>
-      </section>
+      </Container>
       {!isLoadingFirstTime && (
         <WelcomeModal
           isOpen={isWelcomeModalOpen}
@@ -98,7 +98,7 @@ export const Home: React.FC = (): React.ReactElement => {
           welcomeModalId={welcomeModalId}
         />
       )}
-    </DefaultLayout>
+    </CenterLayout>
   );
 };
 
