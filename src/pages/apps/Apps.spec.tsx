@@ -2,7 +2,7 @@ import type { MemoryHistory } from "history";
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
 import React from "react";
-import { Router } from "react-router-dom";
+import * as router from "react-router";
 import { createMemoryHistory } from "history";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { mockFetchApps } from "~/testing/nocks";
@@ -21,9 +21,9 @@ describe("~/pages/apps/Apps.tsx", () => {
   const createWrapper = () => {
     history = createMemoryHistory();
     wrapper = render(
-      <Router history={history}>
+      <router.Router location={history.location} navigator={history}>
         <Apps />
-      </Router>
+      </router.Router>
     );
   };
 

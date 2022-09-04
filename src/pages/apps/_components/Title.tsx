@@ -1,8 +1,13 @@
 import React from "react";
 
-const Title: React.FC & { Main: React.FC; Sub: React.FC } = ({
-  children,
-}): React.ReactElement => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const Title: React.FC<Props> & {
+  Main: React.FC<Props>;
+  Sub: React.FC<Props>;
+} = ({ children }): React.ReactElement => {
   return <div className="font-bold">{children}</div>;
 };
 

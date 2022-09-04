@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Redirect, useLocation } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import qs from "query-string";
 import CenterLayout from "~/layouts/CenterLayout";
 import Logo from "~/components/Logo";
@@ -9,16 +9,23 @@ import * as buttons from "~/components/Buttons";
 import "./Auth.css";
 import { LocalStorage } from "~/utils/storage";
 
-const Auth: React.FC = (): React.ReactElement => {
+const Auth: React.FC = () => {
   const { user, authError, loginOauth } = useContext(AuthContext);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      const { redirect = "/" } = qs.parse(location.search.replace("?", ""));
+
+      if (typeof redirect === "string") {
+        navigate(redirect);
+      }
+    }
+  }, [user]);
 
   if (user) {
-    const { redirect = "/" } = qs.parse(location.search.replace("?", ""));
-
-    if (typeof redirect === "string") {
-      return <Redirect to={redirect} />;
-    }
+    return null;
   }
 
   const referral = new URLSearchParams(location.search).get("referral");

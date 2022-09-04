@@ -1,5 +1,4 @@
 import React from "react";
-import { History } from "history";
 import api from "~/utils/api/Api";
 import githubApi from "~/utils/api/Github";
 import Spinner from "~/components/Spinner";
@@ -35,7 +34,6 @@ interface Account {
 
 interface Props {
   user: User;
-  history: History;
   filter?: string;
   loginOauth: () => void;
 }
@@ -215,7 +213,7 @@ export default class GithubRepos extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { loginOauth, history, filter } = this.props;
+    const { loginOauth, filter } = this.props;
     const {
       repositories,
       accounts = [],
@@ -264,7 +262,6 @@ export default class GithubRepos extends React.PureComponent<Props, State> {
         <div className="flex-auto">
           <RepoList
             api={api}
-            history={history}
             repositories={repositories?.filter(r => r.name.includes(filter!))}
             provider="github"
             loading={loading}

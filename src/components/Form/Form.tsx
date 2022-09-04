@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Input from "./Input";
 import Checkbox from "./Checkbox";
 import Radio from "./Radio";

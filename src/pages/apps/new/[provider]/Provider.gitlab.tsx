@@ -1,5 +1,4 @@
 import React from "react";
-import { History } from "history";
 import gitlabApi from "~/utils/api/Gitlab";
 import api from "~/utils/api/Api";
 import Spinner from "~/components/Spinner";
@@ -18,7 +17,6 @@ interface Repository {
 }
 
 interface Props {
-  history: History;
   filter?: string;
   loginOauth: () => void;
 }
@@ -111,7 +109,7 @@ export default class GitlabRepositories extends React.PureComponent<
   }
 
   render() {
-    const { loginOauth, history, filter } = this.props;
+    const { loginOauth, filter } = this.props;
     const {
       repositories,
       accounts = [],
@@ -165,7 +163,6 @@ export default class GitlabRepositories extends React.PureComponent<
         <div className="flex-auto">
           <RepoList
             api={api}
-            history={history}
             repositories={repositories?.filter(r => r.name.includes(filter!))}
             provider="gitlab"
             loading={loading}

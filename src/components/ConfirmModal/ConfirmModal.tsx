@@ -13,6 +13,7 @@ type ConfirmModalCallback = ({
 }) => void;
 
 interface Props {
+  children?: React.ReactNode;
   confirmText?: string;
   onCancel: () => void;
   onConfirm: ConfirmModalCallback;

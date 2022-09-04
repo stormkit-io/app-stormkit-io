@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import InputAdornment from "@mui/material/InputAdornment";
 import { booleanToString, parseBoolean } from "~/utils/helpers/string";
 import Form from "~/components/Form";
 import EnvironmentSelector from "~/components/EnvironmentSelector";

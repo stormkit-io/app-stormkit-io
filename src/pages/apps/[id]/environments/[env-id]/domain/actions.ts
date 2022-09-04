@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import { History } from "history";
 import api from "~/utils/api/Api";
 
 interface SetDomainProps {
   app: App;
-  history: History;
   environment: Environment;
   setError: SetError;
   setLoading: SetLoading;
 }
 
 export const setDomain =
-  ({ app, environment, history, setError, setLoading }: SetDomainProps) =>
+  ({ app, environment, setError, setLoading }: SetDomainProps) =>
   ({ domain }: { domain: string }): void => {
     setLoading(true);
 
@@ -23,7 +21,7 @@ export const setDomain =
       })
       .then(() => {
         setLoading(false);
-        history.replace({ state: { envs: Date.now() } });
+        window.location.reload();
       })
       .catch(res => {
         setLoading(false);
@@ -43,7 +41,6 @@ interface DeleteDomainProps {
   domainName: string;
   setLoading: SetLoading;
   setError: SetError;
-  history: History;
 }
 
 export const deleteDomain = ({
@@ -52,7 +49,6 @@ export const deleteDomain = ({
   domainName,
   setLoading,
   setError,
-  history,
 }: DeleteDomainProps): Promise<void> => {
   setLoading(true);
 
@@ -63,7 +59,7 @@ export const deleteDomain = ({
       env: environment.env,
     })
     .then(() => {
-      history.replace({ state: { envs: Date.now() } });
+      window.location.reload();
     })
     .catch(res => {
       setLoading(false);

@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import MenuLayout from "~/layouts/MenuLayout";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
@@ -14,22 +14,21 @@ import routes from "./routes";
 export interface AppContextProps {
   app: App;
   environments: Array<Environment>;
-}
-
-interface MatchParams {
-  id: string;
-  envId: string;
+  setRefreshToken: (val: number) => void;
 }
 
 export const AppContext = createContext<AppContextProps>({
   app: {} as App,
   environments: [],
+  setRefreshToken: () => {},
 });
 
 const Provider: React.FC = () => {
-  const match = useRouteMatch<MatchParams>();
-  const { app, error, loading } = useFetchApp({ appId: match.params.id });
-  const envs = useFetchEnvironments({ app });
+  const { app, error, loading, setRefreshToken, refreshToken } = useFetchApp({
+    appId: useParams().id,
+  });
+
+  const envs = useFetchEnvironments({ app, refreshToken });
 
   if (loading) {
     return <Spinner primary pageCenter />;
@@ -64,6 +63,7 @@ const Provider: React.FC = () => {
       value={{
         app,
         environments: envs.environments,
+        setRefreshToken,
       }}
     >
       <MenuLayout menu={<AppMenu app={app} />}>
@@ -73,14 +73,14 @@ const Provider: React.FC = () => {
         <div className="flex flex-auto max-w-screen-lg m-auto w-full">
           {envs.loading && <Spinner primary />}
           {!envs.loading && (
-            <Switch>
+            <Routes>
               {routes.map(route => (
                 <Route
                   {...route}
                   key={Array.isArray(route.path) ? route.path[0] : route.path}
                 />
               ))}
-            </Switch>
+            </Routes>
           )}
         </div>
       </MenuLayout>

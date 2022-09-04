@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Location, History } from "history";
-import { useLocation } from "react-router-dom";
 import Link from "~/components/Link";
 import api from "~/utils/api/Api";
 
 interface FetchMemberProps {
   app: App;
-}
-
-interface LocationState extends Location {
-  members: number;
 }
 
 export interface Member {
@@ -32,11 +26,9 @@ interface FetchMemberReturnValue {
 export const useFetchMembers = ({
   app,
 }: FetchMemberProps): FetchMemberReturnValue => {
-  const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  const refresh = location?.state?.members;
 
   useEffect(() => {
     let unmounted = false;
@@ -63,7 +55,7 @@ export const useFetchMembers = ({
     return () => {
       unmounted = true;
     };
-  }, [api, app, refresh]);
+  }, [api, app]);
 
   return { loading, error, members };
 };
@@ -127,7 +119,6 @@ export const handleInvite =
 interface HandleDeleteProps {
   userId: string;
   app: App;
-  history: History;
   setError: SetError;
   setLoading: SetLoading;
 }
@@ -135,7 +126,6 @@ interface HandleDeleteProps {
 export const handleDelete = ({
   userId,
   app,
-  history,
   setError,
   setLoading,
 }: HandleDeleteProps): Promise<void> => {
@@ -146,7 +136,7 @@ export const handleDelete = ({
     .then(() => {
       setLoading(false);
       setTimeout(() => {
-        history.replace({ state: { members: Date.now() } });
+        window.location.reload();
       }, 250);
     })
     .catch(res => {

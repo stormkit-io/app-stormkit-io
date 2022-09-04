@@ -20,7 +20,7 @@ const EnvironmentMenu: React.FC = () => {
   const path = window?.location?.pathname;
 
   return (
-    <div>
+    <div className="w-full">
       <h1 className="mb-8 flex items-center">
         <BackButton to={`/apps/${app.id}/environments`} className="mr-4" />
         <span className="text-2xl text-white">Environments</span>

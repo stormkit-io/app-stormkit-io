@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import cn from "classnames";
-import Slider from "@material-ui/core/Slider";
+import Slider from "@mui/material/Slider";
 import Button from "~/components/Button";
 import CommitInfo from "../CommitInfo";
 

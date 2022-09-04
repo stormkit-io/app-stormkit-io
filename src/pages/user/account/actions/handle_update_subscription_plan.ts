@@ -1,5 +1,4 @@
 import api from "~/utils/api/Api";
-import { History } from "history";
 import { SubscriptionName } from "./fetch_subscriptions";
 
 type HandleUpdateSubscriptionPlanProps = {
@@ -7,12 +6,10 @@ type HandleUpdateSubscriptionPlanProps = {
   setError: (err: string | null) => void;
   setLoading: (val: boolean) => void;
   closeModal: () => void;
-  history: History;
 };
 
 export const handleUpdateSubscriptionPlan = async ({
   name,
-  history,
   setError,
   setLoading,
   closeModal,
@@ -22,7 +19,7 @@ export const handleUpdateSubscriptionPlan = async ({
   try {
     await api.put("user/subscription", { name });
     closeModal();
-    history.push({ state: { subscription: Date.now() } });
+    window.location.reload();
     return;
   } catch (res) {
     if (res instanceof Response) {

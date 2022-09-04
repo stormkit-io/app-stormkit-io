@@ -3,7 +3,7 @@ import api from "~/utils/api/Api";
 
 interface FetchDeploymentProps {
   app: App;
-  deployId: string;
+  deployId?: string;
 }
 
 interface FetchDeployResponse {
@@ -27,6 +27,10 @@ export const useFetchDeployment = ({
 
   useEffect(() => {
     let unmounted = false;
+
+    if (!deployId) {
+      return;
+    }
 
     // Run setLoading only when time is null, subsequent calls shouldn't
     // put the whole view in loading state.

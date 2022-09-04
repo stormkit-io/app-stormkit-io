@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextFieldProps } from "@material-ui/core/TextField";
+import { TextFieldProps } from "@mui/material/TextField";
 import Input from "./Input";
 import Button from "~/components/Button";
 

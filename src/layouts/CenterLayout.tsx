@@ -6,14 +6,18 @@ import SideBar from "~/components/SideBar";
 import UserMenu from "~/components/UserMenu";
 import { AuthContext } from "~/pages/auth/Auth.context";
 
-const DefaultLayout: React.FC = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const DefaultLayout: React.FC<Props> = ({ children }) => {
   const { user } = useContext(AuthContext);
   const [isNewsOpen, toggleNews] = useState(false);
   const [isUserMenuOpen, toggleUserMenu] = useState(false);
 
   return (
     <main
-      className={cn("flex flex-col min-h-screen m-auto items-center", {
+      className={cn("flex flex-col min-h-screen m-auto items-center w-full", {
         "justify-center": !user,
       })}
     >
@@ -52,7 +56,7 @@ const DefaultLayout: React.FC = ({ children }) => {
             {isNewsOpen && (
               <iframe
                 className="h-full w-full bg-white"
-                src="https://www.stormkit.io/blog/whats-new?ui=no-menu,no-footer,no-posts"
+                src="https://www.stormkit.io/blog/whats-new?ui=no-menu,no-footer,no-posts,no-header"
               />
             )}
           </SideBar>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
 import Form from "~/components/Form";
 import Link from "~/components/Link";
 import InfoBox from "~/components/InfoBox";
@@ -7,7 +6,7 @@ import CopyBox from "~/components/CopyBox";
 import Button from "~/components/Button";
 import api from "~/utils/api/Api";
 import { updateDeployTrigger } from "../actions";
-import type { AppSettings, LocationState } from "../types.d";
+import type { AppSettings } from "../types.d";
 
 interface Props {
   additionalSettings: AppSettings;
@@ -29,10 +28,6 @@ const FormTriggerDeploys: React.FC<Props> = ({
   environments,
   additionalSettings,
 }): React.ReactElement => {
-  const history = useHistory();
-  const location = useLocation<LocationState>();
-
-  const successMessage = location?.state?.triggerDeploysSuccess;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,7 +37,6 @@ const FormTriggerDeploys: React.FC<Props> = ({
         app,
         setLoading,
         setError,
-        history,
       })}
     >
       <Form.Section
@@ -87,20 +81,6 @@ const FormTriggerDeploys: React.FC<Props> = ({
         </Button>
       </div>
       {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
-      {successMessage && (
-        <InfoBox
-          type={InfoBox.SUCCESS}
-          toaster
-          dismissable
-          onDismissed={() =>
-            history.push({
-              state: { app: location?.state?.app, triggerDeploysSuccess: null },
-            })
-          }
-        >
-          {successMessage}
-        </InfoBox>
-      )}
     </Form>
   );
 };

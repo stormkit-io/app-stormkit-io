@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { emojify } from "node-emoji";
 import cn from "classnames";
-import { useRouteMatch } from "react-router";
+import { useParams } from "react-router";
 import { AppContext } from "~/pages/apps/App.context";
 import Spinner from "~/components/Spinner";
 import Button from "~/components/Button";
@@ -13,14 +13,9 @@ import { useFetchDeployment, useScrollIntoView } from "./actions";
 import { prepareSettings, getExitCode } from "./helpers";
 import ExitStatus from "../_components/ExitStatus";
 
-interface RouteMatchParams {
-  deploymentId: string;
-}
-
 const Deployment = () => {
-  const match = useRouteMatch<RouteMatchParams>();
+  const { deploymentId: deployId } = useParams();
   const { app } = useContext(AppContext);
-  const deployId = match.params.deploymentId;
   const { deploy, error, loading } = useFetchDeployment({ app, deployId });
   const commit = parseCommit(deploy);
   const settings = deploy?.id ? prepareSettings({ deploy, commit }) : [];
@@ -28,7 +23,7 @@ const Deployment = () => {
   useScrollIntoView({ loading });
 
   return (
-    <div>
+    <div className="w-full">
       <h1 className="flex items-center mb-8">
         <BackButton to={`/apps/${app.id}/deployments`} className="mr-4" />
         <span className="text-2xl text-white">Deployments</span>

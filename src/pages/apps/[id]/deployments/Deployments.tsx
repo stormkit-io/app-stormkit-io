@@ -26,7 +26,7 @@ const Deployments: React.FC = (): React.ReactElement => {
   }
 
   return (
-    <div>
+    <div className="w-full">
       <h1 className="mb-8 flex items-center">
         <span className="text-2xl text-white">Deployments</span>
       </h1>

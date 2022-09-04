@@ -1,13 +1,15 @@
-import React from "react";
-import { Redirect, useRouteMatch } from "react-router-dom";
-
-interface MatchParams {
-  id: string;
-}
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Id = (): React.ReactElement => {
-  const match = useRouteMatch<MatchParams>();
-  return <Redirect to={`/apps/${match.params.id}`} />;
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate(`/apps/${id}`);
+  }, []);
+
+  return <></>;
 };
 
 export default Id;

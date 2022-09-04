@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Location, History } from "history";
-import { useLocation } from "react-router-dom";
 import api from "~/utils/api/Api";
 import { prepareBuildObject } from "./helpers";
 
 interface FetchEnvironmentsProps {
   app?: App;
+  refreshToken?: number;
 }
 
 interface FetchEnvironmentsReturnValue {
@@ -20,19 +19,14 @@ interface FetchEnvironmentsAPIResponse {
   envs: Array<Environment>;
 }
 
-interface LocationState extends Location {
-  envs: number;
-}
-
 export const useFetchEnvironments = ({
   app,
+  refreshToken,
 }: FetchEnvironmentsProps): FetchEnvironmentsReturnValue => {
-  const location = useLocation<LocationState>();
   const [environments, setEnvironments] = useState<Array<Environment>>([]);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const refresh = location.state?.envs;
 
   useEffect(() => {
     let unmounted = false;
@@ -72,7 +66,7 @@ export const useFetchEnvironments = ({
     return () => {
       unmounted = true;
     };
-  }, [app?.id, app?.displayName, refresh]);
+  }, [app?.id, app?.displayName, refreshToken]);
 
   return { environments, error, loading, hasNextPage };
 };
@@ -225,19 +219,11 @@ export const useFetchRepoType = ({
 interface DeleteEnvironmentProps {
   app: App;
   environment: Environment;
-  history: History;
-  closeModal: () => void;
-  setLoading: SetLoading;
-  setError: SetError;
 }
 
 export const deleteEnvironment = ({
   app,
   environment,
-  history,
-  setLoading,
-  setError,
-  closeModal,
 }: DeleteEnvironmentProps): Promise<void> => {
   const name = environment?.env;
 
@@ -245,35 +231,14 @@ export const deleteEnvironment = ({
     return Promise.reject();
   }
 
-  setLoading(true);
-
-  return api
-    .delete(`/app/env`, {
-      appId: app.id,
-      env: name,
-    })
-    .then(() => {
-      setLoading(false);
-      closeModal();
-      history.push({
-        pathname: `/apps/${app.id}/environments`,
-        state: {
-          envs: Date.now(),
-          message: "Environment has been removed successfully.",
-        },
-      });
-    })
-    .catch(() => {
-      setLoading(false);
-      setError(
-        "Something went wrong while deleting the environment. Please try again, if the problem persists contact us from Discord or email."
-      );
-    });
+  return api.delete(`/app/env`, {
+    appId: app.id,
+    env: name,
+  });
 };
 
 interface InsertEnvironmentProps {
   app: App;
-  history: History;
   isAutoPublish: boolean;
   isAutoDeploy: boolean;
   setError: SetError;
@@ -284,7 +249,6 @@ interface InsertEnvironmentProps {
 export const insertEnvironment =
   ({
     app,
-    history,
     isAutoPublish,
     isAutoDeploy,
     toggleModal,
@@ -314,13 +278,7 @@ export const insertEnvironment =
       .then(() => {
         setLoading(false);
         toggleModal(false);
-        history.replace({
-          state: {
-            envs: Date.now(),
-            message:
-              "Environment has been created successfully. You can now deploy with your new configuration.",
-          },
-        });
+        window.location.reload();
       })
       .catch(async res => {
         let data: {
@@ -362,7 +320,6 @@ export const insertEnvironment =
 
 interface EditEnvironmentProps {
   app: App;
-  history: History;
   isAutoPublish: boolean;
   isAutoDeploy: boolean;
   environmentId: string;
@@ -374,7 +331,6 @@ interface EditEnvironmentProps {
 export const editEnvironment =
   ({
     app,
-    history,
     isAutoPublish,
     isAutoDeploy,
     environmentId,
@@ -406,13 +362,7 @@ export const editEnvironment =
       .then(() => {
         setLoading(false);
         toggleModal(false);
-        history.replace({
-          state: {
-            envs: Date.now(),
-            message:
-              "Environment has been updated successfully. You can now deploy with your new configuration.",
-          },
-        });
+        window.location.reload();
       })
       .catch(async res => {
         let data: {
@@ -450,7 +400,6 @@ export const editEnvironment =
 interface UpdateIntegrationProps {
   app: App;
   environmentId: string;
-  history: History;
   setLoading: SetLoading;
   setError: SetError;
   toggleModal: (val: boolean) => void;
@@ -459,9 +408,7 @@ interface UpdateIntegrationProps {
 export const updateIntegration =
   ({
     app,
-
     environmentId,
-    history,
     toggleModal,
     setLoading,
     setError,
@@ -509,12 +456,6 @@ export const updateIntegration =
       .then(() => {
         setLoading(false);
         toggleModal(false);
-        history.replace({
-          state: {
-            envs: Date.now(),
-            message: "Custom integration has been updated successfully.",
-          },
-        });
       })
       .catch(async res => {
         setLoading(false);

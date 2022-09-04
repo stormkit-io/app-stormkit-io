@@ -1,13 +1,20 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Error404 from "~/components/Errors/Error404";
 import { useParseAppId } from "./actions";
 
 const InvitationAccept: React.FC = (): React.ReactElement => {
   const appId = useParseAppId();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (appId) {
+      navigate(`/apps/${appId}/team`);
+    }
+  }, [appId]);
 
   if (appId) {
-    return <Redirect to={`/apps/${appId}/team`} />;
+    return <></>;
   }
 
   return (

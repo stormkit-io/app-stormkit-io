@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { Location, History } from "history";
-import { useLocation } from "react-router-dom";
 import api from "~/utils/api/Api";
 
 interface FetchAppListProps {
@@ -57,17 +55,15 @@ export const useFetchAppList = ({
 };
 
 interface FetchAppProps {
-  appId: string;
+  appId?: string;
 }
 
 interface FetchAppReturnValue {
   app: App | undefined;
   loading: boolean;
   error: string | null;
-}
-
-interface LocationState extends Location {
-  app?: number;
+  refreshToken?: number;
+  setRefreshToken: (val: number) => void;
 }
 
 interface FetchAppAPIResponse {
@@ -77,20 +73,19 @@ interface FetchAppAPIResponse {
 const appCache: Record<string, App> = {};
 
 export const useFetchApp = ({ appId }: FetchAppProps): FetchAppReturnValue => {
-  const location = useLocation<LocationState>();
-  const [app, setApp] = useState<App | undefined>(appCache[appId]);
+  const [app, setApp] = useState<App | undefined>(appCache[appId!]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<null | string>(null);
-  const refresh = location?.state?.app;
+  const [refreshToken, setRefreshToken] = useState<number>();
 
   useEffect(() => {
     let unmounted = false;
 
-    if (appCache[appId] && !refresh) {
+    if (appCache[appId!] || !appId) {
       return;
     }
 
-    !refresh && setLoading(true); // Do not refresh when updating app object.
+    setLoading(true); // Do not refresh when updating app object.
     setError(null);
 
     api
@@ -142,9 +137,9 @@ export const useFetchApp = ({ appId }: FetchAppProps): FetchAppReturnValue => {
     return () => {
       unmounted = true;
     };
-  }, [api, appId, refresh]);
+  }, [api, appId, refreshToken]);
 
-  return { app, loading, error };
+  return { app, loading, error, refreshToken, setRefreshToken };
 };
 
 interface DeployProps {
@@ -155,11 +150,9 @@ interface DeployProps {
     distFolder?: string;
     publish: boolean;
   };
-  history: History;
   environment?: Environment;
   setError: SetError;
   setLoading: SetLoading;
-  toggleModal: (val: boolean) => void;
 }
 
 interface DeployAPIResponse {
@@ -171,28 +164,19 @@ export const deploy = ({
   config,
   setLoading,
   setError,
-  toggleModal,
-  history,
   environment,
-}: DeployProps): void => {
+}: DeployProps): Promise<DeployAPIResponse | void> => {
   if (!environment) {
-    return setError("Please select an environment.");
+    return Promise.resolve(setError("Please select an environment."));
   }
 
   setLoading(true);
 
-  api
+  return api
     .post<DeployAPIResponse>(`/app/deploy`, {
       env: environment.env,
       appId: app.id,
       ...config,
-    })
-    .then(deploy => {
-      toggleModal(false);
-
-      if (deploy && deploy.id) {
-        history.push(`/apps/${app.id}/deployments/${deploy.id}`);
-      }
     })
     .catch(async res => {
       if (res.status === 429) {

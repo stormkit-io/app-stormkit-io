@@ -9,7 +9,7 @@ const Environments: React.FC = (): React.ReactElement => {
   const [isModalOpen, toggleModal] = useState<boolean>(false);
 
   return (
-    <div className="mb-4">
+    <div className="w-full mb-4">
       <div className="flex items-center mb-4">
         <h1 className="flex flex-auto items-center">
           <span className="text-2xl text-white">Environments</span>

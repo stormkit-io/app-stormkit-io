@@ -1,15 +1,17 @@
-import React from "react";
-import { Redirect, useRouteMatch } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface MatchParams {
-  id: string;
-}
+const Id: React.FC = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-const Id = (): React.ReactElement => {
-  const match = useRouteMatch<MatchParams>();
-  // For now redirect to the environments page.
+  // For now Navigate to the environments page.
   // In the future we can create a dashboard here.
-  return <Redirect to={`/apps/${match.params.id}/environments`} />;
+  useEffect(() => {
+    navigate(`/apps/${id}/environments`);
+  }, []);
+
+  return null;
 };
 
 export default Id;

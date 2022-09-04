@@ -1,6 +1,6 @@
 import React from "react";
-import { Route, Switch, BrowserRouter } from "react-router-dom";
-import { StylesProvider } from "@material-ui/core/styles";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { StyledEngineProvider } from "@mui/material/styles";
 import AuthContext from "./auth/Auth.context";
 import routes from "./routes";
 
@@ -9,20 +9,20 @@ interface Props {
 }
 
 const Root: React.FC<Props> = ({ Router }): React.ReactElement => (
-  <StylesProvider injectFirst>
+  <StyledEngineProvider injectFirst>
     <Router>
       <AuthContext>
-        <Switch>
+        <Routes>
           {routes.map(route => (
             <Route
               {...route}
               key={Array.isArray(route.path) ? route.path[0] : route.path}
             />
           ))}
-        </Switch>
+        </Routes>
       </AuthContext>
     </Router>
-  </StylesProvider>
+  </StyledEngineProvider>
 );
 
 export default Root;

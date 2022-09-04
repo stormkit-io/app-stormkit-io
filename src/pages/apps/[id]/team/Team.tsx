@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
 import cn from "classnames";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import TableContainer from "@material-ui/core/TableContainer";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import TableContainer from "@mui/material/TableContainer";
 import { AppContext } from "~/pages/apps/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import DotDotDot from "~/components/DotDotDot";
@@ -17,7 +16,6 @@ import { useFetchMembers, handleDelete } from "./actions";
 import NewMemberModal from "./_components/NewMemberModal";
 
 const Team: React.FC = (): React.ReactElement => {
-  const history = useHistory();
   const [deleteMember, setDeleteMember] = useState<User>();
   const { app } = useContext(AppContext);
   const { user } = useContext(AuthContext);
@@ -26,7 +24,7 @@ const Team: React.FC = (): React.ReactElement => {
   const isCurrentUserTheOwner = app.userId === user!.id;
 
   return (
-    <div>
+    <div className="w-full">
       <h1 className="mb-4 flex items-center justify-between">
         <span className="text-2xl text-white">Members</span>
         <div className="flex-shrink-0">
@@ -128,7 +126,6 @@ const Team: React.FC = (): React.ReactElement => {
               setLoading,
               userId: deleteMember.id,
               app,
-              history,
             }).then(() => {
               setDeleteMember(undefined);
             });

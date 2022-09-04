@@ -1,8 +1,6 @@
 import api from "~/utils/api/Api";
-import { History } from "history";
 
 type RemoveCardProps = {
-  history: History;
   cardId: string;
   setError: (value: string | null) => void;
   setLoading: (value: boolean) => void;
@@ -10,7 +8,6 @@ type RemoveCardProps = {
 };
 
 export const handleRemovePaymentMethod = async ({
-  history,
   cardId,
   setError,
   setLoading,
@@ -22,7 +19,7 @@ export const handleRemovePaymentMethod = async ({
     await api.delete("/user/subscription/card", { cardId });
     setLoading(false);
     closeModal();
-    history.push({ state: { cards: Date.now() } });
+    window.location.reload();
   } catch (e) {
     setLoading(false);
 

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Tooltip } from "@material-ui/core";
+import { Tooltip } from "@mui/material";
 import { AppContext } from "~/pages/apps/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import InfoBox from "~/components/InfoBox";
@@ -36,7 +36,7 @@ const Usage: React.FC = (): React.ReactElement => {
     stats.numberOfDeploymentsThisMonth + stats.remainingDeploymentsThisMonth;
 
   return (
-    <div>
+    <div className="w-full">
       <h1 className="mb-4 text-2xl text-white flex justify-between">
         <div>Usage</div>
         {user!.package.id !== "enterprise" ? (

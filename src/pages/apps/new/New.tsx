@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import DefaultLayout from "~/layouts/DefaultLayout";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { Title } from "~/pages/apps/_components";
@@ -10,13 +10,13 @@ import * as btn from "~/components/Buttons";
 
 const Start: React.FC = (): React.ReactElement => {
   const { loginOauth } = useContext(AuthContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { apps, loading } = useFetchAppList({});
 
   const login = (provider: Provider) => {
     return loginOauth?.(provider).then(({ accessToken }) => {
       if (accessToken) {
-        history.push(`/apps/new/${provider}`);
+        navigate(`/apps/new/${provider}`);
       }
     });
   };

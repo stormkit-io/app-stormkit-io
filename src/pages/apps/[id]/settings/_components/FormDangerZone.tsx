@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import ConfirmModal from "~/components/ConfirmModal";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
@@ -12,7 +11,6 @@ interface Props {
 
 const FormDangerZone: React.FC<Props> = ({ app }): React.ReactElement => {
   const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
-  const history = useHistory();
 
   return (
     <Form.Section label="Danger Zone" marginBottom="mb-4">
@@ -41,7 +39,7 @@ const FormDangerZone: React.FC<Props> = ({ app }): React.ReactElement => {
             toggleConfirmModal(false);
           }}
           onConfirm={({ setLoading, setError }) => {
-            deleteApp({ app, history, setLoading, setError });
+            deleteApp({ app, setLoading, setError });
           }}
         >
           This will completely remove the application. All associated files and

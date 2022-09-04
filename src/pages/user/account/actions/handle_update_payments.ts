@@ -1,4 +1,3 @@
-import { History } from "history";
 import {
   Stripe,
   StripeElement,
@@ -13,7 +12,6 @@ type UpdatePaymentMethodProps = {
   elements: StripeElements | null;
   setLoading: (value: boolean) => void;
   setError: (value: string | null) => void;
-  history: History;
 };
 
 type HandleStripeErrorProps = {
@@ -49,7 +47,7 @@ interface UpdatePaymentMethodAPIResponse {
 export const handleUpdatePaymentMethod =
   (props: UpdatePaymentMethodProps) =>
   async (formValues: UpdatePaymentMethodFormValues): Promise<void> => {
-    const { stripe, elements, setLoading, setError, history } = props;
+    const { stripe, elements, setLoading, setError } = props;
     const name = formValues.name?.trim();
 
     if (!stripe || !elements) {
@@ -91,7 +89,7 @@ export const handleUpdatePaymentMethod =
 
           if (response && response.customerId) {
             setLoading(false);
-            return history.push({ state: { cards: Date.now() } });
+            return window.location.reload();
           }
         } catch (e) {
           // Do nothing

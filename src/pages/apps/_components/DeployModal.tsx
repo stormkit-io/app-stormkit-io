@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
@@ -19,7 +19,7 @@ const DeployModal: React.FC<Props> = ({
   environments,
   app,
 }): React.ReactElement => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [selectedEnv, setSelectedEnv] = useState<Environment>();
   const fetchResult = useFetchRepoType({ app, env: selectedEnv });
   const [branch, setBranch] = useState("");
@@ -53,8 +53,6 @@ const DeployModal: React.FC<Props> = ({
           deploy({
             app,
             environment: selectedEnv,
-            toggleModal,
-            history,
             setError,
             setLoading,
             config: {
@@ -63,6 +61,11 @@ const DeployModal: React.FC<Props> = ({
               distFolder: dist,
               publish: isAutoPublish || false,
             },
+          }).then(deploy => {
+            if (deploy) {
+              toggleModal(false);
+              navigate(`/apps/${app.id}/deployments/${deploy.id}`);
+            }
           })
         }
       >

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
-import { AppContextProps } from "~/pages/apps/App.context";
 import { useFetchDeployments, publishDeployments } from "../../actions";
 import DeploymentToBePublished from "./DeploymentRow";
 import PreviouslyPublishedDeployments from "./PreviouslyPublishedDeployments";
 
-interface Props extends AppContextProps {
+interface Props {
+  app: App;
+  environments: Environment[];
   deployment: Deployment;
   isOpen: boolean;
   toggleModal: (val: boolean) => void;
@@ -23,7 +23,6 @@ const PublishModal: React.FC<Props> = ({
   app,
 }): React.ReactElement => {
   const skipQuery = !isOpen;
-  const history = useHistory();
   const [selectedEnvironment, setSelectedEnvironment] = useState<string>("");
   const [publishError, setPublishError] = useState<string | null>(null);
   const [isInSync, setIsInSync] = useState(true);
@@ -70,7 +69,6 @@ const PublishModal: React.FC<Props> = ({
               isInSync={isInSync}
               handlePublishClick={publishDeployments({
                 app,
-                history,
                 setPublishError,
               })}
             />
