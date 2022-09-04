@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Location } from "history";
 import api from "~/utils/api/Api";
 
 export type StatusName = "trialing" | "active";
@@ -30,14 +29,6 @@ export type Subscription = {
   totalApps: number;
 };
 
-type LocationState = {
-  subscription: Location;
-};
-
-type FetchSubscriptionProps = {
-  location: Location;
-};
-
 interface FetchSubscriptionReturnValue {
   loading: boolean;
   error: string | null;
@@ -48,14 +39,10 @@ interface FetchSubscriptionAPIResponse {
   subscription: Subscription;
 }
 
-export const useFetchSubscription = ({
-  location,
-}: FetchSubscriptionProps): FetchSubscriptionReturnValue => {
+export const useFetchSubscription = (): FetchSubscriptionReturnValue => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [subscription, setSubscription] = useState<Subscription>();
-  const state = location.state as LocationState;
-  const refresh = state?.subscription;
 
   useEffect(() => {
     let unmounted = false;
@@ -98,7 +85,7 @@ export const useFetchSubscription = ({
     return () => {
       unmounted = true;
     };
-  }, [api, refresh]);
+  }, [api]);
 
   return { loading, error, subscription };
 };

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useRouteMatch, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import DefaultLayout from "~/layouts/DefaultLayout";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { Title } from "~/pages/apps/_components";
@@ -9,18 +9,12 @@ import GithubRepos from "./Provider.github";
 import BitbucketRepos from "./Provider.bitbucket";
 import GitlabRepos from "./Provider.gitlab";
 import Form from "~/components/Form";
-import InputAdornment from "@material-ui/core/InputAdornment";
-
-interface RouteMatchParams {
-  provider: string;
-}
+import InputAdornment from "@mui/material/InputAdornment";
 
 const Provider: React.FC = () => {
   const { user, loginOauth } = useContext(AuthContext);
   const [filter, setFilter] = useState<string>("");
-  const history = useHistory();
-  const match = useRouteMatch<RouteMatchParams>();
-  const provider = match.params.provider;
+  const { provider } = useParams();
 
   if (
     provider !== "github" &&
@@ -66,7 +60,6 @@ const Provider: React.FC = () => {
 
             {provider === "github" && (
               <GithubRepos
-                history={history}
                 user={user!}
                 loginOauth={popupLogin}
                 filter={filter}
@@ -74,19 +67,11 @@ const Provider: React.FC = () => {
             )}
 
             {provider === "bitbucket" && (
-              <BitbucketRepos
-                history={history}
-                loginOauth={popupLogin}
-                filter={filter}
-              />
+              <BitbucketRepos loginOauth={popupLogin} filter={filter} />
             )}
 
             {provider === "gitlab" && (
-              <GitlabRepos
-                history={history}
-                loginOauth={popupLogin}
-                filter={filter}
-              />
+              <GitlabRepos loginOauth={popupLogin} filter={filter} />
             )}
           </div>
           <div className="min-w-1/3 max-w-1/3">

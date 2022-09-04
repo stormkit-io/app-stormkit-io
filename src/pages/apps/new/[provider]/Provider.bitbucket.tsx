@@ -1,5 +1,4 @@
 import React from "react";
-import { History } from "history";
 import qs from "query-string";
 import api from "~/utils/api/Api";
 import bitbucketApi from "~/utils/api/Bitbucket";
@@ -24,7 +23,6 @@ interface Repository {
 interface PageQueryParams {}
 
 interface Props {
-  history: History;
   loginOauth: () => void;
   filter?: string;
 }
@@ -165,7 +163,7 @@ export default class BitbucketRepositories extends React.PureComponent<
   }
 
   render() {
-    const { loginOauth, history, filter } = this.props;
+    const { loginOauth, filter } = this.props;
     const {
       accounts = [],
       loading,
@@ -211,7 +209,6 @@ export default class BitbucketRepositories extends React.PureComponent<
         <div className="flex-auto">
           <RepoList
             api={api}
-            history={history}
             repositories={repositories?.filter(r =>
               r.name.includes(filter || "")
             )}

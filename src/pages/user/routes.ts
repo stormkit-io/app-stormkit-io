@@ -3,9 +3,8 @@ import { RouteProps } from "react-router-dom";
 
 const routes: Array<RouteProps> = [
   {
-    path: "/user/account",
-    exact: true,
-    component: Async(() => import("~/pages/user/account")),
+    path: "/account",
+    element: Async(() => import("~/pages/user/account")),
   },
 ];
 

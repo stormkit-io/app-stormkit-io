@@ -1,5 +1,4 @@
-import React, { FC, ReactElement, useState, useEffect } from "react";
-import { History, Location } from "history";
+import React, { useState, useEffect } from "react";
 import * as stripejs from "@stripe/react-stripe-js";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
@@ -14,11 +13,6 @@ import stripeLogoSvg from "~/assets/images/stripe-logo-white.svg";
 const { useFetchCards, handleUpdatePaymentMethod, handleRemovePaymentMethod } =
   actions;
 
-interface Props {
-  history: History;
-  location: Location;
-}
-
 const {
   Elements,
   CardNumberElement,
@@ -28,15 +22,12 @@ const {
   useElements,
 } = stripejs;
 
-const PaymentDetails: FC<Props> = ({
-  history,
-  location,
-}: Props): ReactElement => {
+const PaymentDetails: React.FC = (): React.ReactElement => {
   const [cardIdToRemove, setCardIdToRemove] = useState<string>();
   const [showForm, setShowForm] = useState(false);
   const [formError, setError] = useState<string | null>(null);
   const [formLoading, setLoading] = useState(false);
-  const { cards, loading, error } = useFetchCards({ location });
+  const { cards, loading, error } = useFetchCards();
   const stripe = useStripe();
   const elements = useElements();
   const errorMsg = error || formError;
@@ -100,7 +91,6 @@ const PaymentDetails: FC<Props> = ({
                 handleSubmit={handleUpdatePaymentMethod({
                   stripe,
                   elements,
-                  history,
                   setError,
                   setLoading,
                 })}
@@ -168,7 +158,6 @@ const PaymentDetails: FC<Props> = ({
               cardId: cardIdToRemove,
               setLoading,
               setError,
-              history,
               closeModal: () => {
                 setCardIdToRemove(undefined);
               },
@@ -183,8 +172,9 @@ const PaymentDetails: FC<Props> = ({
   );
 };
 
-export default (props: Props): ReactElement => (
+export default (): React.ReactElement => (
+  // @ts-ignore
   <Elements stripe={stripePromise}>
-    <PaymentDetails {...props} />
+    <PaymentDetails />
   </Elements>
 );

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { toArray } from "~/utils/helpers/array";
 import Modal from "~/components/Modal";
 import { timeout as animationTimeout } from "~/components/Modal/constants";
@@ -35,8 +34,6 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
   app,
   webhook,
 }): React.ReactElement => {
-  const history = useHistory();
-
   const [trigger, setTrigger] = useState("on_deploy");
   const [method, setMethod] = useState("GET");
   const [payload, setPayload] = useState("");
@@ -127,11 +124,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
             .then(() => {
               setError(null);
               toggleModal(false);
-              history.replace({
-                state: {
-                  outboundWebhooksRefresh: Date.now(),
-                },
-              });
+              window.location.reload();
             })
             .catch(e => {
               if (e.status === 400) {

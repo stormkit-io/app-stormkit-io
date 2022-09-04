@@ -1,6 +1,6 @@
 import React from "react";
 import OutsideClick from "~/components/OutsideClick";
-import { Popper } from "@material-ui/core";
+import { Popper } from "@mui/material";
 
 const News: React.FC = (): React.ReactElement => {
   const [anchorEl, setAnchorEl] = React.useState(null);

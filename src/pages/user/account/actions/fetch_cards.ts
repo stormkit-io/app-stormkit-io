@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Location } from "history";
 import api from "~/utils/api/Api";
 
 type CardTypeData = {
@@ -29,26 +28,14 @@ type FetchCardsReturnValue = {
   loading: boolean;
 };
 
-type LocationState = {
-  cards: Location;
-};
-
-interface FetchCardsProps {
-  location: Location;
-}
-
 interface FetchCardsAPIResponse {
   cards: Cards;
 }
 
-export const useFetchCards = ({
-  location,
-}: FetchCardsProps): FetchCardsReturnValue => {
+export const useFetchCards = (): FetchCardsReturnValue => {
   const [cards, setCards] = useState<Cards>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const state = location.state as LocationState;
-  const refresh = state?.cards;
 
   useEffect(() => {
     let unmounted = false;
@@ -81,7 +68,7 @@ export const useFetchCards = ({
     return () => {
       unmounted = true;
     };
-  }, [api, refresh]);
+  }, [api]);
 
   return { cards, loading, error };
 };

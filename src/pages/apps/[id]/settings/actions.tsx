@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { RouteComponentProps, useLocation } from "react-router-dom";
 import { formatRepo } from "./helpers";
 import api from "~/utils/api/Api";
-import type { AppSettings, LocationState, Runtime } from "./types.d";
+import type { AppSettings, Runtime } from "./types.d";
 
-interface DeleteAppProps extends Pick<RouteComponentProps, "history"> {
+interface DeleteAppProps {
   app: App;
   setLoading: SetLoading;
   setError: SetError;
@@ -17,7 +16,6 @@ type voidFn = () => void;
  */
 export const deleteApp = ({
   app,
-  history,
   setLoading,
   setError,
 }: DeleteAppProps): Promise<void> => {
@@ -27,7 +25,7 @@ export const deleteApp = ({
     .delete("/app", { appId: app.id })
     .then(() => {
       setLoading(false);
-      history.push("/");
+      window.location.href = "/";
     })
     .catch(() => {
       setLoading(false);
@@ -37,15 +35,14 @@ export const deleteApp = ({
     });
 };
 
-interface UpdateDeployTriggerProps
-  extends Pick<RouteComponentProps, "history"> {
+interface UpdateDeployTriggerProps {
   app: App;
   setLoading: SetLoading;
   setError: SetError;
 }
 
 export const updateDeployTrigger =
-  ({ app, setLoading, setError, history }: UpdateDeployTriggerProps): voidFn =>
+  ({ app, setLoading, setError }: UpdateDeployTriggerProps): voidFn =>
   () => {
     setLoading(true);
     setError(null);
@@ -54,12 +51,7 @@ export const updateDeployTrigger =
       .put(`/app/deploy-trigger`, { appId: app.id })
       .then(() => {
         setLoading(false);
-        history.replace({
-          state: {
-            app: Date.now(), // This will trigger a re-fetch for the app.
-            triggerDeploysSuccess: "Endpoint was created successfully.",
-          },
-        });
+        window.location.reload();
       })
       .catch(() => {
         setLoading(false);
@@ -82,15 +74,12 @@ interface UseFetchAdditionalSettingsReturnValue {
 export const useFetchAdditionalSettings = ({
   app,
 }: UseFetchAdditionalSettings): UseFetchAdditionalSettingsReturnValue => {
-  const location = useLocation<LocationState>();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState<AppSettings>({
     envs: [],
     runtime: "nodejs14.x",
   });
-
-  const refresh = location?.state?.app;
 
   useEffect(() => {
     let unmounted = false;
@@ -125,13 +114,12 @@ export const useFetchAdditionalSettings = ({
     return () => {
       unmounted = true;
     };
-  }, [api, app.id, refresh]);
+  }, [api, app.id]);
 
   return { loading, error, settings };
 };
 
-interface UpdateAdditionalSettingsProps
-  extends Pick<RouteComponentProps, "history"> {
+interface UpdateAdditionalSettingsProps {
   setError: SetError;
   setLoading: SetLoading;
   app: App;
@@ -144,7 +132,7 @@ interface FormValues {
 }
 
 export const updateAdditionalSettings =
-  ({ app, setLoading, setError, history }: UpdateAdditionalSettingsProps) =>
+  ({ app, setLoading, setError }: UpdateAdditionalSettingsProps) =>
   ({ repo, displayName, runtime }: FormValues): void => {
     repo = formatRepo(repo);
     setLoading(true);
@@ -159,12 +147,7 @@ export const updateAdditionalSettings =
       })
       .then(() => {
         setLoading(false);
-        history.replace({
-          state: {
-            app: Date.now(), // This will trigger a re-fetch for the app.
-            settingsSuccess: "Your app has been updated successfully.",
-          },
-        });
+        window.location.reload();
       })
       .catch(res => {
         res

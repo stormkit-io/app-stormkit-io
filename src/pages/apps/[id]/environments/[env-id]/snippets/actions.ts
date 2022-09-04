@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
-import { Location } from "history";
 import api from "~/utils/api/Api";
 import { normalize, isUndef } from "./helpers";
 
@@ -59,10 +57,6 @@ interface FetchSnippetsReturnValue {
   setSnippets: SetSnippets;
 }
 
-interface LocationState extends Location {
-  snippets: number;
-}
-
 interface FetchSnippetsAPIResponse {
   snippets: Snippets;
 }
@@ -71,11 +65,9 @@ export const useFetchSnippets = ({
   app,
   env,
 }: FetchSnippetsProps): FetchSnippetsReturnValue => {
-  const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [snippets, setSnippets] = useState<Snippets>({ head: [], body: [] });
-  const refresh = location?.state?.snippets;
 
   useEffect(() => {
     let unmounted = false;
@@ -106,7 +98,7 @@ export const useFetchSnippets = ({
     return () => {
       unmounted = true;
     };
-  }, [app.id, env.env, refresh]);
+  }, [app.id, env.env]);
 
   return { loading, error, snippets, setSnippets };
 };

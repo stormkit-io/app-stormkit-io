@@ -8,6 +8,7 @@ interface Props {
   title: React.ReactNode;
   actions?: React.ReactNode;
   className?: string | string[] | Record<string, boolean>;
+  children: React.ReactNode;
 }
 
 const Container: React.FC<Props> = ({

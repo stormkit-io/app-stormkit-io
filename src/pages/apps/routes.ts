@@ -3,46 +3,38 @@ import { RouteProps } from "react-router-dom";
 
 const routes: Array<RouteProps> = [
   {
-    path: "/apps/:id",
-    exact: true,
-    component: Async(() => import("~/pages/apps/[id]")),
+    path: "/",
+    element: Async(() => import("~/pages/apps/[id]")),
   },
   {
-    path: "/apps/:id/environments/:envId",
-    component: Async(() => import("~/pages/apps/[id]/environments/[env-id]")),
+    path: "/environments/:envId/*",
+    element: Async(() => import("~/pages/apps/[id]/environments/[env-id]")),
   },
   {
-    path: "/apps/:id/environments",
-    component: Async(
-      () => import("~/pages/apps/[id]/environments/Environments")
-    ),
+    path: "/environments",
+    element: Async(() => import("~/pages/apps/[id]/environments/Environments")),
   },
   {
-    path: "/apps/:id/deployments",
-    exact: true,
-    component: Async(() => import("~/pages/apps/[id]/deployments")),
+    path: "/deployments",
+    element: Async(() => import("~/pages/apps/[id]/deployments")),
   },
   {
-    path: "/apps/:id/deployments/:deploymentId",
-    exact: true,
-    component: Async(
+    path: "/deployments/:deploymentId",
+    element: Async(
       () => import("~/pages/apps/[id]/deployments/[deployment-id]")
     ),
   },
   {
-    path: "/apps/:id/team",
-    exact: true,
-    component: Async(() => import("~/pages/apps/[id]/team")),
+    path: "/team",
+    element: Async(() => import("~/pages/apps/[id]/team")),
   },
   {
-    path: "/apps/:id/settings",
-    exact: true,
-    component: Async(() => import("~/pages/apps/[id]/settings")),
+    path: "/settings",
+    element: Async(() => import("~/pages/apps/[id]/settings")),
   },
   {
-    path: "/apps/:id/usage",
-    exact: true,
-    component: Async(() => import("~/pages/apps/[id]/usage")),
+    path: "/usage",
+    element: Async(() => import("~/pages/apps/[id]/usage")),
   },
 ];
 

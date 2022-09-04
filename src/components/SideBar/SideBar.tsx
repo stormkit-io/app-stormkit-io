@@ -7,6 +7,7 @@ import "./SideBar.css";
 interface Props {
   isOpen: boolean;
   maxWidth?: "max-w-128" | "max-w-72";
+  children: React.ReactNode;
 }
 
 const SideBar: React.FC<Props> = ({

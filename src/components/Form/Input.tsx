@@ -1,9 +1,9 @@
 import React from "react";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
-import { Tooltip } from "@material-ui/core";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { Tooltip } from "@mui/material";
 
 type Props = TextFieldProps & {
-  tooltip?: React.ReactChild;
+  tooltip?: React.ReactNode;
 };
 
 const Input: React.FC<Props> = ({

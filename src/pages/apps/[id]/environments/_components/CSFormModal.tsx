@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import Tooltip from "@material-ui/core/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
 import { AppContextProps } from "~/pages/apps/App.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
@@ -19,7 +18,6 @@ const CustomStorageFormModal: React.FC<Props> = ({
   environment,
   app,
 }): React.ReactElement => {
-  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const [integration, setIntegration] = useState<Integration | undefined>(
@@ -36,7 +34,6 @@ const CustomStorageFormModal: React.FC<Props> = ({
         handleSubmit={updateIntegration({
           app,
           environmentId: environment.id || "",
-          history,
           toggleModal,
           setLoading,
           setError,

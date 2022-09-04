@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { AppContextProps } from "~/pages/apps/App.context";
+import React, { useEffect, useState, useContext } from "react";
+import { AppContext } from "~/pages/apps/App.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
@@ -13,7 +12,8 @@ import {
   deleteEnvironment,
 } from "../actions";
 
-interface Props extends Pick<AppContextProps, "app"> {
+interface Props {
+  app: App;
   environment?: Environment;
   isOpen: boolean;
   toggleModal: (val: boolean) => void;
@@ -54,8 +54,6 @@ const EnvironmentFormModal: React.FC<Props> = ({
   environment: env,
   app,
 }): React.ReactElement => {
-  const history = useHistory();
-
   const [isAutoPublish, setIsAutoPublish] = useState<boolean>(
     env?.autoPublish ?? true
   );
@@ -64,6 +62,7 @@ const EnvironmentFormModal: React.FC<Props> = ({
     computeAutoDeployValue(env)
   );
 
+  const { setRefreshToken } = useContext(AppContext);
   const [isDeleteConfirmModalOpen, toggleDeleteConfirmModal] = useState(false);
   const [branchName, setBranchName] = useState(env?.branch || "");
   const [envVars, setEnvVars] = useState(envVarsToArray(env));
@@ -105,7 +104,6 @@ const EnvironmentFormModal: React.FC<Props> = ({
           isAutoPublish,
           isAutoDeploy: autoDeploy !== "disabled",
           environmentId: env?.id || "",
-          history,
           toggleModal,
           setLoading,
           setError,
@@ -328,14 +326,18 @@ const EnvironmentFormModal: React.FC<Props> = ({
         <ConfirmModal
           onCancel={() => toggleDeleteConfirmModal(false)}
           onConfirm={({ setLoading, setError }) => {
+            setLoading(true);
+
             deleteEnvironment({
               app,
               environment: env,
-              history,
-              setLoading,
-              setError,
-              closeModal: () => toggleDeleteConfirmModal(false),
-            });
+            })
+              .then(() => {
+                setRefreshToken(Date.now());
+              })
+              .catch(() => {
+                setError("Something went wrong while deleting environment.");
+              });
           }}
         >
           This will completely remove the environment and all associated

@@ -1,7 +1,7 @@
+import type { History } from "history";
 import React from "react";
-import router from "react-router";
-import { Router } from "react-router-dom";
-import { createMemoryHistory, MemoryHistory } from "history";
+import * as router from "react-router";
+import { createMemoryHistory } from "history";
 import { mockUser } from "~/testing/data";
 import { render, waitFor, RenderResult } from "@testing-library/react";
 import { AuthContext, AuthContextProps } from "./Auth.context";
@@ -9,21 +9,22 @@ import Auth from "./Auth";
 
 describe("~/pages/auth/Auth.tsx", () => {
   let wrapper: RenderResult;
-  let history: MemoryHistory;
+  let history: History;
 
   const createWrapper = (context?: AuthContextProps) => {
     history = createMemoryHistory();
     wrapper = render(
-      <Router history={history}>
+      <router.Router location={history.location} navigator={history}>
         <AuthContext.Provider value={{ user: mockUser(), ...context }}>
           <Auth />
         </AuthContext.Provider>
-      </Router>
+      </router.Router>
     );
   };
 
   const mockUseLocation = ({ pathname = "", search = "" } = {}) => {
     jest.spyOn(router, "useLocation").mockReturnValue({
+      key: "",
       state: {},
       hash: "",
       pathname,

@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import cn from "classnames";
-import Tooltip from "@material-ui/core/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
 import { AuthContext } from "~/pages/auth/Auth.context";
+import { AppContext } from "~/pages/apps/App.context";
 import Link from "~/components/Link";
 import Spinner from "~/components/Spinner";
 import DotDotDot from "~/components/DotDotDot";
@@ -9,7 +10,6 @@ import EnvironmentFormModal from "./EnvironmentFormModal";
 import CSFormModal from "./CSFormModal";
 import { useFetchStatus, STATUS, STATUSES } from "../actions";
 import { deleteEnvironment } from "../actions";
-import { useHistory } from "react-router";
 import ConfirmModal from "~/components/ConfirmModal";
 
 interface Props {
@@ -65,8 +65,8 @@ const Environment: React.FC<Props> = ({
   app,
   isClickable,
 }): React.ReactElement => {
-  const history = useHistory();
   const { user } = useContext(AuthContext);
+  const { setRefreshToken } = useContext(AppContext);
   const { lastDeploy } = environment;
   const name = environment.name || environment.env;
   const domain = getDomain(environment);
@@ -78,7 +78,7 @@ const Environment: React.FC<Props> = ({
   const { status, loading } = useFetchStatus({ domain, lastDeploy, app });
 
   return (
-    <div className={"flex flex-auto py-8 bg-white rounded border-solid"}>
+    <div className="flex flex-auto py-8 bg-white rounded border-solid">
       <div className="flex flex-col flex-auto">
         <header className="flex items-center mb-6 px-8">
           <h2 className="flex-grow text-xl font-bold">
@@ -187,14 +187,21 @@ const Environment: React.FC<Props> = ({
             toggleConfirmModal(false);
           }}
           onConfirm={({ setLoading, setError }) => {
-            deleteEnvironment({
-              app,
-              environment,
-              history,
-              setLoading,
-              setError,
-              closeModal: () => toggleConfirmModal(false),
-            });
+            setLoading(true);
+
+            deleteEnvironment({ app, environment })
+              .then(() => {
+                setTimeout(() => {
+                  setLoading(false);
+                  setRefreshToken(Date.now());
+                }, 250);
+              })
+              .catch(() => {
+                setLoading(false);
+                setError(
+                  "Something went wrong while deleting the environment. Please try again, if the problem persists contact us from Discord or email."
+                );
+              });
           }}
         >
           This will completely remove the environment and all associated

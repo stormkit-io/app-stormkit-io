@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
@@ -25,7 +24,6 @@ interface Props {
 }
 
 const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
-  const history = useHistory();
   const [loadingSample, setLoadingSample] = useState(false);
   const [webhookToEdit, setWebhookToEdit] = useState<OutboundWebhook>();
   const [sampleData, setSampleData] = useState<SendSampleRequestResponse>();
@@ -101,12 +99,7 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
                               app,
                               whId: hook.id,
                             }).then(() => {
-                              history.replace({
-                                state: {
-                                  outboundWebhooksRefresh: Date.now(),
-                                },
-                              });
-
+                              window.location.reload();
                               close();
                             });
                           }}

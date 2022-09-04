@@ -6,14 +6,12 @@ import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
 import { setDomain } from "../actions";
-import { useHistory } from "react-router";
 
 interface Props {
   onClose: () => void;
 }
 
 const DomainModal: React.FC<Props> = ({ onClose }) => {
-  const history = useHistory();
   const { app } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const [error, setError] = useState(null);
@@ -28,7 +26,6 @@ const DomainModal: React.FC<Props> = ({ onClose }) => {
           setLoading,
           app,
           environment,
-          history,
         })}
       >
         <div className="mb-4 p-4 rounded bg-gray-85">

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Location } from "history";
-import { useHistory, useLocation } from "react-router";
 import Form from "~/components/Form";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
@@ -17,18 +15,10 @@ interface Props {
   additionalSettings: AppSettings;
 }
 
-interface LocationState extends Location {
-  settingsSuccess: null | boolean;
-  app: null | number;
-}
-
 const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
-  const history = useHistory();
-  const location = useLocation<LocationState>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [runtime, setRuntime] = useState<Runtime>(additionalSettings.runtime);
-  const successMessage = location?.state?.settingsSuccess;
 
   useEffect(() => {
     if (additionalSettings.runtime) {
@@ -42,7 +32,6 @@ const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
         app,
         setLoading,
         setError,
-        history,
       })}
     >
       <Form.Section label="Display name">
@@ -112,20 +101,6 @@ const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
       {error && (
         <InfoBox type={InfoBox.ERROR} className="mt-4">
           {error}
-        </InfoBox>
-      )}
-      {successMessage && (
-        <InfoBox
-          type={InfoBox.SUCCESS}
-          toaster
-          dismissable
-          onDismissed={() =>
-            history.replace({
-              state: { app: location?.state?.app, settingsSuccess: null },
-            })
-          }
-        >
-          {successMessage}
         </InfoBox>
       )}
     </Form>

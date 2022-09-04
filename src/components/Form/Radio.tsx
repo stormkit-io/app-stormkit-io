@@ -1,2 +1,2 @@
-import Radio from "@material-ui/core/Radio";
+import Radio from "@mui/material/Radio";
 export default Radio;

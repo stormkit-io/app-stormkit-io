@@ -1,5 +1,4 @@
-import React, { FC, ReactElement, useEffect, useState } from "react";
-import { History, Location } from "history";
+import React, { useEffect, useState } from "react";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
@@ -10,16 +9,11 @@ import { useFetchSubscription, handleUpdateSubscriptionPlan } from "../actions";
 import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
 import { packages, features } from "./constants";
 
-interface Props {
-  location: Location;
-  history: History;
-}
-
 type SubscriptionDowngradePros = {
   activePlan: ActivePlan;
 };
 
-const SubscriptionDowngrade: FC<SubscriptionDowngradePros> = ({
+const SubscriptionDowngrade: React.FC<SubscriptionDowngradePros> = ({
   activePlan,
 }) => {
   return (
@@ -36,14 +30,9 @@ const SubscriptionDowngrade: FC<SubscriptionDowngradePros> = ({
   );
 };
 
-const SubscriptionDetails: FC<Props> = ({
-  history,
-  location,
-}: Props): ReactElement => {
+const SubscriptionDetails: React.FC = (): React.ReactElement => {
   const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
-  const { loading, error, subscription } = useFetchSubscription({
-    location,
-  });
+  const { loading, error, subscription } = useFetchSubscription();
 
   const [selected, setSelected] = useState<SubscriptionName | undefined>(
     subscription?.name
@@ -154,7 +143,6 @@ const SubscriptionDetails: FC<Props> = ({
             }
 
             handleUpdateSubscriptionPlan({
-              history,
               name: selected,
               setError,
               setLoading,

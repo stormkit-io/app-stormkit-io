@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
-import { History, Location } from "history";
 import api from "~/utils/api/Api";
 
 export type setLoadingArgs = null | "delete" | "stop";
@@ -31,7 +29,6 @@ export const deleteForever = ({
 
 interface PublishDeploymentsProps {
   app: App;
-  history: History;
   setPublishError: (value: string | null) => void;
 }
 
@@ -41,7 +38,7 @@ interface PublishInfo {
 }
 
 export const publishDeployments =
-  ({ app, history, setPublishError }: PublishDeploymentsProps) =>
+  ({ app, setPublishError }: PublishDeploymentsProps) =>
   (
     sliders: Record<string, { percentage: number }>,
     envId: string
@@ -76,12 +73,7 @@ export const publishDeployments =
         publish,
       })
       .then(() => {
-        history.replace({
-          state: {
-            deployments: Date.now(),
-            success: "Deployment has been successfully published.",
-          },
-        });
+        window.location.reload();
       })
       .catch(e => {
         setPublishError(
@@ -115,11 +107,6 @@ interface UseFetchDeploymentsReturnValaue {
   setDeployments: (value: Array<Deployment>) => void;
 }
 
-interface LocationState extends Location {
-  success?: string;
-  deployments?: number;
-}
-
 interface FetchDeploymentsAPIResponse {
   hasNextPage: boolean;
   deploys: Array<Deployment>;
@@ -130,25 +117,14 @@ export const useFetchDeployments = ({
   from,
   skipQuery,
   filters,
-  setFrom,
 }: UseFetchDeploymentsProps): UseFetchDeploymentsReturnValaue => {
-  const location = useLocation<LocationState>();
   const [deployments, setDeployments] = useState<Array<Deployment>>([]);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [lastFrom, setLastFrom] = useState(from);
-  const refreshTime = location?.state?.deployments;
-  const success = location?.state?.success;
 
   const { envId, status, published, branch } = filters || {};
-
-  useEffect(() => {
-    if (refreshTime && setFrom) {
-      setLastFrom(0);
-      setFrom(0);
-    }
-  }, [refreshTime]);
 
   useEffect(() => {
     let unmounted = false;
@@ -189,14 +165,13 @@ export const useFetchDeployments = ({
     return () => {
       unmounted = true;
     };
-  }, [app.id, envId, published, branch, status, refreshTime, from, skipQuery]);
+  }, [app.id, envId, published, branch, status, from, skipQuery]);
 
   return {
     deployments,
     error,
     loading,
     hasNextPage,
-    success,
     setDeployments,
   };
 };

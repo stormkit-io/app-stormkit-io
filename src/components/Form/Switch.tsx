@@ -1,12 +1,12 @@
 import React, { useState, useEffect, ReactElement, FC } from "react";
-import { Tooltip } from "@material-ui/core";
-import SwitchUI, { SwitchProps } from "@material-ui/core/Switch";
+import { Tooltip } from "@mui/material";
+import SwitchUI, { SwitchProps } from "@mui/material/Switch";
 
 interface Props extends SwitchProps {
   confirm?: (arg0: (val: boolean) => void) => void;
   withWrapper?: boolean;
   children?: React.ReactNode;
-  tooltip?: React.ReactChild;
+  tooltip?: React.ReactNode;
 }
 
 /**

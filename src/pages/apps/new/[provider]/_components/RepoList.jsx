@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import PropTypes from "prop-types";
 import cn from "classnames";
 import InfoBox from "~/components/InfoBox";
@@ -9,13 +10,13 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const RepoList = ({
   api,
-  history,
   loading,
   repositories,
   provider,
   hasNextPage,
   onNextPageClick,
 }) => {
+  const navigate = useNavigate();
   const [state, setState] = useState({ error: null, loadingInsert: null });
 
   if (loading && repositories.length === 0) {
@@ -47,13 +48,16 @@ const RepoList = ({
                 as="div"
                 styled={false}
                 className="flex items-center w-full p-4 hover:bg-gray-75 rounded cursor-pointer"
-                onClick={insertRepo({
-                  repo: r.full_name || r.path_with_namespace,
-                  api,
-                  history,
-                  provider,
-                  setState,
-                })}
+                onClick={() => {
+                  insertRepo({
+                    repo: r.full_name || r.path_with_namespace,
+                    api,
+                    provider,
+                    setState,
+                  }).then(app => {
+                    navigate(`/apps/${app.id}`);
+                  });
+                }}
               >
                 <div>
                   <span
@@ -101,7 +105,6 @@ const RepoList = ({
 };
 
 RepoList.propTypes = {
-  history: PropTypes.object,
   api: PropTypes.object,
   loading: PropTypes.bool,
   provider: PropTypes.string,

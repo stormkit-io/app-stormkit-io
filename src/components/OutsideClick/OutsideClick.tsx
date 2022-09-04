@@ -1,9 +1,10 @@
 import { ReactNode, PureComponent } from "react";
 import ReactDOM from "react-dom";
 
-type Props = {
+interface Props {
   handler: (arg0: any) => void;
-};
+  children: React.ReactNode;
+}
 
 class OutsideClick extends PureComponent<Props, any> {
   componentDidMount() {

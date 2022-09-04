@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
 import CenterLayout from "~/layouts/CenterLayout";
 import Container from "~/components/Container";
@@ -13,16 +13,22 @@ import { WelcomeModal } from "./_components";
 const limit = 20;
 const welcomeModalId = "welcome_modal";
 
-export const Home: React.FC = (): React.ReactElement => {
-  const history = useHistory();
+export const Home: React.FC = () => {
+  const navigate = useNavigate();
   const [from, setFrom] = useState(0);
   const { apps, loading, error, hasNextPage } = useFetchAppList({ from });
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(
     LocalStorage.get(welcomeModalId) !== "shown"
   );
 
+  useEffect(() => {
+    if (apps.length === 0 && !loading) {
+      navigate("/apps/new");
+    }
+  }, [apps, loading]);
+
   if (apps.length === 0 && !loading) {
-    return <Redirect to="/apps/new" />;
+    return null;
   }
 
   const isLoadingFirstTime = loading && apps.length === 0;
@@ -59,11 +65,11 @@ export const Home: React.FC = (): React.ReactElement => {
                       role="button"
                       onKeyPress={e => {
                         if (e.key === "Enter") {
-                          history.push(`/apps/${app.id}`);
+                          navigate(`/apps/${app.id}`);
                         }
                       }}
                       onClick={() => {
-                        history.push(`/apps/${app.id}`);
+                        navigate(`/apps/${app.id}`);
                       }}
                     >
                       <div className="flex">

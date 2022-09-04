@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { AppContext } from "~/pages/apps/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import ConfirmModal from "~/components/ConfirmModal";
@@ -10,18 +9,12 @@ import { useDomainLookup, deleteDomain, fetchDomainsInfo } from "./actions";
 import DomainModal from "./_components/DomainModal";
 import DomainRow from "./_components/DomainRow";
 
-interface Props {
-  app: App;
-  environment: Environment;
-}
-
 interface HandleVerifyProps {
   setLoading: SetLoading;
   setError: SetError;
 }
 
-const Domain: React.FC<Props> = () => {
-  const history = useHistory();
+const Domain: React.FC = () => {
   const { app } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const [domainName, setDomainName] = useState("");
@@ -103,7 +96,6 @@ const Domain: React.FC<Props> = () => {
               domainName,
               setLoading,
               setError,
-              history,
             }).then(() => toggleConfirmModal(false));
           }}
         >

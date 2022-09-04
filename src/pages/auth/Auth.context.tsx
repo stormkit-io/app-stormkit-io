@@ -1,5 +1,5 @@
-import React, { createContext } from "react";
-import { Redirect, useLocation } from "react-router-dom";
+import React, { createContext, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Spinner from "~/components/Spinner";
 import {
   loginOauth,
@@ -18,9 +18,26 @@ export interface AuthContextProps {
 
 export const AuthContext = createContext<AuthContextProps>({});
 
-const ContextProvider: React.FC = ({ children }): React.ReactElement => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const ContextProvider: React.FC<Props> = ({ children }) => {
+  const navigate = useNavigate();
   const { pathname, search } = useLocation();
   const { error, loading, user, accounts, ...fns } = useFetchUser();
+  const shouldRedirect = !user && pathname.indexOf("/auth") === -1;
+
+  useEffect(() => {
+    if (shouldRedirect) {
+      const encoded =
+        pathname !== "/" && pathname !== "/logout"
+          ? encodeURIComponent(`${pathname}${search}`)
+          : undefined;
+
+      navigate(`/auth${encoded ? `?redirect=${encoded}` : ""}`);
+    }
+  }, [shouldRedirect]);
 
   if (loading) {
     return <Spinner primary pageCenter />;
@@ -28,13 +45,8 @@ const ContextProvider: React.FC = ({ children }): React.ReactElement => {
 
   // Redirect the user to the console login if he/she
   // is not logged in and the pathname is not auth.
-  if (!user && pathname.indexOf("/auth") === -1) {
-    const encoded =
-      pathname !== "/" && pathname !== "/logout"
-        ? encodeURIComponent(`${pathname}${search}`)
-        : undefined;
-
-    return <Redirect to={`/auth${encoded ? `?redirect=${encoded}` : ""}`} />;
+  if (shouldRedirect) {
+    return null;
   }
 
   return (

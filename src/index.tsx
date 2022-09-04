@@ -1,5 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
+// @ts-ignore
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import Root from "~/pages/Root";
@@ -16,7 +17,5 @@ if (process.env.SENTRY) {
   );
 }
 
-ReactDOM.render(
-  <Root Router={BrowserRouter} />,
-  document.querySelector("#root")
-);
+const root = createRoot(document.querySelector("#root")!);
+root.render(<Root Router={BrowserRouter} />);
