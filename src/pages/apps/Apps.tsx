@@ -2,34 +2,37 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
 import CenterLayout from "~/layouts/CenterLayout";
-import Container from "~/components/Container";
 import AppName from "~/components/AppName";
 import Button from "~/components/ButtonV2";
-import InfoBox from "~/components/InfoBox";
+import Container from "~/components/Container";
+import Form from "~/components/FormV2";
+import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
 import { useFetchAppList } from "./actions";
 import { WelcomeModal } from "./_components";
 
+let timeout: NodeJS.Timeout;
 const limit = 20;
 const welcomeModalId = "welcome_modal";
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [from, setFrom] = useState(0);
-  const { apps, loading, error, hasNextPage } = useFetchAppList({ from });
+  const [filter, setFilter] = useState("");
+  const { apps, loading, error, hasNextPage } = useFetchAppList({
+    from,
+    filter,
+  });
+
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(
     LocalStorage.get(welcomeModalId) !== "shown"
   );
 
   useEffect(() => {
-    if (apps.length === 0 && !loading) {
+    if (apps.length === 0 && !loading && !filter) {
       navigate("/apps/new");
     }
   }, [apps, loading]);
-
-  if (apps.length === 0 && !loading) {
-    return null;
-  }
 
   const isLoadingFirstTime = loading && apps.length === 0;
 
@@ -46,6 +49,25 @@ export const Home: React.FC = () => {
       >
         <div className="flex flex-auto text-gray-80">
           <div className="w-full px-4">
+            <Form.Input
+              fullWidth
+              autoFocus
+              placeholder="Search"
+              aria-label="Search apps"
+              className="mb-4"
+              onChange={e => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                  setFrom(0);
+                  setFilter(e.target.value);
+                }, 250);
+              }}
+              InputProps={{
+                startAdornment: (
+                  <span className="fas fa-search mr-1 text-gray-80" />
+                ),
+              }}
+            />
             {!loading && error && (
               <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
             )}
@@ -57,6 +79,9 @@ export const Home: React.FC = () => {
             {!isLoadingFirstTime && !error && (
               <>
                 <div className="flex-1 w-full">
+                  {apps.length === 0 && (
+                    <InfoBox>This search produced no results.</InfoBox>
+                  )}
                   {apps.map(app => (
                     <div
                       key={app.id}
@@ -86,7 +111,9 @@ export const Home: React.FC = () => {
                     <Button
                       category="action"
                       loading={loading}
-                      onClick={() => setFrom(from + limit)}
+                      onClick={() => {
+                        setFrom(from + limit);
+                      }}
                     >
                       Load more
                     </Button>
