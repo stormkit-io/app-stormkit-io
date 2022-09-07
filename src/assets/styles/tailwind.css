@@ -34,6 +34,14 @@
   @apply text-sm;
 }
 
+.MuiFilledInput-underline:before {
+  @apply border-gray-30;
+}
+
+.MuiInputBase-root:after {
+  @apply border-gray-60;
+}
+
 fieldset.MuiOutlinedInput-notchedOutline {
   @apply border-gray-83;
 }
@@ -50,15 +58,6 @@ div.MuiTableContainer-root {
 .MuiRadio-root {
   padding: 0;
   margin-right: 1rem;
-}
-
-.MuiFilledInput-root,
-.MuiOutlinedInput-root {
-  @apply bg-gray-90;
-}
-
-.MuiFilledInput-underline:before {
-  @apply border-gray-83;
 }
 
 .MuiInputBase-root.Mui-disabled {
