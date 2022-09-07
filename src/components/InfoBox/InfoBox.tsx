@@ -17,8 +17,8 @@ const icons = {
 
 const colors = {
   [DEFAULT]: {
-    text: "blue-70",
-    bg: "blue-30",
+    text: "blue-30",
+    bg: "blue-80",
     border: "transparent",
     icon: "blue-80",
   },
