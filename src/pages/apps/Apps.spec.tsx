@@ -89,4 +89,34 @@ describe("~/pages/apps/Apps.tsx", () => {
       });
     });
   });
+
+  describe("filtering", () => {
+    const findInput = () => wrapper.getByLabelText("Search apps");
+
+    beforeEach(() => {
+      mockFetchApps({ response: { apps, hasNextPage: true } });
+      createWrapper();
+    });
+
+    test("should submit a new request when search input is updated", async () => {
+      await waitFor(() => {
+        expect(findInput()).toBeTruthy();
+        expect(wrapper.getByText("My-second-app")).toBeTruthy();
+      });
+
+      const scope = mockFetchApps({
+        filter: "hello",
+        response: { apps: [apps[0]], hasNextPage: true },
+      });
+
+      fireEvent.change(findInput().querySelector("input")!, {
+        target: { value: "hello" },
+      });
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(() => wrapper.getByText("My-second-app")).toThrow();
+      });
+    });
+  });
 });

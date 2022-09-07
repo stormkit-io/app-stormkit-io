@@ -3,6 +3,7 @@ import api from "~/utils/api/Api";
 
 interface FetchAppListProps {
   from?: number;
+  filter?: string;
 }
 
 interface FetchAppListReturnValue {
@@ -19,6 +20,7 @@ interface FetchAppListAPIResponse {
 
 export const useFetchAppList = ({
   from = 0,
+  filter,
 }: FetchAppListProps): FetchAppListReturnValue => {
   const [apps, setApps] = useState<Array<App>>([]);
   const [loading, setLoading] = useState(true);
@@ -32,10 +34,15 @@ export const useFetchAppList = ({
     setError(null);
 
     api
-      .fetch<FetchAppListAPIResponse>(`/apps?from=${from}`)
+      .fetch<FetchAppListAPIResponse>(`/apps?from=${from}&filter=${filter}`)
       .then(res => {
         if (unmounted !== true) {
-          setApps([...apps, ...res.apps]);
+          if (from > 0) {
+            setApps([...apps, ...res.apps]);
+          } else {
+            setApps(res.apps);
+          }
+
           setHasNextPage(res.hasNextPage);
           setLoading(false);
         }
@@ -49,7 +56,7 @@ export const useFetchAppList = ({
     return () => {
       unmounted = true;
     };
-  }, [api, from]);
+  }, [api, from, filter]);
 
   return { apps, loading, error, hasNextPage };
 };
