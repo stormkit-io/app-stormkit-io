@@ -120,13 +120,12 @@ module.exports = {
         "pink-50": "#f6005c",
         "pink-10": "#78193B", // v2
 
-        "blue-90": "#e2f2ff",
         "blue-80": "#c9e3f9",
-        "blue-70": "#9fcff9",
+        "blue-70": "#1564cc",
         "blue-60": "#121136", // v2
         "blue-50": "#1F1C3B", // v2
         "blue-40": "#218dff",
-        "blue-30": "#1564cc",
+        "blue-30": "#3F3D56",
         "blue-20": "#2c2c4a",
         "blue-10": "#0f092b", // v2
 
