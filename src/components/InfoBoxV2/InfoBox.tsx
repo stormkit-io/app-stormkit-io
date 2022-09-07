@@ -3,14 +3,12 @@ import cn from "classnames";
 import Button from "~/components/Button";
 import "./InfoBox.css";
 
-const ACTION_REQUIRED = "action-required";
 const SUCCESS = "success";
 const WARNING = "warning";
 const ERROR = "error";
 const DEFAULT = "default";
 
 const icons = {
-  [ACTION_REQUIRED]: "fas fa-briefcase",
   [SUCCESS]: "fas fa-check",
   [WARNING]: "fas fa-radiation",
   [ERROR]: "fas fa-exclamation-triangle",
@@ -18,17 +16,11 @@ const icons = {
 };
 
 const colors = {
-  [ACTION_REQUIRED]: {
-    text: "blue-20",
-    bg: "blue-90",
-    border: "",
-    icon: "",
-  },
   [DEFAULT]: {
-    text: "blue-30",
+    text: "gray-80",
     bg: "black",
-    border: "transparent",
-    icon: "blue-80",
+    border: "blue-30",
+    icon: "blue-30",
   },
   [SUCCESS]: {
     text: "white",
@@ -51,7 +43,6 @@ const colors = {
 };
 
 type StateClass =
-  | typeof ACTION_REQUIRED
   | typeof SUCCESS
   | typeof WARNING
   | typeof ERROR
@@ -72,7 +63,6 @@ const InfoBox: React.FC<Props> & {
   ERROR: typeof ERROR;
   SUCCESS: typeof SUCCESS;
   WARNING: typeof WARNING;
-  ACTION_REQUIRED: typeof ACTION_REQUIRED;
 } = ({
   children,
   className,
@@ -124,7 +114,11 @@ const InfoBox: React.FC<Props> & {
             "inline-flex flex-auto flex-grow-0 min-w-6 max-w-6 h-6 items-center justify-center mr-4"
           )}
         >
-          <span className={cn(icons[type], "text-lg")} />
+          <span
+            className={cn(icons[type], "text-lg", {
+              [`text-${colors[type].icon}`]: Boolean(colors[type].icon),
+            })}
+          />
         </span>
       )}
       <div className="flex-auto">{children}</div>
@@ -147,7 +141,6 @@ const InfoBox: React.FC<Props> & {
 InfoBox.ERROR = ERROR;
 InfoBox.SUCCESS = SUCCESS;
 InfoBox.WARNING = WARNING;
-InfoBox.ACTION_REQUIRED = ACTION_REQUIRED;
 
 InfoBox.defaultProps = {
   type: DEFAULT,
