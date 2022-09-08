@@ -74,11 +74,13 @@ export const useFetchEnvironments = ({
 type STATUS_OK = 200;
 type STATUS_NOT_FOUND = 404;
 type STATUS_NOT_CONFIGURED = "NOT_CONFIGURED";
+type STATUS_NOT_PUBLISHED = "NOT_CONFIGURED";
 
 export type STATUSES =
   | STATUS_OK
   | STATUS_NOT_FOUND
   | STATUS_NOT_CONFIGURED
+  | STATUS_NOT_PUBLISHED
   | null;
 
 export const STATUS: Record<string, STATUSES> = {
@@ -89,6 +91,7 @@ export const STATUS: Record<string, STATUSES> = {
 
 interface FetchStatusProps {
   app: App;
+  environment: Environment;
   domain: string;
   lastDeploy?: { id: string };
 }
@@ -104,6 +107,7 @@ interface FetchStatusAPIResponse {
 
 export const useFetchStatus = ({
   app,
+  environment,
   domain,
   lastDeploy,
 }: FetchStatusProps): FetchStatusReturnValue => {
@@ -116,6 +120,9 @@ export const useFetchStatus = ({
 
     if (!lastDeployId) {
       setStatus(STATUS.NOT_CONFIGURED);
+      return;
+    } else if (lastDeployId && !environment.published) {
+      setStatus(STATUS.STATUS_NOT_PUBLISHED);
       return;
     }
 
