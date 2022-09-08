@@ -90,6 +90,19 @@ describe("~/pages/apps/Apps.tsx", () => {
     });
   });
 
+  describe("empty list", () => {
+    beforeEach(() => {
+      mockFetchApps({ response: { apps: [], hasNextPage: false } });
+      createWrapper();
+    });
+
+    test("should display an empty list text", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText(/quite empty in here/)).toBeTruthy();
+      });
+    });
+  });
+
   describe("filtering", () => {
     const findInput = () => wrapper.getByLabelText("Search apps");
 

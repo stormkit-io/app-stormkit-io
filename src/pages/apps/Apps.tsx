@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
 import CenterLayout from "~/layouts/CenterLayout";
@@ -9,7 +9,7 @@ import Form from "~/components/FormV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
 import { useFetchAppList } from "./actions";
-import { WelcomeModal } from "./_components";
+import { WelcomeModal, EmptyList } from "./_components";
 
 let timeout: NodeJS.Timeout;
 const limit = 20;
@@ -28,11 +28,15 @@ export const Home: React.FC = () => {
     LocalStorage.get(welcomeModalId) !== "shown"
   );
 
-  useEffect(() => {
-    if (apps.length === 0 && !loading && !filter) {
-      navigate("/apps/new");
-    }
-  }, [apps, loading]);
+  if (apps.length === 0 && !loading && !filter) {
+    return (
+      <CenterLayout>
+        <Container className="flex flex-1 items-center justify-center">
+          <EmptyList />
+        </Container>
+      </CenterLayout>
+    );
+  }
 
   const isLoadingFirstTime = loading && apps.length === 0;
 
