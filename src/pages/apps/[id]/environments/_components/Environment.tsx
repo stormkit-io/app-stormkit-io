@@ -29,6 +29,13 @@ const InfoMessage404 = () => (
   </>
 );
 
+const NotPublishedMessage = () => (
+  <>
+    You made an deployment but is not yet Published.
+    Unpublished deployments won't be visible
+  </>
+)
+
 const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
   return (
     <div className="flex items-center">
@@ -36,12 +43,20 @@ const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
         className={cn("text-sm", {
           "text-green-50": status === STATUS.OK,
           "text-red-50": status !== STATUS.OK,
-        })}
+        }, "flex", "align-baseline")}
       >
         <span className={"fas fa-fw fa-globe mr-2"} />
         {status === null && "Unknown error"}
         {status !== STATUS.NOT_CONFIGURED && status !== null && status}
         {status === STATUS.NOT_CONFIGURED && "Not yet deployed"}
+        {status === STATUS.NOT_PUBLISHED && (
+          <Tooltip title={<NotPublishedMessage/>} placement="top" arrow>
+            <div style={{"display": "flex" }}>
+            <p>Not yet published</p>
+            <span className="opacity-50 fas fa-question-circle ml-2 cursor-pointer" />
+            </div>
+          </Tooltip>
+        )}
         {status === STATUS.NOT_FOUND && (
           <Tooltip title={<InfoMessage404 />} placement="top" arrow>
             <span className="opacity-50 fas fa-question-circle ml-2 cursor-pointer" />
@@ -75,7 +90,7 @@ const Environment: React.FC<Props> = ({
   const [isEditModalOpen, toggleEditModal] = useState<boolean>();
   const [isIntegrationModalOpen, toggleIntegrationModal] = useState<boolean>();
 
-  const { status, loading } = useFetchStatus({ domain, lastDeploy, app });
+  const { status, loading } = useFetchStatus({environment, domain, lastDeploy, app });
 
   return (
     <div className="flex flex-auto py-8 bg-white rounded border-solid">
