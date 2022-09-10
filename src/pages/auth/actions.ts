@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "~/utils/api/Api";
+import api, { LS_ACCESS_TOKEN, LS_PROVIDER } from "~/utils/api/Api";
 import bitbucketApi from "~/utils/api/Bitbucket";
 import githubApi from "~/utils/api/Github";
 import gitlabApi from "~/utils/api/Gitlab";
@@ -68,6 +68,7 @@ export const useFetchUser = (): FetchUserReturnValue => {
 export const logout = () => (): void => {
   api.removeAuthToken();
   LocalStorage.del(LS_USER);
+  LocalStorage.del(LS_ACCESS_TOKEN);
   window.location.href = "/";
 };
 
@@ -99,17 +100,20 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
       const onClose = (data: DataMessage) => {
         if (data?.sessionToken) {
           api.setAuthToken(data.sessionToken); // adds it to local storage
-          setUser(data.user);
+          setUser(data.user!);
 
           // Persist it for this session
           bitbucketApi.accessToken = data.accessToken;
           githubApi.accessToken = data.accessToken;
           gitlabApi.accessToken = data.accessToken;
 
+          LocalStorage.set(LS_ACCESS_TOKEN, data.accessToken);
+          LocalStorage.set(LS_PROVIDER, provider);
+
           resolve({
-            user: data.user,
+            user: data.user!,
             sessionToken: data.sessionToken,
-            accessToken: data.accessToken,
+            accessToken: data.accessToken!,
           });
         }
 

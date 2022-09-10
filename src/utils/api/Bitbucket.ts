@@ -1,19 +1,33 @@
 import qs from "query-string";
-import {
-  prepareHeaders,
-  errTokenExpired,
-  errNotEnoughPermissions,
-} from "./helpers";
+import { prepareHeaders, errTokenExpired } from "./helpers";
+import { LocalStorage } from "~/utils/storage";
+import { LS_ACCESS_TOKEN } from "./Api";
+
+interface RepositoriesProps {
+  team?: string;
+  params?: {
+    role?: "admin";
+    pagelen?: number;
+  };
+}
+
+interface Repository {
+  full_name: string;
+  name: string;
+  type: "repository";
+}
+
+interface RepositoriesResponse {
+  next: boolean;
+  values: Repository[];
+}
 
 class Bitbucket {
   baseurl = "https://api.bitbucket.org/2.0";
 
-  // This value will be üp-dated by Auth.context.
-  accessToken = "";
+  // This is the access token required to fetch repositories.
+  accessToken = LocalStorage.get(LS_ACCESS_TOKEN);
 
-  /**
-   * User returns the currently logged in user object.
-   */
   user() {
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
@@ -29,13 +43,10 @@ class Bitbucket {
     });
   }
 
-  /**
-   * Lists all the repositories the user is an admin.
-   *
-   * @param {object.String} team The name of the team.
-   * @param {object.Object} params The parameters to be passed.
-   */
-  repositories({ team, params = {} } = {}) {
+  repositories({
+    team,
+    params = {},
+  }: RepositoriesProps = {}): Promise<RepositoriesResponse> {
     const url = team ? `/repositories/${team}` : "/repositories";
 
     return new Promise((resolve, reject) => {

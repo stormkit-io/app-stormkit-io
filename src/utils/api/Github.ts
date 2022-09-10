@@ -1,5 +1,48 @@
 import qs from "query-string";
 import { prepareHeaders, errTokenExpired } from "./helpers";
+import { LocalStorage } from "~/utils/storage";
+import { LS_ACCESS_TOKEN } from "./Api";
+
+interface RepositoriesProps {
+  // The id of the installation we'd like to show the repositories.
+  installationId: string;
+  params?: {
+    page?: number;
+    per_page?: number;
+  };
+}
+
+interface Repository {
+  name: string;
+  full_name: string;
+}
+
+interface InstallationsProps {
+  page?: number;
+}
+
+interface InstallationResponse {
+  total_count: number;
+  installations: Installation[];
+}
+
+interface RepositoriesResponse {
+  total_count: number;
+  repositories: Repository[];
+}
+
+export interface PageQueryParams {
+  page: number;
+  per_page?: number;
+}
+
+export interface Installation {
+  id: string;
+  account: {
+    login: string;
+    avatar_url: string;
+  };
+}
 
 class Github {
   baseurl = "https://api.github.com";
@@ -8,8 +51,8 @@ class Github {
   // It only needs to be included in endpoints which are related to github apps.
   previewHeader = "application/vnd.github.machine-man-preview+json";
 
-  // This value will be üp-dated by Auth.context.
-  accessToken = "";
+  // This is the access token required to fetch repositories.
+  accessToken = LocalStorage.get(LS_ACCESS_TOKEN);
 
   /**
    * User returns the currently logged in user.
@@ -36,12 +79,9 @@ class Github {
     });
   }
 
-  /**
-   * Installations retrieves a list of installations.
-   *
-   * @param {Number} page The page number to fetch.
-   */
-  installations({ page = 1 } = {}) {
+  installations({
+    page = 1,
+  }: InstallationsProps = {}): Promise<InstallationResponse> {
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
       headers.set("Accept", this.previewHeader);
@@ -62,16 +102,10 @@ class Github {
     });
   }
 
-  /**
-   * Repositories lists alls the repositories user have and
-   * we're allowed to see. In order to fetch repositories from github,
-   * it is required to pass the installation id, which can obtained from
-   * installations endpoint (the method above).
-   *
-   * @param {Object.string} installationId The id of the installation we'd like to show the repositories.
-   * @param {Object.Number} page The page number.
-   */
-  repositories({ installationId, params = {} } = {}) {
+  repositories({
+    installationId,
+    params = {},
+  }: RepositoriesProps): Promise<RepositoriesResponse> {
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
       headers.set("Accept", this.previewHeader);

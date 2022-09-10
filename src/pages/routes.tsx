@@ -1,10 +1,28 @@
-import React from "react";
-import { Navigate, useLocation, RouteProps } from "react-router-dom";
+import React, { useEffect } from "react";
+import { RouteProps } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import Async from "~/components/Async";
+import { LocalStorage } from "~/utils/storage";
+import { LS_PROVIDER } from "~/utils/api/Api";
 
 const RedirectApps: React.FC = () => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
-  <Navigate to={pathname.replace("/app", "/apps")} />;
+
+  useEffect(() => {
+    navigate(pathname.replace("/app", "/apps"));
+  }, [navigate]);
+
+  return <></>;
+};
+
+const RedirectNewApp: React.FC = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate(`/apps/new/${LocalStorage.get(LS_PROVIDER)}`);
+  }, [navigate]);
+
   return <></>;
 };
 
@@ -23,18 +41,26 @@ const routes: Array<RouteProps> = [
   },
   {
     path: "/apps/new",
-    element: Async(() => import("~/pages/apps/new")),
+    element: <RedirectNewApp />,
   },
   {
-    path: "/apps/new/:provider",
-    element: Async(() => import("~/pages/apps/new/[provider]")),
+    path: "/apps/new/github",
+    element: Async(() => import("~/pages/apps/new/github")),
+  },
+  {
+    path: "/apps/new/gitlab",
+    element: Async(() => import("~/pages/apps/new/gitlab")),
+  },
+  {
+    path: "/apps/new/bitbucket",
+    element: Async(() => import("~/pages/apps/new/bitbucket")),
   },
   {
     path: "/app/invitation/accept",
     element: Async(() => import("~/pages/app/invitation/Accept")),
   },
   {
-    path: "/app/:id",
+    path: "/app/:id/*",
     element: <RedirectApps />,
   },
   {

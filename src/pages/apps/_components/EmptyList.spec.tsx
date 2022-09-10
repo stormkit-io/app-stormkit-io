@@ -14,7 +14,7 @@ describe("~/pages/apps/_components/EmptyList", () => {
     history = createMemoryHistory();
     wrapper = render(
       <Router location={history.location} navigator={history}>
-        <EmptyList />
+        <EmptyList actionLink="/apps/new" />
       </Router>
     );
   };

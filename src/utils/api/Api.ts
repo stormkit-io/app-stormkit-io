@@ -22,6 +22,9 @@ interface FetchOptions extends Record<string, unknown> {
   params?: Body; // alias for body
 }
 
+export const LS_ACCESS_TOKEN = "skit_access_token";
+export const LS_PROVIDER = "skit_provider";
+
 class Api {
   static STORAGE_TOKEN_KEY = "skit_token";
 
@@ -51,7 +54,14 @@ class Api {
     this.headers.Authorization = "Bearer " + token;
   }
 
-  getAuthToken(): string | undefined | null {
+  getAuthToken(): string | undefined {
+    const accessToken = LocalStorage.get(LS_ACCESS_TOKEN);
+    const provider = LocalStorage.get(LS_PROVIDER);
+
+    if (!accessToken || !provider) {
+      return undefined;
+    }
+
     return LocalStorage.get(Api.STORAGE_TOKEN_KEY);
   }
 
