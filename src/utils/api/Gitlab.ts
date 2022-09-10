@@ -1,11 +1,28 @@
-import { prepareHeaders, errTokenExpired } from "./helpers";
 import qs from "query-string";
+import { prepareHeaders, errTokenExpired } from "./helpers";
+import { LocalStorage } from "~/utils/storage";
+import { LS_ACCESS_TOKEN } from "./Api";
+
+interface RepositoriesProps {
+  page?: number;
+  size?: number;
+}
+
+interface Repository {
+  name: string;
+  path_with_namespace: string;
+}
+
+interface RepositoriesResponse {
+  nextPage: string;
+  repos: Repository[];
+}
 
 class Gitlab {
   baseurl = "https://gitlab.com/api/v4";
 
-  // This value will be üp-dated by Auth.context.
-  accessToken = "";
+  // This is the access token required to fetch repositories.
+  accessToken = LocalStorage.get(LS_ACCESS_TOKEN);
 
   /**
    * User returns the currently logged in user.
@@ -32,13 +49,10 @@ class Gitlab {
     });
   }
 
-  /**
-   * Installations retrieves a list of installations.
-   *
-   * @param {object.Number} page The page number to fetch.
-   * @param {object.Number} size The number of items to fetch.
-   */
-  repositories({ page, size = 20 } = {}) {
+  repositories({
+    page = 1,
+    size = 20,
+  }: RepositoriesProps = {}): Promise<RepositoriesResponse> {
     return new Promise((resolve, reject) => {
       const headers = prepareHeaders(this.accessToken);
       const params = {
@@ -48,12 +62,8 @@ class Gitlab {
         page,
       };
 
-      const request = new Request(
-        `${this.baseurl}/projects?${qs.stringify(params)}`,
-        {
-          headers,
-        }
-      );
+      const url = `${this.baseurl}/projects?${qs.stringify(params)}`;
+      const request = new Request(url, { headers });
 
       return fetch(request).then(res => {
         if (res.status === 401) {
@@ -61,7 +71,10 @@ class Gitlab {
         }
 
         return res.json().then(json => {
-          resolve({ repos: json, nextPage: res.headers.get("X-Next-Page") });
+          resolve({
+            repos: json,
+            nextPage: res.headers.get("X-Next-Page") || "",
+          });
         });
       });
     });

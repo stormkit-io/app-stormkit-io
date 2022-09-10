@@ -26,7 +26,7 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
   const { error, loading, user, accounts, ...fns } = useFetchUser();
-  const shouldRedirect = !user && pathname.indexOf("/auth") === -1;
+  const shouldRedirect = !loading && !user && !pathname.includes("/auth");
 
   useEffect(() => {
     if (shouldRedirect) {

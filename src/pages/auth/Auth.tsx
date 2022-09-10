@@ -6,8 +6,8 @@ import Logo from "~/components/Logo";
 import { AuthContext } from "./Auth.context";
 import InfoBox from "~/components/InfoBoxV2";
 import * as buttons from "~/components/Buttons";
-import "./Auth.css";
 import { LocalStorage } from "~/utils/storage";
+import "./Auth.css";
 
 const Auth: React.FC = () => {
   const { user, authError, loginOauth } = useContext(AuthContext);

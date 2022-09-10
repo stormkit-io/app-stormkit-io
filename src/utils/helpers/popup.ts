@@ -1,9 +1,9 @@
 export interface DataMessage {
-  accessToken: string;
-  sessionToken: string;
-  user: User;
   success: boolean;
-  email: boolean;
+  accessToken?: string;
+  sessionToken?: string;
+  user?: User;
+  email?: boolean;
 }
 
 interface OpenPopupProps {
@@ -51,6 +51,13 @@ const openPopup = ({
   };
 
   window.addEventListener("message", listener);
+
+  const timer = setInterval(function () {
+    if (popup?.closed) {
+      clearInterval(timer);
+      onClose?.({ success: false });
+    }
+  }, 1000);
 
   return popup;
 };

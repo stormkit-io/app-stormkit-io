@@ -18,6 +18,10 @@ class MockDate extends Date {
   }
 }
 
+const div = document.createElement("div");
+div.id = "side-bar-root";
+document.body.appendChild(div);
+
 global.Date = MockDate;
 
 afterEach(() => {

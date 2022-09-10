@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
+import { LS_PROVIDER } from "~/utils/api/Api";
 import CenterLayout from "~/layouts/CenterLayout";
 import AppName from "~/components/AppName";
 import Button from "~/components/ButtonV2";
@@ -14,6 +15,8 @@ import { WelcomeModal, EmptyList } from "./_components";
 let timeout: NodeJS.Timeout;
 const limit = 20;
 const welcomeModalId = "welcome_modal";
+const provider: string = LocalStorage.get(LS_PROVIDER);
+const newAppHref = `/apps/new/${provider}`;
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -32,7 +35,7 @@ export const Home: React.FC = () => {
     return (
       <CenterLayout>
         <Container className="flex flex-1 items-center justify-center">
-          <EmptyList />
+          <EmptyList actionLink={newAppHref} />
         </Container>
       </CenterLayout>
     );
@@ -46,7 +49,7 @@ export const Home: React.FC = () => {
         className={"flex-1"}
         title="My apps"
         actions={
-          <Button href="/apps/new" category="action">
+          <Button href={newAppHref} category="action">
             Create new app
           </Button>
         }
