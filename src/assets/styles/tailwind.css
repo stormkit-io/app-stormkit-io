@@ -34,12 +34,27 @@
   @apply text-sm;
 }
 
+.MuiList-root {
+  @apply bg-black;
+  @apply text-gray-80;
+  @apply rounded-none;
+}
+
+.MuiMenuItem-root:hover {
+  @apply bg-blue-10;
+  @apply pl-3;
+}
+
 .MuiFilledInput-underline:before {
   @apply border-gray-30;
 }
 
 .MuiInputBase-root:after {
   @apply border-gray-60;
+}
+
+.MuiSvgIcon-root {
+  @apply text-gray-80;
 }
 
 fieldset.MuiOutlinedInput-notchedOutline {
