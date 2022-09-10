@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
-import Input from "./Input";
 import CodeMirror from "@uiw/react-codemirror";
+import MenuItem from "@mui/material/MenuItem";
+import Input from "./Input";
+import Select from "./Select";
 
 type FormRef = React.RefObject<HTMLFormElement>;
 type FormValue = boolean | string;
@@ -114,5 +116,7 @@ function Form<T>({
 
 Form.Input = Input;
 Form.Code = CodeMirror;
+Form.Select = Select;
+Form.Option = MenuItem;
 
 export default Form;
