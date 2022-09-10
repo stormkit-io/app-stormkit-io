@@ -42,7 +42,7 @@ const Button: React.FC<Props> = ({
   styled = true,
   ...rest
 }: Props): ReactElement => {
-  const classes: Array<string> = [];
+  const classes: Array<string> = ["relative"];
 
   if (styled) {
     prepareStyles(classes, category, size);

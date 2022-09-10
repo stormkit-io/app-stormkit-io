@@ -1,5 +1,7 @@
 import React from "react";
 import Link from "~/components/Link";
+import { LS_PROVIDER } from "~/utils/api/Api";
+import { LocalStorage } from "~/utils/storage";
 
 interface SubItem {
   to: string;
@@ -16,7 +18,7 @@ const menuItems: Array<MenuItem> = [
     title: "Apps",
     children: [
       { to: "/", text: "My Apps" },
-      { to: "/apps/new", text: "New App" },
+      { to: `/apps/new/${LocalStorage.get(LS_PROVIDER)}`, text: "New App" },
     ],
   },
   {
