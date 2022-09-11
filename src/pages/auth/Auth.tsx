@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import qs from "query-string";
-import CenterLayout from "~/layouts/CenterLayout";
 import Logo from "~/components/Logo";
 import { AuthContext } from "./Auth.context";
 import InfoBox from "~/components/InfoBoxV2";
@@ -36,7 +35,7 @@ const Auth: React.FC = () => {
   }
 
   return (
-    <CenterLayout>
+    <>
       <div className="mb-16 text-center pt-6 sm:pt-0">
         <Logo iconOnly iconSize={20} />
       </div>
@@ -84,7 +83,7 @@ const Auth: React.FC = () => {
           </div>
         </div>
       </div>
-    </CenterLayout>
+    </>
   );
 };
 

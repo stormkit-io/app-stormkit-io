@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import CenterLayout from "~/layouts/CenterLayout";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { BackButton } from "~/components/Buttons";
 import Button from "~/components/ButtonV2";
@@ -58,58 +57,56 @@ const Provider: React.FC = () => {
   }, [accounts, user?.displayName]);
 
   return (
-    <CenterLayout>
-      <Container
-        className="flex-1"
-        title={
-          <>
-            <BackButton to="/" className="ml-0 mr-2" /> Import app from GitHub
-          </>
-        }
-        actions={
-          <Button
-            category="action"
-            onClick={() => {
-              openPopup({
-                url: openPopupURL,
-                title: "Add repository",
-                width: 1000,
-                onClose: () => {
-                  setInstallationId(undefined);
-                  setRefreshToken(Date.now());
-                },
-              });
+    <Container
+      className="flex-1"
+      title={
+        <>
+          <BackButton to="/" className="ml-0 mr-2" /> Import app from GitHub
+        </>
+      }
+      actions={
+        <Button
+          category="action"
+          onClick={() => {
+            openPopup({
+              url: openPopupURL,
+              title: "Add repository",
+              width: 1000,
+              onClose: () => {
+                setInstallationId(undefined);
+                setRefreshToken(Date.now());
+              },
+            });
+          }}
+        >
+          Connect more repositories
+        </Button>
+      }
+    >
+      <div className="p-4 pt-0">
+        <div className="flex mb-4">
+          <Accounts
+            loading={faLoading}
+            accounts={accounts}
+            selected={installationId}
+            onAccountChange={id => {
+              setPage(1);
+              setInstallationId(id);
             }}
-          >
-            Connect more repositories
-          </Button>
-        }
-      >
-        <div className="p-4 pt-0">
-          <div className="flex mb-4">
-            <Accounts
-              loading={faLoading}
-              accounts={accounts}
-              selected={installationId}
-              onAccountChange={id => {
-                setPage(1);
-                setInstallationId(id);
-              }}
-            />
-          </div>
-
-          <RepoList
-            repositories={repos}
-            provider="github"
-            error={error}
-            loading={loading}
-            isLoadingMore={isLoadingMore}
-            hasNextPage={hasNextPage}
-            onNextPage={() => setPage(page + 1)}
           />
         </div>
-      </Container>
-    </CenterLayout>
+
+        <RepoList
+          repositories={repos}
+          provider="github"
+          error={error}
+          loading={loading}
+          isLoadingMore={isLoadingMore}
+          hasNextPage={hasNextPage}
+          onNextPage={() => setPage(page + 1)}
+        />
+      </div>
+    </Container>
   );
 };
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
-import CenterLayout from "~/layouts/CenterLayout";
 import AppName from "~/components/AppName";
 import Button from "~/components/ButtonV2";
 import Container from "~/components/Container";
@@ -33,18 +32,16 @@ export const Home: React.FC = () => {
 
   if (apps.length === 0 && !loading && !filter) {
     return (
-      <CenterLayout>
-        <Container className="flex flex-1 items-center justify-center">
-          <EmptyList actionLink={newAppHref} />
-        </Container>
-      </CenterLayout>
+      <Container className="flex flex-1 items-center justify-center">
+        <EmptyList actionLink={newAppHref} />
+      </Container>
     );
   }
 
   const isLoadingFirstTime = loading && apps.length === 0;
 
   return (
-    <CenterLayout>
+    <>
       <Container
         className={"flex-1"}
         title="My apps"
@@ -138,7 +135,7 @@ export const Home: React.FC = () => {
           welcomeModalId={welcomeModalId}
         />
       )}
-    </CenterLayout>
+    </>
   );
 };
 

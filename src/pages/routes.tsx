@@ -26,14 +26,27 @@ const RedirectNewApp: React.FC = () => {
   return <></>;
 };
 
+const RedirectToEnvPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    navigate(`${pathname}/environments`);
+  }, [navigate]);
+
+  return <></>;
+};
+
+const centerLayout = () => import("~/layouts/CenterLayout");
+
 const routes: Array<RouteProps> = [
   {
     path: "/",
-    element: Async(() => import("~/pages/apps")),
+    element: Async(() => import("~/pages/apps"), centerLayout),
   },
   {
     path: "/auth",
-    element: Async(() => import("~/pages/auth")),
+    element: Async(() => import("~/pages/auth"), centerLayout),
   },
   {
     path: "/logout",
@@ -45,15 +58,15 @@ const routes: Array<RouteProps> = [
   },
   {
     path: "/apps/new/github",
-    element: Async(() => import("~/pages/apps/new/github")),
+    element: Async(() => import("~/pages/apps/new/github"), centerLayout),
   },
   {
     path: "/apps/new/gitlab",
-    element: Async(() => import("~/pages/apps/new/gitlab")),
+    element: Async(() => import("~/pages/apps/new/gitlab"), centerLayout),
   },
   {
     path: "/apps/new/bitbucket",
-    element: Async(() => import("~/pages/apps/new/bitbucket")),
+    element: Async(() => import("~/pages/apps/new/bitbucket"), centerLayout),
   },
   {
     path: "/app/invitation/accept",
@@ -62,6 +75,10 @@ const routes: Array<RouteProps> = [
   {
     path: "/app/:id/*",
     element: <RedirectApps />,
+  },
+  {
+    path: "/apps/:id",
+    element: <RedirectToEnvPage />,
   },
   {
     path: "/apps/:id/*",

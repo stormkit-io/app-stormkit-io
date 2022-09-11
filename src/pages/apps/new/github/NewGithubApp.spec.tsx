@@ -123,7 +123,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
         expect(wrapper.getByText("simple-project")).toBeTruthy();
       });
 
-      const input = wrapper.getAllByRole("button").at(3);
+      const input = wrapper.getAllByRole("button").at(1);
       expect(input).toBeTruthy();
       fireEvent.mouseDown(input!);
 
