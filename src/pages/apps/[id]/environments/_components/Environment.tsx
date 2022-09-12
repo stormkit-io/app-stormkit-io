@@ -47,6 +47,7 @@ const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
             "text-red-50": status !== STATUS.OK,
           },
           "flex",
+          "items-center",
           "align-baseline"
         )}
       >
@@ -56,7 +57,7 @@ const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
         {status === STATUS.NOT_CONFIGURED && "Not yet deployed"}
         {status === STATUS.NOT_PUBLISHED && (
           <Tooltip title={<NotPublishedMessage />} placement="top" arrow>
-            <div style={{ display: "flex" }}>
+            <div className="flex items-center">
               <p>Not yet published</p>
               <span className="opacity-50 fas fa-question-circle ml-2 cursor-pointer" />
             </div>
