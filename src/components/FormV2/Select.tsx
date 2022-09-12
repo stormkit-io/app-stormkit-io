@@ -6,7 +6,13 @@ import SelectInput, { SelectProps } from "@mui/material/Select";
 
 let inputLabel = 0;
 
-const Select: React.FC<SelectProps & { shrink?: boolean }> = ({
+interface Props {
+  shrink?: boolean;
+  background?: "black" | "transparent";
+  textColor?: "gray-80" | "white";
+}
+
+const Select: React.FC<SelectProps & Props> = ({
   className,
   variant = "filled",
   label,
@@ -14,6 +20,8 @@ const Select: React.FC<SelectProps & { shrink?: boolean }> = ({
   fullWidth = true,
   displayEmpty = true,
   defaultValue = "",
+  background = "black",
+  textColor = "gray-80",
   required,
   ...rest
 }): React.ReactElement => {
@@ -24,9 +32,9 @@ const Select: React.FC<SelectProps & { shrink?: boolean }> = ({
       variant={variant}
       fullWidth={fullWidth}
       required={required}
-      className="text-gray-80"
+      className={cn({ transparent: background === "transparent" })}
       sx={{
-        background: "black",
+        background,
       }}
     >
       {label && (
@@ -41,7 +49,7 @@ const Select: React.FC<SelectProps & { shrink?: boolean }> = ({
         displayEmpty={displayEmpty}
         defaultValue={defaultValue}
         inputProps={{
-          className: cn("p-3 text-gray-80 leading-4"),
+          className: `text-${textColor} leading-4 p-3`,
         }}
         {...rest}
       />

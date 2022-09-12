@@ -1,15 +1,11 @@
 import React, { createContext } from "react";
-import { Routes, Route, useParams } from "react-router-dom";
-import MenuLayout from "~/layouts/MenuLayout";
+import { useParams } from "react-router-dom";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Link from "~/components/Link";
 import Error404 from "~/components/Errors/Error404";
-import AppHeader from "./_components/AppHeader";
-import AppMenu from "./_components/AppMenu";
 import { useFetchApp } from "./actions";
-import { useFetchEnvironments } from "./[id]/environments/actions";
-import routes from "./routes";
+import { useFetchEnvironments } from "./environments/actions";
 
 export interface AppContextProps {
   app: App;
@@ -23,7 +19,11 @@ export const AppContext = createContext<AppContextProps>({
   setRefreshToken: () => {},
 });
 
-const Provider: React.FC = () => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const AppProvider: React.FC<Props> = ({ children }) => {
   const { app, error, loading, setRefreshToken, refreshToken } = useFetchApp({
     appId: useParams().id,
   });
@@ -66,26 +66,9 @@ const Provider: React.FC = () => {
         setRefreshToken,
       }}
     >
-      <MenuLayout menu={<AppMenu app={app} />}>
-        <div className="flex flex-grow-0 max-w-screen-lg m-auto w-full mb-24">
-          <AppHeader app={app} envs={envs.environments} />
-        </div>
-        <div className="flex flex-auto max-w-screen-lg m-auto w-full">
-          {envs.loading && <Spinner primary />}
-          {!envs.loading && (
-            <Routes>
-              {routes.map(route => (
-                <Route
-                  {...route}
-                  key={Array.isArray(route.path) ? route.path[0] : route.path}
-                />
-              ))}
-            </Routes>
-          )}
-        </div>
-      </MenuLayout>
+      {children}
     </AppContext.Provider>
   );
 };
 
-export default Provider;
+export default AppProvider;

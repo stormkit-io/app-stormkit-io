@@ -26,8 +26,10 @@ const prepareStyles = (
     classes.push(...["bg-pink-10"]);
   }
 
-  if (size === "m") {
-    classes.push(...["px-6", "py-2"]);
+  if (size === "sm") {
+    classes.push("px-2", "py-2");
+  } else if (size === "m") {
+    classes.push("px-6", "py-2");
   }
 };
 
@@ -82,7 +84,7 @@ const Button: React.FC<Props> = ({
   }
 
   return (
-    <Link className={cn(classes, "hover:text-white")} to={href}>
+    <Link className={cn(classes, className, "hover:text-white")} to={href}>
       {children}
     </Link>
   );

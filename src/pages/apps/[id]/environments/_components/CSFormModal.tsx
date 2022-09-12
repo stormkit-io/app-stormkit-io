@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
-import { AppContextProps } from "~/pages/apps/App.context";
 import Modal from "~/components/Modal";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import { updateIntegration } from "../actions";
 
-interface Props extends Pick<AppContextProps, "app"> {
+interface Props {
+  app: App;
   environment: Environment;
   user: User;
   toggleModal: (val: boolean) => void;

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AppContext } from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import ConfirmModal from "~/components/ConfirmModal";
 import Spinner from "~/components/Spinner";

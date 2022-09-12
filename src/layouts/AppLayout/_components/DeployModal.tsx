@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { deploy } from "~/pages/apps/actions";
+import { useFetchRepoType } from "~/pages/apps/[id]/environments/actions";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
-import { deploy } from "../actions";
-import { useFetchRepoType } from "../[id]/environments/actions";
 
 interface Props {
   app: App;

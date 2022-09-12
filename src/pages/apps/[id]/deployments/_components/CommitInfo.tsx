@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { emojify } from "node-emoji";
 import Link from "~/components/Link";
-import { AppContext } from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 import { parseCommit } from "~/utils/helpers/deployments";
 import type { Commit } from "~/utils/helpers/deployments";
 import PublishedInfo from "./PublishedInfo";

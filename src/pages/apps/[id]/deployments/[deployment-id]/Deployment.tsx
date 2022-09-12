@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { emojify } from "node-emoji";
 import cn from "classnames";
 import { useParams } from "react-router";
-import { AppContext } from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 import Spinner from "~/components/Spinner";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";

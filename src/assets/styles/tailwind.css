@@ -42,11 +42,14 @@
 
 .MuiMenuItem-root:hover {
   @apply bg-blue-10;
-  @apply pl-3;
 }
 
 .MuiFilledInput-underline:before {
   @apply border-gray-30;
+}
+
+.MuiFormControl-root.transparent .MuiFilledInput-underline:before {
+  @apply border-transparent;
 }
 
 .MuiInputBase-root:after {
@@ -86,12 +89,12 @@ div.MuiTableContainer-root {
   letter-spacing: inherit;
 }
 
-.MuiTooltip-tooltip {
+.MuiTooltip-tooltip:not(.custom-tooltip) {
   @apply bg-black;
   @apply text-sm;
   @apply p-4;
 }
 
-.MuiTooltip-arrow {
+.MuiTooltip-tooltip:not(.custom-tooltip) .MuiTooltip-arrow {
   @apply text-black;
 }

@@ -1,4 +1,4 @@
-export default ({ app }) => [
+export default ({ app }: { app: App }): Environment[] => [
   {
     id: "1429333243019",
     env: "production",
@@ -31,7 +31,6 @@ export default ({ app }) => [
     name: "development",
     branch: "env/dev",
     build: {
-      entry: "packages/console/server/renderer.js",
       distFolder: "packages/console/dist",
       cmd: "yarn run build:console",
       vars: {
@@ -41,6 +40,7 @@ export default ({ app }) => [
         ROOT: "\u003croot\u003e/packages/console",
       },
     },
+    autoDeploy: false,
     autoPublish: false,
     appId: app.id,
     lastDeploy: { id: "3414609680676", createdAt: 1568463533, exit: 0 },

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AppContext } from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 import { PlusButton } from "~/components/Buttons";
 import Environment from "./_components/Environment";
 import EnvironmentFormModal from "./_components/EnvironmentFormModal";
