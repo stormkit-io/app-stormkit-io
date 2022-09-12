@@ -31,8 +31,8 @@ const InfoMessage404 = () => (
 
 const NotPublishedMessage = () => (
   <>
-    You made an deployment but is not yet Published. Unpublished deployments
-    won't be visible
+    Your deployment is not yet published. Publish a deployment to this
+    environment to start serving your application.
   </>
 );
 
