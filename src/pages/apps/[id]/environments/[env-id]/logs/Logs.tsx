@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AppContext } from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";

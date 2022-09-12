@@ -5,10 +5,11 @@ import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
 
 interface Props {
   app: App;
+  imageWidth?: 6 | 7 | 8;
   withDisplayName?: boolean;
 }
 
-const AppName: React.FC<Props> = ({ app, withDisplayName }) => {
+const AppName: React.FC<Props> = ({ app, withDisplayName, imageWidth = 8 }) => {
   const pieces = app.repo.split("/") || [];
   const provider = pieces.shift() as Provider;
   const nameWithoutPrefix = pieces.join("/");
@@ -21,7 +22,7 @@ const AppName: React.FC<Props> = ({ app, withDisplayName }) => {
 
   return (
     <div className="flex items-center">
-      <div className="inline-block mr-2 w-8">
+      <div className={`inline-block mr-2 w-${imageWidth}`}>
         <img src={logo} className="w-full" alt={provider} />
       </div>
       <div className="leading-4">

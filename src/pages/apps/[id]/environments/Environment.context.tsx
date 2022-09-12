@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Error404 from "~/components/Errors/Error404";
-import { AppContext } from "../../App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 
 export interface EnvironmentContextProps {
   environment: Environment;

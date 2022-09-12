@@ -82,7 +82,7 @@ const routes: Array<RouteProps> = [
   },
   {
     path: "/apps/:id/*",
-    element: Async(() => import("~/pages/apps/App.context")),
+    element: Async(() => import("~/layouts/AppLayout")),
   },
   {
     path: "/user/*",

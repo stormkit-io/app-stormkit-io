@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Tooltip } from "@mui/material";
-import { AppContext } from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";

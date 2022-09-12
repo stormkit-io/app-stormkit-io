@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { AppContext } from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Spinner from "~/components/Spinner";
 import FormAppSettings from "./_components/FormAppSettings";

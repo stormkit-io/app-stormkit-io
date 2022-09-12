@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AppContext } from "~/pages/apps/App.context";
+import { AppContext } from "~/pages/apps/[id]/App.context";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Button from "~/components/Button";
