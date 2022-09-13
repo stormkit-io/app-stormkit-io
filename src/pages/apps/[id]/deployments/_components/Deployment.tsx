@@ -74,7 +74,7 @@ const Deployment: React.FC<Props> = ({
                 }}
                 disabled={isManifestModalOpen}
               >
-                <span className="text-pink-50">Manifest</span>
+                <span>Manifest</span>
               </DotDotDot.Item>
               <DotDotDot.Item href={urls.deployment}>
                 View Details
