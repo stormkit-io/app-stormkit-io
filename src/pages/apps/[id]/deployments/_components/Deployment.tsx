@@ -5,6 +5,7 @@ import DotDotDot from "~/components/DotDotDot";
 import Spinner from "~/components/Spinner";
 import ExitStatus from "./ExitStatus";
 import PublishModal from "./PublishModal";
+import ManifestModal from "./Manifest";
 import CommitInfo from "./CommitInfo";
 import { deleteForever, stopDeployment, setLoadingArgs } from "../actions";
 
@@ -26,6 +27,7 @@ const Deployment: React.FC<Props> = ({
   setDeployments,
 }): React.ReactElement => {
   const [isPublishModalOpen, togglePublishModal] = useState(false);
+  const [isManifestModalOpen, toggleManifestModal] = useState(false);
   const [loading, setLoading] = useState<setLoadingArgs>(null);
 
   const urls = {
@@ -64,6 +66,15 @@ const Deployment: React.FC<Props> = ({
                 disabled={isDisabled}
               >
                 <span className="text-pink-50">Publish</span>
+              </DotDotDot.Item>
+              <DotDotDot.Item
+                onClick={close => {
+                  toggleManifestModal(true);
+                  close();
+                }}
+                disabled={isManifestModalOpen}
+              >
+                <span className="text-pink-50">Manifest</span>
               </DotDotDot.Item>
               <DotDotDot.Item href={urls.deployment}>
                 View Details
@@ -128,6 +139,13 @@ const Deployment: React.FC<Props> = ({
         environments={environments}
         deployment={deployment}
       />
+      {isManifestModalOpen === true && (
+        <ManifestModal
+          app={app}
+          deployment={deployment}
+          toggleModal={toggleManifestModal}
+        />
+      )}
     </>
   );
 };

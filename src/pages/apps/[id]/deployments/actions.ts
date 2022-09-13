@@ -112,6 +112,27 @@ interface FetchDeploymentsAPIResponse {
   deploys: Array<Deployment>;
 }
 
+export const useFetchDeploymentManifest = ( appId: string, envId: string): any => {
+  const [manifest, setManifest] = useState<any>({});
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true)
+    api
+      .fetch(`/app/${appId}/manifest/${envId}`, { method: "GET" })
+      .then(data => setManifest(data))
+      .catch(e => setError(e)).finally(() => setLoading(false));
+    setError(null);
+  }, []);
+
+  return {
+    loading,
+    error,
+    manifest
+  }
+};
+
 export const useFetchDeployments = ({
   app,
   from,
