@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { parse } from "tldts";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -15,11 +14,6 @@ interface Props {
     setError: SetError;
   }) => Promise<void>;
 }
-
-const recordName = (domain: Domain): string => {
-  const parsed = parse(domain.domainName);
-  return `${domain.dns.txt.name}.${parsed.subdomain || parsed.domain}`;
-};
 
 const DomainVerificationStatus: React.FC<Props> = ({
   domain,
@@ -58,7 +52,7 @@ const DomainVerificationStatus: React.FC<Props> = ({
                       TXT Record Name/Host
                     </TableCell>
                     <TableCell className="font-bold">
-                      {recordName(domain)}
+                      {domain.dns.txt.name}
                     </TableCell>
                   </TableRow>
                   <TableRow>
