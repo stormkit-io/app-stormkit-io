@@ -26,10 +26,10 @@ export const AppLayout: React.FC = () => {
 
   return (
     <main className={cn("flex flex-col min-h-screen m-auto w-full")}>
-      <header className="flex flex-0 w-full p-4">
+      <header className="ml-16 flex-0">
         <div
-          className="flex flex-1 text-gray-80 items-center justify-center lg:ml-16"
-          style={{ minHeight: "50px" }}
+          className="flex flex-1 text-gray-80 items-center justify-start m-auto w-full max-w-screen-lg my-2 px-4"
+          style={{ minHeight: "54px" }}
         >
           <Link to="/" className="text-xl mr-3">
             <span className="fas fa-arrow-left" />
