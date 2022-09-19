@@ -22,7 +22,7 @@ const Provider: React.FC<Props> = ({ children }) => {
   const environment = environments?.filter(e => e.id === envId)?.[0];
 
   if (!environment) {
-    return <Error404 />;
+    return <Error404>This environment is not found.</Error404>;
   }
 
   return (

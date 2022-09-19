@@ -71,58 +71,46 @@ export const useFetchEnvironments = ({
   return { environments, error, loading, hasNextPage };
 };
 
-type STATUS_OK = 200;
-type STATUS_NOT_FOUND = 404;
-type STATUS_NOT_CONFIGURED = "NOT_CONFIGURED";
-type STATUS_NOT_PUBLISHED = "NOT_CONFIGURED";
-
-export type STATUSES =
-  | STATUS_OK
-  | STATUS_NOT_FOUND
-  | STATUS_NOT_CONFIGURED
-  | STATUS_NOT_PUBLISHED
-  | null;
-
-export const STATUS: Record<string, STATUSES> = {
-  OK: 200,
-  NOT_FOUND: 404,
-  NOT_CONFIGURED: "NOT_CONFIGURED",
-};
-
 interface FetchStatusProps {
   app: App;
   environment: Environment;
   domain: string;
-  lastDeploy?: { id: string };
 }
 
 interface FetchStatusReturnValue {
-  status: STATUSES;
+  status?: number;
   loading: boolean;
 }
 
 interface FetchStatusAPIResponse {
-  status: STATUSES;
+  status: number;
 }
+
+export const isEmpty = (val?: boolean | Array<unknown>): boolean => {
+  if (typeof val === "boolean") {
+    return !val;
+  }
+
+  if (Array.isArray(val)) {
+    return val.length === 0;
+  }
+
+  return !val;
+};
 
 export const useFetchStatus = ({
   app,
   environment,
   domain,
-  lastDeploy,
 }: FetchStatusProps): FetchStatusReturnValue => {
-  const [status, setStatus] = useState<STATUSES>(null);
+  const [status, setStatus] = useState<number>();
   const [loading, setLoading] = useState(false);
-  const lastDeployId = lastDeploy?.id;
+  const lastDeployId = environment.lastDeploy?.id;
 
   useEffect(() => {
     let unmounted = false;
 
-    if (!lastDeployId) {
-      setStatus(STATUS.NOT_CONFIGURED);
-      return;
-    } else if (lastDeployId && !environment.published) {
-      setStatus(STATUS.STATUS_NOT_PUBLISHED);
+    if (!lastDeployId || (lastDeployId && isEmpty(environment.published))) {
       return;
     }
 

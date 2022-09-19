@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router";
-import EnvironmentMenu from "./_components/EnvironmentMenu";
+import EnvironmentHeader from "./_components/EnvironmentHeader";
 import routes from "./routes";
 import EnvironmentContextProvider from "../Environment.context";
 
@@ -8,7 +8,7 @@ const EnvironmentsEntry = () => {
   return (
     <EnvironmentContextProvider>
       <div className="flex flex-col w-full">
-        <EnvironmentMenu />
+        <EnvironmentHeader />
         <div className="mb-4">
           <Routes>
             {routes.map(route => (
