@@ -8,9 +8,19 @@ import Spinner from "~/components/Spinner";
 import DotDotDot from "~/components/DotDotDot";
 import EnvironmentFormModal from "./EnvironmentFormModal";
 import CSFormModal from "./CSFormModal";
-import { useFetchStatus, STATUS, STATUSES } from "../actions";
+import { useFetchStatus } from "../actions";
 import { deleteEnvironment } from "../actions";
 import ConfirmModal from "~/components/ConfirmModal";
+
+type STATUS_OK = 200;
+type STATUS_NOT_FOUND = 404;
+
+type STATUSES = STATUS_OK | STATUS_NOT_FOUND;
+
+const STATUS: Record<string, STATUSES> = {
+  OK: 200,
+  NOT_FOUND: 404,
+};
 
 interface Props {
   app: App;
@@ -20,6 +30,7 @@ interface Props {
 
 interface StatusProps {
   status: STATUSES;
+  environment: Environment;
 }
 
 const InfoMessage404 = () => (
@@ -36,7 +47,10 @@ const NotPublishedMessage = () => (
   </>
 );
 
-const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
+const Status: React.FC<StatusProps> = ({
+  status,
+  environment,
+}): React.ReactElement => {
   return (
     <div className="flex items-center">
       <span
@@ -54,15 +68,16 @@ const Status: React.FC<StatusProps> = ({ status }): React.ReactElement => {
         <span className={"fas fa-fw fa-globe mr-2"} />
         {status === null && "Unknown error"}
         {status !== STATUS.NOT_CONFIGURED && status !== null && status}
-        {status === STATUS.NOT_CONFIGURED && "Not yet deployed"}
-        {status === STATUS.NOT_PUBLISHED && (
-          <Tooltip title={<NotPublishedMessage />} placement="top" arrow>
-            <div className="flex items-center">
-              <p>Not yet published</p>
-              <span className="opacity-50 fas fa-question-circle ml-2 cursor-pointer" />
-            </div>
-          </Tooltip>
-        )}
+        {!environment.lastDeploy && "Not yet deployed"}
+        {environment.lastDeploy &&
+          typeof environment.published === "undefined" && (
+            <Tooltip title={<NotPublishedMessage />} placement="top" arrow>
+              <div className="flex items-center">
+                <p>Not yet published</p>
+                <span className="opacity-50 fas fa-question-circle ml-2 cursor-pointer" />
+              </div>
+            </Tooltip>
+          )}
         {status === STATUS.NOT_FOUND && (
           <Tooltip title={<InfoMessage404 />} placement="top" arrow>
             <span className="opacity-50 fas fa-question-circle ml-2 cursor-pointer" />
@@ -88,7 +103,6 @@ const Environment: React.FC<Props> = ({
 }): React.ReactElement => {
   const { user } = useContext(AuthContext);
   const { setRefreshToken } = useContext(AppContext);
-  const { lastDeploy } = environment;
   const name = environment.name || environment.env;
   const domain = getDomain(environment);
   const environmentUrl = `/apps/${app.id}/environments/${environment.id}`;
@@ -99,7 +113,6 @@ const Environment: React.FC<Props> = ({
   const { status, loading } = useFetchStatus({
     environment,
     domain,
-    lastDeploy,
     app,
   });
 
@@ -194,7 +207,7 @@ const Environment: React.FC<Props> = ({
               {loading ? (
                 <Spinner primary width={4} height={4} />
               ) : (
-                <Status status={status} />
+                <Status status={status as STATUSES} environment={environment} />
               )}
             </div>
           </div>

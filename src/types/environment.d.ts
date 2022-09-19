@@ -37,6 +37,6 @@ declare type Environment = {
   autoDeployBranches?: string;
   lastDeploy?: LastDeploy;
   customStorage?: CustomStorage;
-  published?: boolean;
+  published?: string[];
   getDomainName?: () => string;
 };
