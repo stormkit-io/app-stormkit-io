@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import cn from "classnames";
 import Logo from "~/components/Logo";
 import Link from "~/components/Link";
 
-interface MenuItem {
+export interface MenuItem {
   text: string;
   path: string;
   icon: string;
   children?: MenuItem[];
   borderBottom?: boolean;
+  isActive?: boolean;
 }
 
 interface Props {
@@ -20,10 +20,9 @@ interface Props {
 
 interface SubmenuItemProps {
   item: MenuItem;
-  pathname: string;
 }
 
-const SubmenuItem: React.FC<SubmenuItemProps> = ({ item, pathname }) => {
+const SubmenuItem: React.FC<SubmenuItemProps> = ({ item }) => {
   if (!item.path) {
     return (
       <span className="block p-4 text-center border-b border-blue-30">
@@ -35,9 +34,8 @@ const SubmenuItem: React.FC<SubmenuItemProps> = ({ item, pathname }) => {
   return (
     <Link
       to={item.path}
-      className={cn("block p-4 hover:text-white hover:bg-blue-30", {
-        "bg-blue-20":
-          pathname === item.path && !pathname.endsWith("/environments"),
+      className={cn("block p-4 hover:text-white hover:bg-blue-20", {
+        "bg-blue-20": item.isActive,
       })}
     >
       {item.icon && <span className={cn(item.icon, "mr-4 fa-fw")} />}
@@ -47,7 +45,6 @@ const SubmenuItem: React.FC<SubmenuItemProps> = ({ item, pathname }) => {
 };
 
 const SideMenu: React.FC<Props> = ({ menuItems, children }) => {
-  const { pathname } = useLocation();
   const [activeTooltip, setActiveTooltip] = useState<string>();
 
   return (
@@ -63,7 +60,7 @@ const SideMenu: React.FC<Props> = ({ menuItems, children }) => {
             <Tooltip
               open={activeTooltip === item.text}
               title={(item.children || [{ ...item, icon: "" }]).map(c => (
-                <SubmenuItem key={c.path} item={c} pathname={pathname} />
+                <SubmenuItem key={c.path} item={c} />
               ))}
               arrow
               placement={item.children ? "right-start" : "right"}
@@ -77,7 +74,7 @@ const SideMenu: React.FC<Props> = ({ menuItems, children }) => {
                 onMouseEnter={() => setActiveTooltip(item.text)}
                 className={cn("text-center text-lg hover:bg-blue-30", {
                   "border-b border-blue-10": item.borderBottom,
-                  "bg-blue-20 text-white": pathname.includes(item.path),
+                  "bg-blue-20 text-white": item.isActive,
                 })}
               >
                 <Link to={item.path} className="hover:text-white p-4 block">
