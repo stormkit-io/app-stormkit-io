@@ -24,11 +24,11 @@ interface Props {
 }
 
 const AppProvider: React.FC<Props> = ({ children }) => {
-  const { app, error, loading, setRefreshToken, refreshToken } = useFetchApp({
+  const { app, error, loading, setRefreshToken } = useFetchApp({
     appId: useParams().id,
   });
 
-  const envs = useFetchEnvironments({ app, refreshToken });
+  const envs = useFetchEnvironments({ app });
 
   if (loading) {
     return <Spinner primary pageCenter />;

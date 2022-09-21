@@ -32,8 +32,12 @@ export const useFetchApp = ({ appId }: FetchAppProps): FetchAppReturnValue => {
       return;
     }
 
-    setLoading(true); // Do not refresh when updating app object.
+    setLoading(!refreshToken); // Do not refresh when updating app object.
     setError(null);
+
+    if (app && refreshToken) {
+      setApp({ ...app, refreshToken });
+    }
 
     api
       .fetch<FetchAppAPIResponse>(`/app/${appId}`)
@@ -52,7 +56,7 @@ export const useFetchApp = ({ appId }: FetchAppProps): FetchAppReturnValue => {
         }
 
         if (unmounted !== true) {
-          setApp(app);
+          setApp({ ...app, refreshToken });
         }
       })
       .catch(async res => {

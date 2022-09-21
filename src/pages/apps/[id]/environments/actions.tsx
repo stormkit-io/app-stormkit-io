@@ -4,7 +4,6 @@ import { prepareBuildObject } from "./helpers";
 
 interface FetchEnvironmentsProps {
   app?: App;
-  refreshToken?: number;
 }
 
 interface FetchEnvironmentsReturnValue {
@@ -21,7 +20,6 @@ interface FetchEnvironmentsAPIResponse {
 
 export const useFetchEnvironments = ({
   app,
-  refreshToken,
 }: FetchEnvironmentsProps): FetchEnvironmentsReturnValue => {
   const [environments, setEnvironments] = useState<Array<Environment>>([]);
   const [hasNextPage, setHasNextPage] = useState(false);
@@ -35,7 +33,7 @@ export const useFetchEnvironments = ({
       return;
     }
 
-    setLoading(true);
+    setLoading(!app?.refreshToken);
     setError(null);
 
     api
@@ -66,7 +64,7 @@ export const useFetchEnvironments = ({
     return () => {
       unmounted = true;
     };
-  }, [app?.id, app?.displayName, refreshToken]);
+  }, [app?.id, app?.displayName, app?.refreshToken]);
 
   return { environments, error, loading, hasNextPage };
 };
@@ -114,7 +112,7 @@ export const useFetchStatus = ({
       return;
     }
 
-    setLoading(true);
+    setLoading(!app.refreshToken);
 
     api
       .post<FetchStatusAPIResponse>("/app/proxy", {
@@ -138,7 +136,7 @@ export const useFetchStatus = ({
     return () => {
       unmounted = true;
     };
-  }, [domain, lastDeployId, app.id, api]);
+  }, [domain, lastDeployId, app.id, app.refreshToken]);
 
   return { status, loading };
 };
