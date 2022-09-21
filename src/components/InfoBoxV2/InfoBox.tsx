@@ -37,7 +37,7 @@ const colors = {
   [ERROR]: {
     text: "white",
     bg: "red-50",
-    border: "red-50",
+    border: "",
     icon: "",
   },
 };
@@ -83,7 +83,6 @@ const InfoBox: React.FC<Props> & {
   }, [ref, scrollIntoView]);
 
   const classes: Array<string> = [
-    "rounded-sm",
     "px-4",
     "py-2",
     "flex",
@@ -91,9 +90,7 @@ const InfoBox: React.FC<Props> & {
     "text-sm",
     `bg-${colors[type].bg}`,
     `text-${colors[type].text}`,
-    "border",
-    "border-solid",
-    `border-${colors[type].border}`,
+    colors[type].border && `border border-solid border-${colors[type].border}`,
   ];
 
   if (isOpen === false) {
