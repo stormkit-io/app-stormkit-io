@@ -4,7 +4,6 @@ import cn from "classnames";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import Container from "~/components/Container";
-import Spinner from "~/components/Spinner";
 import { useFetchStatus, isEmpty } from "../../actions";
 import DomainStatus from "./DomainStatus";
 import Link from "~/components/Link";
@@ -55,8 +54,7 @@ const EnvironmentHeader: React.FC = () => {
         maxWidth="max-w-none"
       >
         <Box>
-          {loading && <Spinner />}
-          {!loading && <DomainStatus status={status} />}
+          <DomainStatus loading={loading} status={status} />
         </Box>
         <Box>
           <Link to={`https://${domainName}`}>{domainName}</Link>
@@ -68,25 +66,25 @@ const EnvironmentHeader: React.FC = () => {
         <Box isLast>
           {!environment.lastDeploy?.id ? (
             <>
-              Not yet deployed
               <Tooltip
                 title={"Deploy your app to start serving your application."}
-                placement="bottom-end"
+                placement="bottom"
                 arrow
               >
-                <span className="fas fa-info-circle ml-2 text-xl" />
+                <span className="fas fa-info-circle mr-2 text-xl" />
               </Tooltip>
+              Not yet deployed
             </>
           ) : !environment.published ? (
             <>
-              Not yet published
               <Tooltip
                 title={"Publish a deployment to serve your app."}
-                placement="bottom-end"
+                placement="bottom"
                 arrow
               >
-                <span className="fas fa-info-circle ml-2 text-xl" />
+                <span className="fas fa-info-circle mr-2 text-xl" />
               </Tooltip>
+              Not yet published
             </>
           ) : (
             <div>
@@ -95,17 +93,35 @@ const EnvironmentHeader: React.FC = () => {
                 Array.isArray(environment.published) && (
                   <>
                     :{" "}
-                    {environment.published.map((deploymentId, index) => (
+                    {environment.published.length > 1 ? (
+                      "multiple versions"
+                    ) : (
                       <Link
-                        key={deploymentId}
-                        to={`/apps/${environment.appId}/deployments/${deploymentId}`}
+                        key={environment.published[0].deploymentId}
+                        to={`/apps/${environment.appId}/deployments/${environment.published[0].deploymentId}`}
                       >
-                        {deploymentId}
-                        {index === (environment.published?.length || 0) - 1
-                          ? ""
-                          : ","}
+                        {environment.published[0].deploymentId}
                       </Link>
-                    ))}
+                    )}
+                    {status?.toString()[0] !== "2" && (
+                      <Tooltip
+                        title={
+                          <>
+                            <span className="font-bold">
+                              {environment.getDomainName?.()}
+                            </span>{" "}
+                            returns {status}. Navigate to the deployment page
+                            and check the manifest file. Static websites should
+                            contain a top level index.html file.
+                          </>
+                        }
+                      >
+                        <span
+                          className="ml-2 fas fa-triangle-exclamation"
+                          aria-label="Deployment not found"
+                        />
+                      </Tooltip>
+                    )}
                   </>
                 )}
             </div>
