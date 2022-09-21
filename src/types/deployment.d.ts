@@ -37,3 +37,19 @@ declare type Deployment = {
   tip: string | null; // A hint which specifies why the deployment failed.
   version: string | null; // The lambda version
 };
+
+interface CDNFile {
+  fileName: string;
+  headers: Record<string, string>;
+}
+
+interface Redirects {
+  from: string;
+  to: string;
+}
+
+declare type Manifest = {
+  cdnFiles?: CDNFile[];
+  redirect?: Redirects[];
+  functionHandler?: string;
+};
