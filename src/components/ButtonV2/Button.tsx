@@ -13,6 +13,7 @@ interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, "size"> {
   href?: string;
   size?: Size;
   styled?: boolean;
+  align?: "left" | "center";
 }
 
 const prepareStyles = (
@@ -39,6 +40,7 @@ const Button: React.FC<Props> = ({
   className,
   disabled,
   href,
+  align = "center",
   category = "action",
   size = "m",
   styled = true,
@@ -64,15 +66,10 @@ const Button: React.FC<Props> = ({
     return (
       <button {...props} disabled={Boolean(disabled)} type={type}>
         <span
-          className={cn(
-            "inline-flex",
-            "items-center",
-            "w-full",
-            "justify-center",
-            {
-              invisible: loading,
-            }
-          )}
+          className={cn("inline-flex", "w-full", "items-center", {
+            invisible: loading,
+            "justify-center": align === "center",
+          })}
         >
           {children}
         </span>
