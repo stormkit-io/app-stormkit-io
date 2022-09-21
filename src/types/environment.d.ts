@@ -47,5 +47,6 @@ declare type Environment = {
   lastDeploy?: LastDeploy;
   customStorage?: CustomStorage;
   published?: PublishedInfo[];
+  preview: string;
   getDomainName?: () => string;
 };
