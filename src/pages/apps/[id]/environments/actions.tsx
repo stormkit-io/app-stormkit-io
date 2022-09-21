@@ -44,6 +44,7 @@ export const useFetchEnvironments = ({
           setEnvironments(
             res.envs.map(e => ({
               ...e,
+              name: e.env,
               getDomainName: () => {
                 return e.domain?.name && e.domain?.verified
                   ? e.domain.name
@@ -116,7 +117,7 @@ export const useFetchStatus = ({
 
     api
       .post<FetchStatusAPIResponse>("/app/proxy", {
-        url: `https://${domain}`,
+        url: domain,
         appId: app.id,
       })
       .then(res => {
