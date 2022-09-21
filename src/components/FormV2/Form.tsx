@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import MenuItem from "@mui/material/MenuItem";
+import Checkbox from "@mui/material/Checkbox";
 import Input from "./Input";
 import Select from "./Select";
 
@@ -118,5 +119,6 @@ Form.Input = Input;
 Form.Code = CodeMirror;
 Form.Select = Select;
 Form.Option = MenuItem;
+Form.Checkbox = Checkbox;
 
 export default Form;
