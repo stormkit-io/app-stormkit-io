@@ -24,6 +24,15 @@ declare type CustomStorage = {
   settings: Record<string, string>;
 };
 
+interface PublishedInfo {
+  commitSha?: string;
+  commitAuthor?: string;
+  commitMessage?: string;
+  deploymentId: string;
+  branch: string;
+  percentage: number;
+}
+
 declare type Environment = {
   id?: string;
   env: string; // Name of the environment - will be deprecated.
@@ -37,6 +46,6 @@ declare type Environment = {
   autoDeployBranches?: string;
   lastDeploy?: LastDeploy;
   customStorage?: CustomStorage;
-  published?: string[];
+  published?: PublishedInfo[];
   getDomainName?: () => string;
 };
