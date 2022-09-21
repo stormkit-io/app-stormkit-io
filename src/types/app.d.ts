@@ -11,6 +11,7 @@ declare type App = {
   autoDeploy: autoDeploy;
   defaultEnv: string;
   displayName: string;
+  refreshToken?: number;
   provider: "github" | "bitbucket" | "gitlab";
   name?: string;
   meta?: {
