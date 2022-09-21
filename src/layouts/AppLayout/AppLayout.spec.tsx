@@ -77,11 +77,11 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
       expect(links).toEqual([
         "/", // Back button in the header
-        "/", // Stormkit logo link
         `/apps/${defaultApp.id}/team`,
         `/apps/${defaultApp.id}/settings`,
+        "/", // Stormkit logo link
         `/apps/${defaultApp.id}/environments`,
-        `/apps/${defaultApp.id}/deployments`,
+        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
       ]);
     });
   });
@@ -104,11 +104,11 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
       expect(links).toEqual([
         "/", // Back button in the header
-        "/", // Stormkit logo link
         `/apps/${defaultApp.id}/team`,
         `/apps/${defaultApp.id}/settings`,
+        "/", // Stormkit logo link
         `/apps/${defaultApp.id}/environments`,
-        `/apps/${defaultApp.id}/deployments`,
+        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
       ]);
     });
   });
