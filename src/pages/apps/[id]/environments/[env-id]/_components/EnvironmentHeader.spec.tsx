@@ -69,13 +69,15 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
     });
   });
 
-  describe("when deployed and published", () => {
+  describe("when deployed and published with status 200", () => {
     let scope: nock.Scope;
 
     beforeEach(() => {
       const envs = [...defaultEnvs];
       envs[0].lastDeploy = { id: "1231231", createdAt: Date.now(), exit: 0 };
-      envs[0].published = ["682381"];
+      envs[0].published = [
+        { deploymentId: "682381", branch: "main", percentage: 100 },
+      ];
 
       scope = mockFetchStatus({
         appId: defaultApp.id,
@@ -94,6 +96,43 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(wrapper.getByText("200")).toBeTruthy();
+        expect(wrapper.getByText("Published:"));
+        expect(wrapper.getByText("682381"));
+        expect(wrapper.container.innerHTML).toContain("fa-globe");
+      });
+    });
+  });
+
+  describe("when deployed and published with status 404", () => {
+    let scope: nock.Scope;
+
+    beforeEach(() => {
+      const envs = [...defaultEnvs];
+      envs[0].lastDeploy = { id: "1231231", createdAt: Date.now(), exit: 0 };
+      envs[0].published = [
+        { deploymentId: "682381", branch: "main", percentage: 100 },
+      ];
+
+      scope = mockFetchStatus({
+        appId: defaultApp.id,
+        url: `https://${envs[0].getDomainName?.()}`,
+        response: { status: 404 },
+      });
+
+      createWrapper({ environments: envs });
+    });
+
+    test("should display the header properly", async () => {
+      expect(wrapper.container.innerHTML).toContain("spinner");
+      expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
+      expect(wrapper.getByText("master")).toBeTruthy();
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(wrapper.getByText("404")).toBeTruthy();
+        expect(wrapper.getByText("Published:"));
+        expect(wrapper.getByText("682381"));
+        expect(wrapper.getByLabelText("Deployment not found"));
         expect(wrapper.container.innerHTML).toContain("fa-globe");
       });
     });
