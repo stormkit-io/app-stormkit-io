@@ -98,3 +98,7 @@ div.MuiTableContainer-root {
 .MuiTooltip-tooltip:not(.custom-tooltip) .MuiTooltip-arrow {
   @apply text-black;
 }
+
+.MuiBackdrop-root {
+  background: rgba(0, 0, 0, 0.75);
+}
