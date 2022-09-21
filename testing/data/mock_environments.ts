@@ -21,6 +21,7 @@ export default ({ app }: { app: App }): Environment[] => [
       verified: true,
       cname: "app-stormkit-io-cnmiji6et.hosting.stormkit.io.",
     },
+    preview: "https://app.stormkit.io",
     getDomainName() {
       return "app.stormkit.io";
     },
@@ -44,6 +45,7 @@ export default ({ app }: { app: App }): Environment[] => [
     autoPublish: false,
     appId: app.id,
     lastDeploy: { id: "3414609680676", createdAt: 1568463533, exit: 0 },
+    preview: "https://app.stormkit.io",
     domain: {
       verified: false,
     },
