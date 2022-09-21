@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
 import cn from "classnames";
 import { Tooltip } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-import Button from "~/components/Button";
+import Button from "~/components/ButtonV2";
 
 interface Item {
   text: React.ReactNode;
@@ -20,7 +19,6 @@ interface Props {
 
 const DotDotDot: React.FC<Props> = ({ items }) => {
   const [isOpen, toggleIsOpen] = useState(false);
-  const navigate = useNavigate();
 
   if (!isOpen) {
     return (
@@ -32,7 +30,7 @@ const DotDotDot: React.FC<Props> = ({ items }) => {
 
   return (
     <Tooltip
-      placement="bottom"
+      placement="bottom-end"
       open={isOpen}
       arrow
       classes={{
@@ -44,40 +42,41 @@ const DotDotDot: React.FC<Props> = ({ items }) => {
         <ClickAwayListener onClickAway={() => toggleIsOpen(false)}>
           <div className="flex flex-col">
             {items.map((item, index) => (
-              <button
-                key={index}
-                type="button"
-                disabled={item.disabled}
-                onClick={() => {
-                  if (typeof item.onClick === "function") {
-                    item.onClick();
-                  } else if (item.href) {
-                    navigate(item.href);
-                  }
-
-                  toggleIsOpen(false);
-                }}
-                className={cn(
-                  "px-4 py-3 text-left min-w-48 flex items-center",
-                  item.className,
-                  {
-                    "border-b border-blue-30 ": index < items.length - 1,
-                    "hover:bg-blue-20": !item.disabled,
-                    "opacity-50 cursor-default": item.disabled,
-                  }
-                )}
-              >
-                {item.icon && <span className={cn(item.icon, "mr-2 fa-fw")} />}
-                {item.text}
-              </button>
+              <div key={index}>
+                <Button
+                  styled={false}
+                  align="left"
+                  href={item.href}
+                  onClick={() => {
+                    item.onClick?.();
+                    toggleIsOpen(false);
+                  }}
+                  className={cn(
+                    "px-4 py-3 text-left min-w-48 flex items-center",
+                    item.className,
+                    {
+                      "border-b border-blue-30 ": index < items.length - 1,
+                      "hover:bg-blue-20": !item.disabled,
+                      "opacity-50 cursor-default": item.disabled,
+                    }
+                  )}
+                >
+                  {item.icon && (
+                    <span className={cn(item.icon, "mr-2 fa-fw")} />
+                  )}
+                  {item.text}
+                </Button>
+              </div>
             ))}
           </div>
         </ClickAwayListener>
       }
     >
-      <Button styled={false} onClick={() => toggleIsOpen(!isOpen)}>
-        <span className="fas fa-ellipsis-h cursor-pointer" />
-      </Button>
+      <div>
+        <Button styled={false} onClick={() => toggleIsOpen(!isOpen)}>
+          <span className="fas fa-ellipsis-h cursor-pointer" />
+        </Button>
+      </div>
     </Tooltip>
   );
 };
