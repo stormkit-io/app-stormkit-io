@@ -23,7 +23,10 @@ const DotDotDot: React.FC<Props> = ({ items }) => {
   if (!isOpen) {
     return (
       <Button styled={false} onClick={() => toggleIsOpen(!isOpen)}>
-        <span className="fas fa-ellipsis-h cursor-pointer" />
+        <span
+          className="fas fa-ellipsis-h cursor-pointer"
+          aria-label="expand"
+        />
       </Button>
     );
   }
@@ -47,6 +50,7 @@ const DotDotDot: React.FC<Props> = ({ items }) => {
                   styled={false}
                   align="left"
                   href={item.href}
+                  disabled={item.disabled}
                   onClick={() => {
                     item.onClick?.();
                     toggleIsOpen(false);
