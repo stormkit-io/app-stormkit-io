@@ -16,26 +16,34 @@ type Commit = {
   sha?: string;
 };
 
+type Config = {
+  build: {
+    cmd: string;
+    entry: string;
+    isServerless: boolean;
+    vars: Record<string, string>;
+  };
+  env: string;
+  envId: string;
+};
+
 declare type Deployment = {
   id: string;
   appId: string;
   branch: string;
   commit: Commit;
-  config: Environment;
+  config: Config;
   createdAt: number;
   stoppedAt: number;
   exit: number;
   isAutoDeploy: boolean;
   isRunning: boolean;
-  isFork: boolean;
   logs: Array<Log>;
   numberOfFiles: number;
   published: Array<PublishInfo>;
-  pullRequestNumber: number | null;
   totalSizeInBytes: number;
+  serverPackageSize: number;
   preview: string; // The preview endpoint
-  tip: string | null; // A hint which specifies why the deployment failed.
-  version: string | null; // The lambda version
 };
 
 interface CDNFile {
@@ -50,6 +58,6 @@ interface Redirects {
 
 declare type Manifest = {
   cdnFiles?: CDNFile[];
-  redirect?: Redirects[];
+  redirects?: Redirects[] | null;
   functionHandler?: string;
 };
