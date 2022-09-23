@@ -5,6 +5,7 @@ import {
   RenderResult,
   waitFor,
 } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import mockApp from "~/testing/data/mock_app";
 import mockDeployment from "~/testing/data/mock_deployment";
 import mockEnvironment from "~/testing//data/mock_environment";
@@ -39,13 +40,15 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/PublishModal
       mockDeployment({ appId: currentApp.id, envId: currentEnv.id });
 
     wrapper = render(
-      <PublishModal
-        onClose={onClose}
-        onUpdate={onUpdate}
-        app={currentApp}
-        deployment={currentDepl}
-        environment={currentEnv}
-      />
+      <MemoryRouter>
+        <PublishModal
+          onClose={onClose}
+          onUpdate={onUpdate}
+          app={currentApp}
+          deployment={currentDepl}
+          environment={currentEnv}
+        />
+      </MemoryRouter>
     );
   };
 

@@ -4,34 +4,13 @@ import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
 import ConfirmModal from "~/components/ConfirmModal";
 import DotDotDot from "~/components/DotDotDotV2";
-import Link from "~/components/Link";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { formattedDate } from "~/utils/helpers/deployments";
 import { useFetchDeployments, deleteForever, stopDeployment } from "./actions";
-import ExitStatus from "./_components/ExitStatus";
-import Author from "./_components/Author";
-import Sha from "./_components/Sha";
 import PublishModal from "./_components/PublishModal";
 import ManifestModal from "./_components/ManifestModal";
-import ReleaseInfo from "./_components/ReleaseInfo";
-
-const defaultMessage = (deployment: Deployment): React.ReactNode => {
-  if (deployment.isRunning) {
-    return "Commit message is being parsed...";
-  }
-
-  return deployment.exit === 0 ? (
-    `#${deployment.id}`
-  ) : (
-    <>
-      <div>Deployment failed.</div>
-      <div>
-        Stormkit has no access to the repo or the branch does not exist.
-      </div>
-    </>
-  );
-};
+import CommitInfo from "./_components/CommitInfo";
 
 const Deployments: React.FC = () => {
   const { app, setRefreshToken } = useContext(AppContext);
@@ -57,34 +36,12 @@ const Deployments: React.FC = () => {
             className="bg-blue-10 mx-4 mb-4 p-4 flex text-sm"
             key={deployment.id}
           >
-            <div className="flex-1 flex items-baseline">
-              <div className="mr-3">
-                <ExitStatus
-                  code={deployment.isRunning ? null : deployment.exit}
-                />
-              </div>
-              <div>
-                <Link to={`/apps/${app.id}/deployments/${deployment.id}`}>
-                  {deployment.commit?.message?.split("\n")[0] ||
-                    defaultMessage(deployment)}
-                </Link>
-                <div className="flex items-center">
-                  <Author author={deployment.commit.author} />
-                  <Sha
-                    repo={app.repo}
-                    provider={app.provider}
-                    sha={deployment.commit.sha}
-                  />
-                  <ReleaseInfo
-                    percentage={
-                      deployment.published?.filter(
-                        p => p.envId === environment.id
-                      )[0]?.percentage
-                    }
-                  />
-                </div>
-              </div>
-            </div>
+            <CommitInfo
+              app={app}
+              environment={environment}
+              deployment={deployment}
+              showStatus
+            />
             <div className="flex flex-col items-end justify-between">
               <DotDotDot
                 items={[

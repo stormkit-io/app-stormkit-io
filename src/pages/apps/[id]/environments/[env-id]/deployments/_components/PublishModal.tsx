@@ -7,7 +7,7 @@ import Modal from "~/components/ModalV2";
 import Button from "~/components/ButtonV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Form from "~/components/FormV2";
-import Author from "./Author";
+import CommitInfo from "./CommitInfo";
 import { publishDeployments } from "../actions";
 
 interface Props {
@@ -84,8 +84,9 @@ const PublishModal: React.FC<Props> = ({
       >
         <PublishRow
           showSlider={showPrevDeployments}
-          commitAuthor={deployment?.commit.author}
-          commitMessage={deployment?.commit.message}
+          environment={environment}
+          deployment={deployment}
+          app={app}
           defaultPercentage={percentages[deployment.id]}
           onChange={percentage => {
             setPercentages({ ...percentages, [deployment.id]: percentage });
@@ -97,8 +98,19 @@ const PublishModal: React.FC<Props> = ({
             {previouslyPublished.map(p => (
               <PublishRow
                 key={p.deploymentId}
-                commitAuthor={p.commitAuthor}
-                commitMessage={p.commitMessage}
+                environment={environment}
+                deployment={
+                  {
+                    id: p.deploymentId,
+                    branch: p.branch,
+                    commit: {
+                      message: p.commitMessage,
+                      author: p.commitAuthor,
+                      sha: p.commitSha,
+                    },
+                  } as Deployment
+                }
+                app={app}
                 defaultPercentage={percentages[p.deploymentId]}
                 showSlider
                 onChange={percentage => {
@@ -154,27 +166,29 @@ const PublishModal: React.FC<Props> = ({
 
 interface PublishRowProps {
   showSlider?: boolean;
-  commitMessage?: string;
-  commitAuthor?: string;
+  environment: Environment;
+  deployment: Deployment;
+  app: App;
   defaultPercentage?: number;
   onChange: (percentage: number) => void;
 }
 
 const PublishRow: React.FC<PublishRowProps> = ({
+  app,
+  environment,
+  deployment,
   showSlider,
-  commitMessage,
-  commitAuthor,
   onChange,
   defaultPercentage = 100,
 }) => {
   return (
     <div className="my-4 px-4">
       <div className={cn("bg-blue-10 px-4 py-4", { "pb-2": showSlider })}>
-        <div>
-          {commitMessage?.split("\n")[0]}
-          <br />
-          <Author author={commitAuthor} />
-        </div>
+        <CommitInfo
+          environment={environment}
+          deployment={deployment}
+          app={app}
+        />
         {showSlider && (
           <div>
             <Slider
