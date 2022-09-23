@@ -24,8 +24,11 @@ const Box: React.FC<BoxProps> = ({ children, className, isLast = false }) => {
   return (
     <div
       className={cn(
-        "py-2 my-2 flex items-center",
-        { "border-r border-solid border-blue-30 mr-4 pr-4": !isLast },
+        "py-2 my-1 md:my-2 flex items-center",
+        {
+          "border-b md:border-b-0 md:border-r border-solid border-blue-30 md:mr-4 md:pr-4":
+            !isLast,
+        },
         className
       )}
     >
@@ -49,7 +52,7 @@ const EnvironmentHeader: React.FC = () => {
   return (
     <div className="w-full mb-4">
       <Container
-        className="flex items-stretch px-4 text-sm"
+        className="flex items-stretch px-4 text-sm flex-col md:flex-row"
         maxWidth="max-w-none"
       >
         <Box>

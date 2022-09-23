@@ -33,7 +33,7 @@ const Deployments: React.FC = () => {
         !error &&
         deployments.map(deployment => (
           <div
-            className="bg-blue-10 mx-4 mb-4 p-4 flex text-sm"
+            className="bg-blue-10 mx-2 md:mx-4 mb-2 md:mb-4 p-4 flex text-sm"
             key={deployment.id}
           >
             <CommitInfo

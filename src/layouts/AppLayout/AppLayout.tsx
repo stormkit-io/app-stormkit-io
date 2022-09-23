@@ -37,7 +37,7 @@ export const AppLayout: React.FC = () => {
 
   return (
     <main className={cn("flex flex-col min-h-screen m-auto w-full")}>
-      <header className="ml-16 flex-0">
+      <header className="ml-16 flex-0 overflow-x-auto text-xs md:text-sm">
         <div
           className="flex flex-1 text-gray-80 items-center justify-start m-auto w-full max-w-screen-md my-2 px-4"
           style={{ minHeight: "54px" }}
