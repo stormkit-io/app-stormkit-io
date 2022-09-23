@@ -22,12 +22,12 @@ const Sha: React.FC<{ repo: string; provider: Provider; sha?: string }> = ({
   }
 
   return (
-    <>
+    <span>
       ,{" "}
       <Link to={`https://${link}`} className="font-bold text-white">
         #{sha.substring(0, 6)}
       </Link>
-    </>
+    </span>
   );
 };
 
