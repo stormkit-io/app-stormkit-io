@@ -26,7 +26,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
   const [mode, setMode] = useState<Mode>("ui");
   const [tab, setTab] = useState<Tab>("cdn");
 
-  const { manifest, loading, error } = useFetchManifest({
+  let { manifest, loading, error } = useFetchManifest({
     appId: app.id,
     deploymentId: deployment.id,
   });
@@ -76,7 +76,10 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
           </div>
         )}
         {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
-        {!loading && !error && mode === "ui" && (
+        {!loading && !error && !manifest && (
+          <div className="bg-blue-10 mx-4 p-4">Manifest is not found.</div>
+        )}
+        {!loading && !error && manifest && mode === "ui" && (
           <div className="flex flex-col flex-1">
             <div className="m-4">
               <ToggleButtonGroup
@@ -182,7 +185,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
             )}
           </div>
         )}
-        {!loading && !error && mode === "json" && (
+        {!loading && !error && manifest && mode === "json" && (
           <div className="w-full px-4">
             <CodeMirror
               value={JSON.stringify(manifest, null, 2)}
