@@ -171,7 +171,7 @@ const PublishRow: React.FC<PublishRowProps> = ({
     <div className="my-4 px-4">
       <div className={cn("bg-blue-10 px-4 py-4", { "pb-2": showSlider })}>
         <div>
-          {commitMessage}
+          {commitMessage?.split("\n")[0]}
           <br />
           <Author author={commitAuthor} />
         </div>
