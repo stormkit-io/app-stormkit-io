@@ -7,6 +7,7 @@ import DotDotDot from "~/components/DotDotDotV2";
 import Link from "~/components/Link";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import { formattedDate } from "~/utils/helpers/deployments";
 import { useFetchDeployments, deleteForever, stopDeployment } from "./actions";
 import ExitStatus from "./_components/ExitStatus";
 import Author from "./_components/Author";
@@ -53,35 +54,38 @@ const Deployments: React.FC = () => {
         !error &&
         deployments.map(deployment => (
           <div
-            className="bg-blue-10 mx-4 mb-4 p-4 flex items-baseline text-sm"
+            className="bg-blue-10 mx-4 mb-4 p-4 flex text-sm"
             key={deployment.id}
           >
-            <div className="mr-3">
-              <ExitStatus
-                code={deployment.isRunning ? null : deployment.exit}
-              />
-            </div>
-            <div className="flex-1">
-              <Link to={`/apps/${app.id}/deployments/${deployment.id}`}>
-                {deployment.commit?.message || defaultMessage(deployment)}
-              </Link>
-              <div className="flex items-center">
-                <Author author={deployment.commit.author} />
-                <Sha
-                  repo={app.repo}
-                  provider={app.provider}
-                  sha={deployment.commit.sha}
-                />
-                <ReleaseInfo
-                  percentage={
-                    deployment.published?.filter(
-                      p => p.envId === environment.id
-                    )[0]?.percentage
-                  }
+            <div className="flex-1 flex items-baseline">
+              <div className="mr-3">
+                <ExitStatus
+                  code={deployment.isRunning ? null : deployment.exit}
                 />
               </div>
+              <div>
+                <Link to={`/apps/${app.id}/deployments/${deployment.id}`}>
+                  {deployment.commit?.message?.split("\n")[0] ||
+                    defaultMessage(deployment)}
+                </Link>
+                <div className="flex items-center">
+                  <Author author={deployment.commit.author} />
+                  <Sha
+                    repo={app.repo}
+                    provider={app.provider}
+                    sha={deployment.commit.sha}
+                  />
+                  <ReleaseInfo
+                    percentage={
+                      deployment.published?.filter(
+                        p => p.envId === environment.id
+                      )[0]?.percentage
+                    }
+                  />
+                </div>
+              </div>
             </div>
-            <div>
+            <div className="flex flex-col items-end justify-between">
               <DotDotDot
                 items={[
                   {
@@ -125,6 +129,9 @@ const Deployments: React.FC = () => {
                   },
                 ]}
               ></DotDotDot>
+              <div className="text-xs">
+                {formattedDate(deployment.createdAt)}
+              </div>
             </div>
           </div>
         ))}

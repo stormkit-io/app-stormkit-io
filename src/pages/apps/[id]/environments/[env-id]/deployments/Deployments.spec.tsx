@@ -25,6 +25,10 @@ interface Props {
   deployments?: Deployment[];
 }
 
+jest.mock("~/utils/helpers/deployments", () => ({
+  formattedDate: () => "21.09.2022 - 21:30",
+}));
+
 describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => {
   let wrapper: RenderResult;
   let history: History;
@@ -80,6 +84,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
       expect(wrapper.getByText("chore: bump version")).toBeTruthy();
+      expect(wrapper.getByText("21.09.2022 - 21:30")).toBeTruthy();
     });
   });
 
