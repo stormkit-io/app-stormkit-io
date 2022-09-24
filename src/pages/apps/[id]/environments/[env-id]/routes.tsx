@@ -38,6 +38,13 @@ const routes: Array<RouteProps> = [
       () => import("~/pages/apps/[id]/environments/[env-id]/deployments")
     ),
   },
+  {
+    path: "/deployments/:deploymentId",
+    element: Async(
+      () =>
+        import("~/pages/apps/[id]/environments/[env-id]/deployments/Deployment")
+    ),
+  },
 ];
 
 export default routes;
