@@ -29,10 +29,10 @@ const colors = {
     icon: "",
   },
   [WARNING]: {
-    text: "",
-    bg: "yellow-80",
-    border: "yellow-60",
-    icon: "yellow-30",
+    text: "gray-80",
+    bg: "transparent",
+    border: "yellow-10",
+    icon: "yellow-60",
   },
   [ERROR]: {
     text: "white",
