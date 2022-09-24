@@ -8,6 +8,7 @@ import CommitInfo from "./CommitInfo";
 
 interface Props {
   showStatus?: boolean;
+  clickable?: boolean;
 }
 
 describe("~/apps/[id]/environments/[env-id]/deployments/_components/CommitInfo.tsx", () => {
@@ -16,7 +17,10 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/CommitInfo.t
   const env = mockEnvironment({ app });
   const deploy = mockDeployment({ appId: app.id, envId: env.id });
 
-  const createWrapper = ({ showStatus = false }: Props = {}) => {
+  const createWrapper = ({
+    showStatus = false,
+    clickable = true,
+  }: Props = {}) => {
     wrapper = render(
       <MemoryRouter>
         <CommitInfo
@@ -24,6 +28,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/CommitInfo.t
           environment={env}
           deployment={deploy}
           showStatus={showStatus}
+          clickable={clickable}
         />
       </MemoryRouter>
     );
@@ -42,5 +47,13 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/CommitInfo.t
   test("should display the status properly", () => {
     createWrapper({ showStatus: true });
     expect(wrapper.getByLabelText("Successful")).toBeTruthy();
+  });
+
+  test("should not contain a link to deployments page when it's not clickable", () => {
+    createWrapper({ clickable: false });
+    expect(wrapper.container.querySelectorAll("a")).toHaveLength(1);
+    expect(
+      wrapper.container.querySelector("a")?.getAttribute("href")
+    ).not.toContain("/deployments");
   });
 });

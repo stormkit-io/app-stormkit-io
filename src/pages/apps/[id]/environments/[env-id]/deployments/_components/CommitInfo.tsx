@@ -10,6 +10,7 @@ interface Props {
   deployment: Deployment;
   app: App;
   showStatus?: boolean;
+  clickable?: boolean;
 }
 
 const defaultMessage = (deployment: Deployment): React.ReactNode => {
@@ -34,22 +35,41 @@ const CommitInfo: React.FC<Props> = ({
   app,
   environment,
   showStatus,
+  clickable = true,
 }) => {
+  const message =
+    deployment.commit?.message?.split("\n")[0] || defaultMessage(deployment);
+
+  const emptyPackage =
+    deployment.exit === 0 &&
+    !deployment.totalSizeInBytes &&
+    !deployment.serverPackageSize;
+
   return (
     <div className="flex-1 flex items-baseline leading-6">
       {showStatus && (
         <div className="mr-3">
-          <ExitStatus code={deployment.isRunning ? null : deployment.exit} />
+          <ExitStatus
+            code={deployment.isRunning ? null : deployment.exit}
+            emptyPackage={emptyPackage}
+          />
         </div>
       )}
       <div>
-        <Link to={`/apps/${app.id}/deployments/${deployment.id}`}>
-          {deployment.commit?.message?.split("\n")[0] ||
-            defaultMessage(deployment)}
-        </Link>
+        {clickable ? (
+          <Link
+            to={`/apps/${app.id}/environments/${environment.id}/deployments/${deployment.id}`}
+          >
+            {message}
+          </Link>
+        ) : (
+          <span>{message}</span>
+        )}
         <ReleaseInfo
           percentage={
-            deployment.published?.filter(p => p.envId === environment.id)[0]
+            deployment.published?.find(p => p.envId === environment.id)
+              ?.percentage ||
+            environment.published?.find(p => p.deploymentId === deployment.id)
               ?.percentage
           }
         />
