@@ -71,7 +71,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
         className="flex flex-col h-full"
       >
         {loading && (
-          <div className="flex items-center w-full">
+          <div className="flex justify-center w-full">
             <Spinner />
           </div>
         )}
