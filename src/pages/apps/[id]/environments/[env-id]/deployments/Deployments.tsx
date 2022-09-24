@@ -27,7 +27,11 @@ const Deployments: React.FC = () => {
 
   return (
     <Container title="Deployments" maxWidth="max-w-none" className="pb-4">
-      {loading && <Spinner />}
+      {loading && (
+        <div className="pb-4 flex w-full justify-center">
+          <Spinner />
+        </div>
+      )}
       {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
       {!loading &&
         !error &&
