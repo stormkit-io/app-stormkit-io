@@ -43,9 +43,6 @@ export const AppLayout: React.FC = () => {
           style={{ minHeight: "54px" }}
         >
           <div className="flex flex-1 items-center">
-            <Link to="/" className="text-xl mr-3">
-              <span className="fas fa-arrow-left" />
-            </Link>
             <AppName app={app} imageWidth={7} />
             {pathname.includes("environments") && (
               <Form.Select
