@@ -189,3 +189,88 @@ export const stopDeployment = ({
 }: StopDeploymentProps): Promise<void> => {
   return api.post("/app/deploy/stop", { appId, deploymentId });
 };
+
+interface FetchDeploymentProps {
+  app: App;
+  deploymentId?: string;
+}
+
+interface FetchDeployResponse {
+  error?: string;
+  loading: boolean;
+  deployment?: Deployment;
+}
+
+interface FetchDeployAPIResponse {
+  deploy: Deployment;
+}
+
+const cache: Record<string, Deployment> = {};
+
+export const useFetchDeployment = ({
+  app,
+  deploymentId,
+}: FetchDeploymentProps): FetchDeployResponse => {
+  const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState(true);
+  const [deploy, setDeploy] = useState<Deployment>();
+  const [time, setTime] = useState<number>();
+
+  useEffect(() => {
+    let unmounted = false;
+
+    if (!deploymentId) {
+      return;
+    }
+
+    if (cache[deploymentId]) {
+      setDeploy(cache[deploymentId]);
+      setLoading(false);
+      setError(undefined);
+      return;
+    }
+
+    // Run setLoading only when time is null, subsequent calls shouldn't
+    // put the whole view in loading state.
+    if (time === null) {
+      setLoading(true);
+    }
+
+    api
+      .fetch<FetchDeployAPIResponse>(`/app/${app.id}/deploy/${deploymentId}`)
+      .then(res => {
+        if (unmounted !== true) {
+          // res.deploy.branch = res.deploy.
+          setDeploy(res.deploy);
+          setLoading(false);
+
+          if (!res.deploy.isRunning) {
+            cache[res.deploy.id] = res.deploy;
+          }
+        }
+
+        // If the deployment is still running, then refetch it every 5 seconds
+        // by refreshing the time to trigger a new call.
+        setTimeout(() => {
+          if (unmounted !== true && res.deploy.isRunning) {
+            delete cache[res.deploy.id];
+            setTime(Date.now());
+          }
+        }, 5000);
+      })
+      .catch(() => {
+        if (unmounted !== true) {
+          setLoading(false);
+          setError(
+            "Something went wrong on our side while fetching deployments. Please try again and if the problem persists contact us from Discord or email."
+          );
+        }
+      });
+
+    return () => {
+      unmounted = false;
+    };
+  }, [api, app, deploymentId, time]);
+
+  return { deployment: deploy, loading, error };
+};
