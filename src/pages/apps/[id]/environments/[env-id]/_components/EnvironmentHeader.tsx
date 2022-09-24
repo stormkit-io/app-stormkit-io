@@ -100,7 +100,7 @@ const EnvironmentHeader: React.FC = () => {
                     ) : (
                       <Link
                         key={environment.published[0].deploymentId}
-                        to={`/apps/${environment.appId}/deployments/${environment.published[0].deploymentId}`}
+                        to={`/apps/${environment.appId}/environments/${environment.id}/deployments/${environment.published[0].deploymentId}`}
                       >
                         {environment.published[0].deploymentId}
                       </Link>
