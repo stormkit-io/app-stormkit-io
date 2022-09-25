@@ -20,7 +20,7 @@ interface Props {
 }
 
 type Mode = "json" | "ui";
-type Tab = "cdn" | "redirect" | "serverless";
+type Tab = "cdn" | "redirect" | "ssr";
 
 const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
   const [mode, setMode] = useState<Mode>("ui");
@@ -95,6 +95,9 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   value="cdn"
                   aria-label="cdn files"
                   className="bg-blue-20 hover:text-gray-80"
+                  classes={{
+                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10",
+                  }}
                 >
                   <span className="text-gray-80">CDN Files</span>
                 </ToggleButton>
@@ -102,16 +105,22 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   value="redirect"
                   aria-label="redirects"
                   className="bg-blue-20 hover:text-gray-80"
+                  classes={{
+                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10",
+                  }}
                 >
                   <span className="text-gray-80">Redirects</span>
                 </ToggleButton>
                 <ToggleButton
-                  value="serverless"
-                  aria-label="serverless"
+                  value="ssr"
+                  aria-label="server side rendering"
                   className="bg-blue-20 hover:text-gray-80"
+                  classes={{
+                    root: "border-0 border-solid border-black",
+                  }}
                 >
                   <span className="text-gray-80 inline-flex items-center">
-                    Serverless{" "}
+                    Server side rendering{" "}
                     <span
                       className={cn("w-2 h-2 inline-block ml-2 rounded-full", {
                         "bg-green-50": Boolean(manifest.functionHandler),
@@ -165,19 +174,19 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   </p>
                 </div>
               ))}
-            {tab === "serverless" && (
+            {tab === "ssr" && (
               <div className="bg-blue-10 mx-4 p-4">
                 {manifest.functionHandler ? (
                   <div>
-                    Serverless{" "}
-                    <span className="text-green-50 font-bold">enabled</span>.
+                    Server side rendering{" "}
+                    <span className="text-green-50 font-bold">detected</span>.
                     Requests not matching any CDN file will be served from the
                     serverless app.
                   </div>
                 ) : (
                   <div>
-                    Serverless{" "}
-                    <span className="text-red-50 font-bold">not enabled</span>.
+                    Server side rendering{" "}
+                    <span className="text-red-50 font-bold">not detected</span>.
                     Only CDN files are served.
                   </div>
                 )}

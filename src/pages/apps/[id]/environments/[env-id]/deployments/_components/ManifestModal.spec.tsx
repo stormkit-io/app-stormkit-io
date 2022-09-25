@@ -120,18 +120,18 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
       );
     });
 
-    test("should contain a serverless tab", async () => {
+    test("should contain a ssr tab", async () => {
       const manifest = mockManifest();
       createWrapper({ manifest });
 
       await waitFor(() => {
-        expect(wrapper.getByLabelText("serverless")).toBeTruthy();
+        expect(wrapper.getByLabelText("server side rendering")).toBeTruthy();
       });
 
-      fireEvent.click(wrapper.getByLabelText("serverless"));
+      fireEvent.click(wrapper.getByLabelText("server side rendering"));
 
       await waitFor(() => {
-        expect(wrapper.getByText(/enabled/)).toBeTruthy();
+        expect(wrapper.getByText(/detected/)).toBeTruthy();
       });
 
       expect(
