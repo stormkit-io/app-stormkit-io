@@ -43,7 +43,7 @@ export const AppLayout: React.FC = () => {
           style={{ minHeight: "54px" }}
         >
           <div className="flex flex-1 items-center">
-            <AppName app={app} imageWidth={7} />
+            <AppName app={app} imageWidth={7} withLinkToRepo />
             {pathname.includes("environments") && (
               <Form.Select
                 fullWidth={false}

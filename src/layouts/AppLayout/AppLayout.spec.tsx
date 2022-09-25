@@ -76,6 +76,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         .map(link => link.getAttribute("href"));
 
       expect(links).toEqual([
+        "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/team`,
         `/apps/${defaultApp.id}/settings`,
         "/", // Stormkit logo link
@@ -102,6 +103,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         .map(link => link.getAttribute("href"));
 
       expect(links).toEqual([
+        "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/team`,
         `/apps/${defaultApp.id}/settings`,
         "/", // Stormkit logo link
