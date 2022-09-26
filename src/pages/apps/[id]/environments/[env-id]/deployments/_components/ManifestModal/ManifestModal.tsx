@@ -11,7 +11,8 @@ import InfoBox from "~/components/InfoBoxV2";
 import Button from "~/components/ButtonV2";
 import Link from "~/components/Link";
 import emptyListSvg from "~/assets/images/empty-list.svg";
-import { useFetchManifest } from "../actions";
+import { useFetchManifest } from "../../actions";
+import TabAPI from "./TabAPI";
 
 interface Props {
   app: App;
@@ -20,16 +21,18 @@ interface Props {
 }
 
 type Mode = "json" | "ui";
-type Tab = "cdn" | "redirect" | "ssr";
+type Tab = "cdn" | "redirect" | "ssr" | "api";
 
 const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
   const [mode, setMode] = useState<Mode>("ui");
   const [tab, setTab] = useState<Tab>("cdn");
 
-  let { manifest, loading, error } = useFetchManifest({
+  const { manifest, loading, error } = useFetchManifest({
     appId: app.id,
     deploymentId: deployment.id,
   });
+
+  const apiEnabled = manifest.apiFiles && manifest.apiFiles?.length > 0;
 
   return (
     <Modal open onClose={onClose} maxWidth="max-w-screen-md" fullHeight>
@@ -116,7 +119,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   aria-label="server side rendering"
                   className="bg-blue-20 hover:text-gray-80"
                   classes={{
-                    root: "border-0 border-solid border-black",
+                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10",
                   }}
                 >
                   <span className="text-gray-80 inline-flex items-center">
@@ -125,6 +128,24 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                       className={cn("w-2 h-2 inline-block ml-2 rounded-full", {
                         "bg-green-50": Boolean(manifest.functionHandler),
                         "bg-red-50": !manifest.functionHandler,
+                      })}
+                    />
+                  </span>
+                </ToggleButton>
+                <ToggleButton
+                  value="api"
+                  aria-label="rest api"
+                  className="bg-blue-20 hover:text-gray-80"
+                  classes={{
+                    root: "border-0 border-solid border-black",
+                  }}
+                >
+                  <span className="text-gray-80 inline-flex items-center">
+                    REST API{" "}
+                    <span
+                      className={cn("w-2 h-2 inline-block ml-2 rounded-full", {
+                        "bg-red-50": !apiEnabled,
+                        "bg-green-50": apiEnabled,
                       })}
                     />
                   </span>
@@ -191,6 +212,12 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   </div>
                 )}
               </div>
+            )}
+            {tab === "api" && (
+              <TabAPI
+                manifest={manifest}
+                previewEndpoint={deployment.preview}
+              />
             )}
           </div>
         )}

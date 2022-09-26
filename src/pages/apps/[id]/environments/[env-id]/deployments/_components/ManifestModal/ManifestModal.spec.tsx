@@ -26,7 +26,7 @@ jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
   <>{value}</>
 ));
 
-describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModal.tsx", () => {
+describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModal/ManifestModal.tsx", () => {
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
