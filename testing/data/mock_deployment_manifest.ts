@@ -1,4 +1,9 @@
-export default (): Manifest => ({
+interface Props {
+  apiFiles?: APIFile[];
+}
+
+export default ({ apiFiles }: Props = {}): Manifest => ({
+  apiFiles,
   cdnFiles: [
     {
       fileName: "/manifest.json",

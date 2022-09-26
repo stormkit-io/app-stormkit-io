@@ -56,8 +56,13 @@ interface Redirects {
   to: string;
 }
 
+interface APIFile {
+  fileName: string;
+}
+
 declare type Manifest = {
   cdnFiles?: CDNFile[];
+  apiFiles?: APIFile[];
   redirects?: Redirects[] | null;
   functionHandler?: string;
 };
