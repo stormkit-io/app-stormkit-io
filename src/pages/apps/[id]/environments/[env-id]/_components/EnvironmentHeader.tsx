@@ -109,10 +109,14 @@ const EnvironmentHeader: React.FC = () => {
                       <Tooltip
                         title={
                           <>
-                            <p>
+                            <p className="text-center">
+                              The endpoint returns 404.
+                              <br />
                               Click on{" "}
-                              {environment.published?.length > 1 ? "a" : "the"}{" "}
-                              deployment to debug
+                              {environment.published?.length > 1
+                                ? "a"
+                                : "the"}{" "}
+                              deployment to debug.
                             </p>
                             {environment.published?.map(p => (
                               <div
