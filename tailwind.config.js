@@ -21,6 +21,7 @@ module.exports = {
 
           // InfoBox related dynamic classes
           "text-blue-20",
+          "text-yellow-60",
           "bg-yellow-80",
           "bg-blue-90",
           "bg-blue-80",
@@ -29,6 +30,7 @@ module.exports = {
           "border-yellow-60",
           "border-green-50",
           "border-red-50",
+          "border-yellow-10",
 
           "lg:max-w-128",
           "lg:max-w-72",
