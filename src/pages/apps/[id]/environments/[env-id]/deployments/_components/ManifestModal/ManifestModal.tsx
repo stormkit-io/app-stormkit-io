@@ -32,7 +32,11 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
     deploymentId: deployment.id,
   });
 
-  const apiEnabled = manifest.apiFiles && manifest.apiFiles?.length > 0;
+  const apiEnabled = manifest?.apiFiles && manifest.apiFiles?.length > 0;
+  const ssrEnabled = Boolean(manifest?.functionHandler);
+  const indexHTMLWarning =
+    !ssrEnabled &&
+    !manifest?.cdnFiles?.find(file => file.fileName === "/index.html");
 
   return (
     <Modal open onClose={onClose} maxWidth="max-w-screen-md" fullHeight>
@@ -126,8 +130,8 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                     Server side rendering{" "}
                     <span
                       className={cn("w-2 h-2 inline-block ml-2 rounded-full", {
-                        "bg-green-50": Boolean(manifest.functionHandler),
-                        "bg-red-50": !manifest.functionHandler,
+                        "bg-green-50": ssrEnabled,
+                        "bg-red-50": !ssrEnabled,
                       })}
                     />
                   </span>
@@ -152,19 +156,36 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                 </ToggleButton>
               </ToggleButtonGroup>
             </div>
-            {tab === "cdn" &&
-              manifest.cdnFiles?.map(file => (
-                <div className="bg-blue-10 mx-4 mb-4 p-4" key={file.fileName}>
-                  <span className="block font-bold">{file.fileName}</span>
-                  <Link
-                    to={`${deployment.preview}${file.fileName}`}
-                    className="text-xs"
-                  >
-                    {deployment.preview}
-                    {file.fileName}
-                  </Link>
-                </div>
-              ))}
+            {tab === "cdn" && (
+              <>
+                {indexHTMLWarning && (
+                  <InfoBox type={InfoBox.WARNING} className="mx-4 mb-4">
+                    Top level{" "}
+                    <span className="text-white font-bold">/index.html</span> is
+                    missing and server side rendering is not detected.{" "}
+                    <Link
+                      className="font-bold"
+                      to="https://www.stormkit.io/docs/troubleshooting#index-html-missing"
+                      secondary
+                    >
+                      Learn more.
+                    </Link>
+                  </InfoBox>
+                )}
+                {manifest.cdnFiles?.map(file => (
+                  <div className="bg-blue-10 mx-4 mb-4 p-4" key={file.fileName}>
+                    <span className="block font-bold">{file.fileName}</span>
+                    <Link
+                      to={`${deployment.preview}${file.fileName}`}
+                      className="text-xs"
+                    >
+                      {deployment.preview}
+                      {file.fileName}
+                    </Link>
+                  </div>
+                ))}
+              </>
+            )}
             {tab === "redirect" &&
               (manifest.redirects?.map(r => (
                 <div className="bg-blue-10 m-4 p-4" key={r.to}>
@@ -197,7 +218,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
               ))}
             {tab === "ssr" && (
               <div className="bg-blue-10 mx-4 p-4">
-                {manifest.functionHandler ? (
+                {ssrEnabled ? (
                   <div>
                     Server side rendering{" "}
                     <span className="text-green-50 font-bold">detected</span>.

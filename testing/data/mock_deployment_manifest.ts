@@ -1,10 +1,16 @@
 interface Props {
   apiFiles?: APIFile[];
+  cdnFiles?: CDNFile[];
+  functionHandler?: string;
 }
 
-export default ({ apiFiles }: Props = {}): Manifest => ({
+export default ({
   apiFiles,
-  cdnFiles: [
+  cdnFiles,
+  functionHandler = "index.mjs:handler",
+}: Props = {}): Manifest => ({
+  apiFiles,
+  cdnFiles: cdnFiles || [
     {
       fileName: "/manifest.json",
       headers: { ETag: '"e30-ix3X3IswzLsliBTkCjpm3pS6818"' },
@@ -47,5 +53,5 @@ export default ({ apiFiles }: Props = {}): Manifest => ({
     },
   ],
   redirects: null,
-  functionHandler: "index.mjs:handler",
+  functionHandler: functionHandler,
 });
