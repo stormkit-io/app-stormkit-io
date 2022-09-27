@@ -11,18 +11,24 @@ export const toRepoAddr = (repo: string): string => {
   const address = rest.join("/");
 
   if (provider === "bitbucket") {
-    return `bitbucket.org:${address}.git`;
+    return `https://bitbucket.org/${address}.git`;
   }
 
   if (provider === "github") {
-    return `github.com:${address}.git`;
+    return `https://github.com/${address}.git`;
   }
 
   if (provider === "gitlab") {
-    return `gitlab.com:${address}.git`;
+    return `https://gitlab.com/${address}.git`;
   }
 
   return "";
+};
+
+const replaceMap: Record<string, string> = {
+  github: "github.com",
+  gitlab: "gitlab.com",
+  bitbucket: "bitbucket.org",
 };
 
 /**
@@ -33,23 +39,25 @@ export const formatRepo = (repo: string): string => {
     return "";
   }
 
-  const providers = ["github.com", "bitbucket.org", "gitlab.com"];
+  const provider = repo
+    .match(/(https:\/\/|git\@)?(.*)\.(com|org)/)?.[2]
+    ?.toLowerCase();
 
-  for (let i = 0; i < providers.length; i++) {
-    const [provider] = providers[i].split(".");
-
-    if (repo.indexOf(providers[i]) > -1) {
-      if (repo.indexOf(`${providers[i]}:`) > -1) {
-        // git@github.com:stormkit-io/app-www.git
-        const [, project = ""] = repo.split(":");
-        return `${provider}/${project.replace(".git", "")}`;
-      } else {
-        // https://github.com/stormkit-io/app-www
-        const [, project] = repo.split(`${providers[i]}/`);
-        return `${provider}/${project}`;
-      }
-    }
+  if (
+    provider !== "github" &&
+    provider !== "gitlab" &&
+    provider !== "bitbucket"
+  ) {
+    return "";
   }
 
-  return "";
+  if (repo.indexOf("git@") === 0) {
+    repo = repo.replace(":", "/");
+  }
+
+  return repo
+    .replace("git@", "")
+    .replace(/^https:\/\//, "")
+    .replace(replaceMap[provider], provider)
+    .replace(/\.git$/, "");
 };
