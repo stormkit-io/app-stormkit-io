@@ -7,6 +7,7 @@ import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBox";
 import Form from "~/components/Form";
 import Button from "~/components/Button";
+import Link from "~/components/Link";
 
 interface Props {
   app: App;
@@ -147,11 +148,23 @@ const DeployModal: React.FC<Props> = ({
             </div>
           </>
         )}
-        {error && (
-          <InfoBox type={InfoBox.ERROR} className="mt-4">
-            {error}
-          </InfoBox>
-        )}
+        {error &&
+          (error === "repo-not-found" ? (
+            <InfoBox type={InfoBox.ERROR} className="mt-4">
+              Repository is inaccessible. See the{" "}
+              <Link
+                className="font-bold hover:text-white hover:underline"
+                to="https://www.stormkit.io/docs/troubleshooting#repo-is-innaccessible"
+              >
+                troubleshooting
+              </Link>{" "}
+              for help.
+            </InfoBox>
+          ) : (
+            <InfoBox type={InfoBox.ERROR} className="mt-4">
+              {error}
+            </InfoBox>
+          ))}
         <div className="flex justify-center mt-4 w-full">
           <Button primary loading={loading} disabled={!selectedEnv}>
             Deploy now

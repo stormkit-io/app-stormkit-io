@@ -188,11 +188,12 @@ export const deploy = ({
     .catch(async res => {
       if (res.status === 429) {
         setError((await api.errors(res))[0]);
-      } else if (res.status === 401) {
-        setError(
-          "We do not have enough permissions to continue with the deployment. " +
-            "Check the documentation for more information."
-        );
+      } else if (
+        res.status === 401 ||
+        res.status === 403 ||
+        res.status === 404
+      ) {
+        setError("repo-not-found");
       } else {
         setError(
           "Something wrong happened here. Please contact us at hello@stormkit.io"
