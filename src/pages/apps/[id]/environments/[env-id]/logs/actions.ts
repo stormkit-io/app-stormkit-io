@@ -30,7 +30,7 @@ export const useFetchLogs = ({
     // TODO: define an interface for logs
     api
       .fetch<any>(
-        `/app/${app.id}/logs?${qs.stringify({ env: environment.env })}`
+        `/app/${app.id}/logs?${qs.stringify({ envId: environment.id })}`
       )
       .then(({ logs }) => {
         if (unmounted !== true) {
