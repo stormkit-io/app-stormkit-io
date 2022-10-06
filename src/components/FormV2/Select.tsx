@@ -32,7 +32,10 @@ const Select: React.FC<SelectProps & Props> = ({
       variant={variant}
       fullWidth={fullWidth}
       required={required}
-      className={cn({ transparent: background === "transparent" })}
+      className={cn({
+        transparent: background === "transparent",
+        "h-full": true,
+      })}
       sx={{
         background,
       }}

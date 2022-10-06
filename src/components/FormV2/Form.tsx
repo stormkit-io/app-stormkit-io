@@ -1,9 +1,12 @@
 import React, { useRef } from "react";
 import CodeMirror from "@uiw/react-codemirror";
+import Switch from "@mui/material/Switch";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import Input from "./Input";
+import WithLabel from "./WithLabel";
 import Select from "./Select";
+import KeyValue from "./KeyValue";
 
 type FormRef = React.RefObject<HTMLFormElement>;
 type FormValue = boolean | string;
@@ -116,9 +119,12 @@ function Form<T>({
 }
 
 Form.Input = Input;
+Form.WithLabel = WithLabel;
 Form.Code = CodeMirror;
 Form.Select = Select;
+Form.KeyValue = KeyValue;
 Form.Option = MenuItem;
 Form.Checkbox = Checkbox;
+Form.Switch = Switch;
 
 export default Form;

@@ -3,7 +3,7 @@ import cn from "classnames";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { Tooltip } from "@mui/material";
 
-type Props = TextFieldProps & {
+export type Props = TextFieldProps & {
   tooltip?: React.ReactNode;
 };
 
