@@ -6,6 +6,7 @@ interface Props {
   maxWidth?: "max-w-2xl" | "max-w-none";
   margin?: "m-auto";
   title?: React.ReactNode;
+  subtitle?: React.ReactNode;
   actions?: React.ReactNode;
   className?: string | string[] | Record<string, boolean>;
   children: React.ReactNode;
@@ -13,6 +14,7 @@ interface Props {
 
 const Container: React.FC<Props> = ({
   title,
+  subtitle,
   actions,
   children,
   className,
@@ -26,7 +28,14 @@ const Container: React.FC<Props> = ({
     >
       {(title || actions) && (
         <div className="flex p-4">
-          {title && <h3 className="flex items-center font-bold">{title}</h3>}
+          {(title || subtitle) && (
+            <div className="flex flex-col">
+              {title && (
+                <h3 className="flex items-center font-bold">{title}</h3>
+              )}
+              {subtitle && <h4 className="flex items-center">{subtitle}</h4>}
+            </div>
+          )}
           {actions && (
             <div className="flex flex-1 justify-end text-sm">{actions}</div>
           )}
