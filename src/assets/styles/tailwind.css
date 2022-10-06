@@ -32,6 +32,7 @@
 
 .MuiInputBase-root {
   @apply text-sm;
+  @apply h-full;
 }
 
 .MuiList-root {
@@ -46,6 +47,10 @@
 
 .MuiFilledInput-underline:before {
   @apply border-gray-30;
+}
+
+.no-border > .MuiInputBase-root:before {
+  @apply border-transparent;
 }
 
 .MuiFormControl-root.transparent .MuiFilledInput-underline:before {
@@ -101,4 +106,12 @@ div.MuiTableContainer-root {
 
 .MuiBackdrop-root {
   background: rgba(0, 0, 0, 0.75);
+}
+
+.MuiSwitch-track {
+  @apply bg-white;
+}
+
+.min-h-12 {
+  min-height: 3rem;
 }
