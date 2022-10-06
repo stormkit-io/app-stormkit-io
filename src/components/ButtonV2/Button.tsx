@@ -4,16 +4,18 @@ import Spinner from "~/components/Spinner";
 import Link from "~/components/Link";
 import "./Button.css";
 
-type Category = "action" | "cancel" | "link";
+type Category = "action" | "cancel" | "link" | "button";
 type Size = "sm" | "m" | "lg" | "xl";
 
-interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, "size"> {
+interface Props
+  extends Omit<React.HTMLProps<HTMLButtonElement>, "size" | "type"> {
   category?: Category;
   loading?: boolean;
   href?: string;
   size?: Size;
   styled?: boolean;
   align?: "left" | "center";
+  type?: "button" | "submit";
 }
 
 const prepareStyles = (
@@ -24,7 +26,11 @@ const prepareStyles = (
   classes.push("sk-button");
 
   if (category === "action") {
-    classes.push(...["bg-pink-10"]);
+    classes.push("bg-pink-10");
+  }
+
+  if (category === "button") {
+    classes.push("bg-blue-50");
   }
 
   if (size === "sm") {
@@ -40,6 +46,7 @@ const Button: React.FC<Props> = ({
   className,
   disabled,
   href,
+  type,
   align = "center",
   category = "action",
   size = "m",
@@ -61,10 +68,10 @@ const Button: React.FC<Props> = ({
   };
 
   if (!href) {
-    const type = category === "action" ? "submit" : "button";
+    const buttonType = type || (category === "action" ? "submit" : "button");
 
     return (
-      <button {...props} disabled={Boolean(disabled)} type={type}>
+      <button {...props} disabled={Boolean(disabled)} type={buttonType}>
         <span
           className={cn("inline-flex", "w-full", "items-center", {
             invisible: loading,
