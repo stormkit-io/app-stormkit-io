@@ -37,7 +37,7 @@ interface FetchRepoTypeProps {
   response?: object;
 }
 
-export const mockFetchRepoType = ({
+export const mockFetchRepoMeta = ({
   name,
   appId,
   status,
@@ -80,8 +80,8 @@ export const mockUpdateEnvironment = ({
   environment,
   status = 200,
   response = { ok: true },
-}: UpdateEnvironmentProps) =>
-  nock(endpoint)
+}: UpdateEnvironmentProps) => {
+  return nock(endpoint)
     .put(`/app/env`, {
       appId: environment.appId,
       id: environment.id,
@@ -95,6 +95,7 @@ export const mockUpdateEnvironment = ({
       },
     })
     .reply(status, response);
+};
 
 interface DeleteEnvironmentProps {
   appId: string;
