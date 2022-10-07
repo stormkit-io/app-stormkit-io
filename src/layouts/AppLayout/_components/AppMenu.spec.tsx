@@ -1,5 +1,5 @@
-import { fireEvent, RenderResult } from "@testing-library/react";
 import type { History } from "history";
+import { RenderResult } from "@testing-library/react";
 import React from "react";
 import * as router from "react-router";
 import { createMemoryHistory } from "history";
@@ -49,17 +49,5 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
     expect(wrapper.getAllByRole("link").at(12)?.getAttribute("href")).toBe(
       `/apps/${defaultApp.id}/usage`
     );
-  });
-
-  describe("deploy now", () => {
-    test("should render deploy now button", () => {
-      expect(wrapper.getByLabelText("Deploy now")).toBeTruthy();
-    });
-
-    test("should open a modal when deploy is now clicked", () => {
-      expect(() => wrapper.getByText("Start a deployment")).toThrow();
-      fireEvent.click(wrapper.getByLabelText("Deploy now"));
-      expect(wrapper.getByText("Start a deployment")).toBeTruthy();
-    });
   });
 });

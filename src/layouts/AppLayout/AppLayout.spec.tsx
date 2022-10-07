@@ -3,7 +3,7 @@ import type { History } from "history";
 import React from "react";
 import * as router from "react-router";
 import { createMemoryHistory } from "history";
-import { render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
@@ -110,6 +110,27 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         `/apps/${defaultApp.id}/environments`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
       ]);
+    });
+  });
+
+  describe("deploy now", () => {
+    beforeEach(() => {
+      mockUseLocation({ pathname: `/apps/${defaultApp.id}/environments` });
+      createWrapper({});
+    });
+
+    test("should render deploy now button", () => {
+      expect(wrapper.getByLabelText("Deploy now")).toBeTruthy();
+    });
+
+    test("should open a modal when deploy is now clicked", () => {
+      expect(() => wrapper.getByText("Start a deployment")).toThrow();
+
+      fireEvent.click(
+        wrapper.getByLabelText("Deploy now").querySelector("button")!
+      );
+
+      expect(wrapper.getByText("Start a deployment")).toBeTruthy();
     });
   });
 });

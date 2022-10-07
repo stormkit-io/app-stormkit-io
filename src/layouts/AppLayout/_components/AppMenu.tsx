@@ -1,10 +1,9 @@
 import type { MenuItem } from "~/components/SideMenu";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useLocation } from "react-router";
 import { Tooltip } from "@mui/material";
 import Button from "~/components/ButtonV2";
 import SideMenu from "~/components/SideMenu";
-import DeployModal from "./DeployModal";
 import HeaderButtons from "../../_components/HeaderButtons";
 import { capitalize } from "~/utils/helpers/string";
 
@@ -75,7 +74,6 @@ interface Props {
 }
 
 const AppMenu: React.FC<Props> = ({ app, environments, envId }) => {
-  const [isDeployModalOpen, toggleDeployModal] = useState(false);
   const { pathname } = useLocation();
   const menuItems = useMemo(
     () =>
@@ -86,36 +84,6 @@ const AppMenu: React.FC<Props> = ({ app, environments, envId }) => {
   return (
     <SideMenu menuItems={menuItems}>
       <HeaderButtons>
-        <Tooltip
-          title={
-            <Button
-              className="p-4"
-              styled={false}
-              onClick={() => toggleDeployModal(true)}
-            >
-              Deploy now
-            </Button>
-          }
-          arrow
-          placement="right"
-          classes={{
-            tooltip: "bg-pink-10 custom-tooltip text-sm",
-            arrow: "text-pink-10",
-          }}
-        >
-          {/* required because button does not support holding a ref */}
-          <div className="w-full">
-            <Button
-              aria-label="Deploy now"
-              className="bg-pink-10 p-4 hover:text-white w-full"
-              styled={false}
-              category="action"
-              onClick={() => toggleDeployModal(true)}
-            >
-              <span className="fas fa-rocket text-lg" />
-            </Button>
-          </div>
-        </Tooltip>
         <Tooltip
           title={
             <Button
@@ -144,13 +112,6 @@ const AppMenu: React.FC<Props> = ({ app, environments, envId }) => {
             </Button>
           </div>
         </Tooltip>
-        {isDeployModalOpen && (
-          <DeployModal
-            app={app}
-            environments={environments}
-            toggleModal={toggleDeployModal}
-          />
-        )}
       </HeaderButtons>
     </SideMenu>
   );
