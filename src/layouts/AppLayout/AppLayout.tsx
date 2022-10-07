@@ -1,29 +1,51 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Route, Routes } from "react-router-dom";
+import { Tooltip } from "@mui/material";
 import cn from "classnames";
 import AppContextProvider, { AppContext } from "~/pages/apps/[id]/App.context";
 import AppName from "~/components/AppName";
 import Link from "~/components/Link";
 import Form from "~/components/FormV2";
+import Button from "~/components/ButtonV2";
 import AppMenu from "./_components/AppMenu";
+import DeployModal from "./_components/DeployModal";
 import { routes } from "./routes";
 
-const appMenuItems = (app: App) => [
+const appMenuItems = ({
+  app,
+  toggleDeployModal,
+}: {
+  app: App;
+  toggleDeployModal: (val: boolean) => void;
+}) => [
+  {
+    path: "",
+    text: "Deploy now",
+    icon: "fas fa-rocket",
+    bg: "bg-pink-10",
+    onClick: (e: React.MouseEvent) => {
+      e.preventDefault();
+      toggleDeployModal(true);
+    },
+  },
   { path: `/apps/${app.id}/team`, text: "Team", icon: "fas fa-users" },
   {
     path: `/apps/${app.id}/settings`,
     text: "Settings",
     icon: "fas fa-gear",
-    borderBottom: true,
   },
 ];
 
 export const AppLayout: React.FC = () => {
   const { app, environments } = useContext(AppContext);
   const { pathname } = useLocation();
-  const menuItems = useMemo(() => appMenuItems(app), [app]);
+  const [isDeployModalOpen, toggleDeployModal] = useState(false);
   const navigate = useNavigate();
+  const menuItems = useMemo(
+    () => appMenuItems({ app, toggleDeployModal }),
+    [app, toggleDeployModal]
+  );
 
   // Deduce the envId from the pathname because we cannot access
   // the :envId url parameter, as it's included inside
@@ -36,7 +58,7 @@ export const AppLayout: React.FC = () => {
   }
 
   return (
-    <main className={cn("flex flex-col min-h-screen m-auto w-full")}>
+    <main className="flex flex-col min-h-screen m-auto w-full">
       <header className="ml-16 flex-0 overflow-x-auto text-xs md:text-sm">
         <div
           className="flex flex-1 text-gray-80 items-center justify-start m-auto w-full max-w-screen-md my-2 px-4"
@@ -74,13 +96,36 @@ export const AppLayout: React.FC = () => {
           </div>
           <div className="flex items-center">
             {menuItems.map(item => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className="hover:text-white p-2 flex items-center bg-blue-50 ml-4 w-8 rounded-full h-8 text-xs justify-center"
-              >
-                <span className={item.icon} />
-              </Link>
+              <Tooltip key={item.path} title={item.text} arrow>
+                <span>
+                  {item.path ? (
+                    <Link
+                      to={item.path}
+                      onClick={item.onClick}
+                      className={cn(
+                        "hover:text-white p-2 flex items-center ml-4 w-8 rounded-full h-8 text-xs justify-center",
+                        { "bg-blue-50": !item.bg },
+                        item.bg
+                      )}
+                    >
+                      <span className={item.icon} />
+                    </Link>
+                  ) : (
+                    <Button
+                      type="button"
+                      styled={false}
+                      onClick={item.onClick}
+                      className={cn(
+                        "hover:text-white p-2 flex items-center ml-4 w-8 rounded-full h-8 text-xs justify-center",
+                        { "bg-blue-50": !item.bg },
+                        item.bg
+                      )}
+                    >
+                      <span className={item.icon} />
+                    </Button>
+                  )}
+                </span>
+              </Tooltip>
             ))}
           </div>
         </div>
@@ -95,6 +140,13 @@ export const AppLayout: React.FC = () => {
           </Routes>
         </section>
       </div>
+      {isDeployModalOpen && (
+        <DeployModal
+          app={app}
+          environments={environments}
+          toggleModal={toggleDeployModal}
+        />
+      )}
     </main>
   );
 };
