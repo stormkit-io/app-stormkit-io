@@ -176,7 +176,9 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   <div className="bg-blue-10 mx-4 mb-4 p-4" key={file.fileName}>
                     <span className="block font-bold">{file.fileName}</span>
                     <Link
-                      to={`${deployment.preview}${file.fileName}`}
+                      to={`${deployment.preview}${
+                        file.fileName === "/index.html" ? "" : file.fileName
+                      }`}
                       className="text-xs"
                     >
                       {deployment.preview}
