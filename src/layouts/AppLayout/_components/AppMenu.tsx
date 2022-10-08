@@ -27,14 +27,13 @@ const paths = ({
       path: `/apps/${app.id}/environments`,
       text: "Environments",
       icon: "fas fa-th-large",
-      isActive:
-        pathname.includes("/environments") &&
-        !pathname.includes("/deployments"),
+      isActive: pathname.split("/").pop() === "environments",
     },
     {
       icon: "fa-solid fa-wrench",
       text: `${capitalize(env.env)} environment configuration`,
       path: envPath,
+      isActive: pathname === envPath,
     },
     {
       path: `${envPath}/deployments`,
