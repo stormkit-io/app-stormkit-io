@@ -109,7 +109,7 @@ export const useFetchStatus = ({
   useEffect(() => {
     let unmounted = false;
 
-    if (!lastDeployId || (lastDeployId && isEmpty(environment.published))) {
+    if (isEmpty(environment.published)) {
       return;
     }
 
@@ -137,7 +137,7 @@ export const useFetchStatus = ({
     return () => {
       unmounted = true;
     };
-  }, [domain, lastDeployId, app.id, app.refreshToken]);
+  }, [domain, app.id, app.refreshToken, environment.published]);
 
   return { status, loading };
 };
