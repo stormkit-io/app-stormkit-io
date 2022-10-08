@@ -72,12 +72,15 @@ const SideMenu: React.FC<Props> = ({ menuItems, children }) => {
             >
               <li
                 onMouseEnter={() => setActiveTooltip(item.text)}
-                className={cn("text-center text-lg hover:bg-blue-30", {
+                className={cn("text-center hover:bg-blue-30", {
                   "border-b border-blue-10": item.borderBottom,
                   "bg-blue-20 text-white": item.isActive,
                 })}
               >
-                <Link to={item.path} className="hover:text-white p-4 block">
+                <Link
+                  to={item.path}
+                  className="hover:text-white p-4 block text-sm"
+                >
                   <span className={item.icon} />
                 </Link>
               </li>
