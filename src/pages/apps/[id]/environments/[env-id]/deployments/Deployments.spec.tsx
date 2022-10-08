@@ -120,4 +120,13 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
       expect(deleteScope.isDone()).toBe(true);
     });
   });
+
+  test("displays an empty list when there are no deployments", async () => {
+    createWrapper({ deployments: [] });
+
+    await waitFor(() => {
+      expect(wrapper.getByText("It is quite empty in here.")).toBeTruthy();
+      expect(wrapper.getByText("Click to deploy")).toBeTruthy();
+    });
+  });
 });
