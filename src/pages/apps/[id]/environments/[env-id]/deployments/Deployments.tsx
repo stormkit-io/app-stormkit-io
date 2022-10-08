@@ -2,9 +2,11 @@ import React, { useContext } from "react";
 import Container from "~/components/Container";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
+import Button from "~/components/ButtonV2";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import { formattedDate } from "~/utils/helpers/deployments";
+import { formattedDate, deployNow } from "~/utils/helpers/deployments";
+import emptyListSvg from "~/assets/images/empty-list.svg";
 import { useFetchDeployments } from "./actions";
 import CommitInfo from "./_components/CommitInfo";
 import DeploymentMenu from "./_components/DeploymentMenu";
@@ -52,6 +54,20 @@ const Deployments: React.FC = () => {
             </div>
           </div>
         ))}
+      {!loading && !error && !deployments.length && (
+        <div className="p-4 flex flex-col items-center justify-center">
+          <img src={emptyListSvg} alt="No deployments" className="block mb-4" />
+          <p className="mb-4">It is quite empty in here.</p>
+          <Button
+            type="button"
+            className="text-bold"
+            onClick={deployNow}
+            onKeyUp={deployNow}
+          >
+            Click to deploy
+          </Button>
+        </div>
+      )}
     </Container>
   );
 };
