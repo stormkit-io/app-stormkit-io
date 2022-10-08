@@ -13,6 +13,7 @@ interface Props {
   defaultValue: Record<string, string>;
   tdClasses?: string;
   thClasses?: string;
+  resetToken?: number;
   onChange?: () => void;
 }
 
@@ -21,6 +22,7 @@ const KeyValue: React.FC<Props> = ({
   keyName,
   valName,
   defaultValue,
+  resetToken,
   tdClasses = "border-blue-30 text-gray-80 py-2 px-0",
   thClasses = "border-blue-30 font-bold text-white bg-blue-20",
   onChange,
@@ -35,7 +37,7 @@ const KeyValue: React.FC<Props> = ({
     });
 
     setRows(newRows.length > 0 ? newRows : [["", ""]]);
-  }, [defaultValue]);
+  }, [defaultValue, resetToken]);
 
   const addRowsHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
