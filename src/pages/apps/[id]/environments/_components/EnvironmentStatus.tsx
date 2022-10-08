@@ -1,7 +1,9 @@
 import React from "react";
 import cn from "classnames";
 import Link from "~/components/Link";
+import Button from "~/components/ButtonV2";
 import { useFetchStatus } from "../actions";
+import { deployNow } from "~/utils/helpers/deployments";
 
 interface Props {
   env: Environment;
@@ -87,7 +89,18 @@ const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
             "Deployment failed."
           )
         ) : (
-          "Not yet deployed. Deploy now and publish it to serve your application."
+          <span>
+            Not yet deployed.{" "}
+            <Button
+              type="button"
+              styled={false}
+              onClick={deployNow}
+              onKeyUp={deployNow}
+            >
+              Deploy now
+            </Button>{" "}
+            and publish it to serve your application.
+          </span>
         )}
       </div>
     </>
