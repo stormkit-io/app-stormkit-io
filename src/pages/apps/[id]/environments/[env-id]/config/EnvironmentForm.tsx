@@ -37,24 +37,29 @@ export interface FormHandlerProps {
 }
 
 interface Props {
-  app: App;
-  environment?: Environment;
   formHandler: (props: FormHandlerProps) => void;
+  onCancel?: () => void;
+  environment?: Environment;
+  title?: string;
+  app: App;
 }
 
-const EnvironmentConfig: React.FC<Props> = ({
+const EnvironmentForm: React.FC<Props> = ({
   app,
-  environment,
+  environment: env,
   formHandler,
+  onCancel,
+  title = "Environment details",
 }) => {
-  const { meta, loading, error } = useFetchRepoMeta({ app, env: environment });
+  const { meta, loading, error } = useFetchRepoMeta({ app, env });
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [isAutoPublish, setIsAutoPublish] = useState(environment?.autoPublish);
+  const [isAutoPublish, setIsAutoPublish] = useState(env?.autoPublish || false);
+  const [keyValueResetToken, setKeyValueResetToken] = useState<number>();
   const [isChanged, setIsChanged] = useState(false);
   const [saveError, setSaveError] = useState<string | undefined>();
   const [autoDeploy, setAutoDeploy] = useState<AutoDeployValues>(
-    computeAutoDeployValue(environment)
+    computeAutoDeployValue(env)
   );
 
   useEffect(() => {
@@ -67,6 +72,7 @@ const EnvironmentConfig: React.FC<Props> = ({
 
   return (
     <Form<FormValues>
+      id="env-config-form"
       className="text-gray-80"
       handleSubmit={values => {
         if (!isChanged) {
@@ -100,19 +106,20 @@ const EnvironmentConfig: React.FC<Props> = ({
           {error}
         </InfoBox>
       )}
-      <Container title="Environment details" maxWidth="max-w-none">
+      <Container title={title} maxWidth="max-w-none">
         <Form.WithLabel label="Name" className="py-0">
           <Form.Input
-            defaultValue={environment?.name || ""}
+            defaultValue={env?.name || ""}
             fullWidth
             onChange={() => setIsChanged(true)}
             name="name"
+            autoFocus
             className="bg-blue-10 no-border h-full"
           />
         </Form.WithLabel>
         <Form.WithLabel label="Branch" className="pb-0">
           <Form.Input
-            defaultValue={environment?.branch || ""}
+            defaultValue={env?.branch || ""}
             name="branch"
             onChange={() => setIsChanged(true)}
             className="bg-blue-10 no-border h-full"
@@ -179,7 +186,7 @@ const EnvironmentConfig: React.FC<Props> = ({
           >
             <Form.Input
               name="autoDeployBranches"
-              defaultValue={environment?.branch || ""}
+              defaultValue={env?.branch || ""}
               className="bg-blue-10 no-border h-full"
               onChange={() => setIsChanged(true)}
               InputProps={{
@@ -191,67 +198,68 @@ const EnvironmentConfig: React.FC<Props> = ({
           </Form.WithLabel>
         )}
       </Container>
-      {environment && (
-        <>
-          <Container
-            title="Build configuration"
-            className="my-4"
-            maxWidth="max-w-none"
+      <>
+        <Container
+          title="Build configuration"
+          className="my-4"
+          maxWidth="max-w-none"
+        >
+          <Form.WithLabel
+            label="Build command"
+            className="pt-0"
+            tooltip="Concatenate multiple commands with the logical `&&` operator (e.g. npm run test && npm run build)"
           >
+            <Form.Input
+              defaultValue={env?.build.cmd || ""}
+              fullWidth
+              name="build.cmd"
+              onChange={() => setIsChanged(true)}
+              placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
+              className="bg-blue-10 no-border h-full"
+              InputProps={{
+                endAdornment: loading && <Spinner width={4} height={4} />,
+              }}
+            />
+          </Form.WithLabel>
+          {!loading && !isFrameworkRecognized(meta?.framework) && (
             <Form.WithLabel
-              label="Build command"
+              label="Output folder"
               className="pt-0"
-              tooltip="Concatenate multiple commands with the logical `&&` operator (e.g. npm run test && npm run build)"
+              tooltip="The folder where the build artifacts are located."
             >
               <Form.Input
-                defaultValue={environment.build.cmd || ""}
+                defaultValue={env?.build.distFolder || ""}
                 fullWidth
-                name="build.cmd"
+                name="build.distFolder"
                 onChange={() => setIsChanged(true)}
-                placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
+                placeholder="Defaults to 'build', 'dist' or 'output'"
                 className="bg-blue-10 no-border h-full"
                 InputProps={{
                   endAdornment: loading && <Spinner width={4} height={4} />,
                 }}
               />
             </Form.WithLabel>
-            {!loading && !isFrameworkRecognized(meta?.framework) && (
-              <Form.WithLabel
-                label="Output folder"
-                className="pt-0"
-                tooltip="The folder where the build artifacts are located."
-              >
-                <Form.Input
-                  defaultValue={environment.build.distFolder || ""}
-                  fullWidth
-                  name="build.distFolder"
-                  onChange={() => setIsChanged(true)}
-                  placeholder="Defaults to 'build', 'dist' or 'output'"
-                  className="bg-blue-10 no-border h-full"
-                  InputProps={{
-                    endAdornment: loading && <Spinner width={4} height={4} />,
-                  }}
-                />
-              </Form.WithLabel>
-            )}
-          </Container>
-          <Container
-            title="Environment variables"
-            subtitle="These variables will be made available during build time."
-            maxWidth="max-w-none"
-          >
-            <div className="p-4 pt-0">
-              <Form.KeyValue
-                inputName="build.vars"
-                keyName="Variable name"
-                valName="Value"
-                defaultValue={environment.build.vars || {}}
-                onChange={() => setIsChanged(true)}
-              ></Form.KeyValue>
-            </div>
-          </Container>
-        </>
-      )}
+          )}
+        </Container>
+        <Container
+          title="Environment variables"
+          subtitle="These variables will be made available during build time."
+          maxWidth="max-w-none"
+        >
+          <div className="p-4 pt-0">
+            <Form.KeyValue
+              inputName="build.vars"
+              keyName="Variable name"
+              valName="Value"
+              defaultValue={
+                env?.build?.vars || (env ? {} : { NODE_ENV: "development" })
+              }
+              resetToken={keyValueResetToken}
+              onChange={() => setIsChanged(true)}
+            ></Form.KeyValue>
+          </div>
+        </Container>
+      </>
       {saveError && (
         <InfoBox type={InfoBox.WARNING} className="mt-4">
           {saveError}
@@ -270,6 +278,26 @@ const EnvironmentConfig: React.FC<Props> = ({
         </InfoBox>
       )}
       <div className="mt-4 flex justify-end" id="env-form-save">
+        <Button
+          type="button"
+          category="cancel"
+          className="bg-blue-50 mr-4"
+          onClick={() => {
+            const form = document.getElementById(
+              "env-config-form"
+            ) as HTMLFormElement;
+
+            setSaveError(undefined);
+            setSaveSuccess(false);
+            setAutoDeploy(computeAutoDeployValue(env));
+            setIsAutoPublish(env?.autoPublish || false);
+            setKeyValueResetToken(Date.now());
+            form?.reset();
+            onCancel?.();
+          }}
+        >
+          Cancel
+        </Button>
         <Button disabled={!isChanged} loading={saveLoading}>
           Save
         </Button>
@@ -278,4 +306,4 @@ const EnvironmentConfig: React.FC<Props> = ({
   );
 };
 
-export default EnvironmentConfig;
+export default EnvironmentForm;

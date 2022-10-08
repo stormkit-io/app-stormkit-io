@@ -1,49 +1,71 @@
 import React, { useContext, useState } from "react";
+import cn from "classnames";
 import { AppContext } from "~/pages/apps/[id]/App.context";
-import { PlusButton } from "~/components/Buttons";
-import Environment from "./_components/Environment";
+import Button from "~/components/ButtonV2";
+import Container from "~/components/Container";
+import Link from "~/components/Link";
 import EnvironmentFormModal from "./_components/EnvironmentFormModal";
+import EnvironmentStatus from "./_components/EnvironmentStatus";
 
 const Environments: React.FC = (): React.ReactElement => {
   const { app, environments } = useContext(AppContext);
-  const [isModalOpen, toggleModal] = useState<boolean>(false);
+  const [isModalOpen, toggleModal] = useState(false);
 
   return (
-    <div className="w-full mb-4">
-      <div className="flex items-center mb-4">
-        <h1 className="flex flex-auto items-center">
-          <span className="text-2xl text-white">Environments</span>
-        </h1>
-        {environments.length > 1 && (
-          <div className="flex-shrink-0">
-            <PlusButton
-              onClick={() => toggleModal(true)}
-              className="text-white rounded"
-              size="small"
-              aria-label="Insert environment"
-            />
-          </div>
-        )}
-      </div>
-      <div className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-2 gap-3">
-        {environments.map(env => (
-          <div key={env.id}>
-            <Environment environment={env} app={app} isClickable />
+    <Container
+      title="Environments"
+      maxWidth="max-w-none"
+      actions={
+        <div>
+          <Button
+            onClick={() => toggleModal(true)}
+            type="button"
+            category="button"
+            className="bg-blue-20"
+            aria-label="Open create environment modal"
+          >
+            New environment
+          </Button>
+        </div>
+      }
+    >
+      <div className="p-4 pt-0">
+        {environments.map((env, index) => (
+          <div
+            key={env.id}
+            className={cn("bg-blue-10 p-4", { "mt-4": index > 0 })}
+          >
+            <div>
+              <Link
+                to={`/apps/${app.id}/environments/${env.id}`}
+                className="font-bold"
+              >
+                {env.name}
+              </Link>
+            </div>
+            <div className="text-xs flex items-center mt-3">
+              <label className="flex w-20 text-gray-50">Branch</label>
+              <span>
+                <span className="fa fa-code-branch w-6 text-gray-50"></span>
+                {env.branch}
+              </span>
+            </div>
+            <div className="text-xs mt-3">
+              <EnvironmentStatus env={env} app={app} />
+            </div>
           </div>
         ))}
-        {environments.length === 1 && (
-          <PlusButton
-            onClick={() => toggleModal(true)}
-            className="text-white rounded w-full bg-white-o-05 hover:text-gray-50"
-            size="small"
-            aria-label="Insert environment"
-          />
-        )}
       </div>
       {isModalOpen && (
-        <EnvironmentFormModal app={app} toggleModal={toggleModal} isOpen />
+        <EnvironmentFormModal
+          app={app}
+          isOpen={isModalOpen}
+          onClose={() => {
+            toggleModal(false);
+          }}
+        />
       )}
-    </div>
+    </Container>
   );
 };
 

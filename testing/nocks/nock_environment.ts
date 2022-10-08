@@ -48,13 +48,13 @@ export const mockFetchRepoMeta = ({
 interface InsertEnvironmentProps {
   environment: Environment;
   status?: number;
-  response?: { ok: boolean };
+  response?: { envId: string | undefined };
 }
 
 export const mockInsertEnvironment = ({
   environment,
   status = 200,
-  response = { ok: true },
+  response = { envId: environment.id },
 }: InsertEnvironmentProps) =>
   nock(endpoint)
     .post(`/app/env`, {
