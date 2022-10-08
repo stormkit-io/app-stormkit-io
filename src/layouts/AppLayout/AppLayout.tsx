@@ -20,6 +20,7 @@ const appMenuItems = ({
   toggleDeployModal: (val: boolean) => void;
 }) => [
   {
+    id: "deploy-now",
     path: "",
     text: "Deploy now",
     icon: "fas fa-rocket",
@@ -117,6 +118,7 @@ export const AppLayout: React.FC = () => {
                     </Link>
                   ) : (
                     <Button
+                      id={item.id}
                       type="button"
                       styled={false}
                       onClick={item.onClick}
@@ -136,8 +138,8 @@ export const AppLayout: React.FC = () => {
         </div>
       </header>
       <AppMenu app={app} environments={environments} envId={selectedEnvId} />
-      <div className="ml-16 flex-1">
-        <section className="max-w-screen-md w-full m-auto px-4">
+      <div className="ml-16 flex-1 max-w-screen-md w-full self-center flex">
+        <section className="w-full px-4">
           <Routes>
             {routes.map(r => (
               <Route {...r} key={r.path} />
