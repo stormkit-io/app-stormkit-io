@@ -75,6 +75,9 @@ const KeyValue: React.FC<Props> = ({
               <Input
                 className="bg-transparent no-border"
                 fullWidth
+                inputProps={{
+                  "aria-label": `${inputName} key number ${index + 1}`,
+                }}
                 name={`${inputName}[key]`}
                 defaultValue={key}
                 onChange={onChange}
@@ -87,11 +90,16 @@ const KeyValue: React.FC<Props> = ({
                 defaultValue={value}
                 name={`${inputName}[value]`}
                 onChange={onChange}
+                aria-label=""
+                inputProps={{
+                  "aria-label": `${inputName} value number ${index + 1}`,
+                }}
                 InputProps={{
                   endAdornment: (
                     <Button
                       styled={false}
                       type="button"
+                      aria-label={`Remove ${inputName} row number ${index + 1}`}
                       className="py-1 px-2 flex justify-center items-center bg-blue-30 hover:bg-blue-20 mr-1 rounded-sm"
                       onClick={() => {
                         const copy = [...rows];

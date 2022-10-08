@@ -12,6 +12,7 @@ const Input: React.FC<Props> = ({
   type = "text",
   variant = "filled",
   autoComplete = "off",
+  inputProps,
   InputProps,
   ...props
 }) => {
@@ -25,6 +26,7 @@ const Input: React.FC<Props> = ({
       }}
       inputProps={{
         className: cn("p-3 text-gray-80"),
+        ...inputProps,
       }}
       InputProps={{
         ...InputProps,
