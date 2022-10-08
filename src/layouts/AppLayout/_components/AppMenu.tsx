@@ -32,15 +32,15 @@ const paths = ({
         !pathname.includes("/deployments"),
     },
     {
+      icon: "fa-solid fa-wrench",
+      text: `${capitalize(env.env)} environment configuration`,
+      path: envPath,
+    },
+    {
       path: `${envPath}/deployments`,
       text: "Deployments",
       icon: "fas fa-ship",
       isActive: pathname.includes("/deployments"),
-    },
-    {
-      icon: "fa-solid fa-wrench",
-      text: `${capitalize(env.env)} environment configuration`,
-      path: envPath,
     },
     {
       icon: "far fa-chart-bar",
