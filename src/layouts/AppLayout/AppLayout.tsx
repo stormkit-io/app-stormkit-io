@@ -29,6 +29,11 @@ const appMenuItems = ({
       toggleDeployModal(true);
     },
   },
+  {
+    path: `/apps/${app.id}/environments`,
+    text: "Environments",
+    icon: "fas fa-th-large",
+  },
   { path: `/apps/${app.id}/team`, text: "Team", icon: "fas fa-users" },
   {
     path: `/apps/${app.id}/settings`,

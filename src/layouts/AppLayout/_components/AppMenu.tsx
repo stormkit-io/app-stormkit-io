@@ -24,12 +24,6 @@ const paths = ({
 
   return [
     {
-      path: `/apps/${app.id}/environments`,
-      text: "Environments",
-      icon: "fas fa-th-large",
-      isActive: pathname.split("/").pop() === "environments",
-    },
-    {
       icon: "fa-solid fa-wrench",
       text: `${capitalize(env.env)} environment configuration`,
       path: envPath,
