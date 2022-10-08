@@ -20,6 +20,10 @@ const paths = ({
   env: Environment;
   pathname: string;
 }): Array<Path> => {
+  if (!env) {
+    return [];
+  }
+
   const envPath = `/apps/${app.id}/environments/${env.id}`;
 
   return [
