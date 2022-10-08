@@ -104,7 +104,6 @@ export const useFetchStatus = ({
 }: FetchStatusProps): FetchStatusReturnValue => {
   const [status, setStatus] = useState<number>();
   const [loading, setLoading] = useState(false);
-  const lastDeployId = environment.lastDeploy?.id;
 
   useEffect(() => {
     let unmounted = false;
