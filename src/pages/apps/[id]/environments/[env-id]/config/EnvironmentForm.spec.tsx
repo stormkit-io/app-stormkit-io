@@ -109,6 +109,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", (
               autoPublish: false,
               branch: "test",
               name: "development",
+              "build.cmd": "",
+              "build.distFolder": "",
+              "build.vars[key]": "NODE_ENV",
+              "build.vars[value]": "development",
             },
           })
         );

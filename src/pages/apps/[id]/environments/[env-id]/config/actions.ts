@@ -50,6 +50,7 @@ export const useFetchRepoMeta = ({
 
   useEffect(() => {
     if (!env) {
+      setLoading(false);
       return;
     }
 
@@ -127,6 +128,39 @@ export const editEnvironment = ({
 
   return api.put<{ status: boolean }>(`/app/env`, {
     id: environmentId,
+    appId: app.id,
+    env: name,
+    branch,
+    build,
+    autoPublish: values.autoPublish === "on",
+    autoDeploy: autoDeploy !== "disabled",
+    autoDeployBranches: autoDeployBranches || null,
+  });
+};
+
+interface InsertEnvironmentProps {
+  app: App;
+  values: FormValues;
+}
+
+interface InsertEnvironmentReturnValue {
+  envId: string;
+}
+
+export const insertEnvironment = ({
+  app,
+  values,
+}: InsertEnvironmentProps): Promise<InsertEnvironmentReturnValue> => {
+  const { name, branch, autoDeployBranches, autoDeploy } = values;
+  const build = prepareBuildObject(values);
+
+  if (!name || !branch) {
+    return new Promise((_, reject) => {
+      reject("Environment and branch names are required.");
+    });
+  }
+
+  return api.post<{ envId: string }>(`/app/env`, {
     appId: app.id,
     env: name,
     branch,
