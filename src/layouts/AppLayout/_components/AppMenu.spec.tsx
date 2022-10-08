@@ -46,7 +46,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
   });
 
   test("should display usage button", () => {
-    expect(wrapper.getAllByRole("link").at(12)?.getAttribute("href")).toBe(
+    expect(wrapper.getByLabelText("Usage").getAttribute("href")).toBe(
       `/apps/${defaultApp.id}/usage`
     );
   });

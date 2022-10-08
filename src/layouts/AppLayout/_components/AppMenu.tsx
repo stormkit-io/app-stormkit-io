@@ -30,39 +30,41 @@ const paths = ({
       isActive:
         pathname.includes("/environments") &&
         !pathname.includes("/deployments"),
-      children: [
-        { icon: "", text: `${capitalize(env.env)} environment`, path: "" },
-        {
-          icon: "far fa-chart-bar",
-          text: "Logs",
-          path: `${envPath}/logs`,
-          isActive: pathname.includes("/logs"),
-        },
-        {
-          icon: "fas fa-code",
-          text: "Snippets",
-          path: `${envPath}/snippets`,
-          isActive: pathname.includes("/snippets"),
-        },
-        {
-          icon: "fas fa-flag",
-          text: "Feature Flags",
-          path: `${envPath}/feature-flags`,
-          isActive: pathname.includes("/feature-flags"),
-        },
-        {
-          icon: "fas fa-globe",
-          text: "Configure domain",
-          path: `${envPath}/domain`,
-          isActive: pathname.includes("/domain"),
-        },
-      ],
     },
     {
       path: `${envPath}/deployments`,
       text: "Deployments",
       icon: "fas fa-ship",
       isActive: pathname.includes("/deployments"),
+    },
+    {
+      icon: "fa-solid fa-wrench",
+      text: `${capitalize(env.env)} environment configuration`,
+      path: envPath,
+    },
+    {
+      icon: "far fa-chart-bar",
+      text: "Logs",
+      path: `${envPath}/logs`,
+      isActive: pathname.includes("/logs"),
+    },
+    {
+      icon: "fas fa-code",
+      text: "Snippets",
+      path: `${envPath}/snippets`,
+      isActive: pathname.includes("/snippets"),
+    },
+    {
+      icon: "fas fa-flag",
+      text: "Feature Flags",
+      path: `${envPath}/feature-flags`,
+      isActive: pathname.includes("/feature-flags"),
+    },
+    {
+      icon: "fas fa-globe",
+      text: "Configure domain",
+      path: `${envPath}/domain`,
+      isActive: pathname.includes("/domain"),
     },
   ];
 };
@@ -106,6 +108,7 @@ const AppMenu: React.FC<Props> = ({ app, environments, envId }) => {
             <Button
               href={`/apps/${app.id}/usage`}
               styled={false}
+              aria-label="Usage"
               className="block p-4 text-center w-full"
             >
               <span className="fas fa-money-bill" />
