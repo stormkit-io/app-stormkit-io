@@ -88,7 +88,11 @@ const Button: React.FC<Props> = ({
   }
 
   return (
-    <Link className={cn(classes, className, "hover:text-white")} to={href}>
+    <Link
+      className={cn(classes, className, "hover:text-white")}
+      to={href}
+      aria-label={props["aria-label"]}
+    >
       {children}
     </Link>
   );
