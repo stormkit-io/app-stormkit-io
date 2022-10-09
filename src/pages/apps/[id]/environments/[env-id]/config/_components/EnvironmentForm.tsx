@@ -1,13 +1,15 @@
 import type { FormValues, AutoDeployValues } from "../actions";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import cn from "classnames";
 import Container from "~/components/Container";
+import ConfirmModal from "~/components/ConfirmModal";
 import Form from "~/components/FormV2";
 import Link from "~/components/Link";
 import Button from "~/components/ButtonV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
-import { useFetchRepoMeta } from "../actions";
+import { useFetchRepoMeta, deleteEnvironment } from "../actions";
 
 const isFrameworkRecognized = (framework?: string): boolean => {
   if (!framework) {
@@ -39,6 +41,7 @@ export interface FormHandlerProps {
 interface Props {
   formHandler: (props: FormHandlerProps) => void;
   onCancel?: () => void;
+  setRefreshToken?: (val: number) => void;
   environment?: Environment;
   title?: string;
   app: App;
@@ -49,11 +52,14 @@ const EnvironmentForm: React.FC<Props> = ({
   environment: env,
   formHandler,
   onCancel,
+  setRefreshToken,
   title = "Environment details",
 }) => {
+  const navigate = useNavigate();
   const { meta, loading, error } = useFetchRepoMeta({ app, env });
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAutoPublish, setIsAutoPublish] = useState(env?.autoPublish || false);
   const [keyValueResetToken, setKeyValueResetToken] = useState<number>();
   const [isChanged, setIsChanged] = useState(false);
@@ -277,30 +283,82 @@ const EnvironmentForm: React.FC<Props> = ({
           Environment saved successfully.
         </InfoBox>
       )}
-      <div className="mt-4 flex justify-end" id="env-form-save">
-        <Button
-          type="button"
-          category="cancel"
-          className="bg-blue-50 mr-4"
-          onClick={() => {
-            const form = document.getElementById(
-              "env-config-form"
-            ) as HTMLFormElement;
+      <div
+        className={cn("mt-4 flex", {
+          "justify-end": !env || env.name === "production",
+          "justify-between": env && env.name !== "production",
+        })}
+        id="env-form-save"
+      >
+        {env && env.name !== "production" && (
+          <>
+            <Button
+              type="button"
+              category="button"
+              className="bg-blue-20"
+              aria-label={`Delete ${env.name} environment`}
+              onClick={() => {
+                setIsDeleteModalOpen(true);
+              }}
+            >
+              <span>
+                Delete <span className="font-bold">{env.name}</span> environment
+              </span>
+            </Button>
+            {isDeleteModalOpen && (
+              <ConfirmModal
+                onCancel={() => {
+                  setIsDeleteModalOpen(false);
+                }}
+                onConfirm={({ setLoading, setError }) => {
+                  setLoading(false);
+                  deleteEnvironment({ app, environment: env })
+                    .then(() => {
+                      setLoading(false);
+                      navigate(`/apps/${app.id}/environments`);
+                      setRefreshToken?.(Date.now());
+                    })
+                    .catch(e => {
+                      console.error(e);
+                      setError(
+                        "Something went wrong while deleting environment. Check the console."
+                      );
+                    });
+                }}
+              >
+                <span className="block">
+                  This will completely delete the environment and associated
+                  deployments.
+                </span>
+              </ConfirmModal>
+            )}
+          </>
+        )}
+        <div>
+          <Button
+            type="button"
+            category="cancel"
+            className="bg-blue-50 mr-4"
+            onClick={() => {
+              const form = document.getElementById(
+                "env-config-form"
+              ) as HTMLFormElement;
 
-            setSaveError(undefined);
-            setSaveSuccess(false);
-            setAutoDeploy(computeAutoDeployValue(env));
-            setIsAutoPublish(env?.autoPublish || false);
-            setKeyValueResetToken(Date.now());
-            form?.reset();
-            onCancel?.();
-          }}
-        >
-          Cancel
-        </Button>
-        <Button disabled={!isChanged} loading={saveLoading}>
-          Save
-        </Button>
+              setSaveError(undefined);
+              setSaveSuccess(false);
+              setAutoDeploy(computeAutoDeployValue(env));
+              setIsAutoPublish(env?.autoPublish || false);
+              setKeyValueResetToken(Date.now());
+              form?.reset();
+              onCancel?.();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button disabled={!isChanged} loading={saveLoading}>
+            Save
+          </Button>
+        </div>
       </div>
     </Form>
   );

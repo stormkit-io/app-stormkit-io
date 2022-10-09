@@ -8,6 +8,7 @@ import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
 import { mockInsertEnvironment } from "~/testing/nocks/nock_environment";
 import EnvironmentFormModal from "./EnvironmentFormModal";
+import { MemoryRouter } from "react-router";
 
 interface WrapperProps {
   app?: App;
@@ -33,13 +34,19 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
     currentEnv = environment || mockEnvironment({ app: currentApp });
 
     wrapper = render(
-      <AppContext.Provider
-        value={{ app: currentApp, environments: [currentEnv], setRefreshToken }}
-      >
-        <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-          <EnvironmentFormModal isOpen app={currentApp} onClose={onClose} />
-        </EnvironmentContext.Provider>
-      </AppContext.Provider>
+      <MemoryRouter>
+        <AppContext.Provider
+          value={{
+            app: currentApp,
+            environments: [currentEnv],
+            setRefreshToken,
+          }}
+        >
+          <EnvironmentContext.Provider value={{ environment: currentEnv }}>
+            <EnvironmentFormModal isOpen app={currentApp} onClose={onClose} />
+          </EnvironmentContext.Provider>
+        </AppContext.Provider>
+      </MemoryRouter>
     );
   };
 

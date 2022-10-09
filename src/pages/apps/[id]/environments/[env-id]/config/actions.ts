@@ -240,3 +240,24 @@ export const deleteIntegration = ({
     envId: environmentId,
   });
 };
+
+interface DeleteEnvironmentProps {
+  app: App;
+  environment: Environment;
+}
+
+export const deleteEnvironment = ({
+  app,
+  environment,
+}: DeleteEnvironmentProps): Promise<void> => {
+  const name = environment?.env;
+
+  if (!name) {
+    return Promise.reject();
+  }
+
+  return api.delete(`/app/env`, {
+    appId: app.id,
+    env: name,
+  });
+};

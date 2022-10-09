@@ -1,11 +1,17 @@
-import { RenderResult, waitFor } from "@testing-library/react";
-import { Scope } from "nock/types";
-import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import type { History } from "history";
+import type { RenderResult } from "@testing-library/react";
+import type { Scope } from "nock/types";
+import { waitFor, render, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import React from "react";
+import { Router } from "react-router";
+import { createMemoryHistory } from "history";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
-import { mockFetchRepoMeta } from "~/testing/nocks/nock_environment";
+import {
+  mockFetchRepoMeta,
+  mockDeleteEnvironment,
+} from "~/testing/nocks/nock_environment";
 import EnvironmentForm, { FormHandlerProps } from "./EnvironmentForm";
 
 interface WrapperProps {
@@ -17,6 +23,7 @@ interface WrapperProps {
 describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", () => {
   let fetchRepoMetaScope: Scope;
   let wrapper: RenderResult;
+  let history: History;
   const findSaveButton = () => wrapper.getByText("Save")?.closest("button");
 
   const createWrapper = ({ app, env, formHandler }: WrapperProps) => {
@@ -27,10 +34,48 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", (
       });
     }
 
+    history = createMemoryHistory();
     wrapper = render(
-      <EnvironmentForm app={app} environment={env} formHandler={formHandler} />
+      <Router navigator={history} location={history.location}>
+        <EnvironmentForm
+          app={app}
+          environment={env}
+          formHandler={formHandler}
+        />
+      </Router>
     );
   };
+
+  describe("edit mode - non production environments", () => {
+    let app: App;
+    let env: Environment;
+
+    beforeEach(() => {
+      app = mockApp();
+      env = mockEnvironment({ app });
+      env.name = "development";
+      env.env = "development";
+      createWrapper({ app, env, formHandler: jest.fn() });
+    });
+
+    test("should display a delete button", async () => {
+      await fireEvent.click(
+        wrapper.getByLabelText(`Delete ${env.name} environment`)
+      );
+
+      expect(wrapper.getByText("Confirm action")).toBeTruthy();
+      const scope = mockDeleteEnvironment({ appId: app.id, env: env.name });
+
+      await fireEvent.click(wrapper.getByText("Yes, continue"));
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(history.location.pathname).toEqual(
+          `/apps/${app.id}/environments`
+        );
+      });
+    });
+  });
 
   describe("edit mode", () => {
     let formHandler: jest.Mock;
@@ -42,6 +87,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", (
       app = mockApp();
       env = mockEnvironment({ app });
       createWrapper({ app, env, formHandler });
+    });
+
+    test("should not display a delete button for production environments", async () => {
+      expect(() =>
+        wrapper.getByText(`Delete ${env.name} environment`)
+      ).toThrow();
     });
 
     test("should fetch the repo meta", async () => {
@@ -87,6 +138,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", (
       app = mockApp();
       createWrapper({ app, formHandler });
     });
+
+    test("should not contain a delete button", () => {});
 
     test("should handle form submission properly", async () => {
       expect(findSaveButton()?.getAttribute("disabled")).toBe("");

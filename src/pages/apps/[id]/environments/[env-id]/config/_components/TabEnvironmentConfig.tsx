@@ -17,6 +17,7 @@ const EnvironmentEditForm: React.FC<Props> = ({
     <EnvironmentForm
       environment={environment}
       app={app}
+      setRefreshToken={setRefreshToken}
       formHandler={({ values, setLoading, setError, setSuccess }) => {
         setLoading(true);
         setSuccess(false);
