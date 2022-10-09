@@ -10,6 +10,7 @@ import {
   mockFetchRepoMeta,
 } from "~/testing/nocks/nock_environment";
 import TabEnvironmentConfig from "./TabEnvironmentConfig";
+import { MemoryRouter } from "react-router";
 
 interface WrapperProps {
   app?: App;
@@ -41,11 +42,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabEnvironm
     });
 
     wrapper = render(
-      <TabEnvironmentConfig
-        app={currentApp}
-        environment={currentEnv}
-        setRefreshToken={setRefreshToken}
-      />
+      <MemoryRouter>
+        <TabEnvironmentConfig
+          app={currentApp}
+          environment={currentEnv}
+          setRefreshToken={setRefreshToken}
+        />
+      </MemoryRouter>
     );
   };
 

@@ -1,5 +1,6 @@
 import { RenderResult, waitFor } from "@testing-library/react";
 import { Scope } from "nock/types";
+import { MemoryRouter } from "react-router";
 import React from "react";
 import { render } from "@testing-library/react";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -37,13 +38,19 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     });
 
     wrapper = render(
-      <AppContext.Provider
-        value={{ app: currentApp, environments: currentEnvs, setRefreshToken }}
-      >
-        <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-          <EnvironmentConfig />
-        </EnvironmentContext.Provider>
-      </AppContext.Provider>
+      <MemoryRouter>
+        <AppContext.Provider
+          value={{
+            app: currentApp,
+            environments: currentEnvs,
+            setRefreshToken,
+          }}
+        >
+          <EnvironmentContext.Provider value={{ environment: currentEnv }}>
+            <EnvironmentConfig />
+          </EnvironmentContext.Provider>
+        </AppContext.Provider>
+      </MemoryRouter>
     );
   };
 
