@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "~/components/ModalV2";
-import EnvironmentForm from "../[env-id]/config/EnvironmentForm";
+import EnvironmentForm from "../[env-id]/config/_components/EnvironmentForm";
 import { insertEnvironment } from "../[env-id]/config/actions";
 
 interface Props {

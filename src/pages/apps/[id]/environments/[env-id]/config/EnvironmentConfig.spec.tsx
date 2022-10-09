@@ -1,16 +1,12 @@
 import { RenderResult, waitFor } from "@testing-library/react";
 import { Scope } from "nock/types";
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render } from "@testing-library/react";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
-import {
-  mockUpdateEnvironment,
-  mockFetchRepoMeta,
-} from "~/testing/nocks/nock_environment";
+import { mockFetchRepoMeta } from "~/testing/nocks/nock_environment";
 import EnvironmentConfig from "./EnvironmentConfig";
 
 interface WrapperProps {
@@ -25,8 +21,6 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
   let currentApp: App;
   let currentEnv: Environment;
   let currentEnvs: Environment[];
-
-  const findSaveButton = () => wrapper.getByText("Save")?.closest("button");
 
   const createWrapper = ({
     app,
@@ -53,16 +47,6 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     );
   };
 
-  const originalScrollIntoView = Element.prototype.scrollIntoView;
-
-  beforeEach(() => {
-    Element.prototype.scrollIntoView = jest.fn();
-  });
-
-  afterEach(() => {
-    Element.prototype.scrollIntoView = originalScrollIntoView;
-  });
-
   test("should fetch the repo meta", async () => {
     createWrapper({});
 
@@ -82,24 +66,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     expect(wrapper.getAllByDisplayValue("production")).toBeTruthy();
   });
 
-  test("should handle form submission properly", async () => {
+  test("should contain tabs to switch views", () => {
     createWrapper({});
-    const scope = mockUpdateEnvironment({ environment: currentEnv });
-
-    expect(findSaveButton()?.getAttribute("disabled")).toBe("");
-
-    // Trigger a change event to activate the button
-    const branchInput = wrapper.getByLabelText("Branch");
-    await userEvent.type(branchInput, "staging");
-    await userEvent.clear(branchInput);
-    await userEvent.type(branchInput, currentEnv.branch);
-    expect(findSaveButton()?.getAttribute("disabled")).toBe(null);
-    await fireEvent.click(findSaveButton()!);
-
-    await waitFor(() => {
-      expect(scope.isDone()).toBe(true);
-      expect(findSaveButton()?.getAttribute("disabled")).toBe("");
-      expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
-    });
+    expect(wrapper.getByText("Configuration")).toBeTruthy();
+    expect(wrapper.getByText("Custom Storage")).toBeTruthy();
   });
 });

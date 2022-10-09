@@ -170,3 +170,73 @@ export const insertEnvironment = ({
     autoDeployBranches: autoDeployBranches || null,
   });
 };
+
+export interface IntegrationFormValues extends Record<string, string> {
+  integration: "bunny_cdn" | "aws_s3";
+  externalUrl: string;
+}
+
+interface UpdateIntegrationProps {
+  app: App;
+  environmentId: string;
+  values: IntegrationFormValues;
+}
+
+export const updateIntegration = ({
+  values,
+  app,
+  environmentId,
+}: UpdateIntegrationProps): Promise<void> => {
+  if (
+    !(values.integration === "bunny_cdn" || values.integration === "aws_s3")
+  ) {
+    return Promise.reject(
+      "Invalid integration provided. Allowed values are: bunny_cdn, aws_s3"
+    );
+  }
+
+  try {
+    new URL(values.externalUrl);
+  } catch {
+    return Promise.reject(
+      "Invalid URL provided. Please provide a valid URL, including the protocol. e.g. https://www.stormkit.io"
+    );
+  }
+
+  const config: CustomStorage = {
+    integration: values.integration,
+    externalUrl: values.externalUrl,
+    settings: {},
+  };
+
+  // We receive the key name in string format: settings.STORAGE_KEY
+  // This snippets creates an object from it.
+  Object.keys(values).forEach(key => {
+    if (key.indexOf(".") === -1) {
+      return;
+    }
+
+    config.settings[key.split(".")[1]] = values[key];
+  });
+
+  return api.put(`/app/env/custom-storage`, {
+    appId: app.id,
+    envId: environmentId,
+    config,
+  });
+};
+
+interface DeleteIntegrationProps {
+  app: App;
+  environmentId: string;
+}
+
+export const deleteIntegration = ({
+  app,
+  environmentId,
+}: DeleteIntegrationProps): Promise<void> => {
+  return api.delete(`/app/env/custom-storage`, {
+    appId: app.id,
+    envId: environmentId,
+  });
+};
