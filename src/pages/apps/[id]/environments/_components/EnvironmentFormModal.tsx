@@ -14,7 +14,7 @@ const EnvironmentFormModal: React.FC<Props> = ({ isOpen, app, onClose }) => {
     <Modal
       open={isOpen}
       onClose={onClose}
-      className="p-4 bg-blue-10"
+      className="p-8 bg-blue-10"
       maxWidth="max-w-screen-md"
       fullHeight
     >
