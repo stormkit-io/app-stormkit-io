@@ -96,14 +96,14 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   setTab(val as Tab);
                 }}
                 aria-label="active tab"
-                className="bg-blue-10"
+                className="bg-pink-10"
               >
                 <ToggleButton
                   value="cdn"
                   aria-label="cdn files"
                   className="bg-blue-20 hover:text-gray-80"
                   classes={{
-                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10",
+                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
                   }}
                 >
                   <span className="text-gray-80">CDN Files</span>
@@ -113,7 +113,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   aria-label="redirects"
                   className="bg-blue-20 hover:text-gray-80"
                   classes={{
-                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10",
+                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
                   }}
                 >
                   <span className="text-gray-80">Redirects</span>
@@ -123,16 +123,19 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                   aria-label="server side rendering"
                   className="bg-blue-20 hover:text-gray-80"
                   classes={{
-                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10",
+                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
                   }}
                 >
                   <span className="text-gray-80 inline-flex items-center">
                     Server side rendering{" "}
                     <span
-                      className={cn("w-2 h-2 inline-block ml-2 rounded-full", {
-                        "bg-green-50": ssrEnabled,
-                        "bg-red-50": !ssrEnabled,
-                      })}
+                      className={cn(
+                        "w-2 h-2 inline-block ml-2 rounded-full capitalize",
+                        {
+                          "bg-green-50": ssrEnabled,
+                          "bg-red-50": !ssrEnabled,
+                        }
+                      )}
                     />
                   </span>
                 </ToggleButton>
@@ -144,7 +147,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                     root: "border-0 border-solid border-black",
                   }}
                 >
-                  <span className="text-gray-80 inline-flex items-center">
+                  <span className="text-gray-80 inline-flex items-center capitalize">
                     REST API{" "}
                     <span
                       className={cn("w-2 h-2 inline-block ml-2 rounded-full", {

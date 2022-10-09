@@ -120,22 +120,37 @@ export const mockDeleteEnvironment = ({
 interface CustomStorageProps {
   appId: string;
   envId: string;
-  config: BuildConfig;
+  config?: any;
   status?: number;
   response?: { ok: boolean };
 }
 
-export const mockCustomStorage = ({
+export const mockSetCustomStorage = ({
   appId,
   envId,
   config,
   status = 200,
   response = { ok: true },
-}: CustomStorageProps) =>
-  nock(endpoint)
+}: CustomStorageProps) => {
+  return nock(endpoint)
     .put(`/app/env/custom-storage`, {
       appId,
       envId,
       config,
     })
     .reply(status, response);
+};
+
+export const mockUnsetCustomStorage = ({
+  appId,
+  envId,
+  status = 200,
+  response = { ok: true },
+}: CustomStorageProps) => {
+  return nock(endpoint)
+    .delete(`/app/env/custom-storage`, {
+      appId,
+      envId,
+    })
+    .reply(status, response);
+};

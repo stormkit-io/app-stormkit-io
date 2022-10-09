@@ -1,4 +1,4 @@
-import type { FormValues, AutoDeployValues } from "./actions";
+import type { FormValues, AutoDeployValues } from "../actions";
 import React, { useEffect, useState } from "react";
 import cn from "classnames";
 import Container from "~/components/Container";
@@ -7,7 +7,7 @@ import Link from "~/components/Link";
 import Button from "~/components/ButtonV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
-import { useFetchRepoMeta } from "./actions";
+import { useFetchRepoMeta } from "../actions";
 
 const isFrameworkRecognized = (framework?: string): boolean => {
   if (!framework) {
@@ -150,9 +150,9 @@ const EnvironmentForm: React.FC<Props> = ({
           <div className="bg-blue-10 w-full h-full">
             <Form.Select
               name="autoDeploy"
+              value={autoDeploy}
               background="transparent"
               textColor="gray-80"
-              value={autoDeploy}
               className="no-border h-full"
               onChange={e => {
                 setAutoDeploy(e.target.value as AutoDeployValues);
