@@ -95,6 +95,8 @@ module.exports = {
         "white-o-50": "rgba(255, 255, 255, 0.50)",
         "white-o-75": "rgba(255, 255, 255, 0.75)",
 
+        "purple-50": "#560756",
+
         black: "#000000",
         "black-o-05": "rgba(0, 0, 0, 0.05)",
         "black-o-25": "rgba(0, 0, 0, 0.25)",
