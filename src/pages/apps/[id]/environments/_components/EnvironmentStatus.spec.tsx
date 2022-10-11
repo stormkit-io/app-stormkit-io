@@ -20,7 +20,10 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
   let currentEnv: Environment;
 
   const createWrapper = ({ app, env }: Props) => {
-    fetchStatusScope = mockFetchStatus({ appId: app.id, url: env.preview });
+    fetchStatusScope = mockFetchStatus({
+      appId: app.id,
+      url: env.domain.name || env.preview,
+    });
 
     wrapper = render(
       <MemoryRouter
@@ -54,7 +57,9 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
       await waitFor(() => {
         expect(wrapper.getByText("200")).toBeTruthy();
         expect(
-          wrapper.getByText(currentEnv.preview.replace(/https?:\/\//, ""))
+          wrapper.getByText(
+            currentEnv?.domain?.name?.replace(/https?:\/\//, "")!
+          )
         ).toBeTruthy();
       });
     });

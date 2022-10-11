@@ -11,7 +11,12 @@ interface Props {
 }
 
 const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
-  const endpoint = env.customStorage?.externalUrl || env?.preview || "";
+  const endpoint =
+    env.customStorage?.externalUrl ||
+    (env.domain?.verified && env.domain?.name) ||
+    env?.preview ||
+    "";
+
   const { status } = useFetchStatus({
     environment: env,
     app,
