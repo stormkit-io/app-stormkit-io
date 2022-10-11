@@ -1,11 +1,13 @@
 import React from "react";
-import Form from "~/components/Form";
+import cn from "classnames";
+import Form from "~/components/FormV2";
 
 interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
   environments: Array<Environment>;
   placeholder: string;
   onSelect: (arg0: Environment) => void;
   defaultValue?: string;
+  className?: string;
 }
 
 const EnvironmentSelector: React.FC<Props> = ({
@@ -13,14 +15,16 @@ const EnvironmentSelector: React.FC<Props> = ({
   defaultValue = "",
   onSelect,
   placeholder,
+  className,
   ...rest
 }): React.ReactElement => {
   return (
-    <div {...rest}>
+    <div {...rest} className={cn("bg-blue-10 w-full h-full", className)}>
       <Form.Select
         name="envId"
+        background="transparent"
         displayEmpty
-        value={defaultValue}
+        defaultValue={defaultValue}
         onChange={e => {
           const id = e.target.value as string;
           onSelect(environments.filter(e => e.id === id)[0]);
@@ -31,7 +35,7 @@ const EnvironmentSelector: React.FC<Props> = ({
           {placeholder}
         </Form.Option>
         {environments.map(env => (
-          <Form.Option value={env.id || ""} key={env.id}>
+          <Form.Option value={env.id!} key={env.id}>
             <span>
               <span>{env.name || env.env}</span>{" "}
               <span className="text-xs opacity-75">
