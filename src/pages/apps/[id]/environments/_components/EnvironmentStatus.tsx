@@ -10,12 +10,17 @@ interface Props {
   app: App;
 }
 
+const getDomainName = (env: Environment) => {
+  if (env.domain?.verified && env.domain?.name) {
+    return `https://${env.domain.name}`;
+  }
+
+  return "";
+};
+
 const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
   const endpoint =
-    env.customStorage?.externalUrl ||
-    (env.domain?.verified && env.domain?.name) ||
-    env?.preview ||
-    "";
+    env.customStorage?.externalUrl || getDomainName(env) || env?.preview || "";
 
   const { status } = useFetchStatus({
     environment: env,

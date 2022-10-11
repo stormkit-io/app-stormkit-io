@@ -22,7 +22,7 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
   const createWrapper = ({ app, env }: Props) => {
     fetchStatusScope = mockFetchStatus({
       appId: app.id,
-      url: env.domain.name || env.preview,
+      url: env.domain.name ? `https://${env.domain.name}` : env.preview,
     });
 
     wrapper = render(
