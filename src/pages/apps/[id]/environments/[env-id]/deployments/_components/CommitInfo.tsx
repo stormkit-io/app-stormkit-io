@@ -10,6 +10,7 @@ interface Props {
   deployment: Deployment;
   app: App;
   showStatus?: boolean;
+  showNotPublishedInfo?: boolean;
   clickable?: boolean;
 }
 
@@ -35,6 +36,7 @@ const CommitInfo: React.FC<Props> = ({
   app,
   environment,
   showStatus,
+  showNotPublishedInfo,
   clickable = true,
 }) => {
   const message =
@@ -66,6 +68,7 @@ const CommitInfo: React.FC<Props> = ({
           <span>{message}</span>
         )}
         <ReleaseInfo
+          showNotPublishedInfo={showNotPublishedInfo}
           percentage={
             deployment.published?.find(p => p.envId === environment.id)
               ?.percentage ||

@@ -53,6 +53,7 @@ const Deployment: React.FC = () => {
           app={app}
           deployment={deployment}
           showStatus
+          showNotPublishedInfo
         />
       }
       actions={
