@@ -4,13 +4,19 @@ import ReleaseInfo from "./ReleaseInfo";
 
 interface Props {
   percentage?: number;
+  showNotPublishedInfo?: boolean;
 }
 
 describe("~/apps/[id]/environments/[env-id]/deployments/_components/ReleaseInfo.tsx", () => {
   let wrapper: RenderResult;
 
-  const createWrapper = ({ percentage }: Props) => {
-    wrapper = render(<ReleaseInfo percentage={percentage} />);
+  const createWrapper = ({ percentage, showNotPublishedInfo }: Props) => {
+    wrapper = render(
+      <ReleaseInfo
+        percentage={percentage}
+        showNotPublishedInfo={showNotPublishedInfo}
+      />
+    );
   };
 
   test("should display the percentage information", () => {
@@ -23,5 +29,10 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ReleaseInfo.
   test("should return empty string when percentage is missing", () => {
     createWrapper({});
     expect(wrapper.container.innerHTML).toBe("");
+  });
+
+  test("should show not published info when showNotPublishedInfo prop is true", () => {
+    createWrapper({ showNotPublishedInfo: true, percentage: 0 });
+    expect(wrapper.getByText("Not published")).toBeTruthy();
   });
 });
