@@ -150,6 +150,7 @@ export const AppLayout: React.FC = () => {
       {isDeployModalOpen && (
         <DeployModal
           app={app}
+          selected={environments.find(e => e.id === selectedEnvId)}
           environments={environments}
           toggleModal={toggleDeployModal}
         />

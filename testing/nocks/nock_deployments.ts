@@ -109,3 +109,30 @@ export const mockFetchManifestCall = ({
   nock(endpoint)
     .get(`/app/${appId}/manifest/${deploymentId}`)
     .reply(status, response);
+
+interface mockDeployNowProps {
+  appId: string;
+  config: {
+    env: string;
+    cmd: string;
+    branch: string;
+    distFolder: string;
+    publish: boolean;
+  };
+  status?: number;
+  response: { id?: string; error?: string };
+}
+
+export const mockDeployNow = ({
+  appId,
+  config,
+  status = 200,
+  response,
+}: mockDeployNowProps) => {
+  return nock(endpoint)
+    .post("/app/deploy", {
+      ...config,
+      appId,
+    })
+    .reply(status, response);
+};
