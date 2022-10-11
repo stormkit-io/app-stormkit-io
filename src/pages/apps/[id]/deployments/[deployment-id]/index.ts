@@ -1,1 +1,1 @@
-export { default } from "./Deployment";
+export { default } from "./DeploymentRedirect";
