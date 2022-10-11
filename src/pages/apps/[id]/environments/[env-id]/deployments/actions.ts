@@ -274,3 +274,31 @@ export const useFetchDeployment = ({
 
   return { deployment: deploy, loading, error };
 };
+
+interface WithPageRefreshProps {
+  deployment?: Deployment;
+  setRefreshToken: (val: number) => void;
+}
+
+let shouldRefresh = false;
+
+// Refresh app and envs when a deployment completes running
+export const useWithPageRefresh = ({
+  deployment,
+  setRefreshToken,
+}: WithPageRefreshProps) => {
+  useEffect(() => {
+    if (!deployment) {
+      return;
+    }
+
+    if (deployment.isRunning) {
+      shouldRefresh = true;
+      return;
+    }
+
+    if (!deployment.isRunning && shouldRefresh) {
+      setRefreshToken?.(Date.now());
+    }
+  }, [deployment?.isRunning]);
+};

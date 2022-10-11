@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import cn from "classnames";
 import { useParams } from "react-router";
 import { formattedDate } from "~/utils/helpers/deployments";
@@ -11,7 +11,7 @@ import CommitInfo from "./_components/CommitInfo";
 import Error404 from "~/components/Errors/Error404";
 import Button from "~/components/ButtonV2";
 import DeploymentMenu from "./_components/DeploymentMenu";
-import { useFetchDeployment } from "./actions";
+import { useFetchDeployment, useWithPageRefresh } from "./actions";
 
 const Deployment: React.FC = () => {
   const { deploymentId } = useParams();
@@ -21,6 +21,8 @@ const Deployment: React.FC = () => {
     app,
     deploymentId,
   });
+
+  useWithPageRefresh({ deployment, setRefreshToken });
 
   if (loading || error) {
     return (
