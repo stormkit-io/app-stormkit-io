@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import cn from "classnames";
 import { useParams } from "react-router";
 import { formattedDate } from "~/utils/helpers/deployments";
