@@ -68,7 +68,7 @@ const CommitInfo: React.FC<Props> = ({
           <span>{message}</span>
         )}
         <ReleaseInfo
-          showNotPublishedInfo={showNotPublishedInfo}
+          showNotPublishedInfo={deployment.exit === 0 && showNotPublishedInfo}
           percentage={
             deployment.published?.find(p => p.envId === environment.id)
               ?.percentage ||
