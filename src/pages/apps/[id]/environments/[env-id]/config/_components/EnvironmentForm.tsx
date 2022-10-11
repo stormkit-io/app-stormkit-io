@@ -10,14 +10,7 @@ import Button from "~/components/ButtonV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
 import { useFetchRepoMeta, deleteEnvironment } from "../actions";
-
-const isFrameworkRecognized = (framework?: string): boolean => {
-  if (!framework) {
-    return false;
-  }
-
-  return ["nuxt", "next"].includes(framework);
-};
+import { isFrameworkRecognized } from "../helpers";
 
 const computeAutoDeployValue = (env?: Environment): AutoDeployValues => {
   if (!env) {
@@ -222,30 +215,37 @@ const EnvironmentForm: React.FC<Props> = ({
               onChange={() => setIsChanged(true)}
               placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
               className="bg-blue-10 no-border h-full"
-              InputProps={{
-                endAdornment: loading && <Spinner width={4} height={4} />,
-              }}
             />
           </Form.WithLabel>
-          {!loading && !isFrameworkRecognized(meta?.framework) && (
-            <Form.WithLabel
-              label="Output folder"
-              className="pt-0"
-              tooltip="The folder where the build artifacts are located."
-            >
+          <Form.WithLabel
+            label="Output folder"
+            className="pt-0"
+            tooltip={
+              !loading &&
+              !isFrameworkRecognized(meta?.framework) &&
+              "The folder where the build artifacts are located."
+            }
+          >
+            {!loading && isFrameworkRecognized(meta?.framework) ? (
+              <div className="opacity-50 cursor-not-allowed p-2">
+                <span className="fa fa-info-circle mr-2 ml-1" />
+                Output folder is not needed. It is taken from the framework
+                configuration file.
+              </div>
+            ) : (
               <Form.Input
                 defaultValue={env?.build.distFolder || ""}
                 fullWidth
                 name="build.distFolder"
                 onChange={() => setIsChanged(true)}
-                placeholder="Defaults to 'build', 'dist' or 'output'"
+                placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
                 className="bg-blue-10 no-border h-full"
                 InputProps={{
                   endAdornment: loading && <Spinner width={4} height={4} />,
                 }}
               />
-            </Form.WithLabel>
-          )}
+            )}
+          </Form.WithLabel>
         </Container>
         <Container
           title="Environment variables"
