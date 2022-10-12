@@ -37,7 +37,9 @@ const Container: React.FC<Props> = ({
             </div>
           )}
           {actions && (
-            <div className="flex flex-1 justify-end text-sm">{actions}</div>
+            <div className="flex flex-1 justify-end text-sm ml-4">
+              {actions}
+            </div>
           )}
         </div>
       )}

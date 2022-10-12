@@ -1,57 +1,22 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Route, Routes } from "react-router-dom";
 import { Tooltip } from "@mui/material";
-import cn from "classnames";
 import AppContextProvider, { AppContext } from "~/pages/apps/[id]/App.context";
 import AppName from "~/components/AppName";
-import Link from "~/components/Link";
 import Form from "~/components/FormV2";
-import Button from "~/components/ButtonV2";
-import AppMenu from "./_components/AppMenu";
-import DeployModal from "./_components/DeployModal";
+import Link from "~/components/Link";
+import AppMobileMenu from "./_components/AppMobileMenu";
+import AppDesktopMenu from "./_components/AppDesktopMenu";
+import DeployButton from "./_components/DeployButton";
+import { appMenuItems } from "./menu_items";
 import { routes } from "./routes";
-
-const appMenuItems = ({
-  app,
-  toggleDeployModal,
-}: {
-  app: App;
-  toggleDeployModal: (val: boolean) => void;
-}) => [
-  {
-    id: "deploy-now",
-    path: "",
-    text: "Deploy now",
-    icon: "fas fa-rocket",
-    bg: "bg-pink-10",
-    onClick: (e: React.MouseEvent) => {
-      e.preventDefault();
-      toggleDeployModal(true);
-    },
-  },
-  {
-    path: `/apps/${app.id}/environments`,
-    text: "Environments",
-    icon: "fas fa-th-large",
-  },
-  { path: `/apps/${app.id}/team`, text: "Team", icon: "fas fa-users" },
-  {
-    path: `/apps/${app.id}/settings`,
-    text: "Settings",
-    icon: "fas fa-gear",
-  },
-];
 
 export const AppLayout: React.FC = () => {
   const { app, environments } = useContext(AppContext);
   const { pathname } = useLocation();
-  const [isDeployModalOpen, toggleDeployModal] = useState(false);
   const navigate = useNavigate();
-  const menuItems = useMemo(
-    () => appMenuItems({ app, toggleDeployModal }),
-    [app, toggleDeployModal]
-  );
+  const appMenuItemsMemo = useMemo(() => appMenuItems({ app }), [app]);
 
   // Deduce the envId from the pathname because we cannot access
   // the :envId url parameter, as it's included inside
@@ -65,12 +30,22 @@ export const AppLayout: React.FC = () => {
 
   return (
     <main className="flex flex-col min-h-screen m-auto w-full">
-      <header className="ml-16 flex-0 overflow-x-auto text-xs md:text-sm">
+      <AppMobileMenu
+        app={app}
+        environments={environments}
+        selectedEnvId={selectedEnvId}
+      />
+      <AppDesktopMenu
+        app={app}
+        environments={environments}
+        selectedEnvId={selectedEnvId}
+      />
+      <header className="md:ml-16 flex-0 overflow-x-auto text-xs md:text-sm mb-4 md:mb-0">
         <div
           className="flex flex-1 text-gray-80 items-center justify-start m-auto w-full max-w-screen-md my-2 px-4"
           style={{ minHeight: "54px" }}
         >
-          <div className="flex flex-1 items-center">
+          <div className="flex flex-1 items-center justify-between md:justify-start">
             <AppName app={app} imageWidth={7} withLinkToRepo />
             {pathname.includes("environments") && (
               <Form.Select
@@ -100,45 +75,30 @@ export const AppLayout: React.FC = () => {
               </Form.Select>
             )}
           </div>
-          <div className="flex items-center">
-            {menuItems.map(item => (
-              <Tooltip key={item.path} title={item.text} arrow>
-                <span>
-                  {item.path ? (
+          <div className="hidden md:flex items-center">
+            <DeployButton
+              app={app}
+              environments={environments}
+              selectedEnvId={selectedEnvId}
+            />
+            {appMenuItemsMemo.map(item => (
+              <span key={item.path} className="inline-block ml-4">
+                <Tooltip key={item.path || item.text} title={item.text} arrow>
+                  <span>
                     <Link
                       to={item.path}
-                      onClick={item.onClick}
-                      className={cn(
-                        "hover:text-white p-2 flex items-center ml-4 w-8 rounded-full h-8 text-xs justify-center",
-                        { "bg-blue-50": !item.bg },
-                        item.bg
-                      )}
+                      className="hover:text-white p-2 flex items-center w-8 rounded-full h-8 text-xs justify-center bg-blue-50"
                     >
                       <span className={item.icon} />
                     </Link>
-                  ) : (
-                    <Button
-                      id={item.id}
-                      type="button"
-                      styled={false}
-                      onClick={item.onClick}
-                      className={cn(
-                        "hover:text-white p-2 flex items-center ml-4 w-8 rounded-full h-8 text-xs justify-center",
-                        { "bg-blue-50": !item.bg },
-                        item.bg
-                      )}
-                    >
-                      <span className={item.icon} />
-                    </Button>
-                  )}
-                </span>
-              </Tooltip>
+                  </span>
+                </Tooltip>
+              </span>
             ))}
           </div>
         </div>
       </header>
-      <AppMenu app={app} environments={environments} envId={selectedEnvId} />
-      <div className="ml-16 flex-1 max-w-screen-md w-full self-center flex">
+      <div className="md:ml-16 flex-1 max-w-screen-md w-full self-center flex">
         <section className="w-full px-4">
           <Routes>
             {routes.map(r => (
@@ -147,14 +107,6 @@ export const AppLayout: React.FC = () => {
           </Routes>
         </section>
       </div>
-      {isDeployModalOpen && (
-        <DeployModal
-          app={app}
-          selected={environments.find(e => e.id === selectedEnvId)}
-          environments={environments}
-          toggleModal={toggleDeployModal}
-        />
-      )}
     </main>
   );
 };

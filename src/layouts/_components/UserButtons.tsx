@@ -3,12 +3,9 @@ import { AuthContext } from "~/pages/auth/Auth.context";
 import Button from "~/components/ButtonV2";
 import SideBar from "~/components/SideBar";
 import UserMenu from "~/components/UserMenu";
+import { Tooltip } from "@mui/material";
 
-interface Props {
-  children?: React.ReactNode;
-}
-
-const HeaderButtons: React.FC<Props> = ({ children }) => {
+const UserButtons: React.FC = () => {
   const { user } = useContext(AuthContext);
   const [isNewsOpen, toggleNews] = useState(false);
   const [isUserMenuOpen, toggleUserMenu] = useState(false);
@@ -19,20 +16,45 @@ const HeaderButtons: React.FC<Props> = ({ children }) => {
 
   return (
     <>
-      {children}
-      <Button
-        styled={false}
-        className="p-4"
-        onClick={() => {
-          toggleUserMenu(false);
-          toggleNews(!isNewsOpen);
+      <Tooltip
+        title={
+          <Button
+            className="p-4 block"
+            type="button"
+            onClick={() => {
+              toggleUserMenu(false);
+              toggleNews(!isNewsOpen);
+            }}
+            styled={false}
+          >
+            What's new?
+          </Button>
+        }
+        placement="right"
+        arrow
+        classes={{
+          tooltip: "bg-blue-50 custom-tooltip text-sm",
+          arrow: "text-blue-50",
         }}
       >
-        <span className="fas fa-bell text-base" />
-      </Button>
+        <div className="text-center">
+          <Button
+            styled={false}
+            className="p-2 md:p-4"
+            type="button"
+            onClick={() => {
+              toggleUserMenu(false);
+              toggleNews(!isNewsOpen);
+            }}
+          >
+            <span className="fas fa-bell text-base" />
+          </Button>
+        </div>
+      </Tooltip>
       <Button
-        className="flex p-4"
+        className="hidden md:flex p-2 md:p-4"
         styled={false}
+        type="button"
         onClick={() => {
           toggleUserMenu(!isUserMenuOpen);
           toggleNews(false);
@@ -59,4 +81,4 @@ const HeaderButtons: React.FC<Props> = ({ children }) => {
   );
 };
 
-export default HeaderButtons;
+export default UserButtons;

@@ -55,7 +55,7 @@ const DeployModal: React.FC<Props> = ({
         clearForm();
         toggleModal(false);
       }}
-      className="max-w-screen-sm"
+      className="max-w-screen-sm h-full md:h-auto"
     >
       <Container title="Start a deployment">
         <Form

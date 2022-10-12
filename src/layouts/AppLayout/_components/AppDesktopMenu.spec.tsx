@@ -7,7 +7,7 @@ import { render } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
-import AppMenu from "./AppMenu";
+import AppMenu from "./AppDesktopMenu";
 import { mockUser } from "~/testing/data";
 
 interface WrapperProps {
@@ -16,7 +16,7 @@ interface WrapperProps {
   setRefreshToken?: () => void;
 }
 
-describe("~/layouts/AppLayout/Applayout.tsx", () => {
+describe("~/layouts/AppLayout/_components/AppDesktopMenu.tsx", () => {
   let wrapper: RenderResult;
   let history: History;
   const defaultApp = mockApp();
@@ -34,7 +34,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
           <AppMenu
             app={app}
             environments={environments}
-            envId={environments[0].id!}
+            selectedEnvId={environments[0].id!}
           />
         </AuthContext.Provider>
       </Router>

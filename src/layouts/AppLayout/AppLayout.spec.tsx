@@ -76,10 +76,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         .map(link => link.getAttribute("href"));
 
       expect(links).toEqual([
-        "https://gitlab.com/stormkit-io/frontend",
-        `/apps/${defaultApp.id}/environments`,
-        `/apps/${defaultApp.id}/team`,
-        `/apps/${defaultApp.id}/settings`,
         "/", // Stormkit logo link
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
@@ -87,6 +83,11 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/domain`,
+        `/apps/${defaultApp.id}/usage`,
+        "https://gitlab.com/stormkit-io/frontend",
+        `/apps/${defaultApp.id}/environments`,
+        `/apps/${defaultApp.id}/team`,
+        `/apps/${defaultApp.id}/settings`,
       ]);
     });
   });
@@ -108,10 +109,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         .map(link => link.getAttribute("href"));
 
       expect(links).toEqual([
-        "https://gitlab.com/stormkit-io/frontend",
-        `/apps/${defaultApp.id}/environments`,
-        `/apps/${defaultApp.id}/team`,
-        `/apps/${defaultApp.id}/settings`,
         "/", // Stormkit logo link
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
@@ -119,6 +116,11 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/domain`,
+        `/apps/${defaultApp.id}/usage`,
+        "https://gitlab.com/stormkit-io/frontend",
+        `/apps/${defaultApp.id}/environments`,
+        `/apps/${defaultApp.id}/team`,
+        `/apps/${defaultApp.id}/settings`,
       ]);
     });
   });

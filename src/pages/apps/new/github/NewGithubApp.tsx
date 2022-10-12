@@ -79,7 +79,10 @@ const Provider: React.FC = () => {
             });
           }}
         >
-          Connect more repositories
+          <span className="hidden md:inline-block">
+            Connect more repositories
+          </span>
+          <span className="md:hidden">More repos</span>
         </Button>
       }
     >
