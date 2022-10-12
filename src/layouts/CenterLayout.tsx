@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import cn from "classnames";
 import SideMenu from "~/components/SideMenu";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import HeaderButtons from "./_components/HeaderButtons";
+import UserButtons from "./_components/UserButtons";
+import MobileHeader from "~/components/MobileHeader";
 
 interface Props {
   children: React.ReactNode;
@@ -18,9 +19,16 @@ const DefaultLayout: React.FC<Props> = ({ children }) => {
       })}
     >
       {user && (
-        <SideMenu menuItems={[]}>
-          <HeaderButtons />
-        </SideMenu>
+        <>
+          <div className="md:hidden w-full sticky top-0 z-50">
+            <MobileHeader menuItems={[]} />
+          </div>
+          <div className="hidden md:block">
+            <SideMenu menuItems={[]}>
+              <UserButtons />
+            </SideMenu>
+          </div>
+        </>
       )}
       {children}
     </main>

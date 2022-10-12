@@ -1,61 +1,39 @@
 import React from "react";
+import cn from "classnames";
 import Link from "~/components/Link";
 import { LS_PROVIDER } from "~/utils/api/Api";
 import { LocalStorage } from "~/utils/storage";
 
-interface SubItem {
+interface MenuItem {
   to: string;
   text: string;
 }
 
-interface MenuItem {
-  title: string;
-  children: Array<SubItem>;
-}
-
 const menuItems: Array<MenuItem> = [
+  { to: "/", text: "My Apps" },
+  { to: `/apps/new/${LocalStorage.get(LS_PROVIDER)}`, text: "New App" },
+  { to: "/user/account", text: "Account" },
+  // { to: "/user/referral", text: "Free Credits" }, TODO: Implement this part
   {
-    title: "Apps",
-    children: [
-      { to: "/", text: "My Apps" },
-      { to: `/apps/new/${LocalStorage.get(LS_PROVIDER)}`, text: "New App" },
-    ],
+    to: "https://www.stormkit.io/docs",
+    text: "Docs",
   },
-  {
-    title: "User",
-    children: [
-      { to: "/user/account", text: "Account" },
-      // { to: "/user/referral", text: "Free Credits" }, TODO: Implement this part
-      {
-        to: "https://www.stormkit.io/docs",
-        text: "Docs",
-      },
-      { to: "/logout", text: "Logout" },
-    ],
-  },
+  { to: "/logout", text: "Logout" },
 ];
 
-const UserMenu: React.FC = (): React.ReactElement => {
+interface Props {
+  className?: string | string[] | Record<string, unknown>;
+}
+
+const UserMenu: React.FC<Props> = ({ className }): React.ReactElement => {
   return (
-    <section role="menu" className="text-gray-80 h-full flex flex-col">
+    <section role="menu" className={cn("h-full flex flex-col", className)}>
       <div className="flex flex-col flex-1">
         {menuItems.map(item => (
-          <div className="w-40" key={item.title}>
-            <h3 className="uppercase font-bold text-gray-50 mb-6 text-xs">
-              {item.title}
-            </h3>
-            <ul>
-              {item.children.map(link => (
-                <li key={link.text}>
-                  <Link
-                    to={link.to}
-                    className="mb-6 block text-xs text-gray-80"
-                  >
-                    {link.text}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="w-40" key={item.text}>
+            <Link to={item.to} className="mb-6 block text-xs">
+              {item.text}
+            </Link>
           </div>
         ))}
       </div>
