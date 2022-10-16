@@ -57,7 +57,7 @@ const Deployments: React.FC = () => {
       {!loading && !error && !deployments.length && (
         <div className="p-4 flex flex-col items-center justify-center">
           <img src={emptyListSvg} alt="No deployments" className="block mb-4" />
-          <p className="mb-4">It is quite empty in here.</p>
+          <p className="mb-4">It is quite empty here.</p>
           <Button
             type="button"
             className="text-bold"

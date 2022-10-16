@@ -21,7 +21,6 @@ const Environments: React.FC = (): React.ReactElement => {
             onClick={() => toggleModal(true)}
             type="button"
             category="button"
-            className="bg-blue-20"
             aria-label="Open create environment modal"
           >
             New environment

@@ -51,10 +51,10 @@ const ConfirmModal: React.FC<Props> = ({
       <Container className="p-4">
         <h2 className="font-bold text-2xl text-center mb-12">Confirm action</h2>
         <div className="text-sm text-center">
-          <p className="mb-2">
+          <div className="mb-2">
             {children}
             {!typeConfirmationText && " Are you sure you want to continue?"}
-          </p>
+          </div>
 
           {typeConfirmationText && (
             <>
