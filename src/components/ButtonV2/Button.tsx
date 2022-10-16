@@ -30,7 +30,7 @@ const prepareStyles = (
   }
 
   if (category === "button") {
-    classes.push("bg-blue-50");
+    classes.push("bg-blue-20");
   }
 
   if (size === "sm") {

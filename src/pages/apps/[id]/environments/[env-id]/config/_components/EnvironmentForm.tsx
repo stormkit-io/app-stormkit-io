@@ -295,7 +295,6 @@ const EnvironmentForm: React.FC<Props> = ({
             <Button
               type="button"
               category="button"
-              className="bg-blue-20"
               aria-label={`Delete ${env.name} environment`}
               onClick={() => {
                 setIsDeleteModalOpen(true);
