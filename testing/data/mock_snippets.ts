@@ -1,4 +1,6 @@
-export default () => ({
+interface SnippetResponse extends Omit<Snippet, "_injectLocation" | "_i"> {}
+
+export default (): { head: SnippetResponse[]; body: SnippetResponse[] } => ({
   head: [
     {
       enabled: false,
