@@ -169,7 +169,7 @@ const Snippets: React.FC = (): React.ReactElement => {
                 })
               )}
               {snippets.body.length === 0 && (
-                <div className="bg-blue-10 p-4">
+                <div className="bg-blue-10 p-4 mt-4">
                   No snippet found for the body section.
                 </div>
               )}
