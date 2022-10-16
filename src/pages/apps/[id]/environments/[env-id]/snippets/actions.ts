@@ -8,23 +8,13 @@ interface PutSnippetsProps {
   snippets: Snippets;
   app: App;
   environment: Environment;
-  setLoading: SetLoading;
-  setError: SetError;
-  setSnippets: SetSnippets;
-  onSuccess: () => void;
 }
 
 const putSnippets = ({
   snippets,
   app,
   environment,
-  setLoading,
-  setSnippets,
-  setError,
-  onSuccess,
-}: PutSnippetsProps): Promise<void> => {
-  setLoading(true);
-
+}: PutSnippetsProps): Promise<Snippets> => {
   return api
     .put(`/app/env/snippets`, {
       appId: app.id,
@@ -32,16 +22,7 @@ const putSnippets = ({
       snippets,
     })
     .then(() => {
-      setSnippets(normalize(snippets));
-      onSuccess && onSuccess();
-    })
-    .catch(() => {
-      setError(
-        "Something went wrong while updating snippets. Please try again, if the problem persists reach us from Discord or email."
-      );
-    })
-    .finally(() => {
-      setLoading(false);
+      return normalize(snippets);
     });
 };
 
@@ -106,84 +87,69 @@ export const useFetchSnippets = ({
 interface UpsertSnippetsProps {
   app: App;
   environment: Environment;
-  setError: SetError;
-  setLoading: SetLoading;
-  setSnippets: SetSnippets;
   snippets: Snippets;
   index?: number;
   injectLocation?: "head" | "body";
   isEnabled: boolean;
   isPrepend?: boolean;
-  closeModal?: () => void;
+  values: Snippet;
 }
 
-export const upsertSnippets =
-  ({
+export const upsertSnippets = ({
+  app,
+  environment,
+  snippets,
+  index = -1,
+  injectLocation = "head",
+  isEnabled,
+  isPrepend,
+  values,
+}: UpsertSnippetsProps): Promise<Snippets> => {
+  if (!values.title || !values.content) {
+    return Promise.reject("Title and content are required fields.");
+  }
+
+  values._injectLocation = values._injectLocation.split("_")[0] as
+    | "body"
+    | "head";
+
+  const isEdit = index > -1;
+  const clone = JSON.parse(JSON.stringify(snippets || {}));
+  const snippet: Snippet = clone?.[injectLocation]?.[index] || {};
+
+  Object.assign(snippet, values);
+
+  snippet.enabled = isEnabled;
+  snippet.prepend = isUndef(isPrepend) ? snippet.prepend : isPrepend || false;
+
+  // Delete private variables
+  Object.keys(snippet)
+    .filter(k => k[0] === "_")
+    .forEach(key => {
+      if (key === "_i" || key === "_injectLocation") {
+        delete snippet[key];
+      }
+    });
+
+  const hasInjectLocationChanged = injectLocation !== values._injectLocation;
+  const _injectLocation = values._injectLocation || "";
+
+  if (isEdit && hasInjectLocationChanged) {
+    clone[injectLocation].splice(index, 1);
+    clone[_injectLocation].push(snippet);
+  } else if (!isEdit) {
+    clone[_injectLocation].push(snippet);
+  }
+
+  return putSnippets({
+    snippets: clone,
     app,
     environment,
-    setError,
-    setLoading,
-    snippets,
-    setSnippets,
-    closeModal,
-    index = -1,
-    injectLocation = "head",
-    isEnabled,
-    isPrepend,
-  }: UpsertSnippetsProps) =>
-  (values: Snippet): Promise<void> => {
-    if (!values.title || !values.content) {
-      return Promise.resolve(
-        setError("Title and content are required fields.")
-      );
-    }
-
-    const isEdit = index > -1;
-    const clone = JSON.parse(JSON.stringify(snippets || {}));
-    const snippet: Snippet = clone?.[injectLocation]?.[index] || {};
-
-    Object.assign(snippet, values);
-
-    snippet.enabled = isEnabled;
-    snippet.prepend = isUndef(isPrepend) ? snippet.prepend : isPrepend || false;
-
-    // Delete private variables
-    Object.keys(snippet)
-      .filter(k => k[0] === "_")
-      .forEach(key => {
-        if (key === "_i" || key === "_injectLocation") {
-          delete snippet[key];
-        }
-      });
-
-    const hasInjectLocationChanged = injectLocation !== values._injectLocation;
-    const _injectLocation = values._injectLocation || "";
-
-    if (isEdit && hasInjectLocationChanged) {
-      clone[injectLocation].splice(index, 1);
-      clone[_injectLocation].push(snippet);
-    } else if (!isEdit) {
-      clone[_injectLocation].push(snippet);
-    }
-
-    return putSnippets({
-      snippets: clone,
-
-      app,
-      environment,
-      setLoading,
-      setSnippets,
-      setError,
-      onSuccess: () => closeModal && closeModal(),
-    });
-  };
+  });
+};
 
 interface DeleteSnippetProps {
   snippets: Snippets;
-  setSnippets: SetSnippets;
-  setLoading: SetLoading;
-  setError: SetError;
-  closeModal: () => void;
   app: App;
   environment: Environment;
   injectLocation: "head" | "body";
@@ -193,55 +159,40 @@ interface DeleteSnippetProps {
 export const deleteSnippet = ({
   index,
   snippets,
-  setSnippets,
-  setLoading,
-  setError,
-  closeModal,
   app,
   environment,
   injectLocation,
-}: DeleteSnippetProps): void => {
+}: DeleteSnippetProps): Promise<Snippets> => {
   const clone = JSON.parse(JSON.stringify(snippets));
   clone[injectLocation].splice(index, 1);
 
-  putSnippets({
+  return putSnippets({
     app,
     environment,
     snippets: clone,
-    setLoading,
-    setSnippets,
-    setError,
-    onSuccess: closeModal,
   });
 };
 
 type ExtendedUpsertSnippetProps = Omit<
   UpsertSnippetsProps,
-  "setError" | "setLoading" | "injectLocation" | "isPrepend" | "closeModal"
+  "injectLocation" | "isPrepend" | "values"
 >;
 
 interface EnableOrDisableProps extends ExtendedUpsertSnippetProps {
   snippet: Snippet;
-  setError: SetError;
-  setLoading: SetLoading;
 }
 
 export const enableOrDisable = ({
   isEnabled,
   index,
   snippet,
-  setSnippets,
-  setError,
-  setLoading,
   ...rest
-}: EnableOrDisableProps): Promise<void> => {
+}: EnableOrDisableProps): Promise<Snippets> => {
   return upsertSnippets({
     ...rest,
     index,
     isEnabled,
-    setError,
-    setLoading,
     injectLocation: snippet._injectLocation || "body",
-    setSnippets,
-  })(snippet);
+    values: snippet,
+  });
 };
