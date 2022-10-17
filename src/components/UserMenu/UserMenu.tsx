@@ -23,15 +23,19 @@ const menuItems: Array<MenuItem> = [
 
 interface Props {
   className?: string | string[] | Record<string, unknown>;
+  onClick?: () => void;
 }
 
-const UserMenu: React.FC<Props> = ({ className }): React.ReactElement => {
+const UserMenu: React.FC<Props> = ({
+  className,
+  onClick,
+}): React.ReactElement => {
   return (
     <section role="menu" className={cn("h-full flex flex-col", className)}>
       <div className="flex flex-col flex-1">
         {menuItems.map(item => (
           <div className="w-40" key={item.text}>
-            <Link to={item.to} className="mb-6 block text-xs">
+            <Link to={item.to} className="mb-6 block text-xs" onClick={onClick}>
               {item.text}
             </Link>
           </div>

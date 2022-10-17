@@ -51,21 +51,36 @@ const UserButtons: React.FC = () => {
           </Button>
         </div>
       </Tooltip>
-      <Button
-        className="hidden md:flex p-2 md:p-4"
-        styled={false}
-        type="button"
-        onClick={() => {
-          toggleUserMenu(!isUserMenuOpen);
-          toggleNews(false);
+      <Tooltip
+        title={
+          <UserMenu className="p-4" onClick={() => toggleUserMenu(false)} />
+        }
+        placement="right-end"
+        open={isUserMenuOpen}
+        classes={{
+          tooltip: "bg-blue-50 custom-tooltip text-sm",
+          arrow: "text-blue-50",
         }}
+        arrow
       >
-        <img
-          src={user.avatar}
-          alt={`${user.fullName || user.displayName} profile`}
-          className="rounded-full w-7 h-7 inline-block max-w-none"
-        />
-      </Button>
+        <span className="flex items-center w-full">
+          <Button
+            className="hidden md:flex p-2 md:p-4 w-full"
+            styled={false}
+            type="button"
+            onClick={() => {
+              toggleUserMenu(!isUserMenuOpen);
+              toggleNews(false);
+            }}
+          >
+            <img
+              src={user.avatar}
+              alt={`${user.fullName || user.displayName} profile`}
+              className="rounded-full w-7 h-7 inline-block max-w-none"
+            />
+          </Button>
+        </span>
+      </Tooltip>
       <SideBar isOpen={isNewsOpen} maxWidth="max-w-128">
         {isNewsOpen && (
           <iframe
@@ -73,9 +88,6 @@ const UserButtons: React.FC = () => {
             src="https://www.stormkit.io/blog/whats-new?ui=no-menu,no-footer,no-posts,no-header"
           />
         )}
-      </SideBar>
-      <SideBar isOpen={isUserMenuOpen}>
-        <UserMenu />
       </SideBar>
     </>
   );
