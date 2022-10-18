@@ -135,11 +135,11 @@ const FeatureFlags: React.FC = () => {
             </div>
           ))}
         {!loading && !error && !flags?.length && (
-          <div className="flex items-center justify-center w-full p-4">
-            <div>
+          <div className="p-4 flex items-center justify-center flex-col">
+            <p className="mt-8">
               <img src={emptyListSvg} alt="No feature flags" />
-              <p className="text-center mt-4">It is quite empty here.</p>
-            </div>
+            </p>
+            <p className="mt-12">It is quite empty here.</p>
           </div>
         )}
       </div>

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import cn from "classnames";
 import Container from "~/components/Container";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
@@ -30,9 +31,11 @@ const Deployments: React.FC = () => {
       {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
       {!loading &&
         !error &&
-        deployments.map(deployment => (
+        deployments.map((deployment, i) => (
           <div
-            className="bg-blue-10 mx-2 md:mx-4 mb-2 md:mb-4 p-4 flex text-sm"
+            className={cn("bg-blue-10 mx-2 md:mx-4 p-4 flex text-sm", {
+              "mb-2 md:mb-4": i !== deployments.length - 1,
+            })}
             key={deployment.id}
           >
             <CommitInfo
