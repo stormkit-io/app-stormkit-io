@@ -1,1 +1,1 @@
-export { default } from "./FeatureFlag";
+export { default } from "./FeatureFlags";
