@@ -98,7 +98,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
     createWrapper();
 
     await waitFor(() => {
-      expect(wrapper.getByText("Nuxt CLI v3.0.0-rc.8")).toBeTruthy();
+      expect(wrapper.getByText("Nuxt CLA v3.0.0-rc.8")).toBeTruthy();
     });
   });
 
