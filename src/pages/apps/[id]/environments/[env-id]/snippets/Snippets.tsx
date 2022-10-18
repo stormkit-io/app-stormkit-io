@@ -26,7 +26,6 @@ interface RenderSnippetProps {
 
 const renderSnippet = ({
   snippet,
-  snippets,
   setToBeDeleted,
   setToBeModified,
   setToBeToggled,
@@ -226,7 +225,7 @@ const Snippets: React.FC = (): React.ReactElement => {
                   if (typeof res === "string") {
                     setError(res);
                   } else {
-                    setError("Something went wrong while deleting snippet.");
+                    setError("Something went wrong while updating snippet.");
                   }
                 })
                 .finally(() => {
