@@ -49,6 +49,11 @@
   @apply border-gray-30;
 }
 
+.form-label .MuiFormControl-root {
+  @apply bg-blue-10 h-full;
+}
+
+.form-label .MuiInputBase-root:before,
 .no-border > .MuiInputBase-root:before {
   @apply border-transparent;
 }

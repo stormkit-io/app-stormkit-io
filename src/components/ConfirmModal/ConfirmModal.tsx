@@ -80,7 +80,7 @@ const ConfirmModal: React.FC<Props> = ({
           <Button
             category="cancel"
             type="button"
-            className="mr-4"
+            className="mr-4 bg-blue-20"
             onClick={onCancel}
           >
             Cancel
