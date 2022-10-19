@@ -1,6 +1,7 @@
 import type { Log } from "./actions";
 import React, { useContext } from "react";
 import { useParams, useLocation } from "react-router";
+import emptyListSvg from "~/assets/images/empty-list.svg";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import Container from "~/components/Container";
 import { useFetchDeploymentRuntimeLogs } from "./actions";
@@ -71,7 +72,16 @@ const RuntimeLogs: React.FC = () => {
               {logs.map(renderLog)}
             </div>
           ) : (
-            "Nothing found"
+            <div className="p-4 flex items-center justify-center flex-col">
+              <p className="mt-8">
+                <img src={emptyListSvg} alt="No feature flags" />
+              </p>
+              <p className="mt-8">It is quite empty here.</p>
+              <p>
+                Logs produced by server side rendered apps and APIs will be
+                displayed here.
+              </p>
+            </div>
           ))}
       </div>
     </Container>
