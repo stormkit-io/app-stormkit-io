@@ -36,7 +36,18 @@ const routes: Array<RouteProps> = [
     path: "/deployments/:deploymentId",
     element: Async(
       () =>
-        import("~/pages/apps/[id]/environments/[env-id]/deployments/Deployment")
+        import(
+          "~/pages/apps/[id]/environments/[env-id]/deployments/[deployment-id]"
+        )
+    ),
+  },
+  {
+    path: "/deployments/:deploymentId/runtime-logs",
+    element: Async(
+      () =>
+        import(
+          "~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs"
+        )
     ),
   },
 ];
