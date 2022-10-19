@@ -5,13 +5,20 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TabEnvironmentConfig from "./_components/TabEnvironmentConfig";
 import TabCustomStorage from "./_components/TabCustomStorage";
+import TabDomainConfig from "./_components/TabDomainConfig/TabDomainConfig";
 
-type Tab = "config" | "custom storage" | "domain config";
+type Tab = "config" | "custom storage" | "custom domain";
 
 const EnvironmentConfig: React.FC = () => {
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
-  const [tab, setTab] = useState<Tab>("config");
+  const [tab, setTab] = useState<Tab>(
+    window.location.hash?.indexOf("custom-storage") > -1
+      ? "custom storage"
+      : window.location.hash?.indexOf("custom-domain") > -1
+      ? "custom domain"
+      : "config"
+  );
 
   return (
     <>
@@ -47,6 +54,16 @@ const EnvironmentConfig: React.FC = () => {
             <span className="w-2 h-2 rounded-full bg-green-50 ml-2 inline-block" />
           )}
         </ToggleButton>
+        <ToggleButton
+          value="custom domain"
+          aria-label="Custom domain"
+          className="bg-blue-50 hover:text-gray-80"
+          classes={{
+            root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
+          }}
+        >
+          <span className="text-gray-80">Custom Domain</span>
+        </ToggleButton>
       </ToggleButtonGroup>
       {tab === "config" && (
         <TabEnvironmentConfig
@@ -57,6 +74,13 @@ const EnvironmentConfig: React.FC = () => {
       )}
       {tab === "custom storage" && (
         <TabCustomStorage
+          app={app}
+          environment={environment}
+          setRefreshToken={setRefreshToken}
+        />
+      )}
+      {tab === "custom domain" && (
+        <TabDomainConfig
           app={app}
           environment={environment}
           setRefreshToken={setRefreshToken}

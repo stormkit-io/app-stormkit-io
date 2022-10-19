@@ -78,11 +78,5 @@ export const envMenuItems = ({
       path: `${envPath}/feature-flags`,
       isActive: pathname.includes("/feature-flags"),
     },
-    {
-      icon: "fas fa-globe",
-      text: "Configure domain",
-      path: `${envPath}/domain`,
-      isActive: pathname.includes("/domain"),
-    },
   ];
 };

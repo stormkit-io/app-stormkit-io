@@ -14,11 +14,12 @@ interface TLS {
   signatureAlgorithm: string;
   issuer?: {
     name: string;
+    organization: string[];
   };
 }
 
 declare interface Domain {
-  tls: TLS;
+  tls: TLS | null;
   dns: DNS;
   domainName: string;
 }
