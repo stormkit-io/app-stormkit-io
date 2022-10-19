@@ -53,6 +53,12 @@ const DeploymentMenu: React.FC<Props> = ({
         },
       },
       {
+        text: "Runtime logs",
+        icon: "far fa-chart-bar",
+        disabled: deployment.exit !== 0,
+        href: `/apps/${app.id}/environments/${environment.id}/deployments/${deployment.id}/runtime-logs`,
+      },
+      {
         text: "Preview",
         icon: "fas fa-external-link-square-alt",
         disabled: deployment.exit !== 0,

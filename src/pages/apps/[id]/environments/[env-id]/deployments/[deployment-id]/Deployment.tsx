@@ -7,11 +7,11 @@ import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.c
 import Container from "~/components/Container";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
-import CommitInfo from "./_components/CommitInfo";
 import Error404 from "~/components/Errors/Error404";
 import Button from "~/components/ButtonV2";
-import DeploymentMenu from "./_components/DeploymentMenu";
-import { useFetchDeployment, useWithPageRefresh } from "./actions";
+import CommitInfo from "../_components/CommitInfo";
+import DeploymentMenu from "../_components/DeploymentMenu";
+import { useFetchDeployment, useWithPageRefresh } from "../actions";
 
 const Deployment: React.FC = () => {
   const { deploymentId } = useParams();
@@ -27,7 +27,7 @@ const Deployment: React.FC = () => {
   if (loading || error) {
     return (
       <Container maxWidth="max-w-none">
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center p-4">
           {loading && <Spinner />}
           {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
         </div>

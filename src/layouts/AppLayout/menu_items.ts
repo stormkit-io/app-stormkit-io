@@ -61,12 +61,6 @@ export const envMenuItems = ({
       isActive: pathname.includes("/deployments"),
     },
     {
-      icon: "far fa-chart-bar",
-      text: "Logs",
-      path: `${envPath}/logs`,
-      isActive: pathname.includes("/logs"),
-    },
-    {
       icon: "fas fa-code",
       text: "Snippets",
       path: `${envPath}/snippets`,

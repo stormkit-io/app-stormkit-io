@@ -79,7 +79,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         "/", // Stormkit logo link
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
-        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/logs`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
         `/apps/${defaultApp.id}/usage`,
@@ -111,7 +110,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         "/", // Stormkit logo link
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
-        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/logs`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
         `/apps/${defaultApp.id}/usage`,
