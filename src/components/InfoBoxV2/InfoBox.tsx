@@ -56,6 +56,7 @@ interface Props {
   scrollIntoView?: boolean;
   toaster?: boolean;
   dismissable?: boolean;
+  baseline?: boolean;
   onDismissed?: () => void;
 }
 
@@ -71,6 +72,7 @@ const InfoBox: React.FC<Props> & {
   type = DEFAULT,
   toaster,
   dismissable,
+  baseline,
   onDismissed,
 }): React.ReactElement => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -86,7 +88,7 @@ const InfoBox: React.FC<Props> & {
     "px-4",
     "py-2",
     "flex",
-    "items-center",
+    baseline ? "items-baseline" : "items-center",
     "text-sm",
     `bg-${colors[type].bg}`,
     `text-${colors[type].text}`,
