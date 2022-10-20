@@ -26,7 +26,7 @@ const renderLog = (log: Log, i: number) => {
   data = data.trim();
 
   if (data.length === 0) {
-    return <></>;
+    return null;
   }
 
   return (
