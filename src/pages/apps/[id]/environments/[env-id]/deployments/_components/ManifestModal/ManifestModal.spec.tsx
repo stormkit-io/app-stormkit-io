@@ -102,13 +102,20 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
       createWrapper({ manifest });
 
       await waitFor(() => {
-        expect(
-          wrapper.getByText(manifest.cdnFiles?.[0].fileName!)
-        ).toBeTruthy();
+        expect(wrapper.getByText("/")).toBeTruthy();
       });
 
-      // The file name of the CDN file
-      expect(wrapper.getByText(manifest.cdnFiles?.[1].fileName!)).toBeTruthy();
+      fireEvent.click(wrapper.getByText("/"));
+
+      await waitFor(() => {
+        expect(wrapper.getByText("manifest.json")).toBeTruthy();
+      });
+
+      fireEvent.click(wrapper.getByText("_nuxt"));
+
+      await waitFor(() => {
+        expect(wrapper.getByText("default.6339aee9.mjs")).toBeTruthy();
+      });
 
       // The preview URL for the CDN file
       expect(

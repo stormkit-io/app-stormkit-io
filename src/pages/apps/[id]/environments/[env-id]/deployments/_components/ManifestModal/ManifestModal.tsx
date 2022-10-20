@@ -9,10 +9,10 @@ import Container from "~/components/Container";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
 import Button from "~/components/ButtonV2";
-import Link from "~/components/Link";
 import emptyListSvg from "~/assets/images/empty-list.svg";
 import { useFetchManifest } from "../../actions";
 import TabAPI from "./TabAPI";
+import TabCDNFiles from "./TabCDNFiles";
 
 interface Props {
   app: App;
@@ -34,9 +34,6 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
 
   const apiEnabled = manifest?.apiFiles && manifest.apiFiles?.length > 0;
   const ssrEnabled = Boolean(manifest?.functionHandler);
-  const indexHTMLWarning =
-    !ssrEnabled &&
-    !manifest?.cdnFiles?.find(file => file.fileName === "/index.html");
 
   return (
     <Modal open onClose={onClose} maxWidth="max-w-screen-md" fullHeight>
@@ -160,36 +157,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
               </ToggleButtonGroup>
             </div>
             {tab === "cdn" && (
-              <>
-                {indexHTMLWarning && (
-                  <InfoBox type={InfoBox.WARNING} className="mx-4 mb-4">
-                    Top level{" "}
-                    <span className="text-white font-bold">/index.html</span> is
-                    missing and server side rendering is not detected.{" "}
-                    <Link
-                      className="font-bold"
-                      to="https://www.stormkit.io/docs/troubleshooting#index-html-missing"
-                      secondary
-                    >
-                      Learn more.
-                    </Link>
-                  </InfoBox>
-                )}
-                {manifest.cdnFiles?.map(file => (
-                  <div className="bg-blue-10 mx-4 mb-4 p-4" key={file.fileName}>
-                    <span className="block font-bold">{file.fileName}</span>
-                    <Link
-                      to={`${deployment.preview}${
-                        file.fileName === "/index.html" ? "" : file.fileName
-                      }`}
-                      className="text-xs"
-                    >
-                      {deployment.preview}
-                      {file.fileName}
-                    </Link>
-                  </div>
-                ))}
-              </>
+              <TabCDNFiles manifest={manifest} deployment={deployment} />
             )}
             {tab === "redirect" &&
               (manifest.redirects?.map(r => (
