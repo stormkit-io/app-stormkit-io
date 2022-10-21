@@ -162,7 +162,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
             )}
             {tab === "redirect" &&
               (manifest.redirects?.map(r => (
-                <div className="bg-blue-10 m-4 mt-0 p-4" key={r.to}>
+                <div className="bg-blue-10 mx-4 mb-3 mt-0 p-4" key={r.to}>
                   {r.from}
                   {" => "}
                   {r.to}
