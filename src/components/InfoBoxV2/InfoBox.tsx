@@ -29,9 +29,9 @@ const colors = {
     icon: "",
   },
   [WARNING]: {
-    text: "gray-80",
-    bg: "transparent",
-    border: "yellow-10",
+    text: "black font-light",
+    bg: "yellow-10",
+    border: "",
     icon: "yellow-60",
   },
   [ERROR]: {
