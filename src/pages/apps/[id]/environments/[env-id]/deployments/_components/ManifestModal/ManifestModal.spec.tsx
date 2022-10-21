@@ -102,12 +102,6 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
       createWrapper({ manifest });
 
       await waitFor(() => {
-        expect(wrapper.getByText("/")).toBeTruthy();
-      });
-
-      fireEvent.click(wrapper.getByText("/"));
-
-      await waitFor(() => {
         expect(wrapper.getByText("manifest.json")).toBeTruthy();
       });
 

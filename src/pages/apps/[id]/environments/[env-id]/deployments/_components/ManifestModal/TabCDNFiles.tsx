@@ -61,35 +61,43 @@ const useTree = ({ manifest }: { manifest: Manifest }) => {
 };
 
 const recursiveRender = (deployment: Deployment, treeNode: TreeNode) => {
-  const [expanded, setExpanded] = useState(false);
+  const isRoot = treeNode.currentFolder === "/";
+  const [expanded, setExpanded] = useState(isRoot);
 
   return (
-    <div className="ml-4">
-      <button
-        type="button"
-        className="bg-blue-10 p-4 flex w-full items-center font-bold justify-start"
-        onClick={() => {
-          setExpanded(!expanded);
-        }}
+    <div>
+      {!isRoot && (
+        <button
+          type="button"
+          className="bg-blue-10 p-3 flex w-full items-center font-bold justify-start"
+          style={{ minHeight: "53px" }}
+          onClick={() => {
+            setExpanded(!expanded);
+          }}
+        >
+          <span
+            className={cn("fas w-6 text-left", {
+              "fa-chevron-right": !expanded,
+              "fa-chevron-down": expanded,
+            })}
+          />
+          {treeNode.currentFolder}
+        </button>
+      )}
+      <div
+        className={cn({
+          "mt-3": !isRoot,
+          "border-l border-blue-20 pl-3": expanded && !isRoot,
+        })}
       >
-        <span
-          className={cn("fas w-6 text-left", {
-            "fa-chevron-right": !expanded,
-            "fa-chevron-down": expanded,
-          })}
-        />
-        {treeNode.currentFolder}
-      </button>
-      <div className={cn("mt-4", { "border-l border-blue-20 pl-4": expanded })}>
         {Object.keys(treeNode.folders).map(k => (
-          <div key={k} className={cn({ hidden: !expanded }, "ml-0")}>
+          <div key={k} className={cn({ hidden: !expanded, "ml-0": !isRoot })}>
             {recursiveRender(deployment, treeNode.folders[k])}
           </div>
         ))}
-
         {expanded &&
           treeNode.files.map(file => (
-            <div className="bg-blue-10 mb-4 ml-4 p-4" key={file.fileName}>
+            <div className="bg-blue-10 mb-3 p-3" key={file.fileName}>
               <span className="block font-bold">
                 {file.fileName.split("/").pop()}
               </span>
@@ -121,18 +129,17 @@ const TabCDNFiles: React.FC<Props> = ({ manifest, deployment }) => {
     <>
       {indexHTMLWarning && (
         <InfoBox type={InfoBox.WARNING} className="mx-4 mb-4">
-          Top level <span className="text-white font-bold">/index.html</span> is
-          missing and server side rendering is not detected.{" "}
+          Top level <span className="font-bold">/index.html</span> is missing
+          and server side rendering is not detected.{" "}
           <Link
             className="font-bold"
             to="https://www.stormkit.io/docs/troubleshooting#index-html-missing"
-            secondary
           >
             Learn more.
           </Link>
         </InfoBox>
       )}
-      {recursiveRender(deployment, tree["/"])}
+      <div className="mx-4">{recursiveRender(deployment, tree["/"])}</div>
     </>
   );
 };

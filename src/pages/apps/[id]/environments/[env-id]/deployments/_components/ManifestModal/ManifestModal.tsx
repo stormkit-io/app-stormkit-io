@@ -38,6 +38,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
   return (
     <Modal open onClose={onClose} maxWidth="max-w-screen-md" fullHeight>
       <Container
+        maxWidth="max-w-none"
         title={
           <>
             Deployment manifest
@@ -161,7 +162,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
             )}
             {tab === "redirect" &&
               (manifest.redirects?.map(r => (
-                <div className="bg-blue-10 m-4 p-4" key={r.to}>
+                <div className="bg-blue-10 m-4 mt-0 p-4" key={r.to}>
                   {r.from}
                   {" => "}
                   {r.to}
