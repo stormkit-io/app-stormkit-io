@@ -95,23 +95,25 @@ const Snippets: React.FC = (): React.ReactElement => {
     <Container
       maxWidth="max-w-none"
       title={
-        <Tooltip
-          arrow
-          title={
-            <p>
-              Snippets help you maintain 3rd party code in your application.{" "}
-              <br />
-              <br />
-              The codes specified here will be injected during response time to
-              your document. You can enable or disable any snippet without the
-              need of a deployment.
-            </p>
-          }
-        >
-          <span>
-            Snippets <span className="fas fa-question-circle" />
-          </span>
-        </Tooltip>
+        <>
+          <span>Snippets</span>
+          <Tooltip
+            arrow
+            className="flex items-center"
+            title={
+              <p>
+                Snippets help you maintain 3rd party code in your application.{" "}
+                <br />
+                <br />
+                The codes specified here will be injected during response time
+                to your document. You can enable or disable any snippet without
+                the need of a deployment.
+              </p>
+            }
+          >
+            <span className="fas fa-question-circle text-lg ml-2" />
+          </Tooltip>
+        </>
       }
       actions={
         <Button

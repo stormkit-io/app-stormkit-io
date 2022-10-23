@@ -38,19 +38,21 @@ const FeatureFlags: React.FC = () => {
       maxWidth="max-w-none"
       className="pb-0"
       title={
-        <Tooltip
-          arrow
-          title={
-            <p>
-              Feature flags that are enabled will be accessible through the
-              window.sk.features object.
-            </p>
-          }
-        >
-          <span>
-            Feature flags <span className="fas fa-question-circle" />
-          </span>
-        </Tooltip>
+        <>
+          <span>Feature flags</span>
+          <Tooltip
+            arrow
+            className="flex items-center"
+            title={
+              <p>
+                Feature flags that are enabled will be accessible through the
+                window.sk.features object.
+              </p>
+            }
+          >
+            <span className="fas fa-question-circle text-lg ml-2" />
+          </Tooltip>
+        </>
       }
       actions={
         <Button
