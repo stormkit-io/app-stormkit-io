@@ -37,7 +37,7 @@ const renderLog = (log: Log, i: number) => {
           .split(".")[0]
           .replace("T", " ")}
       </span>
-      <span className="inline-block p-3">{data}</span>
+      <span className="inline-block p-3 break-all">{data}</span>
     </div>
   );
 };
