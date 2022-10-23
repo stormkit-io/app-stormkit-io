@@ -3,6 +3,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import Switch from "@mui/material/Switch";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
+import Radio from "@mui/material/Radio";
 import Input from "./Input";
 import WithLabel from "./WithLabel";
 import Select from "./Select";
@@ -126,5 +127,6 @@ Form.KeyValue = KeyValue;
 Form.Option = MenuItem;
 Form.Checkbox = Checkbox;
 Form.Switch = Switch;
+Form.Radio = Radio;
 
 export default Form;
