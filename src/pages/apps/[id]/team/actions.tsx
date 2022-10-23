@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Link from "~/components/Link";
+import { useEffect, useState } from "react";
 import api from "~/utils/api/Api";
 
 interface FetchMemberProps {
@@ -62,88 +61,29 @@ export const useFetchMembers = ({
 
 interface HandleInviteProps {
   app: App;
-  setToken: (v: string) => void;
-  setError: SetError;
-  setLoading: SetLoading;
-}
-
-interface InviteFormValues {
-  displayName: string;
-  provider: Provider;
+  values: Record<string, string>;
 }
 
 interface HandleInviteResponse {
   token: string;
 }
 
-export const handleInvite =
-  ({ app, setToken, setError, setLoading }: HandleInviteProps) =>
-  ({ displayName, provider }: InviteFormValues) => {
-    setLoading(true);
+export const handleInvite = ({ app, values }: HandleInviteProps) => {
+  return api.post<HandleInviteResponse>(`/app/members/invite`, {
+    appId: app.id,
+    displayName: values.displayName,
+    provider: values.provider,
+  });
+};
 
-    api
-      .post<HandleInviteResponse>(`/app/members/invite`, {
-        appId: app.id,
-        displayName,
-        provider,
-      })
-      .then(res => {
-        setToken(res.token);
-      })
-      .catch(async res => {
-        if (res.status === 400) {
-          const data = await res.json();
-
-          if (data.code === "inception") {
-            return setError("Funny move, but you cannot invite yourself.");
-          }
-
-          return setError("Please provide a display name.");
-        }
-
-        if (res.status === 402) {
-          return setError(
-            <div>
-              Your current package does not allow adding more team members.{" "}
-              <br />
-              You can always <Link to="/user/account">upgrade</Link> to proceed.
-            </div>
-          );
-        }
-      })
-      .then(() => {
-        setLoading(false);
-      });
-  };
-
-interface HandleDeleteProps {
+interface DeleteTeamMemberProps {
   userId: string;
   app: App;
-  setError: SetError;
-  setLoading: SetLoading;
 }
 
-export const handleDelete = ({
+export const deleteTeamMember = ({
   userId,
   app,
-  setError,
-  setLoading,
-}: HandleDeleteProps): Promise<void> => {
-  setLoading(true);
-
-  return api
-    .delete(`/app/member`, { appId: app.id, userId })
-    .then(() => {
-      setLoading(false);
-      setTimeout(() => {
-        window.location.reload();
-      }, 250);
-    })
-    .catch(res => {
-      setLoading(false);
-      setError(
-        res.error ||
-          "An unknown error occurred. Please try again and if the problem persists contact us from Discord or email."
-      );
-    });
+}: DeleteTeamMemberProps): Promise<void> => {
+  return api.delete(`/app/member`, { appId: app.id, userId });
 };

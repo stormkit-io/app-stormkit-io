@@ -1,18 +1,14 @@
 import React, { useContext, useState } from "react";
 import cn from "classnames";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import TableContainer from "@mui/material/TableContainer";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import DotDotDot from "~/components/DotDotDot";
+import Container from "~/components/Container";
+import DotDotDot from "~/components/DotDotDotV2";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBoxV2";
+import Button from "~/components/ButtonV2";
 import ConfirmModal from "~/components/ConfirmModal";
-import { PlusButton } from "~/components/Buttons";
-import { useFetchMembers, handleDelete } from "./actions";
+import { useFetchMembers, deleteTeamMember } from "./actions";
 import NewMemberModal from "./_components/NewMemberModal";
 
 const Team: React.FC = (): React.ReactElement => {
@@ -24,27 +20,23 @@ const Team: React.FC = (): React.ReactElement => {
   const isCurrentUserTheOwner = app.userId === user!.id;
 
   return (
-    <div className="w-full">
-      <h1 className="mb-4 flex items-center justify-between">
-        <span className="text-2xl text-white">Members</span>
-        <div className="flex-shrink-0">
-          {isNewModalOpen && (
-            <NewMemberModal
-              app={app}
-              onClose={() => setIsNewModalOpen(false)}
-            />
-          )}
-          <PlusButton
-            onClick={() => setIsNewModalOpen(true)}
-            className="text-white rounded"
-            text="Invite new member"
-            size="small"
-            aria-label="Invite new member"
-          />
-        </div>
-      </h1>
+    <Container
+      maxWidth="max-w-none"
+      title="Members"
+      actions={
+        <Button
+          type="button"
+          category="button"
+          onClick={() => {
+            setIsNewModalOpen(true);
+          }}
+        >
+          Invite new member
+        </Button>
+      }
+    >
       {!isCurrentUserTheOwner && !loading && (
-        <InfoBox type={InfoBox.WARNING} className="mb-4">
+        <InfoBox type={InfoBox.WARNING} className="mb-4 mx-4">
           <div>
             In order to remove members from the team you'll need to have{" "}
             <span className="font-bold">owner</span> access.
@@ -57,63 +49,70 @@ const Team: React.FC = (): React.ReactElement => {
         </InfoBox>
       )}
       {loading ? (
-        <div className="flex justify-center bg-white rounded p-4">
+        <div className="flex justify-center p-4">
           <Spinner primary />
         </div>
       ) : (
-        members.map(({ user: member, isOwner }, i) => (
-          <TableContainer
-            key={member.id}
-            className={cn(
-              "flex flex-col justify-center bg-white border-b border-solid border-gray-83",
-              {
-                "rounded-tr rounded-tl": i === 0,
-                "rounded-br rounded-bl mb-4": i === members.length - 1,
-              }
-            )}
-          >
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="w-12">
-                    <img
-                      src={member.avatar}
-                      alt={`${member.fullName || member.displayName} profile`}
-                      className="rounded-full w-12 h-12 inline-block max-w-none"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="font-bold">
-                      {member.fullName || member.displayName}
-                    </div>
-                    {isOwner ? (
-                      <span className="text-green-50">Owner</span>
-                    ) : (
-                      <span className="opacity-50">Developer</span>
-                    )}
-                  </TableCell>
-                  {isCurrentUserTheOwner && !isOwner && (
-                    <TableCell className="text-right">
-                      <DotDotDot aria-label="More settings">
-                        <DotDotDot.Item
-                          icon="fas fa-times text-red-50 mr-2"
-                          aria-label={`Delete ${
-                            member.fullName || member.displayName
-                          }`}
-                          onClick={() => {
-                            setDeleteMember(member);
-                          }}
-                        >
-                          Delete
-                        </DotDotDot.Item>
-                      </DotDotDot>
-                    </TableCell>
-                  )}
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ))
+        <div className="pb-4">
+          {members.map(({ user: member, isOwner }, i) => (
+            <div
+              key={member.id}
+              className={cn("bg-blue-10 mx-4 flex p-4 items-center", {
+                "mt-4": i > 0,
+              })}
+            >
+              <div className="mr-4">
+                <img
+                  src={member.avatar}
+                  alt={`${member.fullName || member.displayName} profile`}
+                  className="rounded-full w-8 h-8 inline-block max-w-none"
+                />
+              </div>
+              <div className="flex-grow">
+                <div className="font-bold">
+                  {member.fullName || member.displayName}
+                </div>
+                {isOwner ? (
+                  <span className="text-green-50">Owner</span>
+                ) : (
+                  <span className="opacity-50">Developer</span>
+                )}
+              </div>
+              {isCurrentUserTheOwner && !isOwner && (
+                <div className="self-baseline">
+                  <DotDotDot
+                    aria-label="More settings"
+                    items={[
+                      {
+                        icon: "fas fa-times text-red-50",
+                        text: "Remove member",
+                        onClick: () => {
+                          setDeleteMember(member);
+                        },
+                      },
+                    ]}
+                  />
+                </div>
+              )}
+              {!isCurrentUserTheOwner && user?.id === member.id && (
+                <div className="self-baseline">
+                  <DotDotDot
+                    aria-label="More settings"
+                    items={[
+                      {
+                        icon: "fa-solid fa-right-from-bracket",
+                        text: "Leave team",
+                        onClick: () => {
+                          setDeleteMember(member);
+                        },
+                      },
+                    ]}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       )}
       {deleteMember && (
         <ConfirmModal
@@ -121,21 +120,44 @@ const Team: React.FC = (): React.ReactElement => {
             setDeleteMember(undefined);
           }}
           onConfirm={({ setError, setLoading }) => {
-            handleDelete({
-              setError,
-              setLoading,
+            setLoading(true);
+            setError(null);
+
+            deleteTeamMember({
               userId: deleteMember.id,
               app,
-            }).then(() => {
-              setDeleteMember(undefined);
-            });
+            })
+              .then(() => {
+                if (deleteMember.id === user?.id) {
+                  window.location.assign("/");
+                } else {
+                  window.location.reload();
+                }
+
+                setDeleteMember(undefined);
+              })
+              .catch(e => {
+                console.log(e);
+                setError(
+                  "Something went wrong while removing member from the team."
+                );
+              })
+              .finally(() => {
+                setLoading(false);
+              });
           }}
         >
-          Your are about to remove a member from this app. You will need to
-          re-invite if the user needs access again.
+          {deleteMember.id === user?.id ? (
+            <p>You won't be able to access this app anymore.</p>
+          ) : (
+            <p>User will no longer have access to this app anymore.</p>
+          )}
         </ConfirmModal>
       )}
-    </div>
+      {isNewModalOpen && (
+        <NewMemberModal app={app} onClose={() => setIsNewModalOpen(false)} />
+      )}
+    </Container>
   );
 };
 
