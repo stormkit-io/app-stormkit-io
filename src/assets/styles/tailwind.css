@@ -25,6 +25,10 @@
   @apply rounded-full;
 }
 
+.MuiInputBase-multiline {
+  @apply p-0;
+}
+
 .MuiFormLabel-root {
   font-size: 0.9rem;
   top: 2px;
