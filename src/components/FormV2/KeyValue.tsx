@@ -10,6 +10,8 @@ interface Props {
   inputName: string;
   keyName: string;
   valName: string;
+  keyPlaceholder?: string;
+  valPlaceholder?: string;
   defaultValue: Record<string, string>;
   tdClasses?: string;
   thClasses?: string;
@@ -21,9 +23,11 @@ const KeyValue: React.FC<Props> = ({
   inputName,
   keyName,
   valName,
+  keyPlaceholder,
+  valPlaceholder,
   defaultValue,
   resetToken,
-  tdClasses = "border-blue-30 text-gray-80 py-2 px-0",
+  tdClasses = "border-blue-30 text-gray-80 py-2",
   thClasses = "border-blue-30 font-bold text-white bg-blue-20",
   onChange,
 }) => {
@@ -71,10 +75,11 @@ const KeyValue: React.FC<Props> = ({
       <TableBody>
         {rows.map(([key, value], index) => (
           <TableRow key={`${key}_${index}`}>
-            <TableCell className={tdClasses}>
+            <TableCell className={cn(tdClasses, "pl-0 pr-1 w-1/2")}>
               <Input
-                className="bg-transparent no-border"
+                className="bg-blue-10 no-border"
                 fullWidth
+                placeholder={keyPlaceholder}
                 inputProps={{
                   "aria-label": `${inputName} key number ${index + 1}`,
                 }}
@@ -83,11 +88,12 @@ const KeyValue: React.FC<Props> = ({
                 onChange={onChange}
               />
             </TableCell>
-            <TableCell className={cn(tdClasses, "pr-0")}>
+            <TableCell className={cn(tdClasses, "pl-0 pr-0")}>
               <Input
-                className="bg-transparent no-border mr-0"
+                className="bg-blue-10 no-border mr-0"
                 fullWidth
                 defaultValue={value}
+                placeholder={valPlaceholder}
                 name={`${inputName}[value]`}
                 onChange={onChange}
                 aria-label=""
