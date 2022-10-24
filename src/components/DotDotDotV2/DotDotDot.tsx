@@ -10,7 +10,7 @@ interface Item {
   icon?: string;
   className?: string;
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: (close?: () => void) => boolean | void;
 }
 
 interface Props {
@@ -52,8 +52,9 @@ const DotDotDot: React.FC<Props> = ({ items }) => {
                   href={item.href}
                   disabled={item.disabled}
                   onClick={() => {
-                    item.onClick?.();
-                    toggleIsOpen(false);
+                    if (item.onClick?.(() => toggleIsOpen(false)) !== false) {
+                      toggleIsOpen(false);
+                    }
                   }}
                   className={cn(
                     "px-4 py-3 text-left min-w-48 flex items-center",
