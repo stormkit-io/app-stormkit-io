@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import api from "~/utils/api/Api";
-import type { LocationState, OutboundWebhook } from "../types";
+import type { OutboundWebhook } from "../types";
 
 interface FetchOutboundWebhooksProps {
   app: App;
-  setLoading: SetLoading;
-  setError: SetError;
+  refreshToken?: number;
+}
+
+interface FetchOutboundWebhooksReturnValue {
+  hooks: Array<OutboundWebhook>;
+  error?: string;
+  loading: boolean;
 }
 
 interface FetchOutboundWebhooksRequest {
@@ -15,17 +19,16 @@ interface FetchOutboundWebhooksRequest {
 
 export const useFetchOutboundWebhooks = ({
   app,
-  setLoading,
-  setError,
-}: FetchOutboundWebhooksProps): Array<OutboundWebhook> => {
-  const location = useLocation<LocationState>();
+  refreshToken,
+}: FetchOutboundWebhooksProps): FetchOutboundWebhooksReturnValue => {
   const [hooks, setHooks] = useState<Array<OutboundWebhook>>([]);
-  const refresh = location?.state?.outboundWebhooksRefresh;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     let unmounted = false;
 
-    setError(null);
+    setError(undefined);
     setLoading(true);
 
     api
@@ -51,9 +54,9 @@ export const useFetchOutboundWebhooks = ({
     return () => {
       unmounted = true;
     };
-  }, [app.id, refresh]);
+  }, [app.id, refreshToken]);
 
-  return hooks;
+  return { hooks, error, loading };
 };
 
 interface UpsertOutboundWebhookProps {

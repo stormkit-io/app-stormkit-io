@@ -5,7 +5,7 @@ export interface LocationState extends Location {
   app: number | null;
 }
 
-export type Runtime = "nodejs12.x" | "nodejs14.x";
+export type Runtime = "nodejs12.x" | "nodejs14.x" | "nodejs16.x";
 
 export interface AppSettings {
   envs: Array<string>;
@@ -31,6 +31,6 @@ export type OutboundWebhookFormValues = Omit<
   OutboundWebhook,
   "requestHeaders"
 > & {
-  headerName: Array<string> | string;
-  headerValue: Array<string> | string;
+  "headers[key]": Array<string> | string;
+  "headers[value]": Array<string> | string;
 };

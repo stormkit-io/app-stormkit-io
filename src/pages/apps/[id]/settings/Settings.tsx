@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Spinner from "~/components/Spinner";
+import Container from "~/components/Container";
 import FormAppSettings from "./_components/FormAppSettings";
 import FormTriggerDeploys from "./_components/FormTriggerDeploys";
 import FormOutboundWebhooks from "./_components/FormOutboundWebhooks";
@@ -11,7 +12,7 @@ import * as actions from "./actions";
 const { useFetchAdditionalSettings } = actions;
 
 const Settings: React.FC = () => {
-  const { app, environments } = useContext(AppContext);
+  const { app, environments, setRefreshToken } = useContext(AppContext);
   const { user } = useContext(AuthContext);
   const isCurrentUserTheOwner = app.userId === user!.id;
   const { settings, loading } = useFetchAdditionalSettings({
@@ -29,33 +30,42 @@ const Settings: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h1 className="mb-4 text-2xl text-white">App settings</h1>
-      {loading ? (
-        <Spinner primary />
-      ) : (
-        <>
-          <div className="rounded bg-white p-8 mb-8">
-            <FormAppSettings app={app} additionalSettings={settings} />
+    <>
+      <Container title="App settings" maxWidth="max-w-none" className="mb-4">
+        {loading ? (
+          <div className="flex justify-center mb-4">
+            <Spinner primary />
           </div>
-          <div className="rounded bg-white p-8 mb-8">
-            <FormTriggerDeploys
-              app={app}
-              additionalSettings={settings}
-              environments={environments}
-            />
-          </div>
-          <div className="rounded bg-white p-8 mb-8">
-            <FormOutboundWebhooks app={app} />
-          </div>
-          {isCurrentUserTheOwner && (
-            <div className="rounded bg-white p-8 mb-8">
-              <FormDangerZone app={app} />
-            </div>
-          )}
-        </>
+        ) : (
+          <FormAppSettings
+            app={app}
+            additionalSettings={settings}
+            onUpdate={() => {
+              setRefreshToken(Date.now());
+            }}
+          />
+        )}
+      </Container>
+      <Container title="Trigger deploys" maxWidth="max-w-none" className="mb-4">
+        <FormTriggerDeploys
+          app={app}
+          additionalSettings={settings}
+          environments={environments}
+        />
+      </Container>
+      <Container
+        title="Outbound webhooks"
+        maxWidth="max-w-none"
+        className="mb-4"
+      >
+        <FormOutboundWebhooks app={app} />
+      </Container>
+      {isCurrentUserTheOwner && (
+        <Container title="Danger zone" maxWidth="max-w-none" className="mb-4">
+          <FormDangerZone app={app} />
+        </Container>
       )}
-    </div>
+    </>
   );
 };
 

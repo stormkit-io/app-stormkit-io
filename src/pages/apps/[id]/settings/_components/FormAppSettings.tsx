@@ -1,10 +1,11 @@
+import type { Runtime, AppSettings } from "../types.d";
+import type { FormValues } from "../actions";
 import React, { useState, useEffect } from "react";
-import Form from "~/components/Form";
-import InfoBox from "~/components/InfoBox";
-import Button from "~/components/Button";
+import Form from "~/components/FormV2";
+import InfoBox from "~/components/InfoBoxV2";
+import Button from "~/components/ButtonV2";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
-import type { Runtime, AppSettings } from "../types.d";
 
 const NodeJS16 = "nodejs16.x";
 const NodeJS14 = "nodejs14.x";
@@ -13,9 +14,14 @@ const NodeJS12 = "nodejs12.x";
 interface Props {
   app: App;
   additionalSettings: AppSettings;
+  onUpdate: () => void;
 }
 
-const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
+const FormAppSettings: React.FC<Props> = ({
+  app,
+  additionalSettings,
+  onUpdate,
+}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [runtime, setRuntime] = useState<Runtime>(additionalSettings.runtime);
@@ -27,74 +33,101 @@ const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
   }, [additionalSettings.runtime]);
 
   return (
-    <Form
-      handleSubmit={updateAdditionalSettings({
-        app,
-        setLoading,
-        setError,
-      })}
+    <Form<FormValues>
+      handleSubmit={values => {
+        setLoading(true);
+        setError(null);
+        updateAdditionalSettings({
+          app,
+          values,
+        })
+          .then(() => {
+            onUpdate();
+          })
+          .catch(res => {
+            res
+              .json()
+              .then(({ errors }: { errors: Record<string, string> }) => {
+                setError(
+                  Object.keys(errors)
+                    .map(k => errors[k])
+                    .join(", ")
+                );
+              })
+              .catch(() => {
+                setError(
+                  "Something went wrong happened while updating settings. " +
+                    "Please try again and if the problem persists contact us from Discord or email."
+                );
+              });
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }}
     >
-      <Form.Section label="Display name">
+      <Form.WithLabel
+        label="Display name"
+        className="pb-0 pt-0"
+        tooltip={
+          <p>
+            The display name has to be unique over the whole Stormkit
+            application ecosystem. It will be used as a prefix for your
+            deployment endpoints. You can change it as many times as you wish,
+            however be aware that as soon as your display name is changed, the
+            old one will be available for others to use.
+          </p>
+        }
+      >
         <Form.Input
           name="displayName"
           className="bg-gray-90"
           required
           defaultValue={app.displayName}
           fullWidth
-          inputProps={{
-            "aria-label": "Display name",
-          }}
         />
-        <Form.Description>
-          The display name has to be unique over the whole Stormkit application
-          ecosystem. It will be used as a prefix for your deployment endpoints.
-          You can change it as many times as you wish, however be aware that as
-          soon as your display name is changed, the old one will be available
-          for others to use.
-        </Form.Description>
-      </Form.Section>
-      <Form.Section label="Repository">
+      </Form.WithLabel>
+      <Form.WithLabel
+        label="Repository"
+        className="pb-0"
+        tooltip={<p>The repo address of your application.</p>}
+      >
         <Form.Input
           name="repo"
           className="bg-gray-90"
+          placeholder="e.g. https://github.com/stormkit-io/app-stormkit-io"
           required
           defaultValue={toRepoAddr(app.repo)}
           fullWidth
-          inputProps={{
-            "aria-label": "Repository",
-          }}
         />
-        <Form.Description>
-          The repository address of your application. You can paste the full
-          https address here, we'll take care of formatting it for Stormkit.
-        </Form.Description>
-      </Form.Section>
-      <Form.Section label="Runtime">
+      </Form.WithLabel>
+      <Form.WithLabel
+        label="Runtime"
+        tooltip={
+          <p>The application runtime for the CI and server side environment.</p>
+        }
+      >
         <Form.Select
           name="runtime"
           displayEmpty
           value={runtime}
           onChange={e => setRuntime(e.target.value as Runtime)}
-          inputProps={{
-            "aria-label": "Runtime",
-          }}
         >
-          <Form.Option value={NodeJS12}>NodeJS 12.x</Form.Option>
+          <Form.Option value={NodeJS12} disabled>
+            NodeJS 12.x
+          </Form.Option>
           <Form.Option value={NodeJS14}>NodeJS 14.x</Form.Option>
           <Form.Option value={NodeJS16}>NodeJS 16.x</Form.Option>
         </Form.Select>
-        <Form.Description>
-          The application runtime for deployments and server side environment.
-        </Form.Description>
-        {runtime !== additionalSettings.runtime &&
-          typeof additionalSettings.runtime !== "undefined" && (
-            <InfoBox className="mt-4">
-              This change will only be applied to your new deployments.
-            </InfoBox>
-          )}
-      </Form.Section>
-      <div className="flex justify-end">
-        <Button primary loading={loading} type="submit">
+      </Form.WithLabel>
+      {runtime !== additionalSettings.runtime &&
+        typeof additionalSettings.runtime !== "undefined" && (
+          <InfoBox className="mx-4 mb-4">
+            This change will only be applied to your new deployments.
+          </InfoBox>
+        )}
+      <div className="flex justify-end px-4 pb-4">
+        <Button loading={loading} type="submit" category="action">
           Update
         </Button>
       </div>
