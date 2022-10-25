@@ -39,3 +39,12 @@ export const mockFetchApps = ({
   nock(endpoint)
     .get(`/apps?from=${from}&filter=${filter}`)
     .reply(status, response);
+
+interface DeleteAppProps {
+  appId: string;
+  status?: number;
+  response: { ok: boolean };
+}
+
+export const mockDeleteApp = ({ appId, status, response }: DeleteAppProps) =>
+  nock(endpoint).delete(`/app`, { appId }).reply(status, response);

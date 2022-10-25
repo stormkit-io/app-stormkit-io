@@ -5,8 +5,6 @@ import type { AppSettings, Runtime } from "./types.d";
 
 interface DeleteAppProps {
   app: App;
-  setLoading: SetLoading;
-  setError: SetError;
 }
 
 type voidFn = () => void;
@@ -14,25 +12,8 @@ type voidFn = () => void;
 /**
  * Action to delete an application.
  */
-export const deleteApp = ({
-  app,
-  setLoading,
-  setError,
-}: DeleteAppProps): Promise<void> => {
-  setLoading(true);
-
-  return api
-    .delete("/app", { appId: app.id })
-    .then(() => {
-      setLoading(false);
-      window.location.href = "/";
-    })
-    .catch(() => {
-      setLoading(false);
-      setError(
-        "Something went wrong on our side. Please try again. If the problem persists reach us out through Discord or email."
-      );
-    });
+export const deleteApp = ({ app }: DeleteAppProps): Promise<void> => {
+  return api.delete("/app", { appId: app.id });
 };
 
 interface UpdateDeployTriggerProps {
@@ -78,7 +59,7 @@ export const useFetchAdditionalSettings = ({
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState<AppSettings>({
     envs: [],
-    runtime: "nodejs14.x",
+    runtime: "nodejs16.x",
   });
 
   useEffect(() => {
@@ -86,6 +67,10 @@ export const useFetchAdditionalSettings = ({
 
     setLoading(true);
     setError(null);
+    setSettings({
+      envs: [],
+      runtime: "nodejs16.x",
+    });
 
     api
       .fetch<AppSettings>(`/app/${app.id}/settings`)
@@ -114,58 +99,32 @@ export const useFetchAdditionalSettings = ({
     return () => {
       unmounted = true;
     };
-  }, [api, app.id]);
+  }, [app.id, app.refreshToken]);
 
   return { loading, error, settings };
 };
 
 interface UpdateAdditionalSettingsProps {
-  setError: SetError;
-  setLoading: SetLoading;
+  values: FormValues;
   app: App;
 }
 
-interface FormValues {
+export interface FormValues {
   repo: string;
   displayName: string;
   runtime: Runtime;
 }
 
-export const updateAdditionalSettings =
-  ({ app, setLoading, setError }: UpdateAdditionalSettingsProps) =>
-  ({ repo, displayName, runtime }: FormValues): void => {
-    repo = formatRepo(repo);
-    setLoading(true);
-    setError(null);
+export const updateAdditionalSettings = ({
+  app,
+  values: { repo, displayName, runtime },
+}: UpdateAdditionalSettingsProps): Promise<void> => {
+  repo = formatRepo(repo);
 
-    api
-      .put(`/app`, {
-        appId: app.id,
-        displayName,
-        repo,
-        runtime,
-      })
-      .then(() => {
-        setLoading(false);
-        window.location.reload();
-      })
-      .catch(res => {
-        res
-          .json()
-          .then(({ errors }: { errors: Record<string, string> }) => {
-            setLoading(false);
-            setError(
-              Object.keys(errors)
-                .map(k => errors[k])
-                .join(", ")
-            );
-          })
-          .catch(() => {
-            setLoading(false);
-            setError(
-              "Something went wrong happened while updating settings. " +
-                "Please try again and if the problem persists contact us from Discord or email."
-            );
-          });
-      });
-  };
+  return api.put(`/app`, {
+    appId: app.id,
+    displayName,
+    repo,
+    runtime,
+  });
+};
