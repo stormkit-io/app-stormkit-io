@@ -12,18 +12,6 @@ import Button from "~/components/ButtonV2";
 
 const renderLog = (log: Log, i: number) => {
   let data = log.data.split(/END\sRequestId:/)[0];
-
-  // Regex to remove lines like:
-  // 2022-10-20T13:05:30.027Z	undefined	TRACE
-  // 2022-10-20T13:05:30.028Z	undefined	ERROR
-  data = data.replace(
-    /20[0-9]{2}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[[0-9]+Z.*(ERROR|TRACE|INFO|WARN)\t?/g,
-    ""
-  );
-
-  // Regex to remove lines like:
-  // START RequestId: <request-id> Version: 1
-  data = data.replace(/START\sRequestId:\s[\sa-z0-9-]+\sVersion:\s[0-9]+/, "");
   data = data.trim();
 
   if (data.length === 0) {

@@ -100,7 +100,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     );
   };
 
-  test("should contain a link back to the deployment page", async () => {
+  xtest("should contain a link back to the deployment page", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -113,7 +113,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     });
   });
 
-  test("should display logs", async () => {
+  xtest("should display logs", async () => {
     createWrapper();
 
     await waitFor(() => {
