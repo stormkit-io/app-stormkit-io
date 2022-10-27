@@ -9,6 +9,7 @@ interface FetchDeploymentLogsProps {
   status?: number;
   response: {
     logs: Log[];
+    totalPage: number
   };
 }
 

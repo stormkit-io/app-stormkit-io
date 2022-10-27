@@ -67,6 +67,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
             timestamp: "1666187370",
           },
         ],
+        totalPage: 0,
       },
     });
 
