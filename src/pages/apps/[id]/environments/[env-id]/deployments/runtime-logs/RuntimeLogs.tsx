@@ -1,5 +1,5 @@
 import type { Log } from "./actions";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useParams, useLocation } from "react-router";
 import emptyListSvg from "~/assets/images/empty-list.svg";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -8,6 +8,7 @@ import { useFetchDeploymentRuntimeLogs } from "./actions";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
 import Link from "~/components/Link";
+import Button from "~/components/ButtonV2";
 
 const renderLog = (log: Log, i: number) => {
   let data = log.data.split(/END\sRequestId:/)[0];
@@ -46,9 +47,11 @@ const RuntimeLogs: React.FC = () => {
   const { deploymentId } = useParams();
   const location = useLocation();
   const { app } = useContext(AppContext);
-  const { logs, error, loading } = useFetchDeploymentRuntimeLogs({
+  const [page, setPage] = useState<number>(0);
+  const { logs, error, loading, totalPage } = useFetchDeploymentRuntimeLogs({
     appId: app.id,
     deploymentId,
+    page,
   });
 
   return (
@@ -66,7 +69,7 @@ const RuntimeLogs: React.FC = () => {
       }
       maxWidth="max-w-none"
     >
-      <div className="p-4 pt-0">
+      <div className="p-4 pt-0 max-h-screen" style={{ overflowY: "auto" }}>
         {loading && (
           <div className="flex items-center w-full justify-center">
             <Spinner />
@@ -91,8 +94,19 @@ const RuntimeLogs: React.FC = () => {
             </div>
           ))}
       </div>
-    </Container>
-  );
+
+      {totalPage > 0 && totalPage != page ? (<div className="my-5 py-5 flex justify-center">
+        <Button
+          category="action"
+          loading={loading}
+          onClick={() => {
+            setPage(page + 1);
+          }}
+        >
+          Load more logs
+        </Button>
+      </div>) : null }
+    </Container>)
 };
 
 export default RuntimeLogs;
