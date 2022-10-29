@@ -4,7 +4,7 @@ import api from "~/utils/api/Api";
 interface FetchDeploymentRuntimeLogsProps {
   appId: string;
   deploymentId?: string;
-  page: number
+  page: number;
 }
 
 export interface Log {
@@ -25,7 +25,7 @@ interface FetchDeploymentRuntimeLogsReturnValue {
 export const useFetchDeploymentRuntimeLogs = ({
   appId,
   deploymentId,
-  page
+  page,
 }: FetchDeploymentRuntimeLogsProps): FetchDeploymentRuntimeLogsReturnValue => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
@@ -41,18 +41,20 @@ export const useFetchDeploymentRuntimeLogs = ({
     setError(undefined);
 
     api
-      .fetch<{ logs: Log[], totalPage:number }>(`/app/${appId}/logs?deploymentId=${deploymentId}&page=${page}`)
-      .then(data  => {
+      .fetch<{ logs: Log[]; totalPage: number }>(
+        `/app/${appId}/logs?deploymentId=${deploymentId}&page=${page}`
+      )
+      .then(data => {
         setLogs([...logs, ...data.logs]);
-        setTotalPage(data.totalPage)
+        setTotalPage(data.totalPage);
       })
-      .catch(() => {
+      .catch(res => {
         setError("Something went wrong while fetching logs.");
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, deploymentId, page, totalPage]);
+  }, [appId, deploymentId, page]);
 
   return { logs, error, loading, totalPage };
 };

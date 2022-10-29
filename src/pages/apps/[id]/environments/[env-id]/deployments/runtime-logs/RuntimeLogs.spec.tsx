@@ -1,6 +1,11 @@
 import type { Scope } from "nock";
 import React from "react";
-import { render, RenderResult, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  RenderResult,
+  waitFor,
+} from "@testing-library/react";
 import { createMemoryHistory, History } from "history";
 import { Router, Route, Routes } from "react-router-dom";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -14,6 +19,7 @@ interface Props {
   app?: App;
   deployment?: Deployment;
   environment?: Environment;
+  totalPage?: number;
 }
 
 describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/RuntimeLogs.spec.tsx", () => {
@@ -29,6 +35,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     app,
     environment,
     deployment,
+    totalPage = 0,
   }: Props | undefined = {}) => {
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironment({ app: currentApp });
@@ -43,6 +50,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     scope = mockFetchDeploymentLogs({
       appId: currentApp.id,
       deploymentId: currentDeploy.id,
+      page: 0,
       response: {
         logs: [
           {
@@ -67,7 +75,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
             timestamp: "1666187370",
           },
         ],
-        totalPage: 0,
+        totalPage,
       },
     });
 
@@ -100,7 +108,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     );
   };
 
-  xtest("should contain a link back to the deployment page", async () => {
+  test("should contain a link back to the deployment page", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -113,7 +121,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     });
   });
 
-  xtest("should display logs", async () => {
+  test("should display logs", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -127,6 +135,39 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
       expect(
         wrapper.getByText("sample log from sample-project 3")
       ).toBeTruthy();
+    });
+  });
+
+  test("should paginate", async () => {
+    createWrapper({ totalPage: 2 });
+
+    await waitFor(() => {
+      expect(wrapper.getByText("Load more logs")).toBeTruthy();
+    });
+
+    const paginationScope = mockFetchDeploymentLogs({
+      appId: currentApp.id,
+      deploymentId: currentDeploy.id,
+      page: 1,
+      response: {
+        totalPage: 2,
+        logs: [
+          {
+            appId: currentApp.id,
+            envId: currentEnv.id!,
+            deploymentId: currentDeploy.id,
+            data: "Hello from a second page log",
+            timestamp: "1666198441",
+          },
+        ],
+      },
+    });
+
+    fireEvent.click(wrapper.getByText("Load more logs"));
+
+    await waitFor(() => {
+      expect(paginationScope.isDone()).toBe(true);
+      expect(wrapper.getByText("Hello from a second page log")).toBeTruthy();
     });
   });
 });
