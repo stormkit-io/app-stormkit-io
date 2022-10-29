@@ -12,6 +12,18 @@ import Button from "~/components/ButtonV2";
 
 const renderLog = (log: Log, i: number) => {
   let data = log.data.split(/END\sRequestId:/)[0];
+
+  // Regex to remove lines like:
+  // 2022-10-20T13:05:30.027Z	undefined	TRACE
+  // 2022-10-20T13:05:30.028Z	undefined	ERROR
+  data = data.replace(
+    /20[0-9]{2}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[[0-9]+Z.*(ERROR|TRACE|INFO|WARN)\t?/g,
+    ""
+  );
+
+  // Regex to remove lines like:
+  // START RequestId: <request-id> Version: 1
+  data = data.replace(/START\sRequestId:\s[\sa-z0-9-]+\sVersion:\s[0-9]+/, "");
   data = data.trim();
 
   if (data.length === 0) {
@@ -57,14 +69,14 @@ const RuntimeLogs: React.FC = () => {
       }
       maxWidth="max-w-none"
     >
-      <div className="p-4 pt-0 max-h-screen" style={{ overflowY: "auto" }}>
-        {loading && (
+      <div className="p-4 pt-0">
+        {loading && page === 0 && (
           <div className="flex items-center w-full justify-center">
             <Spinner />
           </div>
         )}
         {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
-        {!loading &&
+        {(!loading || page > 0) &&
           (logs.length > 0 ? (
             <div className="bg-blue-10 font-mono text-xs">
               {logs.map(renderLog)}
@@ -83,18 +95,22 @@ const RuntimeLogs: React.FC = () => {
           ))}
       </div>
 
-      {totalPage > 0 && totalPage != page ? (<div className="my-5 py-5 flex justify-center">
-        <Button
-          category="action"
-          loading={loading}
-          onClick={() => {
-            setPage(page + 1);
-          }}
-        >
-          Load more logs
-        </Button>
-      </div>) : null }
-    </Container>)
+      {(!loading || totalPage > 0) && totalPage !== page ? (
+        <div className="mb-5 pb-5 flex justify-center">
+          <Button
+            type="button"
+            category="button"
+            loading={loading && page > 0}
+            onClick={() => {
+              setPage(page + 1);
+            }}
+          >
+            Load more logs
+          </Button>
+        </div>
+      ) : null}
+    </Container>
+  );
 };
 
 export default RuntimeLogs;
