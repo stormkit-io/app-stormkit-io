@@ -22,7 +22,8 @@ export const AppLayout: React.FC = () => {
   // the :envId url parameter, as it's included inside
   // this component as a child.
   const envId = pathname.split("/environments/")?.[1]?.split("/")?.[0];
-  const selectedEnvId = envId || environments?.[0]?.id || "";
+  const selectedEnvId =
+    envId || environments?.find(e => e.name === "production")?.id || "";
 
   if (!selectedEnvId || environments.length === 0) {
     return <></>;
