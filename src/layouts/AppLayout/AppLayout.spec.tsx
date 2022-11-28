@@ -1,4 +1,4 @@
-import type { RenderResult } from "@testing-library/react";
+import { RenderResult, waitFor } from "@testing-library/react";
 import type { History } from "history";
 import React from "react";
 import * as router from "react-router";
@@ -31,6 +31,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
       initialEntries: [`/apps/${app.id}`],
       initialIndex: 0,
     });
+
     wrapper = render(
       <Router navigator={history} location={history.location}>
         <Routes>
@@ -139,6 +140,37 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
       );
 
       expect(wrapper.getByText("Start a deployment")).toBeTruthy();
+    });
+  });
+
+  describe("with SK_DATA_STORE feature flag turned on", () => {
+    beforeEach(() => {
+      const app = mockApp();
+      app.featureFlags = { SK_DATA_STORE: true };
+      mockUseLocation({ pathname: `/apps/${defaultApp.id}/environments` });
+      createWrapper({ app });
+    });
+
+    test.only("should display data store link", async () => {
+      const links = wrapper
+        .getAllByRole("link")
+        .map(link => link.getAttribute("href"));
+
+      await waitFor(() => {
+        expect(links).toEqual([
+          "/", // Stormkit logo link
+          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
+          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
+          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
+          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
+          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/data-store`,
+          `/apps/${defaultApp.id}/usage`,
+          "https://gitlab.com/stormkit-io/frontend",
+          `/apps/${defaultApp.id}/environments`,
+          `/apps/${defaultApp.id}/team`,
+          `/apps/${defaultApp.id}/settings`,
+        ]);
+      });
     });
   });
 });

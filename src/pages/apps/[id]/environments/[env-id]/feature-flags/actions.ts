@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import api from "~/utils/api/Api";
 
 interface FetchFeatureFlagsArgs {
-  app: App;
-  environment: Environment;
+  appId?: string;
+  environmentId?: string;
 }
 
 interface FetchFeatureFlagsReturnValue {
@@ -14,8 +14,8 @@ interface FetchFeatureFlagsReturnValue {
 }
 
 export const useFetchFeatureFlags = ({
-  app,
-  environment,
+  appId,
+  environmentId,
 }: FetchFeatureFlagsArgs): FetchFeatureFlagsReturnValue => {
   const [flags, setFlags] = useState<FeatureFlag[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,11 +23,15 @@ export const useFetchFeatureFlags = ({
   const [reload, setReload] = useState<number>();
 
   useEffect(() => {
+    if (!appId || !environmentId) {
+      return;
+    }
+
     let unmounted = false;
     setLoading(true);
 
     api
-      .fetch<FeatureFlag[]>(`/apps/${app.id}/envs/${environment.id}/flags`)
+      .fetch<FeatureFlag[]>(`/apps/${appId}/envs/${environmentId}/flags`)
       .then(result => {
         if (!unmounted) {
           setFlags(result);
@@ -47,7 +51,7 @@ export const useFetchFeatureFlags = ({
     return () => {
       unmounted = true;
     };
-  }, [reload]);
+  }, [appId, environmentId, reload]);
 
   return { flags, loading, error, setReload };
 };
