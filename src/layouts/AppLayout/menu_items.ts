@@ -47,7 +47,7 @@ export const envMenuItems = ({
 
   const envPath = `/apps/${app.id}/environments/${env.id}`;
 
-  return [
+  const items = [
     {
       icon: "fa-solid fa-wrench",
       text: `${capitalize(env.env)} environment configuration`,
@@ -73,4 +73,15 @@ export const envMenuItems = ({
       isActive: pathname.includes("/feature-flags"),
     },
   ];
+
+  if (app.featureFlags?.SK_DATA_STORE) {
+    items.push({
+      icon: "fas fa-database",
+      text: "Data Store",
+      path: `${envPath}/data-store`,
+      isActive: pathname.includes("/data-store"),
+    });
+  }
+
+  return items;
 };

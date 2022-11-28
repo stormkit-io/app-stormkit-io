@@ -10,6 +10,7 @@ interface FetchAppReturnValue {
   loading: boolean;
   error: string | null;
   refreshToken?: number;
+  setApp: (val: App) => void;
   setRefreshToken: (val: number) => void;
 }
 
@@ -90,5 +91,5 @@ export const useFetchApp = ({ appId }: FetchAppProps): FetchAppReturnValue => {
     };
   }, [api, appId, refreshToken]);
 
-  return { app, loading, error, refreshToken, setRefreshToken };
+  return { app, loading, error, refreshToken, setRefreshToken, setApp };
 };

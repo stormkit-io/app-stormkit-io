@@ -29,8 +29,8 @@ const FeatureFlags: React.FC = () => {
   const [toBeToggled, setToBeToggled] = useState<FF>();
   const [isFeatureFlagModalOpen, setFeatureFlagModal] = useState(false);
   const { error, loading, flags, setReload } = useFetchFeatureFlags({
-    app,
-    environment: environment!,
+    appId: app.id,
+    environmentId: environment.id!,
   });
 
   return (

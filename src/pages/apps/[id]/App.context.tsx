@@ -1,9 +1,10 @@
-import React, { createContext } from "react";
+import React, { createContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Link from "~/components/Link";
 import Error404 from "~/components/Errors/Error404";
+import { useFetchFeatureFlags } from "~/pages/apps/[id]/environments/[env-id]/feature-flags/actions";
 import { useFetchApp } from "./actions";
 import { useFetchEnvironments } from "./environments/actions";
 
@@ -24,11 +25,32 @@ interface Props {
 }
 
 const AppProvider: React.FC<Props> = ({ children }) => {
-  const { app, error, loading, setRefreshToken } = useFetchApp({
-    appId: useParams().id,
+  const appId = useParams().id;
+  const { app, error, loading, setRefreshToken, setApp } = useFetchApp({
+    appId,
   });
 
   const envs = useFetchEnvironments({ app });
+
+  const { flags } = useFetchFeatureFlags({
+    appId: app?.id,
+    environmentId: envs.environments?.find(e => e.name === "production")?.id!,
+  });
+
+  // Bind feature flags to app object
+  useEffect(() => {
+    if (!app?.id) {
+      return;
+    }
+
+    setApp({
+      ...app,
+      featureFlags: flags?.reduce((obj: Record<string, boolean>, curr) => {
+        obj[curr.flagName] = curr.flagValue;
+        return obj;
+      }, {}),
+    });
+  }, [app?.id, envs.environments, flags]);
 
   if (loading) {
     return <Spinner primary pageCenter />;
