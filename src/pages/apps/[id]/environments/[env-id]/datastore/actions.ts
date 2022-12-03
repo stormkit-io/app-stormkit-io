@@ -83,7 +83,7 @@ export const useWithRecords = ({
       .post<CollectionRecord[]>(`/app/data-storage/query`, {
         appId,
         envId,
-        keyName: collectionName,
+        collectionName,
       })
       .then(data => {
         setRecords(data);

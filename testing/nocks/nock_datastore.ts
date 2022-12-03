@@ -18,7 +18,7 @@ export const mockFetchRecords = ({
   response = [],
 }: MockFetchRecordsProps) => {
   return nock(endpoint)
-    .post(`/app/data-storage/query`, { appId, envId, keyName: collectionName })
+    .post(`/app/data-storage/query`, { appId, envId, collectionName })
     .reply(status, response);
 };
 
