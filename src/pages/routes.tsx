@@ -86,7 +86,7 @@ const routes: Array<RouteProps> = [
   },
   {
     path: "/user/*",
-    element: Async(() => import("~/pages/user")),
+    element: Async(() => import("~/pages/user"), centerLayout),
   },
 ];
 
