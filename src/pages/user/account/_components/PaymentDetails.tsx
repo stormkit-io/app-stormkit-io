@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import * as stripejs from "@stripe/react-stripe-js";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBoxV2";
 import Link from "~/components/Link";
-import Form from "~/components/Form";
-import Button from "~/components/Button";
+import Form from "~/components/FormV2";
+import Button from "~/components/ButtonV2";
+import Container from "~/components/Container";
 import ConfirmModal from "~/components/ConfirmModal";
 import * as actions from "../actions";
 import { stripePromise, stripeStyles } from "./constants";
@@ -34,22 +35,25 @@ const PaymentDetails: React.FC = (): React.ReactElement => {
   const isLoading = loading || !stripe || !elements;
 
   useEffect(() => {
-    setShowForm(false);
+    setShowForm(cards?.length === 0);
   }, [cards]);
 
   return (
-    <div>
-      <h1 className="mb-4 text-2xl text-white">Payment details</h1>
-      <div className="rounded bg-white p-8 mb-8">
-        {isLoading && <Spinner width={6} height={6} primary />}
+    <Container title="Payment details">
+      <div className="pb-4 mb-4">
+        {isLoading && (
+          <div className="px-4">
+            <Spinner width={6} height={6} primary />
+          </div>
+        )}
         {!isLoading && (
           <>
             {cards.length ? (
-              <div className="mb-4">
+              <div className="px-4">
                 {cards.map(card => (
                   <div
                     key={card.id}
-                    className="flex justify-between bg-gray-90 border border-solid border-gray-83 p-4"
+                    className="flex justify-between border border-solid border-blue-20 p-4"
                   >
                     <div>
                       <div className="mb-4 font-bold">Active Card</div>
@@ -96,37 +100,36 @@ const PaymentDetails: React.FC = (): React.ReactElement => {
                 })}
               >
                 {errorMsg && (
-                  <InfoBox type="error" className="mb-4">
+                  <InfoBox type="error" className="mx-4 mt-4">
                     {errorMsg}
                   </InfoBox>
                 )}
-                <Form.Section label="Card number">
-                  <div className="border border-solid border-gray-83 rounded p-4 bg-gray-90">
+                <Form.WithLabel label="Card number" className="p-0 pb-4">
+                  <div className="w-full px-4">
                     <CardNumberElement
                       options={{ style: stripeStyles, showIcon: true }}
                     />
                   </div>
-                </Form.Section>
-                <Form.Section label="Expiry">
-                  <div className="border border-solid border-gray-83 rounded p-4 w-32 bg-gray-90">
+                </Form.WithLabel>
+                <Form.WithLabel label="Expiry">
+                  <div className="w-full px-4">
                     <CardExpiryElement options={{ style: stripeStyles }} />
                   </div>
-                </Form.Section>
-                <Form.Section label="CVC">
-                  <div className="border border-solid border-gray-83 rounded p-4 w-32 bg-gray-90">
+                </Form.WithLabel>
+                <Form.WithLabel label="CVC">
+                  <div className="w-full px-4">
                     <CardCvcElement options={{ style: stripeStyles }} />
                   </div>
-                </Form.Section>
-                <Form.Section label="Cardholder's Name">
+                </Form.WithLabel>
+                <Form.WithLabel label="Cardholder's Name">
                   <Form.Input
                     name="name"
                     defaultValue={cards[0]?.owner?.name}
                     placeholder="John Doe"
                     fullWidth
-                    className="bg-gray-90"
                   />
-                </Form.Section>
-                <div className="flex justify-between">
+                </Form.WithLabel>
+                <div className="flex justify-between px-4">
                   <Link
                     to="https://www.stripe.com"
                     rel="nofollow"
@@ -139,7 +142,7 @@ const PaymentDetails: React.FC = (): React.ReactElement => {
                       className="w-8"
                     />
                   </Link>
-                  <Button primary loading={formLoading}>
+                  <Button category="action" type="submit" loading={formLoading}>
                     Update payment method
                   </Button>
                 </div>
@@ -168,7 +171,7 @@ const PaymentDetails: React.FC = (): React.ReactElement => {
           a subscription, you'll have to downgrade in order to continue.
         </ConfirmModal>
       )}
-    </div>
+    </Container>
   );
 };
 

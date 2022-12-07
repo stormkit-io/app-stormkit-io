@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import Container from "~/components/Container";
 import ConnectedAccounts from "./ConnectedAccounts";
 
 interface Props {
@@ -19,9 +20,8 @@ const UserProfile: React.FC<Props> = ({
   }, [user.memberSince]);
 
   return (
-    <>
-      <h1 className="mb-4 text-2xl text-white">Account settings</h1>
-      <div className="rounded bg-white p-8 mb-8">
+    <Container title="Account settings" className="mt-4">
+      <div className="mb-4">
         <div className="flex flex-col items-center max-w-screen-md m-auto">
           <div className="flex-auto text-center">
             <div className="rounded-full inline-flex w-24 h-24 items-center justify-center overflow-hidden mb-4">
@@ -40,7 +40,7 @@ const UserProfile: React.FC<Props> = ({
           <ConnectedAccounts accounts={accounts} />
         </div>
       </div>
-    </>
+    </Container>
   );
 };
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
-import Button from "~/components/Button";
+import Button from "~/components/ButtonV2";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
 import ConfirmModal from "~/components/ConfirmModal";
+import Container from "~/components/Container";
 import { useFetchSubscription, handleUpdateSubscriptionPlan } from "../actions";
 import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
 import { packages, features } from "./constants";
@@ -46,9 +47,8 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
   const activePlan = subscription?.activePlans?.[0];
 
   return (
-    <div>
-      <h1 className="mb-4 text-2xl text-white">Subscription details</h1>
-      <div className="rounded bg-white p-8 mb-8">
+    <Container title="Subscription details">
+      <div className="p-4 mb-4">
         {loading && <Spinner width={6} height={6} primary />}
         {!loading && error && <InfoBox type="error">{error}</InfoBox>}
         {!loading && !error && (
@@ -64,16 +64,20 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
             >
               <div className="flex flex-wrap">
                 {packages.map((p, i) => (
-                  <Button
-                    as="div"
+                  <div
                     key={p.name}
-                    styled={false}
                     style={{
                       maxWidth: "49%",
                       minWidth: "49%",
                       marginRight: i % 2 === 0 ? "2%" : 0,
                     }}
-                    className="price flex flex-col flex-auto shadow-lg border border-gray-80 p-6 bg-white mb-4"
+                    className="price flex flex-col flex-auto shadow-lg border border-blue-20 p-6 mb-4 cursor-pointer"
+                    tabIndex={0}
+                    onKeyUp={e => {
+                      if (e.key === "Enter") {
+                        setSelected(p.name);
+                      }
+                    }}
                     onClick={() => {
                       setSelected(p.name);
                     }}
@@ -107,7 +111,7 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
                         </li>
                       ))}
                     </ul>
-                  </Button>
+                  </div>
                 ))}
               </div>
               <p>
@@ -124,7 +128,7 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
                 </Link>
               </p>
               <div className="mt-4 text-right">
-                <Button type="submit" primary>
+                <Button type="submit" category="action">
                   Change subscription
                 </Button>
               </div>
@@ -156,7 +160,7 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
           additional costs.
         </ConfirmModal>
       )}
-    </div>
+    </Container>
   );
 };
 

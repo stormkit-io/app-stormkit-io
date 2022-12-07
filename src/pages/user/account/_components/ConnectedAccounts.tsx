@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import cn from "classnames";
+import Container from "~/components/Container";
 import Link from "~/components/Link";
 import PersonalAccessTokenModal from "./PersonalAccessTokenModal";
 
@@ -23,13 +24,12 @@ const ConnectedAccounts: React.FC<Props> = ({
   const [isOpen, toggleModal] = useState(false);
 
   return (
-    <div className="mt-12">
-      <h2 className="font-bold text-lg">Connected Accounts</h2>
-      <h3 className="font-light text-xs text-secondary mb-4">
-        This is the list of connected providers. The primary email specified for
-        the provider is used to combine these accounts.
-      </h3>
-      <div className="mb-4">
+    <Container
+      title="Connected Accounts"
+      subtitle="This is the list of connected providers. The primary email specified for
+    the provider is used to combine these accounts."
+    >
+      <div className="px-4 mb-4">
         {accounts.map(({ provider, hasPersonalAccessToken }, i) => (
           <div
             key={provider}
@@ -46,7 +46,8 @@ const ConnectedAccounts: React.FC<Props> = ({
               <span>
                 <Link
                   to="#"
-                  tertiary
+                  secondary
+                  className="font-bold"
                   onClick={e => {
                     e.preventDefault();
                     toggleModal(true);
@@ -66,7 +67,7 @@ const ConnectedAccounts: React.FC<Props> = ({
           </div>
         ))}
       </div>
-    </div>
+    </Container>
   );
 };
 
