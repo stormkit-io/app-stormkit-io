@@ -21,6 +21,12 @@ const routes: Array<RouteProps> = [
     ),
   },
   {
+    path: "/function-triggers",
+    element: Async(
+      () => import("~/pages/apps/[id]/environments/[env-id]/function-triggers")
+    ),
+  },
+  {
     path: "/snippets",
     element: Async(
       () => import("~/pages/apps/[id]/environments/[env-id]/snippets")

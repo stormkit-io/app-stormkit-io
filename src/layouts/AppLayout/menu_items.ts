@@ -74,6 +74,15 @@ export const envMenuItems = ({
     },
   ];
 
+  if (app.featureFlags?.SK_TRIGGER_FUNCTION) {
+    items.push({
+      icon: "fa-solid fa-clock-rotate-left",
+      text: "Trigger Functions",
+      path: `${envPath}/function-triggers`,
+      isActive: pathname.includes("/function-triggers"),
+    });
+  }
+
   if (app.featureFlags?.SK_DATA_STORE) {
     items.push({
       icon: "fas fa-database",
