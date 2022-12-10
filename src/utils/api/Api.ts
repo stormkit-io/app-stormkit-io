@@ -149,6 +149,22 @@ class Api {
     }
   }
 
+  // Helper method for sending patch requests.
+  async patch<T>(url: string, opts: FetchOptions = {}): Promise<T> {
+    // This line of code allows using post as patch(url, myRequestBody)
+    if (!opts.body && !opts.params) {
+      opts = { body: opts as unknown as Body };
+    }
+
+    opts.method = "PATCH";
+
+    if (opts.body || opts.params) {
+      opts.body = JSON.stringify(opts.body || opts.params);
+    }
+
+    return this.fetch(url, opts);
+  }
+
   // Helper method for sending post requests.
   async post<T>(url: string, opts: FetchOptions = {}): Promise<T> {
     // This line of code allows using post as post(url, myRequestBody)
