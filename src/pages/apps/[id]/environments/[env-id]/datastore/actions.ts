@@ -65,6 +65,12 @@ interface WithRecordsReturnValue {
   error?: string;
 }
 
+interface CollectionRecordAPI {
+  recordId: string;
+  record: Record<string, unknown>;
+  createdAt: number;
+}
+
 export const useWithRecords = ({
   appId,
   envId,
@@ -80,13 +86,19 @@ export const useWithRecords = ({
     setLoading(true);
 
     api
-      .post<CollectionRecord[]>(`/app/data-storage/query`, {
+      .post<CollectionRecordAPI[]>(`/app/data-storage/query`, {
         appId,
         envId,
         collectionName,
       })
       .then(data => {
-        setRecords(data);
+        setRecords(
+          data.map(d => ({
+            id: d.recordId,
+            value: d.record,
+            createdAt: d.createdAt * 1000,
+          }))
+        );
       })
       .finally(() => {
         setLoading(false);

@@ -49,24 +49,33 @@ const Records: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell className={thClasses}>Record ID</TableCell>
-              <TableCell className={cn(thClasses, "pl-2")}>Records</TableCell>
+              <TableCell className={cn(thClasses, "pl-2")}>Value</TableCell>
+              <TableCell className={cn(thClasses, "pl-2")}>
+                Created At
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {records.map((record, i) => (
               <TableRow
-                key={record.recordId}
+                key={record.id}
                 className={cn("mx-4 bg-blue-50", {
                   "mt-4": i > 0,
                 })}
               >
                 <TableCell className={cn(tdClasses, "pl-4 pr-1 w-1/4")}>
-                  {record.recordId}
+                  {record.id}
                 </TableCell>
-                <TableCell className={cn(tdClasses, "pl-0 pr-1 w-3/4")}>
+                <TableCell className={cn(tdClasses, "pl-0 pr-1 w-2/4")}>
                   <code className="p-2 m-0 flex bg-transparent text-gray-50 text-xs">
-                    {JSON.stringify({ ...record, recordId: undefined })}
+                    {JSON.stringify(record.value)}
                   </code>
+                </TableCell>
+                <TableCell className={cn(tdClasses, "pl-2 pr-1 w-1/4")}>
+                  {new Date(record.createdAt)
+                    .toISOString()
+                    .replace("T", " ")
+                    .replace(".000Z", "")}
                 </TableCell>
               </TableRow>
             ))}
