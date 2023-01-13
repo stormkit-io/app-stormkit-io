@@ -34,12 +34,13 @@ const Environments: React.FC = (): React.ReactElement => {
             key={env.id}
             className={cn("bg-blue-10 p-4", { "mt-4": index > 0 })}
           >
-            <div>
+            <div className="group">
               <Link
                 to={`/apps/${app.id}/environments/${env.id}`}
                 className="font-bold"
               >
                 {env.name}
+               <i className="mx-2 fa-solid fa-pen-to-square hidden group-hover:inline"></i>
               </Link>
             </div>
             <div className="text-xs flex items-center mt-3">
