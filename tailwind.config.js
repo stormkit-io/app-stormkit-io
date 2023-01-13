@@ -166,6 +166,9 @@ module.exports = {
   variants: {
     visibility: ["responsive", "hover", "focus", "group-hover"],
     opacity: ["disabled"],
+    extend: {
+      display: ["group-hover"],
+    },
   },
   plugins: [],
 };
