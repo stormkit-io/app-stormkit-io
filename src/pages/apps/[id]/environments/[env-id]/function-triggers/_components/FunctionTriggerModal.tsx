@@ -67,7 +67,7 @@ const TriggerFunctionModal: React.FC<Props> = ({
     setLoading(true);
     setError(null);
 
-    const { url: rawUrl, cron, method } = values;
+    const { url: rawUrl = "", cron, method } = values;
     const url = `${urlPrefix}${rawUrl}`;
 
     let headers = "";
@@ -136,7 +136,6 @@ const TriggerFunctionModal: React.FC<Props> = ({
           >
             <Form.Input
               name="url"
-              required
               autoFocus
               fullWidth
               defaultValue={options?.url?.split("/api/")[1] || ""}
