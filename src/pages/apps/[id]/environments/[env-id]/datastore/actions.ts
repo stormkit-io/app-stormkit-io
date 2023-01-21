@@ -63,6 +63,7 @@ interface WithRecordsReturnValue {
   loading: boolean;
   records: CollectionRecord[];
   error?: string;
+  setReload: (val: number) => void;
 }
 
 interface CollectionRecordAPI {
@@ -80,6 +81,7 @@ export const useWithRecords = ({
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState<CollectionRecord[]>([]);
+  const [reload, setReload] = useState<number>();
 
   useEffect(() => {
     setError(undefined);
@@ -103,7 +105,25 @@ export const useWithRecords = ({
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [reload]);
 
-  return { error, loading, records };
+  return { error, loading, records, setReload };
+};
+
+interface DeleteRecordProps {
+  appId: string;
+  collectionName: string;
+  recordId: string;
+}
+
+export const deleteRecord = ({
+  appId,
+  collectionName,
+  recordId,
+}: DeleteRecordProps) => {
+  return api.delete("/app/data-storage", {
+    appId,
+    collectionName,
+    recordIds: [recordId],
+  });
 };

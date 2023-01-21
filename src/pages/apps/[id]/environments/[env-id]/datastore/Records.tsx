@@ -6,21 +6,57 @@ import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
 import Link from "~/components/Link";
 import DotDotDot from "~/components/DotDotDotV2";
+import ConfirmModal from "~/components/ConfirmModal";
 import Modal from "~/components/ModalV2";
 import { timeSince } from "~/utils/helpers/date";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import { useWithRecords } from "./actions";
+import { useWithRecords, deleteRecord } from "./actions";
 
 const Records: React.FC = () => {
   const params = useParams<{ collection: string }>();
   const { app } = useContext(AppContext);
+  const [toBeDeleted, setToBeDeleted] = useState<CollectionRecord>();
   const [expandedContent, setExpandedContent] = useState<CollectionRecord>();
   const { environment } = useContext(EnvironmentContext);
-  const { loading, error, records } = useWithRecords({
+  const { loading, error, records, setReload } = useWithRecords({
     appId: app.id,
     envId: environment.id!,
     collectionName: params.collection!,
   });
+
+  const handleDeleteCancel = () => {
+    setToBeDeleted(undefined);
+  };
+
+  const handleDelete = ({
+    setError,
+    setLoading,
+  }: {
+    setError: SetError;
+    setLoading: SetLoading;
+  }) => {
+    setLoading(true);
+
+    deleteRecord({
+      recordId: toBeDeleted?.id!,
+      appId: app.id,
+      collectionName: params.collection!,
+    })
+      .then(() => {
+        setReload(Date.now());
+      })
+      .catch(res => {
+        setError(
+          typeof res === "string"
+            ? res
+            : "Something went wrong while deleting record."
+        );
+      })
+      .finally(() => {
+        setToBeDeleted(undefined);
+        setLoading(false);
+      });
+  };
 
   return (
     <Container
@@ -68,6 +104,12 @@ const Records: React.FC = () => {
                         setExpandedContent(record);
                       },
                     },
+                    {
+                      text: "Delete",
+                      onClick: () => {
+                        setToBeDeleted(record);
+                      },
+                    },
                   ]}
                 />
                 <div className="text-xs flex-shrink-0 mt-2">
@@ -100,6 +142,11 @@ const Records: React.FC = () => {
             </code>
           </Container>
         </Modal>
+      )}
+      {toBeDeleted && (
+        <ConfirmModal onConfirm={handleDelete} onCancel={handleDeleteCancel}>
+          <p>After deletion there is no way to recover the data.</p>
+        </ConfirmModal>
       )}
     </Container>
   );
