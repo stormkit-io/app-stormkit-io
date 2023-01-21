@@ -29,7 +29,7 @@ const DataStore: React.FC = () => {
             <Button
               href={`./${collection.name}`}
               key={collection.name}
-              className="p-4 mx-4 bg-blue-10 flex justify-between"
+              className="p-2 mb-4 last:mb-0 mx-4 bg-blue-10 flex justify-between"
               styled={false}
             >
               <span>{collection.name}</span>
