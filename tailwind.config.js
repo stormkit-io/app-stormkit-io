@@ -168,6 +168,7 @@ module.exports = {
     opacity: ["disabled"],
     extend: {
       display: ["group-hover"],
+      margin: ["last", "first"],
     },
   },
   plugins: [],
