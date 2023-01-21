@@ -6,7 +6,8 @@ import Spinner from "~/components/Spinner";
 import Button from "~/components/ButtonV2";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import { formattedDate, deployNow } from "~/utils/helpers/deployments";
+import { deployNow } from "~/utils/helpers/deployments";
+import { timeSince } from "~/utils/helpers/date";
 import emptyListSvg from "~/assets/images/empty-list.svg";
 import { useFetchDeployments } from "./actions";
 import CommitInfo from "./_components/CommitInfo";
@@ -52,7 +53,7 @@ const Deployments: React.FC = () => {
                 setRefreshToken={setRefreshToken}
               />
               <div className="text-xs">
-                {formattedDate(deployment.createdAt)}
+                {timeSince(deployment.createdAt * 1000)} ago
               </div>
             </div>
           </div>
