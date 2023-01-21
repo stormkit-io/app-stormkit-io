@@ -3,7 +3,7 @@ import cn from "classnames";
 import MuiModal, { ModalProps } from "@mui/material/Modal";
 
 interface Props extends ModalProps {
-  maxWidth?: "max-w-128" | "max-w-screen-md";
+  maxWidth?: "max-w-128" | "max-w-screen-md" | "max-w-screen-lg";
   fullHeight?: boolean;
 }
 
