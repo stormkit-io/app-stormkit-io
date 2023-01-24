@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Tooltip } from "@mui/material";
 import cn from "classnames";
 import emptyListSvg from "~/assets/images/empty-list.svg";
 import Container from "~/components/Container";
@@ -16,6 +17,10 @@ interface Props {
   environment: Environment;
   setRefreshToken: (val: number) => void;
 }
+
+const isTopLevel = (domainName: string): boolean => {
+  return domainName?.split(".")?.length === 2;
+};
 
 const TabDomainConfig: React.FC<Props> = ({
   app,
@@ -77,6 +82,30 @@ const TabDomainConfig: React.FC<Props> = ({
                   >
                     {domain.dns.verified ? "Remove" : "Cancel"}
                   </Button>
+                </div>
+              </div>
+              <div className="flex items-center mb-4 border-b border-blue-20">
+                <div className="bg-black p-4 md:min-w-56">
+                  {isTopLevel(domain.domainName) ? "A Record" : "CNAME"}
+                </div>
+                <div className="p-4 pr-0 flex justify-between items-center w-full">
+                  <span>
+                    {isTopLevel(domain.domainName)
+                      ? "3.64.188.62"
+                      : `${app.displayName}.stormkit.dev`}
+                  </span>
+                  <Tooltip
+                    title={
+                      "Domain should point to this value. This can be configured inside your DNS provider."
+                    }
+                    arrow
+                    classes={{
+                      tooltip: "bg-black custom-tooltip p-4 text-sm",
+                      arrow: "text-black",
+                    }}
+                  >
+                    <span className="fas fa-question-circle" />
+                  </Tooltip>
                 </div>
               </div>
               <DomainVerificationStatus
