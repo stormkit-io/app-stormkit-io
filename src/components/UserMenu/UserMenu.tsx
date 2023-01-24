@@ -35,14 +35,14 @@ const UserMenu: React.FC<Props> = ({
       <div className="flex flex-col flex-1">
         {menuItems.map(item => (
           <div className="w-40" key={item.text}>
-            <Link to={item.to} className="mb-6 block text-xs" onClick={onClick}>
+            <Link to={item.to} className="mb-6 block " onClick={onClick}>
               {item.text}
             </Link>
           </div>
         ))}
       </div>
       <div className="border-t border-gray-80 border-solid pt-4 leading-relaxed text-center">
-        <p className="text-xl">
+        <p className="text-xl mb-2">
           <a
             target="_blank"
             rel="noreferrer nooopener"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
+import InfoBox from "~/components/InfoBoxV2";
 import Button from "~/components/ButtonV2";
 import Link from "~/components/Link";
 import Form from "~/components/Form";
