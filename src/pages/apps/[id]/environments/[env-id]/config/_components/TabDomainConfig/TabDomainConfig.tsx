@@ -71,7 +71,7 @@ const TabDomainConfig: React.FC<Props> = ({
             >
               <div className="flex items-center mb-4 border-b border-blue-20">
                 <div className="bg-black p-4 md:min-w-56">Domain name</div>
-                <div className="p-4 pr-0 flex justify-between items-center w-full">
+                <div className="pl-4 pr-0 flex justify-between items-center w-full">
                   <span>{domain.domainName}</span>
                   <Button
                     type="button"
