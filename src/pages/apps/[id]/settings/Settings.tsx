@@ -15,7 +15,7 @@ const Settings: React.FC = () => {
   const { app, environments, setRefreshToken } = useContext(AppContext);
   const { user } = useContext(AuthContext);
   const isCurrentUserTheOwner = app.userId === user!.id;
-  const { settings, loading } = useFetchAdditionalSettings({
+  const { settings, loading, setSettings } = useFetchAdditionalSettings({
     app,
   });
 
@@ -50,6 +50,7 @@ const Settings: React.FC = () => {
         <FormTriggerDeploys
           app={app}
           additionalSettings={settings}
+          setAdditionalSettings={setSettings}
           environments={environments}
         />
       </Container>

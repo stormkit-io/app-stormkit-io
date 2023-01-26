@@ -22,6 +22,10 @@ interface UpdateDeployTriggerProps {
   setError: SetError;
 }
 
+export const deleteTrigger = (appId: string) => {
+  return api.delete(`/app/${appId}/deploy-trigger`);
+}
+
 export const updateDeployTrigger =
   ({ app, setLoading, setError }: UpdateDeployTriggerProps): voidFn =>
   () => {
@@ -50,6 +54,7 @@ interface UseFetchAdditionalSettingsReturnValue {
   loading: boolean;
   error: string | null;
   settings: AppSettings;
+  setSettings: (value: React.SetStateAction<AppSettings>) => void;
 }
 
 export const useFetchAdditionalSettings = ({
@@ -101,7 +106,7 @@ export const useFetchAdditionalSettings = ({
     };
   }, [app.id, app.refreshToken]);
 
-  return { loading, error, settings };
+  return { loading, error, settings, setSettings };
 };
 
 interface UpdateAdditionalSettingsProps {
