@@ -1,6 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import Container from "~/components/Container";
 import ConnectedAccounts from "./ConnectedAccounts";
+import Button from "~/components/ButtonV2";
+import { deleteUser } from "../actions";
+import ConfirmModal from "~/components/ConfirmModal";
+import { AuthContext } from "~/pages/auth/Auth.context";
 
 interface Props {
   user: User;
@@ -18,6 +22,10 @@ const UserProfile: React.FC<Props> = ({
       day: "2-digit",
     });
   }, [user.memberSince]);
+
+  const { logout } = useContext(AuthContext);
+  const [deleteAccountConfirmModal, toggleDeleteAccountConfirmModal] =
+    useState(false);
 
   return (
     <Container title="Account settings" className="mt-4">
@@ -37,6 +45,44 @@ const UserProfile: React.FC<Props> = ({
               </span>
             </div>
           </div>
+          <div className="flex justify-end mt-4">
+            <Button
+              category="action"
+              type="submit"
+              onClick={e => {
+                e.preventDefault();
+                toggleDeleteAccountConfirmModal(true);
+              }}
+            >
+              Delete Account
+            </Button>
+          </div>
+          {deleteAccountConfirmModal && (
+            <ConfirmModal
+              typeConfirmationText="Permanently delete account"
+              onCancel={() => {
+                toggleDeleteAccountConfirmModal(false);
+              }}
+              onConfirm={({ setLoading, setError }) => {
+                setLoading(true);
+
+                deleteUser()
+                  .then(() => {
+                    if (logout) logout();
+                  })
+                  .catch(() => {
+                    setLoading(false);
+                    setError(
+                      "Something went wrong while deleting your account please contact us via email or discord."
+                    );
+                  });
+              }}
+            >
+              This will completely remove the application. All associated files
+              and endpoints will be gone. Remember there is no going back from
+              here.
+            </ConfirmModal>
+          )}
           <ConnectedAccounts accounts={accounts} />
         </div>
       </div>

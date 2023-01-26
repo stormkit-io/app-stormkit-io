@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
 import Button from "~/components/ButtonV2";
@@ -136,6 +136,8 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
           </div>
         )}
       </div>
+
+
       {isConfirmModalOpen && (
         <ConfirmModal
           onCancel={() => {
