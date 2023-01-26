@@ -136,8 +136,6 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
           </div>
         )}
       </div>
-
-
       {isConfirmModalOpen && (
         <ConfirmModal
           onCancel={() => {
