@@ -10,12 +10,33 @@ const UserButtons: React.FC = () => {
   const [isNewsOpen, toggleNews] = useState(false);
   const [isUserMenuOpen, toggleUserMenu] = useState(false);
 
+  const isLocal = () =>
+    process.env.STORMKIT_ENV == "local";
+
+  const isCanary = () =>
+    window.document.cookie.indexOf("sk_canary=true") > -1 ? true : false;
+  const enableCanary = () => {
+    window.document.cookie = "sk_canary=true";
+  };
+  const disableCanary = () => {
+    window.document.cookie = "sk_canary=false";
+  };
+
   if (!user) {
     return <></>;
   }
 
   return (
     <>
+      {user.isAdmin && (
+        <span className="text-center">
+            <div
+              onClick={() => (isCanary() ? disableCanary() : enableCanary())}
+            >
+              { isCanary() ? "Canary" : isLocal() ? "Local" : "Prod" }
+            </div>
+        </span>
+      )}
       <Tooltip
         title={
           <Button
