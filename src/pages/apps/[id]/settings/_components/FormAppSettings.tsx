@@ -7,6 +7,7 @@ import Button from "~/components/ButtonV2";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
 
+const NodeJS18 = "nodejs18.x";
 const NodeJS16 = "nodejs16.x";
 const NodeJS14 = "nodejs14.x";
 const NodeJS12 = "nodejs12.x";
@@ -118,6 +119,7 @@ const FormAppSettings: React.FC<Props> = ({
           </Form.Option>
           <Form.Option value={NodeJS14}>NodeJS 14.x</Form.Option>
           <Form.Option value={NodeJS16}>NodeJS 16.x</Form.Option>
+          <Form.Option value={NodeJS18}>NodeJS 18.x</Form.Option>
         </Form.Select>
       </Form.WithLabel>
       {runtime !== additionalSettings.runtime &&
