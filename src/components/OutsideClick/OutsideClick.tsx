@@ -1,34 +1,29 @@
-import { ReactNode, PureComponent } from "react";
-import ReactDOM from "react-dom";
+import React, { useRef, useEffect } from "react";
 
 interface Props {
   handler: (arg0: any) => void;
   children: React.ReactNode;
 }
 
-class OutsideClick extends PureComponent<Props, any> {
-  componentDidMount() {
-    document.addEventListener("click", this.handleClick);
-  }
+export default function OutsideClick(props: Props) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { handler } = props;
 
-  componentWillUnmount() {
-    if (typeof document !== "undefined") {
-      document.removeEventListener("click", this.handleClick);
+  useEffect(() => {
+    function handleClickOutside(event: Event): void {
+      if (
+        event.target != null &&
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        handler(event);
+      }
     }
-  }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
 
-  handleClick = (event: any) => {
-    const root = ReactDOM.findDOMNode(this);
-    const { handler } = this.props;
-
-    if (root && !root.contains(event.target)) {
-      handler(event);
-    }
-  };
-
-  render(): ReactNode {
-    return this.props.children;
-  }
+  return <div ref={wrapperRef}>{props.children}</div>;
 }
-
-export default OutsideClick;
