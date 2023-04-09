@@ -32,7 +32,7 @@ const DomainUsageStatus: React.FC<Props> = ({ domain }) => {
   }
 
   return (
-    <div className="">
+    <div>
       {cert !== null ? (
         <div className="text-gray-80 w-full">
           <div className="flex items-center mb-4 border-b border-blue-20">
@@ -78,7 +78,7 @@ const DomainUsageStatus: React.FC<Props> = ({ domain }) => {
           </InfoBox>
           {retry > 2 && (
             <InfoBox className="mb-4">
-              Issueing certificate is taking longer than expected. Have you set
+              Issuing certificate is taking longer than expected. Have you set
               the CNAME properly and published a deployment to this environment?
             </InfoBox>
           )}
