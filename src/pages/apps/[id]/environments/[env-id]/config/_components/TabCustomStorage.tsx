@@ -6,7 +6,11 @@ import InfoBox from "~/components/InfoBoxV2";
 import Form from "~/components/FormV2";
 import Button from "~/components/ButtonV2";
 import { updateIntegration, deleteIntegration } from "../actions";
-
+import Visibility from '@mui/icons-material/Visibility';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 interface Props {
   app: App;
   environment: Environment;
@@ -105,7 +109,7 @@ const CustomStorage: React.FC<Props> = ({
         {integration === "bunny_cdn" && (
           <>
             <Form.WithLabel label="Storage key">
-              <Form.Input
+              <Form.Password
                 name="settings.STORAGE_KEY"
                 className="bg-blue-10 no-border h-full"
                 placeholder="The API key of your storage zone"
@@ -159,7 +163,7 @@ const CustomStorage: React.FC<Props> = ({
               label="Secret Access Key"
               tooltip="AWS Secret Access Key obtained from IAM service"
             >
-              <Form.Input
+              <Form.Password
                 name="settings.SECRET_ACCESS_KEY"
                 className="bg-blue-10 no-border h-full"
                 required
