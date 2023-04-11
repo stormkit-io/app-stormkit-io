@@ -6,11 +6,7 @@ import InfoBox from "~/components/InfoBoxV2";
 import Form from "~/components/FormV2";
 import Button from "~/components/ButtonV2";
 import { updateIntegration, deleteIntegration } from "../actions";
-import Visibility from '@mui/icons-material/Visibility';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
 interface Props {
   app: App;
   environment: Environment;
