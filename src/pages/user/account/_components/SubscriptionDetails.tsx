@@ -1,14 +1,38 @@
-import React, { useEffect, useContext, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
-import Button from "~/components/ButtonV2";
-import Link from "~/components/Link";
-import Form from "~/components/Form";
-import ConfirmModal from "~/components/ConfirmModal";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import Container from "~/components/Container";
-import { useFetchSubscription, handleUpdateSubscriptionPlan } from "../actions";
+import { AuthContext } from "~/pages/auth/Auth.context";
+import { useFetchSubscription } from "../actions";
 import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
-import { packages, features } from "./constants";
+import PricingSlider, { SubscriptionTier, WhatsIncluded } from "./Pricing";
+import { Typography } from "@mui/material";
+
+const paymentLinks: Record<"dev" | "prod", Record<SubscriptionTier, string>> = {
+  dev: {
+    "100": "https://buy.stripe.com/test_fZe29G3W0aMDerefYY",
+    "500": "https://buy.stripe.com/test_cN26pWdwAg6X2IwbIJ",
+    "1000": "https://buy.stripe.com/test_bIY3dK0JOaMD6YM6oq",
+    "1000+": "", // contact us
+  },
+  prod: {
+    "1000": "https://buy.stripe.com/8wMeY2bjh8JJ3E43ce",
+    "500": "https://buy.stripe.com/cN23fk3QPbVVdeEdQR",
+    "100": "https://buy.stripe.com/8wM2bgfzx8JJ4I88ww",
+    "1000+": "", // contact us
+  },
+};
+
+function paymentLink(tier: SubscriptionTier) {
+  if (process.env.STORMKIT_ENV === "local") {
+    return paymentLinks.dev[tier];
+  }
+
+  return paymentLinks.prod[tier];
+}
 
 type SubscriptionDowngradePros = {
   activePlan: ActivePlan;
@@ -31,135 +55,86 @@ const SubscriptionDowngrade: React.FC<SubscriptionDowngradePros> = ({
   );
 };
 
-const SubscriptionDetails: React.FC = (): React.ReactElement => {
-  const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
-  const { loading, error, subscription } = useFetchSubscription();
+const subscriptionToTier: Record<SubscriptionName, SubscriptionTier> = {
+  starter: "100",
+  medium: "500",
+  enterprise: "1000",
+  free: "100", // This is here for typescript, or for existing customers who're not in a trial
+};
 
-  const [selected, setSelected] = useState<SubscriptionName | undefined>(
-    subscription?.name
-  );
+const SubscriptionDetails: React.FC = (): React.ReactElement => {
+  const { user } = useContext(AuthContext);
+  const { loading, error, subscription } = useFetchSubscription();
+  const [tier, setTier] = useState<SubscriptionTier>("100");
 
   useEffect(() => {
-    setSelected(subscription?.name);
-  }, [subscription?.name, loading]);
+    if (subscription?.name) {
+      setTier(subscriptionToTier[subscription.name]);
+    }
+  }, [subscription?.name]);
 
-  const pckg = packages.find(i => i.name === subscription?.name);
   const activePlan = subscription?.activePlans?.[0];
 
   return (
-    <Container title="Subscription details">
-      <div className="p-4 mb-4">
+    <Container>
+      <Box sx={{ p: 2, mb: 2 }}>
+        <Typography
+          variant="h2"
+          sx={{
+            fontWeight: 400,
+            fontSize: 16,
+            mb: 6,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          Subscription
+          {!loading && (
+            <Chip
+              color="primary"
+              label={
+                "Current: " +
+                (subscription?.name === "free"
+                  ? "Free trial"
+                  : `up to ${
+                      subscriptionToTier[subscription?.name || "free"]
+                    } deployments`)
+              }
+            />
+          )}
+        </Typography>
         {loading && <Spinner width={6} height={6} primary />}
         {!loading && error && <InfoBox type="error">{error}</InfoBox>}
         {!loading && !error && (
-          <div className="flex flex-col">
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
             {activePlan?.status === "trialing" && (
               <SubscriptionDowngrade activePlan={activePlan} />
             )}
-            <Form
-              className="w-full"
-              handleSubmit={() => {
-                toggleConfirmModal(true);
-              }}
-            >
-              <div className="flex flex-wrap">
-                {packages.map((p, i) => (
-                  <div
-                    key={p.name}
-                    style={{
-                      maxWidth: "49%",
-                      minWidth: "49%",
-                      marginRight: i % 2 === 0 ? "2%" : 0,
-                    }}
-                    className="price flex flex-col flex-auto shadow-lg border border-blue-20 p-6 mb-4 cursor-pointer"
-                    tabIndex={0}
-                    onKeyUp={e => {
-                      if (e.key === "Enter") {
-                        setSelected(p.name);
-                      }
-                    }}
-                    onClick={() => {
-                      setSelected(p.name);
-                    }}
-                  >
-                    <div className="flex justify-between mb-4">
-                      <span
-                        className="inline-block py-1 px-4 rounded-lg text-xs text-white"
-                        style={{ backgroundColor: p.color }}
-                      >
-                        {p.name}
-                      </span>
-                      <Form.Radio
-                        checked={selected === p.name}
-                        value={p.name}
-                        name="subscription"
-                        style={{ marginRight: 0 }}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <b>{p.price}$</b>
-                      <span className="text-xs">/ month</span>
-                    </div>
-                    <ul className="flex-auto">
-                      {features[p.name].map(f => (
-                        <li key={f} className="text-sm mb-2">
-                          <span
-                            className="fas fa-check-circle mr-2"
-                            style={{ color: p.color }}
-                          />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-              <p>
-                You are currently using <b>{pckg?.title}</b> tier. Learn more
-                about{" "}
-                <Link
-                  to="https://www.stormkit.io/pricing"
-                  className="inline-block mt-4"
-                  secondary
-                >
-                  <>
-                    pricing <i className="fas fa-external-link-square-alt" />
-                  </>
-                </Link>
-              </p>
-              <div className="mt-4 text-right">
-                <Button type="submit" category="action">
-                  Change subscription
-                </Button>
-              </div>
-            </Form>
-          </div>
+            <Box sx={{ bgcolor: "rgba(0,0,0,0.1)", p: 4 }}>
+              <PricingSlider
+                tier={subscriptionToTier[subscription?.name || "free"]}
+                onTierChange={t => setTier(t)}
+              />
+            </Box>
+            <Box sx={{ mt: 4, mb: 8 }}>
+              <WhatsIncluded tier={tier} />
+            </Box>
+            <Box sx={{ mt: 2, textAlign: "right" }}>
+              <Button
+                href={`${paymentLink(tier)}?client_reference_id=${
+                  user?.id
+                }&prefilled_email=${user?.email}`}
+                disabled={tier === "1000+"}
+                color="secondary"
+                variant="contained"
+              >
+                Go to Stripe Checkout
+              </Button>
+            </Box>
+          </Box>
         )}
-      </div>
-      {isConfirmModalOpen && (
-        <ConfirmModal
-          onCancel={() => {
-            toggleConfirmModal(false);
-          }}
-          onConfirm={({ setError, setLoading }) => {
-            if (!selected) {
-              return setError("Subscription name is not valid.");
-            }
-
-            handleUpdateSubscriptionPlan({
-              name: selected,
-              setError,
-              setLoading,
-              closeModal: () => {
-                toggleConfirmModal(false);
-              },
-            });
-          }}
-        >
-          You're about to change your subscription plan. This may incur in
-          additional costs.
-        </ConfirmModal>
-      )}
+      </Box>
     </Container>
   );
 };

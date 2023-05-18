@@ -1,5 +1,4 @@
 import { RenderResult, waitFor } from "@testing-library/react";
-import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import ConnectedAccounts from "./ConnectedAccounts";

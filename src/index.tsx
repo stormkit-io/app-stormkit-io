@@ -1,4 +1,3 @@
-import React from "react";
 // @ts-ignore
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";

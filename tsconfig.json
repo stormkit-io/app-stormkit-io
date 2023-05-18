@@ -17,7 +17,7 @@
     "strict": true,
     "moduleResolution": "Node",
     "newLine": "lf",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "types": ["react", "node", "jest"],
     "paths": {
       "~/*": ["./src/*"],
