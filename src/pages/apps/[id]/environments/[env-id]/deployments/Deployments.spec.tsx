@@ -1,5 +1,4 @@
 import type { Scope } from "nock";
-import React from "react";
 import {
   fireEvent,
   render,
