@@ -33,7 +33,7 @@ export default createTheme({
     secondary: {
       main: "#78193B",
       light: "#e7e5ee",
-      dark: "#78193B",
+      dark: "#f6005c",
       contrastText: "#e7e5ee",
     },
     text: {

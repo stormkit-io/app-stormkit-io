@@ -67,6 +67,7 @@
     "@babel/preset-react": "7.16.7",
     "@babel/preset-typescript": "7.16.7",
     "@mui/icons-material": "^5.11.16",
+    "@mui/lab": "^5.0.0-alpha.130",
     "@mui/material": "^5.13.1",
     "@react-mock/xhr": "0.2.0",
     "@types/jest": "^29.0.0",

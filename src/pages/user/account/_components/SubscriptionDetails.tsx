@@ -1,12 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
-import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Container from "~/components/Container";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import { useFetchSubscription } from "../actions";
+import { useFetchSubscription, fetchCheckoutEndpoint } from "../actions";
 import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
 import PricingSlider, { SubscriptionTier, WhatsIncluded } from "./Pricing";
 import { Typography } from "@mui/material";
@@ -65,6 +65,7 @@ const subscriptionToTier: Record<SubscriptionName, SubscriptionTier> = {
 const SubscriptionDetails: React.FC = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
   const { loading, error, subscription } = useFetchSubscription();
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [tier, setTier] = useState<SubscriptionTier>("100");
 
   useEffect(() => {
@@ -121,16 +122,29 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
               <WhatsIncluded tier={tier} />
             </Box>
             <Box sx={{ mt: 2, textAlign: "right" }}>
-              <Button
+              <LoadingButton
+                onClick={e => {
+                  e.preventDefault();
+                  setCheckoutLoading(true);
+                  fetchCheckoutEndpoint(tier).then(url => {
+                    window.location.assign(url);
+                  });
+                }}
                 href={`${paymentLink(tier)}?client_reference_id=${
                   user?.id
                 }&prefilled_email=${user?.email}`}
                 disabled={tier === "1000+"}
+                loading={checkoutLoading}
                 color="secondary"
                 variant="contained"
+                sx={{
+                  ":hover": {
+                    color: "white !important",
+                  },
+                }}
               >
-                Go to Stripe Checkout
-              </Button>
+                Go to Stripe Customer Portal
+              </LoadingButton>
             </Box>
           </Box>
         )}
