@@ -188,6 +188,7 @@ const TriggerFunctionModal: React.FC<Props> = ({
 
           <Form.WithLabel label="Enable headers" className="pt-0">
             <Form.Switch
+              color="secondary"
               checked={showHeaders}
               onChange={e => setShowHeaders(e.target.checked)}
             />
@@ -212,6 +213,7 @@ const TriggerFunctionModal: React.FC<Props> = ({
 
           <Form.WithLabel label="Enable payload" className="pt-0">
             <Form.Switch
+              color="secondary"
               checked={showPayload}
               onChange={e => setShowPayload(e.target.checked)}
             />
@@ -233,6 +235,7 @@ const TriggerFunctionModal: React.FC<Props> = ({
           <Form.WithLabel label="Enable trigger" className="pb-0 pt-0 mt-0">
             <div className="bg-blue-10 w-full flex justify-between pr-4 items-center">
               <Form.Switch
+                color="secondary"
                 checked={status}
                 name="status"
                 onChange={e => setStatus(e.target.checked)}

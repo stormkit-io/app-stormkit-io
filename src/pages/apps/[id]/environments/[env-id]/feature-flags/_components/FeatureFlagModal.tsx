@@ -83,7 +83,7 @@ const FeatureFlagModal: React.FC<Props> = ({
           <Form.WithLabel label="Enabled" className="pb-0">
             <div className="bg-blue-10 w-full flex justify-between pr-4 items-center">
               <Form.Switch
-                color="primary"
+                color="secondary"
                 defaultChecked={flag?.flagValue || false}
                 name="flagValue"
               />

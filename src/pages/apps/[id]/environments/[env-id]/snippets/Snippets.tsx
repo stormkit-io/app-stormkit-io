@@ -48,6 +48,7 @@ const renderSnippet = ({
       </div>
       <div className="flex items-center">
         <Form.Switch
+          color="secondary"
           className="mr-4"
           checked={snippet.enabled}
           onChange={() => setToBeToggled(snippet)}

@@ -150,6 +150,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
           </Form.WithLabel>
           <Form.WithLabel label="Enable headers" className="pt-0">
             <Form.Switch
+              color="secondary"
               checked={showHeaders}
               onChange={e => setShowHeaders(e.target.checked)}
             />

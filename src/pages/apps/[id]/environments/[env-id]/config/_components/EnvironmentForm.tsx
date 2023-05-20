@@ -132,7 +132,7 @@ const EnvironmentForm: React.FC<Props> = ({
         >
           <div className="bg-blue-10 w-full flex justify-between pr-4 items-center">
             <Form.Switch
-              color="primary"
+              color="secondary"
               onChange={e => {
                 setIsChanged(true);
                 setIsAutoPublish(e.target.checked);

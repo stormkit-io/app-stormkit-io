@@ -124,6 +124,7 @@ const SnippetModal: React.FC<Props> = ({
           <Form.WithLabel label="Enabled" className="pb-0">
             <div className="bg-blue-10 w-full flex justify-between pr-4 items-center">
               <Form.Switch
+                color="secondary"
                 checked={isEnabled}
                 onChange={e => setIsEnabled(e.target.checked)}
               />

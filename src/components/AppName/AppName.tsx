@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "~/components/Link";
+import Box from "@mui/material/Box";
 import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
 import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
@@ -34,10 +35,13 @@ const AppName: React.FC<Props> = ({
       : bitbucketLogo;
 
   return (
-    <div className="flex items-center">
-      <div className={`inline-block mr-2 w-${imageWidth}`}>
-        <img src={logo} className="w-full" alt={provider} />
-      </div>
+    <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
+      <Box
+        component="img"
+        sx={{ display: "inline-block", mr: 1, w: imageWidth }}
+        src={logo}
+        alt={provider}
+      />
       <div className="leading-4">
         {withLinkToRepo && (
           <Link
@@ -52,7 +56,7 @@ const AppName: React.FC<Props> = ({
           <div className="text-xs text-gray-60">{app.displayName}</div>
         )}
       </div>
-    </div>
+    </Box>
   );
 };
 

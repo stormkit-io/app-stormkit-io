@@ -103,6 +103,7 @@ const FeatureFlags: React.FC = () => {
               </div>
               <div className="flex items-center">
                 <Form.Switch
+                  color="secondary"
                   checked={f.flagValue}
                   className="mr-4"
                   inputProps={{ "aria-label": `Toggle ${f.flagName} state` }}
