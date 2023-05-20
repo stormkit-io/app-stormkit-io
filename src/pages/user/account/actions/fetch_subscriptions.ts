@@ -39,6 +39,16 @@ interface FetchSubscriptionAPIResponse {
   subscription: Subscription;
 }
 
+export const fetchCheckoutEndpoint = (deployments: string): Promise<string> => {
+  return api
+    .fetch<{ url: string }>(
+      `/user/subscription/session?deployments=${deployments}`
+    )
+    .then(res => {
+      return res.url;
+    });
+};
+
 export const useFetchSubscription = (): FetchSubscriptionReturnValue => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
