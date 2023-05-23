@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Speed from "@mui/icons-material/Speed";
@@ -18,6 +19,7 @@ export default function TopMenu({ children, app }: Props) {
   const { user } = useContext(AuthContext);
   const [isCanary, setIsCanary] = useState(!!localStorage.getItem("sk_canary"));
   const shouldShowEnvButton = isLocal || user?.isAdmin;
+  const userPackage = user?.package || "free";
 
   return (
     <Box
@@ -57,6 +59,21 @@ export default function TopMenu({ children, app }: Props) {
         )}
       </Box>
       <Box sx={{ flex: 1 }}>{children}</Box>
+      {userPackage === "free" && (
+        <Link href="/user/account">
+          <Chip
+            component="span"
+            label="Free trial | Upgrade"
+            sx={{
+              bgcolor: "#b75c22",
+              color: "white",
+              cursor: "pointer",
+              ":hover": { opacity: 1 },
+              opacity: 0.9,
+            }}
+          ></Chip>
+        </Link>
+      )}
       {app && (
         <Box
           sx={{

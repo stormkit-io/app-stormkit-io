@@ -165,14 +165,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
           `/apps/${defaultApp.id}/settings`,
           `/apps/${defaultApp.id}/environments`,
           "https://gitlab.com/stormkit-io/frontend",
-          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
-          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
-          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
-          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
-          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/data-store`,
-
-          // `/apps/${defaultApp.id}/team`,
-          // `/apps/${defaultApp.id}/settings`,
         ]);
       });
     });
