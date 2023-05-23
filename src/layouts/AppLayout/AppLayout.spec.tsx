@@ -77,6 +77,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
       expect(links).toEqual([
         "/", // Stormkit logo link
+        "/user/account", // Free tier
         `/apps/${defaultApp.id}/usage`,
         "/", // App back button
         `/apps/${defaultApp.id}/environments`,
@@ -108,6 +109,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
       expect(links).toEqual([
         "/", // Stormkit logo link
+        "/user/account", // Free tier
         `/apps/${defaultApp.id}/usage`,
         "/", // App back button
         `/apps/${defaultApp.id}/environments`,
@@ -158,6 +160,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
       await waitFor(() => {
         expect(links).toEqual([
           "/", // Stormkit logo link
+          "/user/account", // Free tier
           `/apps/${defaultApp.id}/usage`,
           "/",
           `/apps/${defaultApp.id}/environments`,
