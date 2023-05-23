@@ -1,38 +1,51 @@
 import React, { useContext } from "react";
-import cn from "classnames";
-import SideMenu from "~/components/SideMenu";
+import Box from "@mui/material/Box";
+import TopMenu from "~/components/TopMenu";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import UserButtons from "./_components/UserButtons";
-import MobileHeader from "~/components/MobileHeader";
 
 interface Props {
   children: React.ReactNode;
 }
 
-const DefaultLayout: React.FC<Props> = ({ children }) => {
+export default function CenterLayout({ children }: Props) {
   const { user } = useContext(AuthContext);
 
   return (
-    <main
-      className={cn("flex flex-col min-h-screen m-auto items-center w-full", {
-        "justify-center": !user,
-      })}
+    <Box
+      component="main"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        width: "100%",
+      }}
     >
       {user && (
-        <>
-          <div className="md:hidden w-full sticky top-0 z-50">
-            <MobileHeader menuItems={[]} />
-          </div>
-          <div className="hidden md:block">
-            <SideMenu menuItems={[]}>
-              <UserButtons />
-            </SideMenu>
-          </div>
-        </>
+        <Box
+          bgcolor="background.paper"
+          sx={{
+            display: "flex",
+            position: "sticky",
+            top: 0,
+            zIndex: 50,
+            boxShadow: 2,
+          }}
+        >
+          <TopMenu />
+        </Box>
       )}
-      {children}
-    </main>
+      <Box
+        sx={{
+          mt: 4,
+          flex: 1,
+          px: { xs: 2, md: 0 },
+          display: "flex",
+          alignItems: user ? "flex-start" : "center",
+          justifyContent: "center",
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
   );
-};
-
-export default DefaultLayout;
+}

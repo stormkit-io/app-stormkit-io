@@ -1,5 +1,5 @@
-import React from "react";
-import cn from "classnames";
+import React, { useEffect, useState } from "react";
+import Box from "@mui/material/Box";
 import { CSSTransition } from "react-transition-group";
 import { createPortal } from "react-dom";
 import "./SideBar.css";
@@ -10,22 +10,36 @@ interface Props {
   children: React.ReactNode;
 }
 
-const SideBar: React.FC<Props> = ({
-  isOpen,
-  children,
-  maxWidth = "max-w-72",
-}) => {
+const SideBar: React.FC<Props> = ({ isOpen, children }) => {
+  const [marginTop, setMarginTop] = useState<number>(60);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMarginTop(
+        document.querySelector("#top-bar")?.getBoundingClientRect().height || 60
+      );
+    }
+  }, [isOpen]);
+
   return createPortal(
-    <CSSTransition in={isOpen} timeout={200} classNames="side-bar">
-      <div
-        className={cn(
-          "fixed bottom-0 top-16 md:top-0 w-full bg-blue-50 right-0 side-bar text-gray-80 p-4 overflow-auto",
-          `lg:${maxWidth}`
-        )}
-      >
-        {children}
-      </div>
-    </CSSTransition>,
+    <Box
+      boxShadow={6}
+      bgcolor="background.paper"
+      sx={{
+        overflow: "auto",
+        display: isOpen ? "block" : "none",
+        position: "fixed",
+        bottom: 0,
+        right: 0,
+        top: `${marginTop}px`,
+        width: "100%",
+        pl: { md: 0.5 },
+        maxWidth: { lg: 500 },
+        animation: isOpen ? "slideFromRight 200ms ease-in-out forwards" : "",
+      }}
+    >
+      {children}
+    </Box>,
     document.querySelector("#side-bar-root")!
   );
 };

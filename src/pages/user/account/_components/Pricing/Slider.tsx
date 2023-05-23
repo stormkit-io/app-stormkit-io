@@ -56,11 +56,11 @@ export default function PricingSlider({ tier = "100", onTierChange }: Props) {
           <Typography
             id="pricing-slider"
             gutterBottom
-            sx={{ textTransform: "uppercase", opacity: 0.5 }}
+            sx={{ textTransform: "uppercase", opacity: 0.5, fontSize: 12 }}
           >
             Monthly deployments
           </Typography>
-          <Typography sx={{ fontSize: 24, fontWeight: "bold" }}>
+          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
             {isLastValue ? "from" : "up to"} {labelMap[value]}
           </Typography>
         </Box>
@@ -68,11 +68,11 @@ export default function PricingSlider({ tier = "100", onTierChange }: Props) {
           <Typography
             id="pricing-slider"
             gutterBottom
-            sx={{ textTransform: "uppercase", opacity: 0.5 }}
+            sx={{ textTransform: "uppercase", opacity: 0.5, fontSize: 12 }}
           >
             Your price
           </Typography>
-          <Typography sx={{ fontSize: 24, fontWeight: "bold" }}>
+          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
             {priceMap[value] ? `$${priceMap[value]} / mo` : "Contact us"}
           </Typography>
         </Box>

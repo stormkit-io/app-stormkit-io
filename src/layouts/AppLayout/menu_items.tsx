@@ -1,35 +1,49 @@
-import type { MenuItem } from "~/components/SideMenu";
-import { capitalize } from "~/utils/helpers/string";
+import RocketLaunch from "@mui/icons-material/RocketLaunch";
+import Construction from "@mui/icons-material/Construction";
+import Code from "@mui/icons-material/Code";
+import Tour from "@mui/icons-material/Tour";
+import Update from "@mui/icons-material/Update";
+import Database from "@mui/icons-material/Storage";
+import AccountTree from "@mui/icons-material/AccountTree";
+import Group from "@mui/icons-material/Group";
+import Settings from "@mui/icons-material/Settings";
+import React from "react";
 
-interface AppMenuItem {
-  text: string;
-  icon: string;
-  path: string;
-}
-
-export const appMenuItems = ({ app }: { app: App }): AppMenuItem[] => [
+export const appMenuItems = ({
+  app,
+  pathname,
+}: {
+  app: App;
+  pathname: string;
+}): Path[] => [
   {
     // List environments
     path: `/apps/${app.id}/environments`,
     text: "Environments",
-    icon: "fas fa-th-large",
+    icon: <AccountTree />,
+    isActive: pathname.endsWith("/environments"),
   },
   {
     // List team members
     path: `/apps/${app.id}/team`,
     text: "Team",
-    icon: "fas fa-users",
+    icon: <Group />,
+    isActive: pathname.endsWith("/team"),
   },
   {
     // List settings
     path: `/apps/${app.id}/settings`,
     text: "Settings",
-    icon: "fas fa-gear",
+    icon: <Settings />,
+    isActive: pathname.endsWith("/settings"),
   },
 ];
 
-interface Path extends MenuItem {
-  borderBottom?: boolean;
+interface Path {
+  path: string;
+  icon: React.ReactNode;
+  text: React.ReactNode;
+  isActive?: boolean;
 }
 
 export const envMenuItems = ({
@@ -40,7 +54,7 @@ export const envMenuItems = ({
   app: App;
   env: Environment;
   pathname: string;
-}): Array<Path> => {
+}): Path[] => {
   if (!env) {
     return [];
   }
@@ -49,25 +63,25 @@ export const envMenuItems = ({
 
   const items = [
     {
-      icon: "fa-solid fa-wrench",
-      text: `${capitalize(env.env)} environment configuration`,
+      icon: <Construction />,
+      text: `Configuration`,
       path: envPath,
       isActive: pathname === envPath,
     },
     {
       path: `${envPath}/deployments`,
       text: "Deployments",
-      icon: "fas fa-ship",
+      icon: <RocketLaunch />,
       isActive: pathname.includes("/deployments"),
     },
     {
-      icon: "fas fa-code",
+      icon: <Code />,
       text: "Snippets",
       path: `${envPath}/snippets`,
       isActive: pathname.includes("/snippets"),
     },
     {
-      icon: "fas fa-flag",
+      icon: <Tour />,
       text: "Feature Flags",
       path: `${envPath}/feature-flags`,
       isActive: pathname.includes("/feature-flags"),
@@ -76,7 +90,7 @@ export const envMenuItems = ({
 
   if (app.featureFlags?.SK_TRIGGER_FUNCTION) {
     items.push({
-      icon: "fa-solid fa-clock-rotate-left",
+      icon: <Update />,
       text: "Trigger Functions",
       path: `${envPath}/function-triggers`,
       isActive: pathname.includes("/function-triggers"),
@@ -85,7 +99,7 @@ export const envMenuItems = ({
 
   if (app.featureFlags?.SK_DATA_STORE) {
     items.push({
-      icon: "fas fa-database",
+      icon: <Database />,
       text: "Data Store",
       path: `${envPath}/data-store`,
       isActive: pathname.includes("/data-store"),

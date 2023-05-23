@@ -32,7 +32,7 @@ exports[`~/pages/apps/_components/WelcomeModal when is open matches the snapshot
         tabindex="-1"
       >
         <div
-          class="w-full text-gray-80 m-auto max-w-2xl bg-blue-50 p-4 md:p-8 justify-center h-full md:h-auto flex md:block flex-col md:flex-none"
+          class="w-full text-gray-80 max-w-2xl bg-blue-50 p-4 md:p-8 justify-center h-full md:h-auto flex md:block flex-col md:flex-none"
         >
           <h1
             class="font-bold text-xl md:text-3xl text-center mb-8"

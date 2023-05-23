@@ -22,6 +22,20 @@ export default createTheme({
         component: LinkBehavior,
       } as LinkProps,
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltipArrow: {
+          backgroundColor: "black",
+        },
+        popper: {
+          padding: 4,
+        },
+        tooltip: {
+          backgroundColor: "black",
+          fontSize: 14,
+        },
+      },
+    },
   },
   palette: {
     mode: "dark",
@@ -41,7 +55,7 @@ export default createTheme({
     },
     background: {
       default: "#0F092B",
-      paper: "#262558",
+      paper: "#070415",
     },
     info: {
       main: "#f9f9f9",

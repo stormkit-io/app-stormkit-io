@@ -1,6 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
 import type { History } from "history";
-import React from "react";
 import * as router from "react-router";
 import { createMemoryHistory } from "history";
 import { render, fireEvent } from "@testing-library/react";
@@ -60,7 +59,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
     });
   };
 
-  describe("app header - with environments", () => {
+  describe("app menu - with no selected environment", () => {
     beforeEach(() => {
       mockUseLocation({ pathname: `/apps/${defaultApp.id}/environments` });
       createWrapper({});
@@ -68,7 +67,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
     test("should render the application header correctly", () => {
       expect(wrapper.getByText("stormkit-io/frontend")).toBeTruthy();
-      expect(wrapper.getByText("production")).toBeTruthy();
+      expect(wrapper.getByText("Select an environment")).toBeTruthy();
     });
 
     test("should render menu links", () => {
@@ -78,28 +77,28 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
       expect(links).toEqual([
         "/", // Stormkit logo link
-        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
-        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
-        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
-        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
         `/apps/${defaultApp.id}/usage`,
-        "https://gitlab.com/stormkit-io/frontend",
+        "/", // App back button
         `/apps/${defaultApp.id}/environments`,
         `/apps/${defaultApp.id}/team`,
         `/apps/${defaultApp.id}/settings`,
+        `/apps/${defaultApp.id}/environments`, // Environments back button
+        "https://gitlab.com/stormkit-io/frontend",
       ]);
     });
   });
 
-  describe("app header - without environments", () => {
+  describe("app header - with selected environment", () => {
     beforeEach(() => {
-      mockUseLocation({ pathname: `/settings` });
+      mockUseLocation({
+        pathname: `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
+      });
       createWrapper({});
     });
 
     test("should render the application header correctly", () => {
       expect(wrapper.getByText("stormkit-io/frontend")).toBeTruthy();
-      expect(() => wrapper.getByText("production")).toThrow();
+      expect(() => wrapper.getByText("Select an environment")).toThrow();
     });
 
     test("should render menu links", () => {
@@ -109,15 +108,17 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
       expect(links).toEqual([
         "/", // Stormkit logo link
+        `/apps/${defaultApp.id}/usage`,
+        "/", // App back button
+        `/apps/${defaultApp.id}/environments`,
+        `/apps/${defaultApp.id}/team`,
+        `/apps/${defaultApp.id}/settings`,
+        `/apps/${defaultApp.id}/environments`, // Environments back button
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
-        `/apps/${defaultApp.id}/usage`,
         "https://gitlab.com/stormkit-io/frontend",
-        `/apps/${defaultApp.id}/environments`,
-        `/apps/${defaultApp.id}/team`,
-        `/apps/${defaultApp.id}/settings`,
       ]);
     });
   });
@@ -135,9 +136,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
     test("should open a modal when deploy is now clicked", () => {
       expect(() => wrapper.getByText("Start a deployment")).toThrow();
 
-      fireEvent.click(
-        wrapper.getByLabelText("Deploy now").querySelector("button")!
-      );
+      fireEvent.click(wrapper.getByLabelText("Deploy now"));
 
       expect(wrapper.getByText("Start a deployment")).toBeTruthy();
     });
@@ -151,7 +150,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
       createWrapper({ app });
     });
 
-    test.only("should display data store link", async () => {
+    test("should display data store link", async () => {
       const links = wrapper
         .getAllByRole("link")
         .map(link => link.getAttribute("href"));
@@ -159,16 +158,21 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
       await waitFor(() => {
         expect(links).toEqual([
           "/", // Stormkit logo link
-          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
-          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
-          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
-          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
-          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/data-store`,
           `/apps/${defaultApp.id}/usage`,
-          "https://gitlab.com/stormkit-io/frontend",
+          "/",
           `/apps/${defaultApp.id}/environments`,
           `/apps/${defaultApp.id}/team`,
           `/apps/${defaultApp.id}/settings`,
+          `/apps/${defaultApp.id}/environments`,
+          "https://gitlab.com/stormkit-io/frontend",
+          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
+          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
+          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
+          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
+          // `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/data-store`,
+
+          // `/apps/${defaultApp.id}/team`,
+          // `/apps/${defaultApp.id}/settings`,
         ]);
       });
     });

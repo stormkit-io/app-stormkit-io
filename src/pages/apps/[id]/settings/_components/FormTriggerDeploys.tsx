@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import cn from "classnames";
+import Button from "@mui/lab/LoadingButton";
 import Form from "~/components/FormV2";
 import Link from "~/components/Link";
 import InfoBox from "~/components/InfoBoxV2";
 import CopyBox from "~/components/CopyBox";
-import Button from "~/components/ButtonV2";
 import api from "~/utils/api/Api";
 import { updateDeployTrigger, deleteTrigger } from "../actions";
 import type { AppSettings } from "../types.d";
@@ -75,38 +75,42 @@ const FormTriggerDeploys: React.FC<Props> = ({
           ))
         )}
         <div className="flex justify-end p-4">
-          <Button loading={loading} type="submit" category="action">
+          {additionalSettings.deployTrigger && (
+            <Button
+              color="secondary"
+              variant="contained"
+              sx={{ mr: 2 }}
+              loading={loading}
+              onClick={e => {
+                e.preventDefault();
+                setLoading(true);
+                setAdditionalSettings({
+                  ...additionalSettings,
+                  deployTrigger: undefined,
+                });
+                deleteTrigger(app.id)
+                  .then(() => {
+                    setLoading(false);
+                  })
+                  .catch(e => {
+                    setError(e.message);
+                    setLoading(false);
+                  });
+              }}
+            >
+              Delete endpoints
+            </Button>
+          )}
+          <Button
+            loading={loading}
+            type="submit"
+            color="secondary"
+            variant="contained"
+          >
             {additionalSettings.deployTrigger
               ? "Generate a new endpoint"
               : "Generate"}
           </Button>
-        </div>
-        <div>
-          {additionalSettings.deployTrigger && (
-            <div className="flex justify-end p-4">
-              <Button
-                loading={loading}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setLoading(true);
-                  setAdditionalSettings({
-                    ...additionalSettings,
-                    deployTrigger: undefined,
-                  });
-                  deleteTrigger(app.id)
-                    .then(() => {
-                      setLoading(false);
-                    })
-                    .catch(e => {
-                      setError(e.message);
-                      setLoading(false);
-                    });
-                }}
-              >
-                Delete endpoints
-              </Button>
-            </div>
-          )}
         </div>
         {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
       </Form>
