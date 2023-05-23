@@ -18,14 +18,11 @@ const Container: React.FC<Props> = ({
   actions,
   children,
   className,
-  margin = "m-auto",
   maxWidth = "max-w-2xl",
   bg = "bg-blue-50",
 }) => {
   return (
-    <div
-      className={cn(["w-full text-gray-80", margin, maxWidth, bg, className])}
-    >
+    <div className={cn(["w-full text-gray-80", maxWidth, bg, className])}>
       {(title || actions) && (
         <div className="flex p-4">
           {(title || subtitle) && (

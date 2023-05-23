@@ -73,7 +73,6 @@ const KeyValue: React.FC<Props> = ({
             )}
             <Input
               multiline
-              className="bg-gray-90"
               defaultValue={key}
               fullWidth
               onBlur={e => {
@@ -86,7 +85,6 @@ const KeyValue: React.FC<Props> = ({
           </div>
           <div className="flex flex-auto items-center max-w-1/2 relative">
             <Input
-              className="bg-gray-90"
               defaultValue={value}
               fullWidth
               onBlur={e => {

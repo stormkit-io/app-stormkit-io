@@ -1,25 +1,22 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import Button from "~/components/ButtonV2";
+import { Notifications } from "@mui/icons-material";
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import LinearProgress from "@mui/material/LinearProgress";
 import SideBar from "~/components/SideBar";
 import UserMenu from "~/components/UserMenu";
+import Spinner from "~/components/Spinner";
 import { Tooltip } from "@mui/material";
 import OutsideClick from "~/components/OutsideClick/OutsideClick";
 
 const UserButtons: React.FC = () => {
+  const theme = useTheme();
   const { user } = useContext(AuthContext);
   const [isNewsOpen, toggleNews] = useState(false);
   const [isUserMenuOpen, toggleUserMenu] = useState(false);
-  const isLocal = () => process.env.STORMKIT_ENV == "local";
-
-  const isCanary = () =>
-    window.document.cookie.indexOf("sk_canary=true") > -1 ? true : false;
-  const enableCanary = () => {
-    window.document.cookie = "sk_canary=true";
-  };
-  const disableCanary = () => {
-    window.document.cookie = "sk_canary=false";
-  };
+  const [isFrameLoaded, setIsFrameLoaded] = useState(false);
 
   if (!user) {
     return <></>;
@@ -27,103 +24,83 @@ const UserButtons: React.FC = () => {
 
   return (
     <>
-      {user.isAdmin && (
-        <span className="text-center">
-          <div onClick={() => (isCanary() ? disableCanary() : enableCanary())}>
-            {isCanary() ? "Canary" : isLocal() ? "Local" : "Prod"}
-          </div>
-        </span>
-      )}
-      <>
-        <OutsideClick
-          handler={e => {
+      <OutsideClick
+        handler={() => {
+          toggleNews(false);
+        }}
+      >
+        <Tooltip title="What's new?" placement="bottom" arrow>
+          <IconButton
+            onClick={() => {
+              toggleUserMenu(false);
+              toggleNews(!isNewsOpen);
+            }}
+          >
+            <Notifications />
+          </IconButton>
+        </Tooltip>
+      </OutsideClick>
+
+      <Tooltip
+        title={
+          <OutsideClick
+            handler={() => {
+              toggleUserMenu(false);
+            }}
+          >
+            <UserMenu className="p-4" onClick={() => toggleUserMenu(false)} />
+          </OutsideClick>
+        }
+        placement="bottom-end"
+        open={isUserMenuOpen}
+        arrow
+      >
+        <IconButton
+          onClick={() => {
+            toggleUserMenu(!isUserMenuOpen);
             toggleNews(false);
           }}
         >
-          <Tooltip
-            title={
-              <Button
-                className="p-4 block"
-                type="button"
-                onClick={() => {
-                  toggleUserMenu(false);
-                  toggleNews(!isNewsOpen);
-                }}
-                styled={false}
-              >
-                What's new?
-              </Button>
-            }
-            placement="right"
-            arrow
-            classes={{
-              tooltip: "bg-blue-50 custom-tooltip text-sm",
-              arrow: "text-blue-50",
+          <Box
+            component="img"
+            sx={{ borderRadius: "50%", w: 24, height: 24, maxWidth: "none" }}
+            src={user.avatar}
+            alt={`${user.fullName || user.displayName} profile`}
+          />
+        </IconButton>
+      </Tooltip>
+
+      <SideBar isOpen={isNewsOpen}>
+        <Box sx={{ position: "relative", height: "100%" }}>
+          {(isNewsOpen || isFrameLoaded) && (
+            <Box
+              component="iframe"
+              onLoad={() => {
+                setIsFrameLoaded(true);
+              }}
+              sx={{
+                position: "relative",
+                visibility: isFrameLoaded ? "visible" : "hidden",
+                zIndex: 2,
+                width: "100%",
+                height: "100%",
+                bgcolor: theme.palette.background.default,
+              }}
+              src="https://www.stormkit.io/blog/whats-new?ui=no-menu,no-footer,no-posts,no-header"
+            />
+          )}
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 1,
             }}
           >
-            <div className="text-center">
-              <Button
-                styled={false}
-                className="p-2 md:p-4"
-                type="button"
-                onClick={() => {
-                  toggleUserMenu(false);
-                  toggleNews(!isNewsOpen);
-                }}
-              >
-                <span className="fas fa-bell text-base" />
-              </Button>
-            </div>
-          </Tooltip>
-        </OutsideClick>
-      </>
-
-      <>
-        <Tooltip
-          title={
-            <OutsideClick
-              handler={e => {
-                toggleUserMenu(false);
-              }}
-            >
-              <UserMenu className="p-4" onClick={() => toggleUserMenu(false)} />
-            </OutsideClick>
-          }
-          placement="right-end"
-          open={isUserMenuOpen}
-          classes={{
-            tooltip: "bg-blue-50 custom-tooltip text-sm",
-            arrow: "text-blue-50",
-          }}
-          arrow
-        >
-          <span className="flex items-center w-full">
-            <Button
-              className="hidden md:flex p-2 md:p-4 w-full"
-              styled={false}
-              type="button"
-              onClick={() => {
-                toggleUserMenu(!isUserMenuOpen);
-                toggleNews(false);
-              }}
-            >
-              <img
-                src={user.avatar}
-                alt={`${user.fullName || user.displayName} profile`}
-                className="rounded-full w-7 h-7 inline-block max-w-none"
-              />
-            </Button>
-          </span>
-        </Tooltip>
-      </>
-
-      <SideBar isOpen={isNewsOpen} maxWidth="max-w-128">
-        {isNewsOpen && (
-          <iframe
-            className="h-full w-full bg-white"
-            src="https://www.stormkit.io/blog/whats-new?ui=no-menu,no-footer,no-posts,no-header"
-          />
-        )}
+            <Spinner />
+          </Box>
+        </Box>
       </SideBar>
     </>
   );

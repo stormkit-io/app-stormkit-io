@@ -82,7 +82,6 @@ const FormAppSettings: React.FC<Props> = ({
       >
         <Form.Input
           name="displayName"
-          className="bg-gray-90"
           required
           defaultValue={app.displayName}
           fullWidth
@@ -95,7 +94,6 @@ const FormAppSettings: React.FC<Props> = ({
       >
         <Form.Input
           name="repo"
-          className="bg-gray-90"
           placeholder="e.g. https://github.com/stormkit-io/app-stormkit-io"
           required
           defaultValue={toRepoAddr(app.repo)}

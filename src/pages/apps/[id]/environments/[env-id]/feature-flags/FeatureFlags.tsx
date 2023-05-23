@@ -1,6 +1,7 @@
-import React, { useContext, useState } from "react";
-import cn from "classnames";
+import { useContext, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import emptyListSvg from "~/assets/images/empty-list.svg";
@@ -21,7 +22,7 @@ interface FF {
   flagValue: boolean;
 }
 
-const FeatureFlags: React.FC = () => {
+export default function FeatureFlags() {
   const { app } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const [toBeModified, setToBeModified] = useState<FF>();
@@ -80,28 +81,55 @@ const FeatureFlags: React.FC = () => {
         {!loading &&
           flags &&
           flags.map((f, i) => (
-            <div
+            <Box
               key={f.flagName}
-              className={cn(
-                "bg-blue-10 p-4 flex items-center justify-between",
-                {
-                  "mb-4": i !== flags.length - 1,
-                }
-              )}
+              sx={{
+                p: 2,
+                mb: 2,
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                alignItems: "center",
+                justifyContent: "space-between",
+                ":last-child": {
+                  mb: 0,
+                },
+              }}
+              className="bg-blue-10"
             >
-              <div>
-                <div className="font-bold">{f.flagName}</div>
-                <div className="text-xs leading-6">
+              <Box sx={{ maxWidth: "100%", overflowX: "auto" }}>
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: "bold", fontSize: 14 }}
+                >
+                  {f.flagName}
+                </Typography>
+                <Box sx={{ opacity: 0.7 }}>
                   When enabled access through
-                  <span
-                    className="bg-blue-20 rounded-sm font-mono p-1 ml-1"
+                  <Box
+                    component="span"
+                    sx={{
+                      display: { xs: "block", md: "inline-block" },
+                      borderRadius: 1,
+                      fontFamily: "monospace",
+                      mt: { xs: 0.5, md: 0 },
+                      p: 0.5,
+                      ml: { xs: 0, md: 0.5 },
+                    }}
+                    className="bg-blue-20"
                     data-testid="ff-code"
                   >
                     window.sk.features["{f.flagName}"]
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center">
+                  </Box>
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: { xs: "100%", md: "auto" },
+                  justifyContent: { xs: "space-between", md: "initial" },
+                }}
+              >
                 <Form.Switch
                   color="secondary"
                   checked={f.flagValue}
@@ -134,8 +162,8 @@ const FeatureFlags: React.FC = () => {
                     },
                   ]}
                 />
-              </div>
-            </div>
+              </Box>
+            </Box>
           ))}
         {!loading && !error && !flags?.length && (
           <div className="p-4 flex items-center justify-center flex-col">
@@ -235,6 +263,4 @@ const FeatureFlags: React.FC = () => {
       )}
     </Container>
   );
-};
-
-export default FeatureFlags;
+}

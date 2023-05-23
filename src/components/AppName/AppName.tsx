@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "~/components/Link";
+import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
@@ -42,20 +42,21 @@ const AppName: React.FC<Props> = ({
         src={logo}
         alt={provider}
       />
-      <div className="leading-4">
+      <Box sx={{ lineHeight: 1.5 }}>
         {withLinkToRepo && (
           <Link
-            to={`https://${providerHosts[app.provider]}/${nameWithoutPrefix}`}
+            href={`https://${providerHosts[app.provider]}/${nameWithoutPrefix}`}
             aria-label="Repository URL"
+            sx={{ color: "white" }}
           >
             {nameWithoutPrefix}
           </Link>
         )}
         {!withLinkToRepo && nameWithoutPrefix}
         {withDisplayName && (
-          <div className="text-xs text-gray-60">{app.displayName}</div>
+          <Box sx={{ fontSize: 12, opacity: 0.7 }}>{app.displayName}</Box>
         )}
-      </div>
+      </Box>
     </Box>
   );
 };

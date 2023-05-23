@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Tooltip } from "@mui/material";
-import Button from "~/components/ButtonV2";
+import IconButton from "@mui/material/IconButton";
+import RocketLaunch from "@mui/icons-material/RocketLaunch";
 import DeployModal from "./DeployModal";
 
 interface Props {
@@ -19,20 +20,16 @@ const DeployButton: React.FC<Props> = ({
   return (
     <>
       <Tooltip title="Deploy now" arrow>
-        <span>
-          <Button
-            id="deploy-now"
-            type="button"
-            styled={false}
-            onClick={e => {
-              e.preventDefault();
-              toggleDeployModal(true);
-            }}
-            className="hover:text-white p-2 flex items-center w-8 rounded-full h-8 text-xs justify-center bg-pink-10"
-          >
-            <span className="fas fa-rocket" />
-          </Button>
-        </span>
+        <IconButton
+          id="deploy-now"
+          onClick={e => {
+            e.preventDefault();
+            toggleDeployModal(true);
+          }}
+          className="hover:text-white p-2 flex items-center w-8 rounded-full h-8 text-xs justify-center bg-pink-10"
+        >
+          <RocketLaunch sx={{ fontSize: 16 }} />
+        </IconButton>
       </Tooltip>
       {isDeployModalOpen && (
         <DeployModal
