@@ -93,11 +93,11 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
           Subscription
           {!loading && (
             <Chip
-              color="primary"
+              color="warning"
               label={
                 "Current: " +
                 (subscription?.name === "free"
-                  ? "Free trial"
+                  ? `Free trial${user?.paymentRequired ? " expired" : ""}`
                   : `up to ${
                       subscriptionToTier[subscription?.name || "free"]
                     } deployments`)

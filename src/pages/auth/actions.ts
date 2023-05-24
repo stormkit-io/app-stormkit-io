@@ -20,6 +20,7 @@ interface FetchUserReturnValue {
 interface FetchUserResponse {
   accounts: Array<ConnectedAccount>;
   user: User;
+  paymentRequired?: boolean;
   ok: boolean;
 }
 
@@ -38,9 +39,9 @@ export const useFetchUser = (): FetchUserReturnValue => {
       api.setAuthToken(token);
       api
         .fetch<FetchUserResponse>("/user")
-        .then(({ user, ok, accounts }) => {
+        .then(({ user, ok, accounts, paymentRequired }) => {
           if (ok && !unmounted) {
-            setUser(user);
+            setUser({ ...user, paymentRequired });
             setAccounts(accounts);
             LocalStorage.set(LS_USER, user);
           }

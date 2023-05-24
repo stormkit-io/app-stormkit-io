@@ -4,7 +4,6 @@ import { Notifications } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import LinearProgress from "@mui/material/LinearProgress";
 import SideBar from "~/components/SideBar";
 import UserMenu from "~/components/UserMenu";
 import Spinner from "~/components/Spinner";

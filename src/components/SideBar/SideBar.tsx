@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import { CSSTransition } from "react-transition-group";
 import { createPortal } from "react-dom";
 import "./SideBar.css";
 

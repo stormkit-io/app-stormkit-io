@@ -22,7 +22,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const ContextProvider: React.FC<Props> = ({ children }) => {
+export default function ContextProvider({ children }: Props) {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
   const { error, loading, user, accounts, ...fns } = useFetchUser();
@@ -38,6 +38,12 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
       navigate(`/auth${encoded ? `?redirect=${encoded}` : ""}`);
     }
   }, [shouldRedirect]);
+
+  useEffect(() => {
+    if (user?.paymentRequired) {
+      navigate("/user/account?expired=true");
+    }
+  }, [user?.paymentRequired, pathname]);
 
   if (loading) {
     return <Spinner primary pageCenter />;
@@ -62,6 +68,4 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export default ContextProvider;
+}

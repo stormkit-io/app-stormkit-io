@@ -6,6 +6,7 @@ declare type User = {
   displayName: string;
   memberSince: number;
   isAdmin?: boolean;
+  paymentRequired?: boolean;
   package: {
     id: "enterprise" | "medium" | "starter" | "free";
   };

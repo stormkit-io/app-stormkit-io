@@ -36,6 +36,22 @@ export default createTheme({
         },
       },
     },
+    MuiAlert: {
+      styleOverrides: {
+        standardWarning: {
+          backgroundColor: "#b75c22",
+          color: "white",
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        colorWarning: {
+          backgroundColor: "#b75c22",
+          color: "white",
+        },
+      },
+    },
   },
   palette: {
     mode: "dark",
@@ -60,6 +76,9 @@ export default createTheme({
     info: {
       main: "#f9f9f9",
       contrastText: "#B7AE22",
+    },
+    warning: {
+      main: "#ffffff",
     },
   },
   breakpoints: {
