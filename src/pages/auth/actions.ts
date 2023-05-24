@@ -97,8 +97,17 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
       }
 
       const title = "oauthWindow";
+      let alreadyClosed = false;
 
       const onClose = (data: DataMessage) => {
+        // This function gets called twice with different data for some reason.
+        // This hack makes sure the second is disregarded.
+        if (alreadyClosed) {
+          return;
+        }
+
+        alreadyClosed = true;
+
         if (data?.sessionToken) {
           api.setAuthToken(data.sessionToken); // adds it to local storage
           setUser(data.user!);
