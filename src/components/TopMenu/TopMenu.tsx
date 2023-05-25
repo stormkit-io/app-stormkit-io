@@ -41,7 +41,7 @@ export default function TopMenu({ children, app }: Props) {
         <Link href="/">
           <Logo iconSize={100} />
         </Link>
-        {!shouldShowEnvButton && (
+        {shouldShowEnvButton && (
           <Button
             onClick={() => {
               if (!isCanary) {
@@ -59,7 +59,7 @@ export default function TopMenu({ children, app }: Props) {
         )}
       </Box>
       <Box sx={{ flex: 1 }}>{children}</Box>
-      {userPackage === "free" && user?.paymentRequired !== true && (
+      {userPackage === "free" && user?.isPaymentRequired !== true && (
         <Link href="/user/account">
           <Chip
             color="warning"
