@@ -40,10 +40,10 @@ export default function ContextProvider({ children }: Props) {
   }, [shouldRedirect]);
 
   useEffect(() => {
-    if (user?.paymentRequired) {
+    if (user?.isPaymentRequired) {
       navigate("/user/account?expired=true");
     }
-  }, [user?.paymentRequired, pathname]);
+  }, [user?.isPaymentRequired, pathname]);
 
   if (loading) {
     return <Spinner primary pageCenter />;

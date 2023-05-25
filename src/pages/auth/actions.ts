@@ -39,9 +39,9 @@ export const useFetchUser = (): FetchUserReturnValue => {
       api.setAuthToken(token);
       api
         .fetch<FetchUserResponse>("/user")
-        .then(({ user, ok, accounts, paymentRequired }) => {
+        .then(({ user, ok, accounts }) => {
           if (ok && !unmounted) {
-            setUser({ ...user, paymentRequired });
+            setUser(user);
             setAccounts(accounts);
             LocalStorage.set(LS_USER, user);
           }

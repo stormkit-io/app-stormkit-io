@@ -1,13 +1,14 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
+import WarningIcon from "@mui/icons-material/Warning";
 import Container from "~/components/Container";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { useFetchSubscription, fetchCheckoutEndpoint } from "../actions";
-import { SubscriptionName, ActivePlan } from "../actions/fetch_subscriptions";
+import { SubscriptionName } from "../actions/fetch_subscriptions";
 import PricingSlider, { SubscriptionTier, WhatsIncluded } from "./Pricing";
 import { Typography } from "@mui/material";
 
@@ -34,27 +35,6 @@ function paymentLink(tier: SubscriptionTier) {
   return paymentLinks.prod[tier];
 }
 
-type SubscriptionDowngradePros = {
-  activePlan: ActivePlan;
-};
-
-const SubscriptionDowngrade: React.FC<SubscriptionDowngradePros> = ({
-  activePlan,
-}) => {
-  return (
-    <InfoBox type="default" className="mb-4">
-      Your current subscription will end on{" "}
-      {new Date(activePlan.trial_end * 1000).toLocaleDateString("en-GB", {
-        year: "numeric",
-        month: "long",
-        day: "2-digit",
-      })}
-      . After that you'll be downgraded to <b>{activePlan.plan.nickname}</b>{" "}
-      package.
-    </InfoBox>
-  );
-};
-
 const subscriptionToTier: Record<SubscriptionName, SubscriptionTier> = {
   starter: "100",
   medium: "500",
@@ -68,13 +48,21 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [tier, setTier] = useState<SubscriptionTier>("100");
 
+  const freeTrialEnds = useMemo(() => {
+    if (user?.freeTrialEnds) {
+      return new Date(user.freeTrialEnds * 1000).toLocaleDateString("en", {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+      });
+    }
+  }, [user?.freeTrialEnds]);
+
   useEffect(() => {
     if (subscription?.name) {
       setTier(subscriptionToTier[subscription.name]);
     }
   }, [subscription?.name]);
-
-  const activePlan = subscription?.activePlans?.[0];
 
   return (
     <Container>
@@ -97,7 +85,7 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
               label={
                 "Current: " +
                 (subscription?.name === "free"
-                  ? `Free trial${user?.paymentRequired ? " expired" : ""}`
+                  ? `Free trial${user?.isPaymentRequired ? " expired" : ""}`
                   : `up to ${
                       subscriptionToTier[subscription?.name || "free"]
                     } deployments`)
@@ -105,13 +93,26 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
             />
           )}
         </Typography>
+        {freeTrialEnds && (
+          <Typography
+            sx={{
+              mb: 2,
+              bgcolor: "rgba(0,0,0,0.1)",
+              p: 2,
+              display: "flex",
+              alignItems: "center",
+              opacity: 0.7,
+            }}
+          >
+            <WarningIcon sx={{ mr: 2 }} />
+            Your free trial expires on {freeTrialEnds}. Upgrade to continue
+            using Stormkit.
+          </Typography>
+        )}
         {loading && <Spinner width={6} height={6} primary />}
         {!loading && error && <InfoBox type="error">{error}</InfoBox>}
         {!loading && !error && (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
-            {activePlan?.status === "trialing" && (
-              <SubscriptionDowngrade activePlan={activePlan} />
-            )}
             <Box sx={{ bgcolor: "rgba(0,0,0,0.1)", p: 4 }}>
               <PricingSlider
                 tier={subscriptionToTier[subscription?.name || "free"]}
