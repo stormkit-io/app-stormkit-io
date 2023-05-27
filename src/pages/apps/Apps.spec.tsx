@@ -1,13 +1,14 @@
 import type { MemoryHistory } from "history";
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
-import React from "react";
 import * as router from "react-router";
 import { createMemoryHistory } from "history";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { mockFetchApps } from "~/testing/nocks";
 import { mockApp } from "~/testing/data";
 import Apps from "./Apps";
+import { LocalStorage } from "~/utils/storage";
+import { LS_PROVIDER } from "~/utils/api/Api";
 
 describe("~/pages/apps/Apps.tsx", () => {
   const apps = [
@@ -19,6 +20,7 @@ describe("~/pages/apps/Apps.tsx", () => {
   let history: MemoryHistory;
 
   const createWrapper = () => {
+    LocalStorage.set(LS_PROVIDER, "github");
     history = createMemoryHistory();
     wrapper = render(
       <router.Router location={history.location} navigator={history}>
@@ -45,6 +47,22 @@ describe("~/pages/apps/Apps.tsx", () => {
     test("should have a button to create a new app", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Create new app")).toBeTruthy();
+      });
+    });
+
+    test("should have a button to create a new app from url", async () => {
+      let button: HTMLElement;
+
+      await waitFor(() => {
+        button = wrapper.getByText("Create new app");
+      });
+
+      fireEvent.click(button!);
+
+      await waitFor(() => {
+        expect(wrapper.getByText("Import from URL").getAttribute("href")).toBe(
+          "/apps/new/url"
+        );
       });
     });
 

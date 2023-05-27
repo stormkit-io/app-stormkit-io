@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
+import Box from "@mui/material/Box";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ImportExport from "@mui/icons-material/ImportExport";
 import LinkIcon from "@mui/icons-material/Link";
+import Typography from "@mui/material/Typography";
 import ButtonDropdown from "~/components/ButtonDropdown";
 import AppName from "~/components/AppName";
-import Container from "~/components/Container";
 import ContainerV2 from "~/components/ContainerV2";
 import Form from "~/components/FormV2";
 import InfoBox from "~/components/InfoBoxV2";
@@ -18,8 +19,6 @@ import { WelcomeModal, EmptyList } from "./_components";
 let timeout: NodeJS.Timeout;
 const limit = 20;
 const welcomeModalId = "welcome_modal";
-const provider = LocalStorage.get<Provider>(LS_PROVIDER);
-const newAppHref = `/apps/new/${provider}`;
 
 const providerToText: Record<Provider, string> = {
   github: "GitHub",
@@ -27,7 +26,7 @@ const providerToText: Record<Provider, string> = {
   bitbucket: "Bitbucket",
 };
 
-export const Home: React.FC = () => {
+export default function Apps() {
   const navigate = useNavigate();
   const [from, setFrom] = useState(0);
   const [filter, setFilter] = useState("");
@@ -40,15 +39,26 @@ export const Home: React.FC = () => {
     LocalStorage.get(welcomeModalId) !== "shown"
   );
 
+  const provider = LocalStorage.get<Provider>(LS_PROVIDER);
+  const newAppHref = `/apps/new/${provider}`;
+
   if (!provider) {
-    return <></>;
+    return (
+      <ContainerV2 title="Invalid provider">
+        <Typography sx={{ p: 2, pt: 0 }}>
+          We cannot detect the connected provider. Please login again.
+        </Typography>
+      </ContainerV2>
+    );
   }
 
   if (apps.length === 0 && !loading && !filter) {
     return (
-      <Container className="flex flex-1 items-center justify-center">
-        <EmptyList actionLink={newAppHref} />
-      </Container>
+      <ContainerV2>
+        <Box sx={{ p: 4 }}>
+          <EmptyList actionLink={newAppHref} />
+        </Box>
+      </ContainerV2>
     );
   }
 
@@ -163,6 +173,4 @@ export const Home: React.FC = () => {
       )}
     </>
   );
-};
-
-export default Home;
+}
