@@ -5,7 +5,10 @@ interface InsertRepoProps {
   repo: string;
 }
 
-export const insertRepo = ({ provider, repo }: InsertRepoProps) => {
+export const insertRepo = ({
+  provider,
+  repo,
+}: InsertRepoProps): Promise<App> => {
   return api.post<{ app: App }>("/app", { provider, repo }).then(({ app }) => {
     return app;
   });

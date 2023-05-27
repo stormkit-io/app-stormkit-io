@@ -1,8 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import { BackButton } from "~/components/Buttons";
-import Button from "~/components/ButtonV2";
-import Container from "~/components/Container";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import openPopup from "~/utils/helpers/popup";
 import RepoList from "../_components/RepoList";
 import Accounts from "../_components/Accounts";
@@ -57,16 +59,36 @@ const Provider: React.FC = () => {
   }, [accounts, user?.displayName]);
 
   return (
-    <Container
-      className="flex-1"
-      title={
-        <>
-          <BackButton to="/" className="ml-0 mr-2" /> Import app from GitHub
-        </>
-      }
-      actions={
+    <Box
+      sx={{ bgcolor: "container.main", width: "100%", color: "white", mb: 4 }}
+      maxWidth="md"
+    >
+      <Box
+        sx={{
+          display: "flex",
+          color: "white",
+          mb: 2,
+          p: 2,
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography>
+          <Link
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              color: "white",
+            }}
+            href="/"
+          >
+            <ArrowBack sx={{ mr: 1 }} />
+            Import from GitHub
+          </Link>
+        </Typography>
         <Button
-          category="action"
+          color="secondary"
+          variant="contained"
           onClick={() => {
             openPopup({
               url: openPopupURL,
@@ -79,15 +101,22 @@ const Provider: React.FC = () => {
             });
           }}
         >
-          <span className="hidden md:inline-block">
+          <Box
+            component="span"
+            sx={{ display: { xs: "none", md: "inline-block" } }}
+          >
             Connect more repositories
-          </span>
-          <span className="md:hidden">More repos</span>
+          </Box>
+          <Box
+            component="span"
+            sx={{ display: { xs: "inline-block", md: "none" } }}
+          >
+            More repos
+          </Box>
         </Button>
-      }
-    >
-      <div className="p-4 pt-0">
-        <div className="flex mb-4">
+      </Box>
+      <Box sx={{ p: 2, pt: 0 }}>
+        <Box sx={{ display: "flex", mb: 2 }}>
           <Accounts
             loading={faLoading}
             accounts={accounts}
@@ -97,7 +126,7 @@ const Provider: React.FC = () => {
               setInstallationId(id);
             }}
           />
-        </div>
+        </Box>
 
         <RepoList
           repositories={repos}
@@ -108,8 +137,8 @@ const Provider: React.FC = () => {
           hasNextPage={hasNextPage}
           onNextPage={() => setPage(page + 1)}
         />
-      </div>
-    </Container>
+      </Box>
+    </Box>
   );
 };
 
