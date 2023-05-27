@@ -24,14 +24,15 @@ export default createTheme({
     },
     MuiTooltip: {
       styleOverrides: {
-        tooltipArrow: {
-          backgroundColor: "black",
+        arrow: {
+          color: "#070415",
         },
         popper: {
           padding: 4,
         },
         tooltip: {
-          backgroundColor: "black",
+          color: "white",
+          backgroundColor: "#070415",
           fontSize: 14,
         },
       },
@@ -73,8 +74,11 @@ export default createTheme({
       default: "#0F092B",
       paper: "#070415",
     },
+    container: {
+      main: "#1F1C3B",
+    },
     info: {
-      main: "#f9f9f9",
+      main: "#a4a4a4",
       contrastText: "#B7AE22",
     },
     warning: {
@@ -85,7 +89,7 @@ export default createTheme({
     values: {
       xs: 320,
       sm: 384,
-      md: 576,
+      md: 670,
       lg: 1024,
       xl: 1368,
     },
