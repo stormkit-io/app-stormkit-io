@@ -12,7 +12,7 @@ const Account: React.FC = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      {user?.paymentRequired && (
+      {user?.isPaymentRequired && (
         <Alert color="warning">
           <AlertTitle sx={{ fontSize: 20 }}>Free trial expired</AlertTitle>
           <Typography>

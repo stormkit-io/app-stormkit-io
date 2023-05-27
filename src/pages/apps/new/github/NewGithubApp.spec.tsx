@@ -1,6 +1,5 @@
 import type { MemoryHistory } from "history";
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { Router } from "react-router";
 import { createMemoryHistory } from "history";
 import { render, fireEvent, waitFor } from "@testing-library/react";
@@ -86,7 +85,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
     });
 
     test("should have a proper title", () => {
-      expect(wrapper.getByText("Import app from GitHub")).toBeTruthy();
+      expect(wrapper.getByText("Import from GitHub")).toBeTruthy();
     });
 
     test("should render repositories", async () => {

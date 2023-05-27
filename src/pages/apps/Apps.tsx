@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
+import LoadingButton from "@mui/lab/LoadingButton";
+import ImportExport from "@mui/icons-material/ImportExport";
+import LinkIcon from "@mui/icons-material/Link";
+import ButtonDropdown from "~/components/ButtonDropdown";
 import AppName from "~/components/AppName";
-import Button from "~/components/ButtonV2";
 import Container from "~/components/Container";
+import ContainerV2 from "~/components/ContainerV2";
 import Form from "~/components/FormV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
@@ -14,8 +18,14 @@ import { WelcomeModal, EmptyList } from "./_components";
 let timeout: NodeJS.Timeout;
 const limit = 20;
 const welcomeModalId = "welcome_modal";
-const provider: string = LocalStorage.get(LS_PROVIDER);
+const provider = LocalStorage.get<Provider>(LS_PROVIDER);
 const newAppHref = `/apps/new/${provider}`;
+
+const providerToText: Record<Provider, string> = {
+  github: "GitHub",
+  gitlab: "GitLab",
+  bitbucket: "Bitbucket",
+};
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -30,6 +40,10 @@ export const Home: React.FC = () => {
     LocalStorage.get(welcomeModalId) !== "shown"
   );
 
+  if (!provider) {
+    return <></>;
+  }
+
   if (apps.length === 0 && !loading && !filter) {
     return (
       <Container className="flex flex-1 items-center justify-center">
@@ -42,13 +56,24 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      <Container
-        className={"flex-1"}
+      <ContainerV2
         title="My apps"
         actions={
-          <Button href={newAppHref} category="action">
-            Create new app
-          </Button>
+          <ButtonDropdown
+            buttonText="Create new app"
+            items={[
+              {
+                icon: <ImportExport />,
+                text: `Import from ${providerToText[provider]}`,
+                href: newAppHref,
+              },
+              {
+                icon: <LinkIcon />,
+                text: "Import from URL",
+                href: "/apps/new/url",
+              },
+            ]}
+          />
         }
       >
         <div className="flex flex-auto text-gray-80">
@@ -112,22 +137,23 @@ export const Home: React.FC = () => {
                 </div>
                 {hasNextPage && (
                   <div className="my-4 flex justify-center">
-                    <Button
-                      category="action"
+                    <LoadingButton
+                      variant="contained"
+                      color="secondary"
                       loading={loading}
                       onClick={() => {
                         setFrom(from + limit);
                       }}
                     >
                       Load more
-                    </Button>
+                    </LoadingButton>
                   </div>
                 )}
               </>
             )}
           </div>
         </div>
-      </Container>
+      </ContainerV2>
       {!isLoadingFirstTime && (
         <WelcomeModal
           isOpen={isWelcomeModalOpen}

@@ -69,6 +69,10 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/apps/new/bitbucket"), centerLayout),
   },
   {
+    path: "/apps/new/url",
+    element: Async(() => import("~/pages/apps/new/url"), centerLayout),
+  },
+  {
     path: "/app/invitation/accept",
     element: Async(() => import("~/pages/app/invitation/Accept")),
   },

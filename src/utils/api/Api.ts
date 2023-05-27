@@ -42,7 +42,7 @@ class Api {
       "Content-Type": "application/json",
     };
 
-    const token = LocalStorage.get(Api.STORAGE_TOKEN_KEY);
+    const token = LocalStorage.get<string>(Api.STORAGE_TOKEN_KEY);
 
     if (token) {
       this.setAuthToken(token);

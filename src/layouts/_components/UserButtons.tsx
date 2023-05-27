@@ -4,11 +4,11 @@ import { Notifications } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import ClickAwayListener from "@mui/base/ClickAwayListener";
 import SideBar from "~/components/SideBar";
 import UserMenu from "~/components/UserMenu";
 import Spinner from "~/components/Spinner";
-import { Tooltip } from "@mui/material";
-import OutsideClick from "~/components/OutsideClick/OutsideClick";
 
 const UserButtons: React.FC = () => {
   const theme = useTheme();
@@ -23,8 +23,8 @@ const UserButtons: React.FC = () => {
 
   return (
     <>
-      <OutsideClick
-        handler={() => {
+      <ClickAwayListener
+        onClickAway={() => {
           toggleNews(false);
         }}
       >
@@ -38,17 +38,19 @@ const UserButtons: React.FC = () => {
             <Notifications />
           </IconButton>
         </Tooltip>
-      </OutsideClick>
+      </ClickAwayListener>
 
       <Tooltip
         title={
-          <OutsideClick
-            handler={() => {
+          <ClickAwayListener
+            onClickAway={() => {
               toggleUserMenu(false);
             }}
           >
-            <UserMenu className="p-4" onClick={() => toggleUserMenu(false)} />
-          </OutsideClick>
+            <div>
+              <UserMenu className="p-4" onClick={() => toggleUserMenu(false)} />
+            </div>
+          </ClickAwayListener>
         }
         placement="bottom-end"
         open={isUserMenuOpen}
