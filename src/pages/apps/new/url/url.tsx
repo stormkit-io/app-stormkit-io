@@ -89,7 +89,7 @@ export default function ImportURL() {
           label="Where can we find the repository?"
           placeholder="https://github.com/stormkit-io/marketplace-feedback-form"
           fullWidth
-          autoComplete="false"
+          autoComplete="off"
           value={importUrl}
           onChange={e => setImportUrl(e.currentTarget.value)}
         />
