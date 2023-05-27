@@ -28,7 +28,7 @@ export default function ContainerV2({ title, actions, children, sx }: Props) {
           {actions}
         </Box>
       )}
-      {children && <Box>{children}</Box>}
+      {children && <Box sx={{ color: "white" }}>{children}</Box>}
     </Box>
   );
 }
