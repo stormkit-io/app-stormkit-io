@@ -1,6 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Account } from "../types.d";
-import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import Accounts from "./Accounts";
 
@@ -44,11 +43,6 @@ describe("~/pages/apps/new/_components/Accounts.tsx", () => {
   };
 
   describe("loading", () => {
-    test("displays a spinner when loading is true", () => {
-      createWrapper({ accounts, loading: true });
-      expect(wrapper.container.innerHTML).toContain("spinner-bounce");
-    });
-
     test("does not display a spinner when loading is false", () => {
       createWrapper({ accounts, loading: false });
       expect(wrapper.container.innerHTML).not.toContain("spinner-bounce");

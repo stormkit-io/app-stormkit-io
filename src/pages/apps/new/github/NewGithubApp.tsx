@@ -3,6 +3,8 @@ import { AuthContext } from "~/pages/auth/Auth.context";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import openPopup from "~/utils/helpers/popup";
@@ -116,17 +118,27 @@ const Provider: React.FC = () => {
         </Button>
       </Box>
       <Box sx={{ p: 2, pt: 0 }}>
-        <Box sx={{ display: "flex", mb: 2 }}>
-          <Accounts
-            loading={faLoading}
-            accounts={accounts}
-            selected={installationId}
-            onAccountChange={id => {
-              setPage(1);
-              setInstallationId(id);
-            }}
-          />
-        </Box>
+        {!faLoading && accounts?.length > 0 && (
+          <Box sx={{ display: "flex", mb: 2 }}>
+            <Accounts
+              accounts={accounts}
+              selected={installationId}
+              onAccountChange={id => {
+                setPage(1);
+                setInstallationId(id);
+              }}
+            />
+          </Box>
+        )}
+
+        {!faLoading && accounts?.length === 0 && (
+          <Alert color="info" sx={{ mb: repos?.length > 0 ? 2 : 0 }}>
+            <AlertTitle>No connected accounts found</AlertTitle>
+            <Typography>
+              Click on "Connect More Repositories" to import from GitHub.
+            </Typography>
+          </Alert>
+        )}
 
         <RepoList
           repositories={repos}

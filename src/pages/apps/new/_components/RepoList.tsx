@@ -2,6 +2,7 @@ import type { Repo } from "../types.d";
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import SearchIcon from "@mui/icons-material/Search";
 import Form from "~/components/FormV2";
 import Button from "~/components/ButtonV2";
 import Spinner from "~/components/Spinner";
@@ -62,24 +63,23 @@ const RepoList: React.FC<Props> = ({
 
   return (
     <>
-      <Form.Input
-        fullWidth
-        placeholder={"Filter repos by name"}
-        className="mb-4"
-        onChange={e => {
-          clearTimeout(filterTimer);
-          filterTimer = setTimeout(() => {
-            setFilter(e.target.value);
-          }, 250);
-        }}
-        InputProps={{
-          startAdornment: (
-            <span className="inline-block w-5 text-center">
-              <span className="fas fa-search text-gray-80" />
-            </span>
-          ),
-        }}
-      />
+      {repos.length > 0 && !loading && (
+        <Form.Input
+          fullWidth
+          variant="filled"
+          placeholder={"Filter repos by name"}
+          sx={{ mb: 2 }}
+          onChange={e => {
+            clearTimeout(filterTimer);
+            filterTimer = setTimeout(() => {
+              setFilter(e.target.value);
+            }, 250);
+          }}
+          InputProps={{
+            startAdornment: <SearchIcon sx={{ width: 24 }} />,
+          }}
+        />
+      )}
 
       {loading && (
         <div

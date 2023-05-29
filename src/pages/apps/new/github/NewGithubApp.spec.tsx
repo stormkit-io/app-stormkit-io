@@ -28,6 +28,28 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
     );
   };
 
+  describe("empty data", () => {
+    beforeEach(() => {
+      githubApi.accessToken = "123456";
+      githubApi.baseurl = "http://localhost";
+
+      mockFetchInstallations({
+        response: {
+          total_count: 0,
+          installations: [],
+        },
+      });
+
+      createWrapper();
+    });
+
+    test("no connected accounts should display a warning", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("No connected accounts found")).toBeTruthy();
+      });
+    });
+  });
+
   describe("fetching data", () => {
     const installationId = "5818";
     const installationId2 = "5911";

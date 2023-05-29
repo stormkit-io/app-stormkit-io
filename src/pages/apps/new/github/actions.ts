@@ -38,13 +38,14 @@ export const useFetchRepos = ({
   page = 1,
 }: UseFetchRepoProps): UseFetchReposReturnValue => {
   const [loading, setLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(true);
   const [error, setError] = useState<string>();
   const [repos, setRepos] = useState<Repo[]>([]);
   const [hasNextPage, setHasNextPage] = useState(false);
 
   useEffect(() => {
     if (!installationId) {
+      setLoading(false);
       return;
     }
 
