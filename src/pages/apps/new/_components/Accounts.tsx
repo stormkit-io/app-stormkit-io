@@ -1,8 +1,8 @@
 import type { Account } from "../types.d";
 import type { SelectChangeEvent } from "@mui/material";
 import React from "react";
+import Box from "@mui/material/Box";
 import Form from "~/components/FormV2";
-import Spinner from "~/components/Spinner";
 
 interface Props {
   onAccountChange: (login: string) => void;
@@ -20,32 +20,30 @@ const Accounts: React.FC<Props> = ({
   return (
     <Form.Select
       name="accounts"
-      className="min-w-64"
-      multiple={false}
+      fullWidth
+      disabled={loading}
       value={selected || ""}
       onChange={(e: SelectChangeEvent<unknown>) => {
         onAccountChange(e.target.value as string);
       }}
     >
-      {loading && (
-        <Form.Option value={""}>
-          <Spinner width={5} height={5} />
+      {accounts?.map(account => (
+        <Form.Option key={account.id} value={account.id}>
+          <Box
+            component="img"
+            src={account.avatar}
+            alt={account.login}
+            sx={{
+              m: 0,
+              width: 24,
+              mr: 2,
+              borderRadius: "50%",
+              display: "inline-block",
+            }}
+          />
+          {account.login}
         </Form.Option>
-      )}
-      {!loading &&
-        accounts?.map(account => (
-          <Form.Option key={account.id} value={account.id}>
-            <span className="flex items-center">
-              <img
-                src={account.avatar}
-                alt={account.login}
-                className="w-5 mr-3 rounded-full"
-                style={{ display: "inline" }}
-              />
-              {account.login}
-            </span>
-          </Form.Option>
-        ))}
+      ))}
     </Form.Select>
   );
 };
