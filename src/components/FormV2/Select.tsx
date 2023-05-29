@@ -8,8 +8,6 @@ let inputLabel = 0;
 
 interface Props {
   shrink?: boolean;
-  background?: "black" | "transparent";
-  textColor?: "gray-80" | "white";
 }
 
 const Select: React.FC<SelectProps & Props> = ({
@@ -20,8 +18,6 @@ const Select: React.FC<SelectProps & Props> = ({
   fullWidth = true,
   displayEmpty = true,
   defaultValue = "",
-  background = "black",
-  textColor = "gray-80",
   required,
   ...rest
 }): React.ReactElement => {
@@ -29,15 +25,12 @@ const Select: React.FC<SelectProps & Props> = ({
 
   return (
     <FormControl
+      color="info"
       variant={variant}
       fullWidth={fullWidth}
       required={required}
-      className={cn({
-        transparent: background === "transparent",
-        "h-full": true,
-      })}
       sx={{
-        background,
+        height: "100%",
       }}
     >
       {label && (
@@ -52,7 +45,11 @@ const Select: React.FC<SelectProps & Props> = ({
         displayEmpty={displayEmpty}
         defaultValue={defaultValue}
         inputProps={{
-          className: `text-${textColor} leading-4 p-3`,
+          sx: {
+            color: "white",
+            lineHeight: 1.5,
+            p: 2,
+          },
         }}
         {...rest}
       />

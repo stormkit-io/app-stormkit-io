@@ -150,8 +150,6 @@ const EnvironmentForm: React.FC<Props> = ({
             <Form.Select
               name="autoDeploy"
               value={autoDeploy}
-              background="transparent"
-              textColor="gray-80"
               className="no-border h-full"
               onChange={e => {
                 setAutoDeploy(e.target.value as AutoDeployValues);

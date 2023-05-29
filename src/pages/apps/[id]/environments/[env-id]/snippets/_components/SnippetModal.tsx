@@ -106,8 +106,6 @@ const SnippetModal: React.FC<Props> = ({
               defaultValue={`${snippet?._injectLocation || "head"}_${
                 isSnippetPrepend ? "prepend" : "append"
               }`}
-              background="transparent"
-              textColor="gray-80"
               className="no-border h-full"
               onChange={e => {
                 const val = e.target.value as string;
