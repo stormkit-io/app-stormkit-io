@@ -1,4 +1,13 @@
 /**
+ * Given a `Provider` string, it returns the actual Company name.
+ */
+export const providerToText: Record<Provider, string> = {
+  github: "GitHub",
+  gitlab: "GitLab",
+  bitbucket: "Bitbucket",
+};
+
+/**
  * Capitalizes the first letter of the given string.
  */
 export const capitalize = (value?: string): string => {

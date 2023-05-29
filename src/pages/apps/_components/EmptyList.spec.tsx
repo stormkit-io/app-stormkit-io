@@ -1,6 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
 import type { MemoryHistory } from "history";
-import React from "react";
 import { render } from "@testing-library/react";
 import { Router } from "react-router";
 import { createMemoryHistory } from "history";
@@ -26,8 +25,10 @@ describe("~/pages/apps/_components/EmptyList", () => {
       wrapper.getByText(/Connect your repository to get started./)
     ).toBeTruthy();
 
-    const button = wrapper.getByText("Create new app");
-    expect(button).toBeTruthy();
-    expect(button.getAttribute("href")).toBe("/apps/new");
+    const button1 = wrapper.getByText("Create new app");
+    expect(button1.getAttribute("href")).toBe("/apps/new");
+
+    const button2 = wrapper.getByText("Import from URL");
+    expect(button2.getAttribute("href")).toBe("/apps/new/url");
   });
 });

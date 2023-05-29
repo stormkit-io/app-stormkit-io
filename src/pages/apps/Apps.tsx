@@ -13,18 +13,13 @@ import ContainerV2 from "~/components/ContainerV2";
 import Form from "~/components/FormV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
+import { providerToText } from "~/utils/helpers/string";
 import { useFetchAppList } from "./actions";
 import { WelcomeModal, EmptyList } from "./_components";
 
 let timeout: NodeJS.Timeout;
 const limit = 20;
 const welcomeModalId = "welcome_modal";
-
-const providerToText: Record<Provider, string> = {
-  github: "GitHub",
-  gitlab: "GitLab",
-  bitbucket: "Bitbucket",
-};
 
 export default function Apps() {
   const navigate = useNavigate();
@@ -52,11 +47,13 @@ export default function Apps() {
     );
   }
 
+  const importFromProvider = `Import from ${providerToText[provider]}`;
+
   if (apps.length === 0 && !loading && !filter) {
     return (
       <ContainerV2>
         <Box sx={{ p: 4 }}>
-          <EmptyList actionLink={newAppHref} />
+          <EmptyList actionLink={newAppHref} actionText={importFromProvider} />
         </Box>
       </ContainerV2>
     );
@@ -74,7 +71,7 @@ export default function Apps() {
             items={[
               {
                 icon: <ImportExport />,
-                text: `Import from ${providerToText[provider]}`,
+                text: importFromProvider,
                 href: newAppHref,
               },
               {
