@@ -71,8 +71,6 @@ const CustomStorage: React.FC<Props> = ({
         >
           <Form.Select
             name="integration"
-            background="transparent"
-            textColor="gray-80"
             className="no-border h-full"
             displayEmpty
             value={integration || ""}

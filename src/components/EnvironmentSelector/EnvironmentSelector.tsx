@@ -22,7 +22,6 @@ const EnvironmentSelector: React.FC<Props> = ({
     <div {...rest} className={cn("bg-blue-10 w-full h-full", className)}>
       <Form.Select
         name="envId"
-        background="transparent"
         displayEmpty
         defaultValue={defaultValue}
         onChange={e => {

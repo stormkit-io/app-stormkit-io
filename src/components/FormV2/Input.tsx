@@ -1,5 +1,4 @@
 import React from "react";
-import cn from "classnames";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { Tooltip } from "@mui/material";
 
@@ -19,13 +18,11 @@ const Input: React.FC<Props> = ({
   return (
     <TextField
       type={type}
+      color="info"
       variant={variant}
       autoComplete={autoComplete}
-      sx={{
-        background: "black",
-      }}
       inputProps={{
-        className: cn("p-3 text-gray-80"),
+        sx: { p: 2, color: "white" },
         ...inputProps,
       }}
       InputProps={{

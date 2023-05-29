@@ -176,7 +176,6 @@ const TriggerFunctionModal: React.FC<Props> = ({
             <Form.Select
               name="method"
               defaultValue={triggerFunction?.options.method || "GET"}
-              background="transparent"
               className="no-border h-full"
             >
               <Form.Option value="POST"> POST </Form.Option>
