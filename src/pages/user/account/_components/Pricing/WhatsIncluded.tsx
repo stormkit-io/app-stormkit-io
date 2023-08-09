@@ -24,6 +24,7 @@ const limits: Record<SubscriptionTier, { fns: string; bandwidth: string }> = {
 };
 
 const includedFeatures = [
+  "Unlimited seats",
   "Unlimited projects",
   (tier: SubscriptionTier) => `${limits[tier].fns} Serverless invocations`,
   (tier: SubscriptionTier) => `${limits[tier].bandwidth} Bandwidth`,
