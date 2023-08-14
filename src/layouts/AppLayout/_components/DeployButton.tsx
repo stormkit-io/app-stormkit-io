@@ -26,9 +26,10 @@ const DeployButton: React.FC<Props> = ({
             e.preventDefault();
             toggleDeployModal(true);
           }}
-          className="hover:text-white p-2 flex items-center w-8 rounded-full h-8 text-xs justify-center bg-pink-10"
+          className="hover:text-white bg-pink-10 text-sm rounded-none"
         >
           <RocketLaunch sx={{ fontSize: 16 }} />
+          <div className="m-1">Deploy Now</div>
         </IconButton>
       </Tooltip>
       {isDeployModalOpen && (
