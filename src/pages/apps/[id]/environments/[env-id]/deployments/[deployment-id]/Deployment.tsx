@@ -107,7 +107,7 @@ const Deployment: React.FC = () => {
             </div>
             {message.length ? (
               <code
-                className="block bg-blue-10 text-sm p-4 text-gray-80 leading-relaxed overflow-y-auto"
+                className="block whitespace-pre bg-blue-10 text-sm p-4 text-gray-80 leading-relaxed overflow-auto"
                 style={{ maxHeight: "400px", fontFamily: "monospace" }}
               >
                 {message.split("\n").map((line, i) => (
