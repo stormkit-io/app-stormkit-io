@@ -1,7 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
-import type { History } from "history";
 import * as router from "react-router";
-import { createMemoryHistory } from "history";
 import { render, fireEvent } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import mockApp from "~/testing/data/mock_app";
@@ -16,7 +14,6 @@ interface WrapperProps {
 
 describe("~/layouts/AppLayout/Applayout.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
   const defaultApp = mockApp();
   const defaultEnvs = mockEnvironments({ app: defaultApp });
 
@@ -25,28 +22,25 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
     environments = defaultEnvs,
     setRefreshToken = () => {},
   }: WrapperProps) => {
-    const { Router, Route, Routes } = router;
-    history = createMemoryHistory({
-      initialEntries: [`/apps/${app.id}`],
-      initialIndex: 0,
-    });
-
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <Routes>
-          <Route
-            path="/apps/:id/*"
-            element={
-              <AppContext.Provider
-                value={{ app, environments, setRefreshToken }}
-              >
-                <AppLayout />
-              </AppContext.Provider>
-            }
-          />
-        </Routes>
-      </Router>
+    const { RouterProvider } = router;
+    const memoryRouter = router.createMemoryRouter(
+      [
+        {
+          path: "/apps/:id/*",
+          element: (
+            <AppContext.Provider value={{ app, environments, setRefreshToken }}>
+              <AppLayout />
+            </AppContext.Provider>
+          ),
+        },
+      ],
+      {
+        initialEntries: [`/apps/${app.id}`],
+        initialIndex: 0,
+      }
     );
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   const mockUseLocation = ({ pathname = "", search = "" } = {}) => {

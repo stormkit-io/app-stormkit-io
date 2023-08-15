@@ -1,21 +1,17 @@
 import type { RenderResult } from "@testing-library/react";
-import type { MemoryHistory } from "history";
 import { render } from "@testing-library/react";
-import { Router } from "react-router";
-import { createMemoryHistory } from "history";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import EmptyList from "./EmptyList";
 
 describe("~/pages/apps/_components/EmptyList", () => {
   let wrapper: RenderResult;
-  let history: MemoryHistory;
 
   const createWrapper = () => {
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router location={history.location} navigator={history}>
-        <EmptyList actionLink="/apps/new" />
-      </Router>
-    );
+    const memoryRouter = createMemoryRouter([
+      { path: "*", element: <EmptyList actionLink="/apps/new" /> },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   test("renders correctly", () => {

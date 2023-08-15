@@ -1,13 +1,11 @@
 import type { Scope } from "nock";
-import React from "react";
 import {
   fireEvent,
   render,
   RenderResult,
   waitFor,
 } from "@testing-library/react";
-import { createMemoryHistory, History } from "history";
-import { Router, Route, Routes } from "react-router-dom";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import mockApp from "~/testing/data/mock_app";
 import mockDeployment from "~/testing/data/mock_deployment";
@@ -24,7 +22,6 @@ interface Props {
 
 describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/RuntimeLogs.spec.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
   let currentApp: App;
   let currentEnv: Environment;
   let currentDeploy: Deployment;
@@ -79,33 +76,32 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
       },
     });
 
-    history = createMemoryHistory({
-      initialIndex: 0,
-      initialEntries: [
-        `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${currentDeploy.id}/runtime-logs`,
+    const memoryRouter = createMemoryRouter(
+      [
+        {
+          path: "/apps/:appId/environments/:envId/deployments/:deploymentId/runtime-logs",
+          element: (
+            <AppContext.Provider
+              value={{
+                app: currentApp,
+                environments: [currentEnv],
+                setRefreshToken: jest.fn(),
+              }}
+            >
+              <RuntimeLogs />
+            </AppContext.Provider>
+          ),
+        },
       ],
-    });
-
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <Routes>
-          <Route
-            path="/apps/:appId/environments/:envId/deployments/:deploymentId/runtime-logs"
-            element={
-              <AppContext.Provider
-                value={{
-                  app: currentApp,
-                  environments: [currentEnv],
-                  setRefreshToken: jest.fn(),
-                }}
-              >
-                <RuntimeLogs />
-              </AppContext.Provider>
-            }
-          />
-        </Routes>
-      </Router>
+      {
+        initialIndex: 0,
+        initialEntries: [
+          `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${currentDeploy.id}/runtime-logs`,
+        ],
+      }
     );
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   test("should contain a link back to the deployment page", async () => {

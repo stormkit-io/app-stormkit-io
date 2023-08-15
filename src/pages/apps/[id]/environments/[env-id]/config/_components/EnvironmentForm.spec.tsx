@@ -1,11 +1,8 @@
-import type { History } from "history";
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock/types";
 import { waitFor, render, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React from "react";
-import { Router } from "react-router";
-import { createMemoryHistory } from "history";
+import * as router from "react-router";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
 import {
@@ -23,7 +20,7 @@ interface WrapperProps {
 describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", () => {
   let fetchRepoMetaScope: Scope;
   let wrapper: RenderResult;
-  let history: History;
+  let navigate: jest.Func;
   const findSaveButton = () => wrapper.getByText("Save")?.closest("button");
 
   const createWrapper = ({ app, env, formHandler }: WrapperProps) => {
@@ -34,16 +31,23 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", (
       });
     }
 
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <EnvironmentForm
-          app={app}
-          environment={env}
-          formHandler={formHandler}
-        />
-      </Router>
-    );
+    navigate = jest.fn();
+    jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
+
+    const memoryRouter = router.createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <EnvironmentForm
+            app={app}
+            environment={env}
+            formHandler={formHandler}
+          />
+        ),
+      },
+    ]);
+
+    wrapper = render(<router.RouterProvider router={memoryRouter} />);
   };
 
   describe("edit mode - non production environments", () => {
@@ -70,9 +74,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", (
 
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
-        expect(history.location.pathname).toEqual(
-          `/apps/${app.id}/environments`
-        );
+        expect(navigate).toHaveBeenCalledWith(`/apps/${app.id}/environments`);
       });
     });
   });
@@ -143,6 +145,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", (
 
     test("should handle form submission properly", async () => {
       expect(findSaveButton()?.getAttribute("disabled")).toBe("");
+
+      // Click on the toggle to switch Environment to KeyValue
+      await fireEvent.click(wrapper.getByLabelText("key value view"));
 
       // Trigger a change event to activate the button
       await userEvent.type(wrapper.getByLabelText("Name"), "development");

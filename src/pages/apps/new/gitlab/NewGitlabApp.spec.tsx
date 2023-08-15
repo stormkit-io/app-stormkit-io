@@ -1,8 +1,5 @@
-import type { MemoryHistory } from "history";
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
-import { Router } from "react-router";
-import { createMemoryHistory } from "history";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import { render, waitFor } from "@testing-library/react";
 import gitlabApi from "~/utils/api/Gitlab";
 import * as nocks from "~/testing/nocks/nock_gitlab";
@@ -12,15 +9,13 @@ const { mockFetchRepositories } = nocks;
 
 describe("~/pages/apps/new/github/NewGitlabApp.tsx", () => {
   let wrapper: RenderResult;
-  let history: MemoryHistory;
 
   const createWrapper = () => {
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router location={history.location} navigator={history}>
-        <NewGitlabApp />
-      </Router>
-    );
+    const memoryRouter = createMemoryRouter([
+      { path: "*", element: <NewGitlabApp /> },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   describe("fetching data", () => {

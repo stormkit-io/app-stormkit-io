@@ -1,7 +1,5 @@
-import type { MemoryHistory } from "history";
 import type { RenderResult } from "@testing-library/react";
-import { Router } from "react-router";
-import { createMemoryHistory } from "history";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import githubApi from "~/utils/api/Github";
@@ -13,19 +11,22 @@ const { mockFetchInstallations, mockFetchRepositories } = nocks;
 
 describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   let wrapper: RenderResult;
-  let history: MemoryHistory;
   let user: User;
 
   const createWrapper = () => {
     user = mockUser();
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router location={history.location} navigator={history}>
-        <AuthContext.Provider value={{ user }}>
-          <NewGithubApp />
-        </AuthContext.Provider>
-      </Router>
-    );
+    const memoryRouter = createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <AuthContext.Provider value={{ user }}>
+            <NewGithubApp />
+          </AuthContext.Provider>
+        ),
+      },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   describe("empty data", () => {

@@ -1,13 +1,11 @@
 import type { Scope } from "nock";
-import React from "react";
 import {
   fireEvent,
   render,
   RenderResult,
   waitFor,
 } from "@testing-library/react";
-import { createMemoryHistory, History } from "history";
-import { Router } from "react-router-dom";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import mockApp from "~/testing/data/mock_app";
@@ -26,7 +24,6 @@ interface Props {
 
 describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
   let currentApp: App;
   let currentEnv: Environment;
   let currentTriggers: FunctionTrigger[];
@@ -47,22 +44,26 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
       response: currentTriggers,
     });
 
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <AppContext.Provider
-          value={{
-            app: currentApp,
-            environments: [currentEnv],
-            setRefreshToken: jest.fn(),
-          }}
-        >
-          <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-            <FunctionTriggers />
-          </EnvironmentContext.Provider>
-        </AppContext.Provider>
-      </Router>
-    );
+    const memoryRouter = createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <AppContext.Provider
+            value={{
+              app: currentApp,
+              environments: [currentEnv],
+              setRefreshToken: jest.fn(),
+            }}
+          >
+            <EnvironmentContext.Provider value={{ environment: currentEnv }}>
+              <FunctionTriggers />
+            </EnvironmentContext.Provider>
+          </AppContext.Provider>
+        ),
+      },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   test("should list function triggers", async () => {

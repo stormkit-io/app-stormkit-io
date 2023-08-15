@@ -5,8 +5,7 @@ import {
   RenderResult,
   waitFor,
 } from "@testing-library/react";
-import { createMemoryHistory, History } from "history";
-import { Router } from "react-router-dom";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import mockApp from "~/testing/data/mock_app";
@@ -30,7 +29,6 @@ jest.mock("~/utils/helpers/date", () => ({
 
 describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
   let currentApp: App;
   let currentEnv: Environment;
   let currentDeploys: Deployment[];
@@ -59,22 +57,26 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
       response: { hasNextPage: false, deploys: currentDeploys },
     });
 
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <AppContext.Provider
-          value={{
-            app: currentApp,
-            environments: [currentEnv],
-            setRefreshToken: jest.fn(),
-          }}
-        >
-          <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-            <Deployments />
-          </EnvironmentContext.Provider>
-        </AppContext.Provider>
-      </Router>
-    );
+    const memoryRouter = createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <AppContext.Provider
+            value={{
+              app: currentApp,
+              environments: [currentEnv],
+              setRefreshToken: jest.fn(),
+            }}
+          >
+            <EnvironmentContext.Provider value={{ environment: currentEnv }}>
+              <Deployments />
+            </EnvironmentContext.Provider>
+          </AppContext.Provider>
+        ),
+      },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   test("should list deployments", async () => {

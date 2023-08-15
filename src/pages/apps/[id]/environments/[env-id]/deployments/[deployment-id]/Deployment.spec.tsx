@@ -1,8 +1,6 @@
 import type { Scope } from "nock";
-import React from "react";
 import { render, RenderResult, waitFor } from "@testing-library/react";
-import { createMemoryHistory, History } from "history";
-import { Router, Route, Routes } from "react-router-dom";
+import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import mockApp from "~/testing/data/mock_app";
@@ -23,7 +21,6 @@ jest.mock("~/utils/helpers/deployments", () => ({
 
 describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
   let currentApp: App;
   let currentEnv: Environment;
   let currentDeploy: Deployment;
@@ -50,37 +47,34 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
       response: { deploy: currentDeploy },
     });
 
-    history = createMemoryHistory({
-      initialIndex: 0,
-      initialEntries: [
-        `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${currentDeploy.id}`,
+    const memoryRouter = createMemoryRouter(
+      [
+        {
+          path: "/apps/:appId/environments/:envId/deployments/:deploymentId",
+          element: (
+            <AppContext.Provider
+              value={{
+                app: currentApp,
+                environments: [currentEnv],
+                setRefreshToken: jest.fn(),
+              }}
+            >
+              <EnvironmentContext.Provider value={{ environment: currentEnv }}>
+                <Deployment />
+              </EnvironmentContext.Provider>
+            </AppContext.Provider>
+          ),
+        },
       ],
-    });
-
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <Routes>
-          <Route
-            path="/apps/:appId/environments/:envId/deployments/:deploymentId"
-            element={
-              <AppContext.Provider
-                value={{
-                  app: currentApp,
-                  environments: [currentEnv],
-                  setRefreshToken: jest.fn(),
-                }}
-              >
-                <EnvironmentContext.Provider
-                  value={{ environment: currentEnv }}
-                >
-                  <Deployment />
-                </EnvironmentContext.Provider>
-              </AppContext.Provider>
-            }
-          />
-        </Routes>
-      </Router>
+      {
+        initialIndex: 0,
+        initialEntries: [
+          `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${currentDeploy.id}`,
+        ],
+      }
     );
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   test("should display deployment details", async () => {

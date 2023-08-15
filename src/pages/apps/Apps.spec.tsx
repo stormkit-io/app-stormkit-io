@@ -1,8 +1,6 @@
-import type { MemoryHistory } from "history";
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
 import * as router from "react-router";
-import { createMemoryHistory } from "history";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { mockFetchApps } from "~/testing/nocks";
 import { mockApp } from "~/testing/data";
@@ -17,16 +15,14 @@ describe("~/pages/apps/Apps.tsx", () => {
   ];
 
   let wrapper: RenderResult;
-  let history: MemoryHistory;
 
   const createWrapper = () => {
     LocalStorage.set(LS_PROVIDER, "github");
-    history = createMemoryHistory();
-    wrapper = render(
-      <router.Router location={history.location} navigator={history}>
-        <Apps />
-      </router.Router>
-    );
+
+    const memoryRouter = router.createMemoryRouter([
+      { path: "*", element: <Apps /> },
+    ]);
+    wrapper = render(<router.RouterProvider router={memoryRouter} />);
   };
 
   describe("when user has already created apps", () => {

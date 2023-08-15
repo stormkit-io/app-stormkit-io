@@ -1,8 +1,8 @@
-import React from "react";
-import router from "react-router";
+import type { RenderResult } from "@testing-library/react";
+import type { AuthContextProps } from "~/pages/auth/Auth.context";
+import type { Scope } from "nock";
+import * as router from "react-router";
 import { render } from "@testing-library/react";
-import { Router } from "react-router-dom";
-import { createMemoryHistory } from "history";
 import { waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
 import Api from "~/utils/api/Api";
@@ -12,55 +12,72 @@ import * as nocks from "~/testing/nocks";
 const { AuthContext, default: ContextProvider } = Auth;
 
 describe("pages/auth/Auth.context", () => {
-  let wrapper;
-  let scope;
-  let context;
+  let wrapper: RenderResult;
+  let scope: Scope;
+  let context: AuthContextProps;
+  let navigate: jest.Func;
+
+  const mockUseLocation = () => {
+    jest.spyOn(router, "useLocation").mockReturnValue({
+      search: "my-query=1",
+      pathname: "/apps/1231231",
+      state: {},
+      key: "",
+      hash: "",
+    });
+  };
 
   const createWrapper = () => {
-    const history = createMemoryHistory();
-    const api = new Api({
-      baseurl: process.env.API_DOMAIN,
-    });
+    navigate = jest.fn();
+    jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
 
-    wrapper = render(
-      <Router history={history}>
-        <ContextProvider api={api}>
-          <AuthContext.Consumer>
-            {ctx => {
-              context = ctx;
-            }}
-          </AuthContext.Consumer>
-        </ContextProvider>
-      </Router>
-    );
+    const { RouterProvider, createMemoryRouter } = router;
+    const memoryRouter = createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <ContextProvider>
+            <AuthContext.Consumer>
+              {ctx => {
+                context = ctx;
+                return <></>;
+              }}
+            </AuthContext.Consumer>
+          </ContextProvider>
+        ),
+      },
+    ]);
 
-    wrapper.history = history;
+    wrapper = render(<RouterProvider router={memoryRouter} />);
+
     return wrapper;
   };
 
   describe("when there is a session token but it is expired", () => {
     beforeEach(() => {
       LocalStorage.set("skit_token", "my-expired-token");
+      LocalStorage.set("skit_access_token", "my-access-token");
+      LocalStorage.set("skit_provider", "github");
 
-      jest.spyOn(router, "useLocation").mockReturnValue({
-        search: "my-query=1",
-        pathname: "/apps/1231231",
-      });
+      mockUseLocation();
 
       scope = nocks.mockFetchUser({ response: { ok: false, user: null } });
       createWrapper();
     });
 
     afterEach(() => {
+      LocalStorage.del("skit_provider");
+      LocalStorage.del("skit_access_token");
       LocalStorage.del("skit_token");
     });
 
-    test.skip("redirects user to the auth page", async () => {
+    test("redirects user to the auth page", async () => {
+      jest.spyOn(Api, "getAuthToken").mockReturnValue("my-expired-token");
+
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
-        expect(wrapper.history.location.pathname).toBe("/auth");
-        expect(wrapper.history.location.search).toBe(
-          "?redirect=%2Fapps%2F1231231my-query%3D1"
+        expect(navigate).toHaveBeenCalledWith(
+          "/auth?redirect=%2Fapps%2F1231231my-query%3D1"
         );
       });
     });
@@ -69,11 +86,10 @@ describe("pages/auth/Auth.context", () => {
   describe("when there is a session token and user is logged in", () => {
     beforeEach(() => {
       LocalStorage.set("skit_token", "my-valid-token");
+      LocalStorage.set("skit_access_token", "my-access-token");
+      LocalStorage.set("skit_provider", "github");
 
-      jest.spyOn(router, "useLocation").mockReturnValue({
-        search: "my-query=1",
-        pathname: "/apps/1231231",
-      });
+      mockUseLocation();
 
       scope = nocks.mockFetchUser({});
       createWrapper();
@@ -83,7 +99,7 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.del("skit_token");
     });
 
-    test.skip("shows the context properly", async () => {
+    test("shows the context properly", async () => {
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(context).toEqual({
