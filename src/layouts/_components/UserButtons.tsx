@@ -5,7 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import ClickAwayListener from "@mui/base/ClickAwayListener";
+import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import SideBar from "~/components/SideBar";
 import UserMenu from "~/components/UserMenu";
 import Spinner from "~/components/Spinner";
