@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import cn from "classnames";
 import { Tooltip } from "@mui/material";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
+import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import Button from "~/components/ButtonV2";
 
 interface Item {
