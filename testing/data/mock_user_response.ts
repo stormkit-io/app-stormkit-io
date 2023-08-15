@@ -1,4 +1,10 @@
-export default () => ({
+interface UserResponse {
+  user: User | null;
+  accounts: Array<{ provider: Provider; url: string; displayName: string }>;
+  ok: boolean;
+}
+
+export default (): UserResponse => ({
   user: {
     displayName: "stormkit",
     avatar: "https://avatars2.githubusercontent.com/u/3321893?v=4",
@@ -6,9 +12,7 @@ export default () => ({
     memberSince: 1551184200,
     id: "1644802351",
     fullName: "Foo Bar",
-    package: {
-      id: "free",
-    },
+    package: { id: "free" },
   },
   accounts: [
     { provider: "gitlab", url: "", displayName: "Stormkit" },

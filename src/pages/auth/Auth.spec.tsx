@@ -1,7 +1,4 @@
-import type { History } from "history";
-import React from "react";
 import * as router from "react-router";
-import { createMemoryHistory } from "history";
 import { mockUser } from "~/testing/data";
 import { render, waitFor, RenderResult } from "@testing-library/react";
 import { AuthContext, AuthContextProps } from "./Auth.context";
@@ -9,17 +6,24 @@ import Auth from "./Auth";
 
 describe("~/pages/auth/Auth.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
+  let navigate: jest.Func;
 
   const createWrapper = (context?: AuthContextProps) => {
-    history = createMemoryHistory();
-    wrapper = render(
-      <router.Router location={history.location} navigator={history}>
-        <AuthContext.Provider value={{ user: mockUser(), ...context }}>
-          <Auth />
-        </AuthContext.Provider>
-      </router.Router>
-    );
+    navigate = jest.fn();
+    jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
+
+    const memoryRouter = router.createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <AuthContext.Provider value={{ user: mockUser(), ...context }}>
+            <Auth />
+          </AuthContext.Provider>
+        ),
+      },
+    ]);
+
+    wrapper = render(<router.RouterProvider router={memoryRouter} />);
   };
 
   const mockUseLocation = ({ pathname = "", search = "" } = {}) => {
@@ -40,7 +44,7 @@ describe("~/pages/auth/Auth.tsx", () => {
 
     test("redirects user to the given page", async () => {
       await waitFor(() => {
-        expect(history.location.pathname).toBe("/apps");
+        expect(navigate).toHaveBeenCalledWith("/apps");
       });
     });
   });
@@ -53,7 +57,7 @@ describe("~/pages/auth/Auth.tsx", () => {
 
     test("redirects user to the home page", async () => {
       await waitFor(() => {
-        expect(history.location.pathname).toBe("/");
+        expect(navigate).toHaveBeenCalledWith("/");
       });
     });
   });

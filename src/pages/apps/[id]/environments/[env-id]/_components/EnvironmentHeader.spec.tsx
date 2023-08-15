@@ -1,8 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
-import type { History } from "history";
-import React from "react";
-import { createMemoryHistory } from "history";
-import { Router } from "react-router";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import { render } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -19,7 +16,6 @@ interface WrapperProps {
 
 describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
   const defaultApp = mockApp();
   const defaultEnvs = mockEnvironments({ app: defaultApp });
 
@@ -27,18 +23,24 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
     app = defaultApp,
     environments = defaultEnvs,
   }: WrapperProps) => {
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <AppContext.Provider
-          value={{ app, environments, setRefreshToken: () => {} }}
-        >
-          <EnvironmentContext.Provider value={{ environment: environments[0] }}>
-            <EnvironmentHeader />
-          </EnvironmentContext.Provider>
-        </AppContext.Provider>
-      </Router>
-    );
+    const memoryRouter = createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <AppContext.Provider
+            value={{ app, environments, setRefreshToken: () => {} }}
+          >
+            <EnvironmentContext.Provider
+              value={{ environment: environments[0] }}
+            >
+              <EnvironmentHeader />
+            </EnvironmentContext.Provider>
+          </AppContext.Provider>
+        ),
+      },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   describe("when not yet published", () => {

@@ -1,5 +1,4 @@
 import { RenderResult, waitFor } from "@testing-library/react";
-import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -86,6 +85,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
       wrapper.getByLabelText("Output folder"),
       "packages/console/dist"
     );
+
+    // Click on the toggle to switch Environment to KeyValue
+    await fireEvent.click(wrapper.getByLabelText("key value view"));
 
     // Delete first and only environment variable
     await fireEvent.click(

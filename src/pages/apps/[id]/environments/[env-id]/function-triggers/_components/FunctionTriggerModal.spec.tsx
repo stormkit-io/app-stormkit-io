@@ -1,8 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { fireEvent, render, waitFor } from "@testing-library/react";
-import { createMemoryHistory, History } from "history";
-import { Router } from "react-router-dom";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import userEvent from "@testing-library/user-event";
 import mockApp from "~/testing/data/mock_app";
 import mockFunctionTriggers from "~/testing/data/mock_function_triggers";
@@ -23,7 +21,6 @@ interface Props {
 
 describe("~/apps/[id]/environments/[env-id]/function-triggers/_components/FunctionTriggerModal.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
   let currentApp: App;
   let currentEnv: Environment;
   let closeModal: jest.Func;
@@ -40,18 +37,22 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/_components/Functi
         trigger.options.url.split("/api")[0].replace("https://", "");
     }
 
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <FunctionTriggerModal
-          triggerFunction={trigger}
-          onSuccess={successHandler}
-          closeModal={closeModal}
-          app={currentApp}
-          environment={currentEnv}
-        />
-      </Router>
-    );
+    const memoryRouter = createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <FunctionTriggerModal
+            triggerFunction={trigger}
+            onSuccess={successHandler}
+            closeModal={closeModal}
+            app={currentApp}
+            environment={currentEnv}
+          />
+        ),
+      },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   test("should update a given trigger", async () => {

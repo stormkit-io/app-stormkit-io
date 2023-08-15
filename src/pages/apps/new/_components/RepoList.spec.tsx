@@ -1,9 +1,6 @@
-import type { MemoryHistory } from "history";
 import type { RenderResult } from "@testing-library/react";
 import type { Repo } from "../types.d";
-import React from "react";
-import { Router } from "react-router";
-import { createMemoryHistory } from "history";
+import * as router from "react-router";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import * as nocks from "~/testing/nocks";
 import RepoList from "./RepoList";
@@ -20,7 +17,7 @@ interface Props {
 
 describe("~/pages/apps/new/_components/RepoList.tsx", () => {
   let wrapper: RenderResult;
-  let history: MemoryHistory;
+  let navigate: jest.Func;
 
   const repositories: Repo[] = [
     { name: "test-repo", fullName: "namespace/test-repo" },
@@ -36,20 +33,29 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
     hasNextPage = false,
     onNextPage = () => {},
   }: Props) => {
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router location={history.location} navigator={history}>
-        <RepoList
-          loading={loading}
-          error={error}
-          provider={provider}
-          repositories={repositories}
-          isLoadingMore={isLoadingMore}
-          hasNextPage={hasNextPage}
-          onNextPage={onNextPage}
-        />
-      </Router>
-    );
+    const { RouterProvider, createMemoryRouter } = router;
+
+    navigate = jest.fn();
+    jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
+
+    const memoryRouter = createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <RepoList
+            loading={loading}
+            error={error}
+            provider={provider}
+            repositories={repositories}
+            isLoadingMore={isLoadingMore}
+            hasNextPage={hasNextPage}
+            onNextPage={onNextPage}
+          />
+        ),
+      },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   describe("loading", () => {
@@ -84,7 +90,7 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
 
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
-        expect(history.location.pathname).toBe(`/apps/${id}`);
+        expect(navigate).toHaveBeenCalledWith(`/apps/${id}`);
       });
     });
 

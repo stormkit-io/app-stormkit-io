@@ -266,12 +266,12 @@ const EnvironmentForm: React.FC<Props> = ({
                   setEnvVarsMode(val as "textarea" | "keyvalue");
                 }
               }}
-              aria-label="display mode"
+              aria-label="environment variables display mode"
             >
-              <ToggleButton value="textarea" aria-label="json view">
+              <ToggleButton value="textarea" aria-label="textarea view">
                 <span className="fa-solid fa-code text-gray-80" />
               </ToggleButton>
-              <ToggleButton value="keyvalue" aria-label="ui view">
+              <ToggleButton value="keyvalue" aria-label="key value view">
                 <span className="fa-solid fa-list text-gray-80" />
               </ToggleButton>
             </ToggleButtonGroup>

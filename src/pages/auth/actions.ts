@@ -132,7 +132,9 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
             setError(
               "We could not fetch your primary verified email from the provider. Make sure your email is verified."
             );
-          } else if (data.error === "account-too-new") {
+          }
+          // @ts-ignore
+          else if (data.error === "account-too-new") {
             setError(
               "Your provider account is newly created. We do not accept new accounts. Please wait a few days."
             );

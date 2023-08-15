@@ -1,9 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
-import type { History } from "history";
-import React from "react";
 import { waitFor, fireEvent, render } from "@testing-library/react";
-import { Router } from "react-router";
-import { createMemoryHistory } from "history";
+import * as router from "react-router";
 import mockApp from "~/testing/data/mock_app";
 import mockEnv from "~/testing/data/mock_environment";
 import { mockFetchRepoMeta } from "~/testing/nocks/nock_environment";
@@ -18,25 +15,35 @@ interface Props {
 
 describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
   let wrapper: RenderResult;
-  let history: History;
   let currentApp: App;
   let currentEnv: Environment;
-  let toggleModal: jest.Mock;
+  let toggleModal: jest.Func;
+  let navigate: jest.Func;
   const deploymentId = "15639164571";
 
   const createWrapper = ({ app, env }: Props) => {
     toggleModal = jest.fn();
-    history = createMemoryHistory();
-    wrapper = render(
-      <Router navigator={history} location={history.location}>
-        <DeployModal
-          app={app}
-          environments={[env]}
-          selected={env}
-          toggleModal={toggleModal}
-        />
-      </Router>
-    );
+    navigate = jest.fn();
+
+    jest.spyOn(router, "useNavigate").mockReturnValue(navigate);
+
+    const { RouterProvider, createMemoryRouter } = router;
+
+    const memoryRouter = createMemoryRouter([
+      {
+        path: "*",
+        element: (
+          <DeployModal
+            app={app}
+            environments={[env]}
+            selected={env}
+            toggleModal={toggleModal}
+          />
+        ),
+      },
+    ]);
+
+    wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
   beforeEach(async () => {
@@ -109,7 +116,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
       expect(toggleModal).toHaveBeenCalledWith(false);
-      expect(history.location.pathname).toBe(
+      expect(navigate).toHaveBeenCalledWith(
         `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${deploymentId}`
       );
     });
@@ -129,7 +136,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(history.location.pathname).toBe("/");
+      expect(navigate).not.toHaveBeenCalled();
       expect(
         wrapper.getByText(
           /You have exceeded the maximum number of concurrent builds/
@@ -138,7 +145,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     });
   });
 
-  test("Other errors should display a generic error", async () => {
+  test("other errors should display a generic error", async () => {
     const scope = mockDeployNow({
       appId: currentApp.id,
       config: { ...deployConfig, env: currentEnv.name },
@@ -152,7 +159,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(history.location.pathname).toBe("/");
+      expect(navigate).not.toHaveBeenCalled();
       expect(
         wrapper.getByText(
           /Something wrong happened here. Please contact us at hello@stormkit.io/
