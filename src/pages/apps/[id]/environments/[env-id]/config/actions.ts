@@ -14,6 +14,13 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     }
   });
 
+  values["build.vars"]?.split("\n").forEach(line => {
+    if (line.indexOf("=") > 0) {
+      const [key, value] = line.split("=");
+      vars[key.trim()] = value.trim();
+    }
+  });
+
   const build: BuildConfig = {
     cmd: values["build.cmd"]?.trim(),
     distFolder: (values["build.distFolder"] || "").trim(),
@@ -98,8 +105,9 @@ export interface FormValues {
   autoDeployBranches?: string;
   "build.cmd": string;
   "build.distFolder"?: string;
-  "build.vars[key]"?: string;
-  "build.vars[value]"?: string;
+  "build.vars"?: string; // This is the textarea version
+  "build.vars[key]"?: string; // This is the key value version
+  "build.vars[value]"?: string; // This is the key value version
 }
 
 interface EditEnvironmentProps {
