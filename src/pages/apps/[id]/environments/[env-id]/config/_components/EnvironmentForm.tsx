@@ -2,7 +2,12 @@ import type { FormValues, AutoDeployValues } from "../actions";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import cn from "classnames";
+import Box from "@mui/material/Box";
+import TextInput from "@mui/material/Input";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Container from "~/components/Container";
+import ContainerV2 from "~/components/ContainerV2";
 import ConfirmModal from "~/components/ConfirmModal";
 import Form from "~/components/FormV2";
 import Link from "~/components/Link";
@@ -50,6 +55,9 @@ const EnvironmentForm: React.FC<Props> = ({
 }) => {
   const navigate = useNavigate();
   const { meta, loading, error } = useFetchRepoMeta({ app, env });
+  const [envVarsMode, setEnvVarsMode] = useState<"textarea" | "keyvalue">(
+    "textarea"
+  );
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -245,24 +253,68 @@ const EnvironmentForm: React.FC<Props> = ({
             )}
           </Form.WithLabel>
         </Container>
-        <Container
-          title="Environment variables"
+        <ContainerV2
+          title="Environment Variables"
           subtitle="These variables will be made available during build time."
-          maxWidth="max-w-none"
+          maxWidth={"none"}
+          actions={
+            <ToggleButtonGroup
+              value={envVarsMode}
+              exclusive
+              onChange={(_, val) => {
+                if (val !== null) {
+                  setEnvVarsMode(val as "textarea" | "keyvalue");
+                }
+              }}
+              aria-label="display mode"
+            >
+              <ToggleButton value="textarea" aria-label="json view">
+                <span className="fa-solid fa-code text-gray-80" />
+              </ToggleButton>
+              <ToggleButton value="keyvalue" aria-label="ui view">
+                <span className="fa-solid fa-list text-gray-80" />
+              </ToggleButton>
+            </ToggleButtonGroup>
+          }
         >
-          <div className="p-4 pt-0">
-            <Form.KeyValue
-              inputName="build.vars"
-              keyName="Variable name"
-              valName="Value"
-              defaultValue={
-                env?.build?.vars || (env ? {} : { NODE_ENV: "development" })
-              }
-              resetToken={keyValueResetToken}
-              onChange={() => setIsChanged(true)}
-            ></Form.KeyValue>
-          </div>
-        </Container>
+          <Box sx={{ p: 2, pt: 0 }}>
+            {envVarsMode === "keyvalue" && (
+              <Form.KeyValue
+                inputName="build.vars"
+                keyName="Variable name"
+                valName="Value"
+                defaultValue={
+                  env?.build?.vars || (env ? {} : { NODE_ENV: "development" })
+                }
+                resetToken={keyValueResetToken}
+                onChange={() => setIsChanged(true)}
+              />
+            )}
+            {envVarsMode === "textarea" && (
+              <TextInput
+                placeholder="NODE_ENV=production"
+                sx={{
+                  bgcolor: "rgba(0, 0, 0, 0.1)",
+                  fontFamily: "monospace",
+                  color: "white",
+                  p: 2,
+                  fontSize: 14,
+                  lineHeight: 1.75,
+                }}
+                fullWidth
+                maxRows={20}
+                name="build.vars"
+                multiline
+                onChange={() => {
+                  setIsChanged(true);
+                }}
+                defaultValue={Object.keys(env?.build?.vars || {})
+                  .map(key => `${key}=${env?.build.vars[key]}`)
+                  .join("\n")}
+              />
+            )}
+          </Box>
+        </ContainerV2>
       </>
       {saveError && (
         <InfoBox type={InfoBox.WARNING} className="mt-4">

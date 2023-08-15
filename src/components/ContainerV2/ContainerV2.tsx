@@ -3,13 +3,24 @@ import Box, { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 interface Props extends Omit<BoxProps, "title"> {
+  subtitle?: React.ReactNode;
   title?: React.ReactNode;
   actions?: React.ReactNode;
 }
 
-export default function ContainerV2({ title, actions, children, sx }: Props) {
+export default function ContainerV2({
+  title,
+  subtitle,
+  actions,
+  children,
+  maxWidth = "md",
+  sx,
+}: Props) {
   return (
-    <Box maxWidth="md" sx={{ width: "100%", bgcolor: "container.main", ...sx }}>
+    <Box
+      maxWidth={maxWidth}
+      sx={{ width: "100%", bgcolor: "container.main", ...sx }}
+    >
       {(title || actions) && (
         <Box
           sx={{
@@ -20,11 +31,18 @@ export default function ContainerV2({ title, actions, children, sx }: Props) {
             color: "white",
           }}
         >
-          {title && (
-            <Typography variant="h5" sx={{ fontSize: 16 }}>
-              {title}
-            </Typography>
-          )}
+          <Box>
+            {title && (
+              <Typography variant="h5" sx={{ fontSize: 16 }}>
+                {title}
+              </Typography>
+            )}
+            {subtitle && (
+              <Typography variant="h6" sx={{ fontSize: 14, opacity: 0.65 }}>
+                {subtitle}
+              </Typography>
+            )}
+          </Box>
           {actions}
         </Box>
       )}
