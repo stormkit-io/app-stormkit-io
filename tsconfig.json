@@ -7,7 +7,6 @@
     "baseUrl": "./",
     "skipLibCheck": true,
     "allowJs": true,
-    "watch": true,
     "sourceMap": true,
     "isolatedModules": true,
     "noUnusedLocals": true,
