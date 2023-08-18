@@ -45,6 +45,10 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/apps"), centerLayout),
   },
   {
+    path:"/clone",
+    element: Async(() => import("~/pages/clone"), centerLayout),
+  },
+  {
     path: "/auth",
     element: Async(() => import("~/pages/auth"), centerLayout),
   },
