@@ -16,10 +16,16 @@ const Auth: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      const { redirect = "/" } = qs.parse(location.search.replace("?", ""));
+      const { redirect = "/", template } = qs.parse(
+        location.search.replace("?", "")
+      );
 
       if (typeof redirect === "string") {
-        navigate(redirect);
+        if (template !== undefined) {
+          navigate(`/clone?template=${template}`);
+        } else {
+         navigate(redirect);
+        }
       }
     }
   }, [user]);
