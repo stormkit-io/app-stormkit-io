@@ -6,6 +6,10 @@ export const routes = [
     element: Async(() => import("~/pages/apps/[id]/environments")),
   },
   {
+    path: "/environments/default",
+    element: Async(() => import("~/pages/apps/[id]/environments/Default")),
+  },
+  {
     path: "/environments/:envId/*",
     element: Async(() => import("~/pages/apps/[id]/environments/[env-id]")),
   },

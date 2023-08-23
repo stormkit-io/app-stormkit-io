@@ -10,7 +10,7 @@ const RedirectApps: React.FC = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    navigate(pathname.replace("/app", "/apps"));
+    navigate(pathname.replace("/app", "/apps"), { replace: true });
   }, [navigate]);
 
   return <></>;
@@ -20,7 +20,7 @@ const RedirectNewApp: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(`/apps/new/${LocalStorage.get(LS_PROVIDER)}`);
+    navigate(`/apps/new/${LocalStorage.get(LS_PROVIDER)}`, { replace: true });
   }, [navigate]);
 
   return <></>;
@@ -31,7 +31,7 @@ const RedirectToEnvPage: React.FC = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    navigate(`${pathname}/environments`);
+    navigate(`${pathname}/environments/default`, { replace: true });
   }, [navigate]);
 
   return <></>;
