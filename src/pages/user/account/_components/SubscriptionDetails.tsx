@@ -105,8 +105,12 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
             }}
           >
             <WarningIcon sx={{ mr: 2 }} />
-            Your free trial expires on {freeTrialEnds}. Upgrade to continue
-            using Stormkit.
+            Your free trial is scheduled to conclude on {freeTrialEnds}. If
+            you want more time to explore don't hesitate to reach out.
+            We're more than happy to extend your trial!
+            If there's a specific feature you're excited to see in the
+            future, let us know. We're here to listen and make your experience
+            with Stormkit even better.
           </Typography>
         )}
         {loading && <Spinner width={6} height={6} primary />}
