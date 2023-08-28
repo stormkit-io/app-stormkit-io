@@ -50,6 +50,22 @@ export default defineConfig(({ mode }) => {
     plugins: [basicSsl(), createHtmlPlugin({}), svgr(), react()],
     build: {
       outDir: "../dist",
+      rollupOptions: {
+        // Material ui's "use client" directive causes a warning.
+        // This function ignores those warnings.
+        // See https://github.com/rollup/rollup/issues/4699#issuecomment-1571555307
+        // for more information.
+        onwarn(warning, warn) {
+          if (
+            warning.code === "MODULE_LEVEL_DIRECTIVE" &&
+            warning.message.includes("use client")
+          ) {
+            return;
+          }
+
+          warn(warning);
+        },
+      },
     },
     esbuild: {
       define: {
