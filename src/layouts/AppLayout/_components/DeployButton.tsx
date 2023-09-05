@@ -37,7 +37,7 @@ const DeployButton: React.FC<Props> = ({
         }}
       >
         <RocketLaunch sx={{ fontSize: 16 }} />
-        <div className="m-1">Deploy Now</div>
+        <div className="m-1">Deploy</div>
       </IconButton>
       {isDeployModalOpen && (
         <DeployModal
