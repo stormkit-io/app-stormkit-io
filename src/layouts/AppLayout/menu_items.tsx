@@ -21,7 +21,7 @@ export const appMenuItems = ({
     path: `/apps/${app.id}/environments`,
     text: "Environments",
     icon: <AccountTree />,
-    isActive: pathname.endsWith("/environments"),
+    isActive: pathname.includes("/environments"),
   },
   {
     // List team members
@@ -64,7 +64,7 @@ export const envMenuItems = ({
   const items = [
     {
       icon: <Construction />,
-      text: `Configuration`,
+      text: "Config",
       path: envPath,
       isActive: pathname === envPath,
     },
@@ -91,7 +91,7 @@ export const envMenuItems = ({
   if (app.featureFlags?.SK_TRIGGER_FUNCTION) {
     items.push({
       icon: <Update />,
-      text: "Trigger Functions",
+      text: "Triggers",
       path: `${envPath}/function-triggers`,
       isActive: pathname.includes("/function-triggers"),
     });
