@@ -31,8 +31,7 @@ export default function TopMenu({ children, app }: Props) {
         alignItems: "center",
         boxShadow: 2,
         m: "auto",
-        pr: 2,
-        pl: { xs: 2, md: 3 },
+        px: 2,
         py: 1,
         width: "100%",
       }}

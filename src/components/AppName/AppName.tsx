@@ -7,9 +7,11 @@ import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
 
 interface Props {
   app: App;
-  imageWidth?: 6 | 7 | 8;
+  imageWidth?: number;
   withLinkToRepo?: boolean;
   withDisplayName?: boolean;
+  withMarginRight?: boolean;
+  wrapOnMobile?: boolean;
 }
 
 const providerHosts: Record<Provider, string> = {
@@ -22,7 +24,9 @@ const AppName: React.FC<Props> = ({
   app,
   withDisplayName,
   withLinkToRepo,
+  withMarginRight = true,
   imageWidth = 8,
+  wrapOnMobile,
 }) => {
   const pieces = app.repo.split("/") || [];
   const provider = pieces.shift() as Provider;
@@ -35,10 +39,16 @@ const AppName: React.FC<Props> = ({
       : bitbucketLogo;
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        mr: withMarginRight ? 2 : 0,
+      }}
+    >
       <Box
         component="img"
-        sx={{ display: "inline-block", mr: 1, w: imageWidth }}
+        sx={{ display: "inline-block", mr: 1, width: imageWidth }}
         src={logo}
         alt={provider}
       />
@@ -49,12 +59,30 @@ const AppName: React.FC<Props> = ({
             aria-label="Repository URL"
             sx={{ color: "white" }}
           >
-            {nameWithoutPrefix}
+            <Box
+              component="span"
+              sx={{
+                maxWidth: { xs: wrapOnMobile ? "150px" : "none", md: "none" },
+                display: "inline-block",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {nameWithoutPrefix}
+            </Box>
           </Link>
         )}
         {!withLinkToRepo && nameWithoutPrefix}
         {withDisplayName && (
-          <Box sx={{ fontSize: 12, opacity: 0.7 }}>{app.displayName}</Box>
+          <Box
+            sx={{
+              fontSize: 12,
+              opacity: 0.7,
+            }}
+          >
+            {app.displayName}
+          </Box>
         )}
       </Box>
     </Box>

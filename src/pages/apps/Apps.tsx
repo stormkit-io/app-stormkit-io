@@ -135,7 +135,7 @@ export default function Apps() {
                     >
                       <div className="flex">
                         <div className="flex-1">
-                          <AppName app={app} withDisplayName />
+                          <AppName app={app} withDisplayName imageWidth={23} />
                         </div>
                         <span className="fas fa-chevron-right text-base ml-2" />
                       </div>

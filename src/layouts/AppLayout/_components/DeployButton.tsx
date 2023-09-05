@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import RocketLaunch from "@mui/icons-material/RocketLaunch";
 import DeployModal from "./DeployModal";
@@ -19,19 +18,27 @@ const DeployButton: React.FC<Props> = ({
 
   return (
     <>
-      <Tooltip title="Deploy now" arrow>
-        <IconButton
-          id="deploy-now"
-          onClick={e => {
-            e.preventDefault();
-            toggleDeployModal(true);
-          }}
-          className="hover:text-white bg-pink-10 text-sm rounded-none"
-        >
-          <RocketLaunch sx={{ fontSize: 16 }} />
-          <div className="m-1">Deploy Now</div>
-        </IconButton>
-      </Tooltip>
+      <IconButton
+        id="deploy-now"
+        onClick={e => {
+          e.preventDefault();
+          toggleDeployModal(true);
+        }}
+        // className="hover:text-white bg-pink-10 text-sm rounded-none"
+        sx={{
+          bgcolor: "secondary.main",
+          borderRadius: 1,
+          fontSize: 13,
+          ":hover": {
+            bgcolor: "secondary.main",
+            filter: "brightness(1.5)",
+            transition: "all 0.25s ease-in",
+          },
+        }}
+      >
+        <RocketLaunch sx={{ fontSize: 16 }} />
+        <div className="m-1">Deploy Now</div>
+      </IconButton>
       {isDeployModalOpen && (
         <DeployModal
           app={app}
