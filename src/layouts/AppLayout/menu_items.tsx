@@ -5,6 +5,7 @@ import Tour from "@mui/icons-material/Tour";
 import Update from "@mui/icons-material/Update";
 import Database from "@mui/icons-material/Storage";
 import AccountTree from "@mui/icons-material/AccountTree";
+import Terminal from "@mui/icons-material/Terminal";
 import Group from "@mui/icons-material/Group";
 import Settings from "@mui/icons-material/Settings";
 import React from "react";
@@ -103,6 +104,15 @@ export const envMenuItems = ({
       text: "Data Store",
       path: `${envPath}/data-store`,
       isActive: pathname.includes("/data-store"),
+    });
+  }
+
+  if (env.published?.length) {
+    items.push({
+      icon: <Terminal />,
+      text: "Runtime logs",
+      path: `${envPath}/deployments/${env.published[0].deploymentId}/runtime-logs`,
+      isActive: pathname.includes("/feature-flags"),
     });
   }
 

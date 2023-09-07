@@ -43,6 +43,7 @@ const AppName: React.FC<Props> = ({
       sx={{
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
         mr: withMarginRight ? 2 : 0,
       }}
     >
@@ -52,7 +53,7 @@ const AppName: React.FC<Props> = ({
         src={logo}
         alt={provider}
       />
-      <Box sx={{ lineHeight: 1.5 }}>
+      <Box>
         {withLinkToRepo && (
           <Link
             href={`https://${providerHosts[app.provider]}/${nameWithoutPrefix}`}

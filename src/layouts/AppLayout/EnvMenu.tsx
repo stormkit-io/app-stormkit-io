@@ -6,7 +6,6 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import { AppContext } from "~/pages/apps/[id]/App.context";
-import DeployButton from "./_components/DeployButton";
 import { envMenuItems } from "./menu_items";
 
 interface Props {
@@ -31,93 +30,88 @@ export default function EnvMenu({ app }: Props) {
     [app, env, pathname]
   );
 
+  if (!selectedEnvId) {
+    return <></>;
+  }
+
   return (
     <Box
       sx={{
-        display: "flex",
         width: "100%",
+        display: "flex",
         justifyContent: "space-between",
-        my: 2,
-        px: { xs: 2, md: 0 },
+        mb: { xs: 0, lg: 2 },
+        px: { xs: 2, lg: 0 },
       }}
     >
-      {selectedEnvId && (
-        <>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Select
-              variant="standard"
-              disableUnderline
-              onChange={e => {
-                if (pathname.includes(`/environments/${selectedEnvId}`)) {
-                  navigate(
-                    pathname.replace(
-                      `/environments/${selectedEnvId}`,
-                      `/environments/${e.target.value}`
-                    )
-                  );
-                } else {
-                  navigate(`/apps/${app.id}/environments/${e.target.value}`);
-                }
+      <Select
+        variant="standard"
+        disableUnderline
+        onChange={e => {
+          if (pathname.includes(`/environments/${selectedEnvId}`)) {
+            navigate(
+              pathname.replace(
+                `/environments/${selectedEnvId}`,
+                `/environments/${e.target.value}`
+              )
+            );
+          } else {
+            navigate(`/apps/${app.id}/environments/${e.target.value}`);
+          }
+        }}
+        sx={{ pr: 1 }}
+        value={selectedEnvId || "_"}
+      >
+        <MenuItem value="_" disabled>
+          Select an environment
+        </MenuItem>
+        {environments.map(e => (
+          <MenuItem key={e.id} value={e.id}>
+            {e.env}
+          </MenuItem>
+        ))}
+      </Select>
+      <Box
+        sx={{
+          textAlign: "right",
+        }}
+      >
+        {envMenu.map(item => (
+          <Link
+            key={item.path}
+            href={item.path}
+            sx={{
+              cursor: "pointer",
+              color: "white",
+              pr: 1.5,
+              pl: { xs: 1.5, lg: 0 },
+              py: { xs: 1.5, lg: 0.25 },
+              display: "inline-flex",
+              alignItems: "center",
+              opacity: item.isActive ? 1 : 0.4,
+              ":hover": {
+                opacity: 1,
+                color: "white",
+              },
+              ":last-child": {
+                pr: 0,
+              },
+            }}
+          >
+            <Box
+              component="span"
+              display="inline-block"
+              sx={{
+                scale: "0.75",
+                display: { xs: "none", lg: "inline-block" },
               }}
-              sx={{ pr: 1 }}
-              value={selectedEnvId || "_"}
             >
-              <MenuItem value="_" disabled>
-                Select an environment
-              </MenuItem>
-              {environments.map(e => (
-                <MenuItem key={e.id} value={e.id}>
-                  {e.env}
-                </MenuItem>
-              ))}
-            </Select>
-            <div>
-              {envMenu.map(item => (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  sx={{
-                    cursor: "pointer",
-                    color: "white",
-                    pr: 1.5,
-                    pl: { xs: 1.5, lg: 0 },
-                    py: { xs: 1.5, lg: 0.25 },
-                    display: "inline-flex",
-                    alignItems: "center",
-                    borderRadius: 1,
-                    bgcolor: item.isActive
-                      ? "rgba(255,255,255,0.1)"
-                      : "transparent",
-                    ":hover": {
-                      opacity: 1,
-                      color: "white",
-                    },
-                  }}
-                >
-                  <Box
-                    component="span"
-                    display="inline-block"
-                    sx={{
-                      scale: "0.75",
-                      display: { xs: "none", lg: "inline-block" },
-                    }}
-                  >
-                    <IconButton>{item.icon}</IconButton>
-                  </Box>
-                  {item.text}
-                </Link>
-              ))}
-            </div>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <DeployButton
-              app={app}
-              environments={environments}
-              selectedEnvId={selectedEnvId}
-            />
-          </Box>
-        </>
-      )}
+              <IconButton>{item.icon}</IconButton>
+            </Box>
+            {item.text}
+          </Link>
+        ))}
+      </Box>
     </Box>
   );
 }

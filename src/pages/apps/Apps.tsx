@@ -119,9 +119,20 @@ export default function Apps() {
                     <InfoBox>This search produced no results.</InfoBox>
                   )}
                   {apps.map(app => (
-                    <div
+                    <Box
                       key={app.id}
-                      className="px-4 py-6 mb-4 bg-blue-10 w-full cursor-pointer hover:bg-black transition-colors"
+                      bgcolor="container.paper"
+                      sx={{
+                        px: 2,
+                        py: 3,
+                        mb: 2,
+                        width: "100%",
+                        cursor: "pointer",
+                        "&:hover": {
+                          filter: "brightness(1.5)",
+                          transition: "all 0.25s ease-in",
+                        },
+                      }}
                       tabIndex={0}
                       role="button"
                       onKeyPress={e => {
@@ -134,12 +145,12 @@ export default function Apps() {
                       }}
                     >
                       <div className="flex">
-                        <div className="flex-1">
+                        <div className="flex flex-1">
                           <AppName app={app} withDisplayName imageWidth={23} />
                         </div>
                         <span className="fas fa-chevron-right text-base ml-2" />
                       </div>
-                    </div>
+                    </Box>
                   ))}
                 </div>
                 {hasNextPage && (

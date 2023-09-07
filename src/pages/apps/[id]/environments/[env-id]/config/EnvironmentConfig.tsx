@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -9,7 +9,7 @@ import TabDomainConfig from "./_components/TabDomainConfig/TabDomainConfig";
 
 type Tab = "config" | "custom storage" | "custom domain";
 
-const EnvironmentConfig: React.FC = () => {
+export default function EnvironmentConfig() {
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const [tab, setTab] = useState<Tab>(
@@ -29,14 +29,20 @@ const EnvironmentConfig: React.FC = () => {
           setTab(val as Tab);
         }}
         aria-label="active tab"
-        className="bg-pink-10 mb-4"
+        sx={{
+          borderRadius: 0,
+          bgcolor: "container.paper",
+          mb: 2,
+        }}
       >
         <ToggleButton
           value="config"
           aria-label="Environment config"
-          className="bg-blue-50 hover:text-gray-80"
-          classes={{
-            root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
+          className="hover:text-gray-80"
+          sx={{
+            border: "none",
+            borderRight: "1px solid black",
+            textTransform: "capitalize",
           }}
         >
           <span className="text-gray-80">Configuration</span>
@@ -44,9 +50,10 @@ const EnvironmentConfig: React.FC = () => {
         <ToggleButton
           value="custom storage"
           aria-label="Custom storage"
-          className="bg-blue-50 hover:text-gray-80"
-          classes={{
-            root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
+          sx={{
+            border: "none",
+            borderRight: "1px solid black",
+            textTransform: "capitalize",
           }}
         >
           <span className="text-gray-80">Custom Storage</span>
@@ -57,9 +64,9 @@ const EnvironmentConfig: React.FC = () => {
         <ToggleButton
           value="custom domain"
           aria-label="Custom domain"
-          className="bg-blue-50 hover:text-gray-80"
-          classes={{
-            root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
+          sx={{
+            border: "none",
+            textTransform: "capitalize",
           }}
         >
           <span className="text-gray-80">Custom Domain</span>
@@ -88,6 +95,4 @@ const EnvironmentConfig: React.FC = () => {
       )}
     </>
   );
-};
-
-export default EnvironmentConfig;
+}

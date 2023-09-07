@@ -8,13 +8,11 @@ const EnvironmentsEntry = () => {
     <EnvironmentContextProvider>
       <div className="flex flex-col w-full">
         <EnvironmentHeader />
-        <div className="mb-4">
-          <Routes>
-            {routes.map(route => (
-              <Route {...route} path={route.path} key={route.path} />
-            ))}
-          </Routes>
-        </div>
+        <Routes>
+          {routes.map(route => (
+            <Route {...route} path={route.path} key={route.path} />
+          ))}
+        </Routes>
       </div>
     </EnvironmentContextProvider>
   );

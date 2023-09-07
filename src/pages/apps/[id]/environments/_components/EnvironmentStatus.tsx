@@ -1,6 +1,7 @@
 import React from "react";
 import cn from "classnames";
-import Link from "~/components/Link";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import Button from "~/components/ButtonV2";
 import { useFetchStatus } from "../actions";
 import { deployNow } from "~/utils/helpers/deployments";
@@ -31,16 +32,22 @@ const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
   if (env.published) {
     return (
       <>
-        <div className="flex">
-          <label className="flex w-20 text-gray-50">Endpoint</label>
-          <span>
+        <Box sx={{ display: "flex" }}>
+          <Box component="label" sx={{ width: 80, opacity: 0.5 }}>
+            Endpoint
+          </Box>
+          <Box>
             <span className="fa fa-external-link w-6 text-gray-50"></span>
-            <Link to={endpoint}>{endpoint.replace(/https?:\/\//, "")}</Link>
-          </span>
-        </div>
-        <div className="flex mt-3">
-          <label className="flex w-20 text-gray-50">Published</label>
-          <span>
+            <Link href={endpoint} sx={{ color: "white" }}>
+              {endpoint.replace(/https?:\/\//, "")}
+            </Link>
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex", mt: 2 }}>
+          <Box component="label" sx={{ width: 80, opacity: 0.5 }}>
+            Published
+          </Box>
+          <Box>
             <span
               className="fa fa-ship w-6 text-gray-50"
               style={{ marginLeft: "-1px" }}
@@ -48,15 +55,18 @@ const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
             {env.published.map(p => (
               <Link
                 key={p.deploymentId}
-                to={`/apps/${env.appId}/environments/${env.id}/deployments/${p.deploymentId}`}
+                href={`/apps/${env.appId}/environments/${env.id}/deployments/${p.deploymentId}`}
+                sx={{ color: "white" }}
               >
                 {p.deploymentId}
               </Link>
             ))}
-          </span>
-        </div>
-        <div className="flex mt-3">
-          <label className="flex w-20 text-gray-50">Status</label>
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex", mt: 2 }}>
+          <Box component="label" sx={{ width: 80, opacity: 0.5 }}>
+            Status
+          </Box>
           <span
             className={cn({
               "text-green-50": status === 200 || status === 304,
@@ -69,7 +79,7 @@ const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
             ></span>
             {status}
           </span>
-        </div>
+        </Box>
       </>
     );
   }
@@ -90,7 +100,7 @@ const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
             <span>
               Deployed successfully.{" "}
               <Link
-                to={`/apps/${app.id}/environments/${env.id}/deployments/${env.lastDeploy.id}`}
+                href={`/apps/${app.id}/environments/${env.id}/deployments/${env.lastDeploy.id}`}
               >
                 Go to deployment <span className="fa fa-chevron-right" />
               </Link>

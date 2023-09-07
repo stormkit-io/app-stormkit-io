@@ -72,10 +72,12 @@ export default createTheme({
     },
     background: {
       default: "#0F092B",
-      paper: "#070415",
+      paper: "#0a0621",
     },
     container: {
-      main: "#1F1C3B",
+      default: "#1F1C3B",
+      // paper: "rgba(255,255,255,0.05)",
+      paper: "rgba(129,114,126,0.05)",
     },
     info: {
       main: "#a4a4a4",

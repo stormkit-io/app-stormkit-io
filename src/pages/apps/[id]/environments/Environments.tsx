@@ -1,61 +1,85 @@
 import React, { useContext, useState } from "react";
-import cn from "classnames";
+import { useLocation } from "react-router";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 import { AppContext } from "~/pages/apps/[id]/App.context";
-import Button from "~/components/ButtonV2";
-import Container from "~/components/Container";
-import Link from "~/components/Link";
+import { envMenuItems } from "~/layouts/AppLayout/menu_items";
+import DotDotDot from "~/components/DotDotDotV2";
 import EnvironmentFormModal from "./_components/EnvironmentFormModal";
 import EnvironmentStatus from "./_components/EnvironmentStatus";
 
 const Environments: React.FC = (): React.ReactElement => {
   const { app, environments } = useContext(AppContext);
   const [isModalOpen, toggleModal] = useState(false);
+  const { pathname } = useLocation();
 
   return (
-    <Container
-      title="Environments"
-      maxWidth="max-w-none"
-      actions={
-        <div>
-          <Button
-            onClick={() => toggleModal(true)}
-            type="button"
-            category="button"
-            aria-label="Open create environment modal"
+    <Box>
+      <Box sx={{ textAlign: "right", mb: 2 }}>
+        <Button
+          onClick={() => toggleModal(true)}
+          variant="contained"
+          color="secondary"
+          aria-label="Open create environment modal"
+          sx={{ textTransform: "capitalize" }}
+        >
+          New environment
+        </Button>
+      </Box>
+      {environments.map(env => (
+        <Box
+          key={env.id}
+          bgcolor="container.paper"
+          sx={{
+            mb: 2,
+            p: 2,
+            color: "white",
+            "&:last-child": { mb: 0 },
+            "&:hover": {
+              transition: "all 0.25s ease-in",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
           >
-            New environment
-          </Button>
-        </div>
-      }
-    >
-      <div className="p-4 pt-0">
-        {environments.map((env, index) => (
-          <div
-            key={env.id}
-            className={cn("bg-blue-10 p-4", { "mt-4": index > 0 })}
-          >
-            <div className="group">
+            <Box>
               <Link
-                to={`/apps/${app.id}/environments/${env.id}`}
-                className="font-bold"
+                href={`/apps/${app.id}/environments/${env.id}`}
+                sx={{ color: "white", textTransform: "capitalize" }}
               >
                 {env.name}
-               <i className="mx-2 fa-solid fa-pen-to-square hidden group-hover:inline"></i>
               </Link>
-            </div>
-            <div className="text-xs flex items-center mt-3">
-              <label className="flex w-20 text-gray-50">Branch</label>
-              <span>
-                <span className="fa fa-code-branch w-6 text-gray-50"></span>
-                {env.branch}
-              </span>
-            </div>
-            <div className="text-xs mt-3">
-              <EnvironmentStatus env={env} app={app} />
-            </div>
-          </div>
-        ))}
-      </div>
+            </Box>
+            <Box>
+              <DotDotDot
+                items={envMenuItems({ app, env, pathname }).map(i => ({
+                  text: i.text,
+                  href: i.path,
+                  icon: i.icon,
+                }))}
+              />
+            </Box>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+            <Box component="label" sx={{ width: 80, opacity: 0.5 }}>
+              Branch
+            </Box>
+            <Box>
+              <span className="fa fa-code-branch w-6 text-gray-50"></span>
+              {env.branch}
+            </Box>
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <EnvironmentStatus env={env} app={app} />
+          </Box>
+        </Box>
+      ))}
       {isModalOpen && (
         <EnvironmentFormModal
           app={app}
@@ -65,7 +89,7 @@ const Environments: React.FC = (): React.ReactElement => {
           }}
         />
       )}
-    </Container>
+    </Box>
   );
 };
 

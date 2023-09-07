@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import cn from "classnames";
+import Box from "@mui/material/Box";
 import { useParams } from "react-router";
 import { formattedDate } from "~/utils/helpers/deployments";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -13,7 +14,17 @@ import CommitInfo from "../_components/CommitInfo";
 import DeploymentMenu from "../_components/DeploymentMenu";
 import { useFetchDeployment, useWithPageRefresh } from "../actions";
 
-const Deployment: React.FC = () => {
+const splitLines = (message: string): string[] => {
+  // Remove first and last empty lines
+  const lines = message
+    .replace(/^[\\n\s]+|[\\n\s]+$/g, "")
+    .replace(/\n\n+/g, "\n\n")
+    .split("\n");
+
+  return lines;
+};
+
+export default function Deployment() {
   const { deploymentId } = useParams();
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
@@ -79,45 +90,85 @@ const Deployment: React.FC = () => {
           </InfoBox>
         )}
         {deployment.logs?.map(({ title, status, message = "" }, i) => (
-          <div
-            key={title}
-            data-testid={`deployment-step-${i}`}
-            className={cn("mx-4", {
-              "mb-4": i < deployment.logs.length - 1,
-            })}
-          >
-            <div className="flex justify-between pb-2">
-              <span className="text-gray-50 text-sm">
-                <span
-                  className={cn("inline-block w-2 h-2 mr-3", {
-                    "bg-red-50": status === false,
-                    "bg-blue-40": typeof status === "undefined" || null,
-                    "bg-green-70":
-                      status &&
-                      (!showEmptyPackageWarning ||
-                        i < deployment.logs.length - 1),
-                    "bg-yellow-10":
-                      status &&
-                      showEmptyPackageWarning &&
-                      deployment.logs.length - 1 === i,
-                  })}
-                ></span>
-                {title}
-              </span>
-            </div>
-            {message.length ? (
-              <code
-                className="block whitespace-pre bg-blue-10 text-sm p-4 text-gray-80 leading-relaxed overflow-auto"
-                style={{ maxHeight: "400px", fontFamily: "monospace" }}
+          <Box key={title} data-testid={`deployment-step-${i}`} sx={{ mx: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                p: 2,
+                bgcolor: "rgba(0,0,0,0.1)",
+              }}
+            >
+              <span
+                className={cn("inline-block w-2 h-2", {
+                  "bg-red-50": status === false,
+                  "bg-blue-40": typeof status === "undefined" || null,
+                  "bg-green-70":
+                    status &&
+                    (!showEmptyPackageWarning ||
+                      i < deployment.logs.length - 1),
+                  "bg-yellow-10":
+                    status &&
+                    showEmptyPackageWarning &&
+                    deployment.logs.length - 1 === i,
+                })}
+              />
+              <Box
+                component="span"
+                sx={{
+                  fontFamily: "monospace",
+                  ml: 1.75,
+                  display: "inline-block",
+                }}
               >
-                {message.split("\n").map((line, i) => (
-                  <div key={i}>{line}</div>
+                {title}
+              </Box>
+            </Box>
+            {message.length ? (
+              <Box
+                component="code"
+                bgcolor="transparent"
+                sx={{
+                  fontFamily: "monospace",
+
+                  display: "block",
+                  py: 2,
+                  lineHeight: 1.5,
+                  overflow: "auto",
+                  color: "white",
+                }}
+                style={{ maxHeight: "400px" }}
+              >
+                {splitLines(message).map((line, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      display: "flex",
+                      opacity: 0.5,
+                      "&:hover": { opacity: 1, bgcolor: "rgba(0,0,0,0.1)" },
+                    }}
+                  >
+                    <Box
+                      component="span"
+                      sx={{
+                        display: "inline-block",
+                        minWidth: "50px",
+                        maxWidth: "50px",
+                        width: "100%",
+                        textAlign: "right",
+                        mr: 1,
+                      }}
+                    >
+                      {i + 1}.
+                    </Box>{" "}
+                    {line}
+                  </Box>
                 ))}
-              </code>
+              </Box>
             ) : (
               ""
             )}
-          </div>
+          </Box>
         ))}
         {deployment.isRunning && (
           <div className="flex justify-center mt-4" id="deploy-spinner-running">
@@ -134,6 +185,4 @@ const Deployment: React.FC = () => {
       </div>
     </Container>
   );
-};
-
-export default Deployment;
+}
