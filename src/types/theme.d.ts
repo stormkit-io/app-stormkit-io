@@ -1,11 +1,12 @@
 import "@mui/material/styles";
+import { TypeBackground } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
   interface Palette {
-    container: Palette["primary"];
+    container: TypeBackground;
   }
 
   interface PaletteOptions {
-    container: PaletteOptions["primary"];
+    container: TypeBackground;
   }
 }

@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
-import cn from "classnames";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import Container from "~/components/Container";
 import DotDotDot from "~/components/DotDotDotV2";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
-import Button from "~/components/ButtonV2";
 import ConfirmModal from "~/components/ConfirmModal";
 import { useFetchMembers, deleteTeamMember } from "./actions";
 import NewMemberModal from "./_components/NewMemberModal";
@@ -20,21 +20,7 @@ const Team: React.FC = (): React.ReactElement => {
   const isCurrentUserTheOwner = app.userId === user!.id;
 
   return (
-    <Container
-      maxWidth="max-w-none"
-      title="Members"
-      actions={
-        <Button
-          type="button"
-          category="button"
-          onClick={() => {
-            setIsNewModalOpen(true);
-          }}
-        >
-          Invite new member
-        </Button>
-      }
-    >
+    <Box>
       {!isCurrentUserTheOwner && !loading && (
         <InfoBox type={InfoBox.WARNING} className="mb-4 mx-4">
           <div>
@@ -53,31 +39,53 @@ const Team: React.FC = (): React.ReactElement => {
           <Spinner primary />
         </div>
       ) : (
-        <div className="pb-4">
-          {members.map(({ user: member, isOwner }, i) => (
-            <div
-              key={member.id}
-              className={cn("bg-blue-10 mx-4 flex p-4 items-center", {
-                "mt-4": i > 0,
-              })}
+        <Box>
+          <Box sx={{ textAlign: "right" }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                setIsNewModalOpen(true);
+              }}
+              sx={{ textTransform: "capitalize" }}
             >
-              <div className="mr-4">
+              Invite new member
+            </Button>
+          </Box>
+          {members.map(({ user: member, isOwner }) => (
+            <Box
+              key={member.id}
+              bgcolor="container.paper"
+              sx={{
+                p: 2,
+                display: "flex",
+                alignItems: "center",
+                mt: 2,
+                "&:first-child": {
+                  mt: 0,
+                },
+              }}
+            >
+              <Box sx={{ mr: 2 }}>
                 <img
                   src={member.avatar}
                   alt={`${member.fullName || member.displayName} profile`}
                   className="rounded-full w-8 h-8 inline-block max-w-none"
                 />
-              </div>
-              <div className="flex-grow">
-                <div className="font-bold">
+              </Box>
+              <Box sx={{ flex: 1 }}>
+                <Typography sx={{ fontWeight: "normal", color: "white" }}>
                   {member.fullName || member.displayName}
-                </div>
-                {isOwner ? (
-                  <span className="text-green-50">Owner</span>
-                ) : (
-                  <span className="opacity-50">Developer</span>
-                )}
-              </div>
+                </Typography>
+                <Typography
+                  sx={{
+                    color: isOwner ? "green" : "white",
+                    opacity: isOwner ? 1 : 0.5,
+                  }}
+                >
+                  {isOwner ? "Owner" : "Developer"}
+                </Typography>
+              </Box>
               {isCurrentUserTheOwner && !isOwner && (
                 <div className="self-baseline">
                   <DotDotDot
@@ -110,9 +118,9 @@ const Team: React.FC = (): React.ReactElement => {
                   />
                 </div>
               )}
-            </div>
+            </Box>
           ))}
-        </div>
+        </Box>
       )}
       {deleteMember && (
         <ConfirmModal
@@ -157,7 +165,7 @@ const Team: React.FC = (): React.ReactElement => {
       {isNewModalOpen && (
         <NewMemberModal app={app} onClose={() => setIsNewModalOpen(false)} />
       )}
-    </Container>
+    </Box>
   );
 };
 

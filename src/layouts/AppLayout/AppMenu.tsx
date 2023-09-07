@@ -38,7 +38,7 @@ export default function AppHeader({ app }: Props) {
           alignItems: "center",
         }}
       >
-        <Box sx={{ mr: 1 }}>
+        <Box sx={{ mr: 2 }}>
           <AppName
             app={app}
             imageWidth={23} // Same as Stormkit Icon
@@ -60,11 +60,9 @@ export default function AppHeader({ app }: Props) {
                 color: "white",
                 px: { xs: 1, md: 0 },
                 pr: { md: 2 },
-                py: { xs: 1.25, md: 0 },
+                py: 1,
                 display: "inline-flex",
                 alignItems: "center",
-                position: "relative",
-                bottom: "-1px",
                 ":hover": { opacity: 1, color: "white" },
               }}
             >

@@ -6,6 +6,7 @@ interface Props extends Omit<BoxProps, "title"> {
   subtitle?: React.ReactNode;
   title?: React.ReactNode;
   actions?: React.ReactNode;
+  bgcolor?: string;
 }
 
 export default function ContainerV2({
@@ -14,13 +15,11 @@ export default function ContainerV2({
   actions,
   children,
   maxWidth = "md",
+  bgcolor = "container.paper",
   sx,
 }: Props) {
   return (
-    <Box
-      maxWidth={maxWidth}
-      sx={{ width: "100%", bgcolor: "container.main", ...sx }}
-    >
+    <Box maxWidth={maxWidth} sx={{ width: "100%", bgcolor, ...sx }}>
       {(title || actions) && (
         <Box
           sx={{

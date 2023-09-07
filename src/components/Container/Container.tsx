@@ -1,5 +1,6 @@
 import React from "react";
 import cn from "classnames";
+import Box from "@mui/material/Box";
 
 interface Props {
   bg?: "bg-blue-50";
@@ -19,10 +20,12 @@ const Container: React.FC<Props> = ({
   children,
   className,
   maxWidth = "max-w-2xl",
-  bg = "bg-blue-50",
 }) => {
   return (
-    <div className={cn(["w-full text-gray-80", maxWidth, bg, className])}>
+    <Box
+      sx={{ width: "100%", bgcolor: "container.paper" }}
+      className={cn(["w-full text-gray-80", maxWidth, className])}
+    >
       {(title || actions) && (
         <div className="flex p-4">
           {(title || subtitle) && (
@@ -41,7 +44,7 @@ const Container: React.FC<Props> = ({
         </div>
       )}
       {children}
-    </div>
+    </Box>
   );
 };
 

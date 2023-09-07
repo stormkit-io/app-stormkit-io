@@ -62,7 +62,12 @@ const Provider: React.FC = () => {
 
   return (
     <Box
-      sx={{ bgcolor: "container.main", width: "100%", color: "white", mb: 4 }}
+      sx={{
+        bgcolor: "container.default",
+        width: "100%",
+        color: "white",
+        mb: 4,
+      }}
       maxWidth="md"
     >
       <Box

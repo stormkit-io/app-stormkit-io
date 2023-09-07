@@ -44,7 +44,7 @@ export const AppLayout: React.FC = () => {
             flexDirection: "column",
             alignItems: "flex-start",
             maxWidth: "1024px",
-            px: 2,
+            my: { md: 0, lg: 3 },
           }}
         >
           <EnvMenu app={app} />

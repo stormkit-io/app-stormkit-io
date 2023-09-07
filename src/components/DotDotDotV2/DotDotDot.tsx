@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import cn from "classnames";
-import { Tooltip } from "@mui/material";
+import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import Button from "~/components/ButtonV2";
 
 interface Item {
   text: React.ReactNode;
   href?: string;
-  icon?: string;
+  icon?: string | React.ReactNode;
   className?: string;
   disabled?: boolean;
   onClick?: (close?: () => void) => boolean | void;
@@ -66,8 +68,22 @@ const DotDotDot: React.FC<Props> = ({ items }) => {
                     }
                   )}
                 >
-                  {item.icon && (
+                  {typeof item.icon === "string" && (
                     <span className={cn(item.icon, "mr-2 fa-fw")} />
+                  )}
+                  {typeof item.icon === "object" && (
+                    <Box
+                      component="span"
+                      sx={{
+                        scale: "0.75",
+                        display: "inline-flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <IconButton size="small" sx={{ p: 0, m: 0, mr: 1 }}>
+                        {item.icon}
+                      </IconButton>
+                    </Box>
                   )}
                   {item.text}
                 </Button>

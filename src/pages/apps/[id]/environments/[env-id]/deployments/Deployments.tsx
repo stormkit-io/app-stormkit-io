@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
-import cn from "classnames";
-import Container from "~/components/Container";
+import { useContext } from "react";
+import Box from "@mui/material/Box";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
 import Button from "~/components/ButtonV2";
@@ -13,7 +12,7 @@ import { useFetchDeployments } from "./actions";
 import CommitInfo from "./_components/CommitInfo";
 import DeploymentMenu from "./_components/DeploymentMenu";
 
-const Deployments: React.FC = () => {
+export default function Deployments() {
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const { deployments, loading, error } = useFetchDeployments({
@@ -23,21 +22,38 @@ const Deployments: React.FC = () => {
   });
 
   return (
-    <Container title="Deployments" maxWidth="max-w-none" className="pb-4">
+    <Box>
       {loading && (
-        <div className="pb-4 flex w-full justify-center">
+        <Box
+          sx={{
+            pt: 2,
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
           <Spinner />
-        </div>
+        </Box>
       )}
       {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
       {!loading &&
         !error &&
         deployments.map((deployment, i) => (
-          <div
-            className={cn("bg-blue-10 mx-2 md:mx-4 p-4 flex text-sm", {
-              "mb-2 md:mb-4": i !== deployments.length - 1,
-            })}
+          <Box
             key={deployment.id}
+            sx={{
+              bgcolor: "container.paper",
+              p: 2,
+              mb: 2,
+              color: "white",
+              display: "flex",
+              "&:last-child": {
+                mb: 0,
+              },
+              "&:hover": {
+                transition: "all 0.25s ease-in",
+              },
+            }}
           >
             <CommitInfo
               app={app}
@@ -56,7 +72,7 @@ const Deployments: React.FC = () => {
                 {timeSince(deployment.createdAt * 1000)} ago
               </div>
             </div>
-          </div>
+          </Box>
         ))}
       {!loading && !error && !deployments.length && (
         <div className="p-4 flex flex-col items-center justify-center">
@@ -72,8 +88,6 @@ const Deployments: React.FC = () => {
           </Button>
         </div>
       )}
-    </Container>
+    </Box>
   );
-};
-
-export default Deployments;
+}

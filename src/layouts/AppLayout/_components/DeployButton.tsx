@@ -24,7 +24,6 @@ const DeployButton: React.FC<Props> = ({
           e.preventDefault();
           toggleDeployModal(true);
         }}
-        // className="hover:text-white bg-pink-10 text-sm rounded-none"
         sx={{
           bgcolor: "secondary.main",
           borderRadius: 1,
