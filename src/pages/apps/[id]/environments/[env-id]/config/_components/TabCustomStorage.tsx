@@ -1,10 +1,16 @@
 import type { IntegrationFormValues } from "../actions";
 import React, { useState } from "react";
-import cn from "classnames";
-import Container from "~/components/Container";
-import InfoBox from "~/components/InfoBoxV2";
-import Form from "~/components/FormV2";
-import Button from "~/components/ButtonV2";
+import Box from "@mui/material/Box";
+import Button from "@mui/lab/LoadingButton";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import InputDesc from "~/components/InputDescription";
 import { updateIntegration, deleteIntegration } from "../actions";
 
 interface Props {
@@ -27,9 +33,17 @@ const CustomStorage: React.FC<Props> = ({
   );
 
   return (
-    <Form<IntegrationFormValues>
-      id="custom-storage-form"
-      handleSubmit={values => {
+    <Box
+      component="form"
+      sx={{ p: 2, color: "white" }}
+      onSubmit={e => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target as HTMLFormElement);
+        const values = Object.fromEntries(
+          formData.entries()
+        ) as IntegrationFormValues;
+
         setLoading(true);
         setSuccess(false);
         setError(undefined);
@@ -63,180 +77,201 @@ const CustomStorage: React.FC<Props> = ({
           });
       }}
     >
-      <Container title="Configure custom storage" maxWidth="max-w-none">
-        <Form.WithLabel
-          label="Provider"
-          className="pt-0"
-          tooltip={"Build artifacts will be uploaded to this provider."}
-        >
-          <Form.Select
+      <Typography variant="h6">Environment variables</Typography>
+      <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 4 }}>
+        These variables will be available to build time and Functions runtime.
+      </Typography>
+
+      <Box sx={{ mb: 4 }}>
+        <FormControl variant="standard" fullWidth>
+          <InputLabel id="auto-deploy-label" sx={{ pl: 2, pt: 1 }}>
+            Auto deploy
+          </InputLabel>
+          <Select
             name="integration"
             className="no-border h-full"
-            displayEmpty
-            value={integration || ""}
+            variant="filled"
+            fullWidth
+            defaultValue={integration || "_"}
+            value={integration || "_"}
             onChange={e => {
               setIntegration(e.target.value as Integration);
             }}
           >
-            <Form.Option disabled value={""}>
+            <MenuItem disabled value={"_"}>
               Choose an integration
-            </Form.Option>
-            <Form.Option value="bunny_cdn">Bunny CDN</Form.Option>
-            <Form.Option value="aws_s3">AWS S3</Form.Option>
-          </Form.Select>
-        </Form.WithLabel>
-        {integration !== undefined && (
-          <Form.WithLabel
+            </MenuItem>
+            <MenuItem value="bunny_cdn">Bunny CDN</MenuItem>
+            <MenuItem value="aws_s3">AWS S3</MenuItem>
+          </Select>
+        </FormControl>
+        <InputDesc>
+          <Typography>
+            Build artifacts will be uploaded to this provider instead of
+            Stormkit servers.
+          </Typography>
+        </InputDesc>
+      </Box>
+
+      {integration !== undefined && (
+        <Box sx={{ mb: 4 }}>
+          <TextField
+            variant="filled"
+            name="externalUrl"
             label="External URL"
-            tooltip="This is your custom domain that is not managed by Stormkit. It will be used to provide preview links."
-          >
-            <Form.Input
-              name="externalUrl"
-              defaultValue={environment.customStorage?.externalUrl}
-              placeholder="e.g. https://www.stormkit.io"
+            defaultValue={environment.customStorage?.externalUrl}
+            placeholder="e.g. https://www.stormkit.io"
+            fullWidth
+            required
+          />
+          <InputDesc>
+            Your custom domain that is not managed by Stormkit. It will be used
+            to provide preview links.
+          </InputDesc>
+        </Box>
+      )}
+      {integration === "bunny_cdn" && (
+        <>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              label="Storage Key"
+              variant="filled"
+              name="settings.STORAGE_KEY"
+              defaultValue={
+                environment.customStorage?.settings?.["STORAGE_KEY"]
+              }
+              placeholder="The API key of your storage zone"
               fullWidth
               required
-              className="bg-blue-10 no-border h-full"
             />
-          </Form.WithLabel>
-        )}
-        {integration === "bunny_cdn" && (
-          <>
-            <Form.WithLabel label="Storage key">
-              <Form.Password
-                name="settings.STORAGE_KEY"
-                className="bg-blue-10 no-border h-full"
-                placeholder="The API key of your storage zone"
-                required
-                defaultValue={
-                  environment.customStorage?.settings?.["STORAGE_KEY"]
-                }
-                fullWidth
-              />
-            </Form.WithLabel>
-            <Form.WithLabel
-              label="Storage zone"
-              tooltip={
-                <span>
-                  The name of the Storage zone - it corresponds to the{" "}
-                  <b>username</b> under FTP &amp; API Access
-                </span>
+          </Box>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              variant="filled"
+              name="settings.STORAGE_ZONE"
+              label="Storage Zone"
+              defaultValue={
+                environment.customStorage?.settings?.["STORAGE_ZONE"]
               }
-            >
-              <Form.Input
-                name="settings.STORAGE_ZONE"
-                className="bg-blue-10 no-border h-full"
-                placeholder="My storage zone"
-                required
-                defaultValue={
-                  environment.customStorage?.settings?.["STORAGE_ZONE"]
-                }
-                fullWidth
-              />
-            </Form.WithLabel>
-          </>
-        )}
+              placeholder="My storage zone"
+              fullWidth
+              required
+            />
+            <InputDesc>
+              <span>
+                The name of the Storage zone - it corresponds to the{" "}
+                <b>username</b> under FTP &amp; API Access
+              </span>
+            </InputDesc>
+          </Box>
+        </>
+      )}
 
-        {integration === "aws_s3" && (
-          <>
-            <Form.WithLabel
+      {integration === "aws_s3" && (
+        <>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              variant="filled"
               label="Access Key ID"
-              tooltip="AWS Access Key ID obtained from IAM service"
-            >
-              <Form.Input
-                name="settings.ACCESS_KEY_ID"
-                className="bg-blue-10 no-border h-full"
-                required
-                defaultValue={
-                  environment.customStorage?.settings?.["ACCESS_KEY_ID"]
-                }
-                fullWidth
-              />
-            </Form.WithLabel>
-            <Form.WithLabel
-              label="Secret Access Key"
-              tooltip="AWS Secret Access Key obtained from IAM service"
-            >
-              <Form.Password
-                name="settings.SECRET_ACCESS_KEY"
-                className="bg-blue-10 no-border h-full"
-                required
-                defaultValue={
-                  environment.customStorage?.settings?.["SECRET_ACCESS_KEY"]
-                }
-                fullWidth
-              />
-            </Form.WithLabel>
-            <Form.WithLabel label="Bucket name" tooltip="S3 Bucket Name">
-              <Form.Input
-                name="settings.BUCKET_NAME"
-                className="bg-blue-10 no-border h-full"
-                required
-                defaultValue={
-                  environment.customStorage?.settings?.["BUCKET_NAME"]
-                }
-                fullWidth
-              />
-            </Form.WithLabel>
-            <Form.WithLabel
-              label="Key prefix"
-              tooltip="
-                Key prefis is the path to upload the files inside your Bucket.
-                Do not prefix with a forward slash (/)."
-            >
-              <Form.Input
-                name="settings.KEY_PREFIX"
-                className="bg-blue-10 no-border h-full"
-                defaultValue={
-                  environment.customStorage?.settings?.["KEY_PREFIX"]
-                }
-                fullWidth
-              />
-            </Form.WithLabel>
-            <Form.WithLabel
-              label="AWS Region"
-              tooltip={
-                <span>
-                  Region name where there bucket was created. Defaults to{" "}
-                  <b>eu-central-1</b>.
-                </span>
+              name="settings.ACCESS_KEY_ID"
+              required
+              defaultValue={
+                environment.customStorage?.settings?.["ACCESS_KEY_ID"]
               }
-            >
-              <Form.Input
-                name="settings.REGION"
-                placeholder="e.g eu-central-1"
-                className="bg-blue-10 no-border h-full"
-                defaultValue={environment.customStorage?.settings?.["REGION"]}
-                fullWidth
-              />
-            </Form.WithLabel>
-          </>
-        )}
-      </Container>
+              fullWidth
+            />
+            <InputDesc>AWS Access Key ID obtained from IAM service</InputDesc>
+          </Box>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              variant="filled"
+              label="Secret Access Key"
+              type="password"
+              name="settings.SECRET_ACCESS_KEY"
+              required
+              defaultValue={
+                environment.customStorage?.settings?.["SECRET_ACCESS_KEY"]
+              }
+              fullWidth
+            />
+            <InputDesc>
+              AWS Secret Access Key obtained from IAM service
+            </InputDesc>
+          </Box>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              variant="filled"
+              label="Bucket name"
+              name="settings.BUCKET_NAME"
+              className="bg-blue-10 no-border h-full"
+              required
+              defaultValue={
+                environment.customStorage?.settings?.["BUCKET_NAME"]
+              }
+              fullWidth
+            />
+          </Box>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              name="settings.KEY_PREFIX"
+              label="Key prefix"
+              variant="filled"
+              className="bg-blue-10 no-border h-full"
+              defaultValue={environment.customStorage?.settings?.["KEY_PREFIX"]}
+              fullWidth
+            />
+            <InputDesc>
+              Key prefis is the path to upload the files inside your Bucket. Do
+              not prefix with a forward slash (/).
+            </InputDesc>
+          </Box>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              variant="filled"
+              label="AWS Region"
+              name="settings.REGION"
+              placeholder="e.g eu-central-1"
+              className="bg-blue-10 no-border h-full"
+              defaultValue={environment.customStorage?.settings?.["REGION"]}
+              fullWidth
+            />
+            <InputDesc>
+              <span>
+                Region name where there bucket was created. Defaults to{" "}
+                <b>eu-central-1</b>.
+              </span>
+            </InputDesc>
+          </Box>
+        </>
+      )}
+
       {error && (
-        <InfoBox type={InfoBox.ERROR} className="mt-4">
+        <Alert color="error" sx={{ mb: 4 }}>
+          <AlertTitle>Error</AlertTitle>
           {error}
-        </InfoBox>
+        </Alert>
       )}
       {success && (
-        <InfoBox type={InfoBox.SUCCESS} className="mt-4">
-          Custom storage configuration saved successfully. Your app will now be
-          served from your custom storage.
-        </InfoBox>
+        <Alert color="success" sx={{ mb: 4 }}>
+          <AlertTitle>Success</AlertTitle>
+          Custom storage configuration was saved successfully. Your app will now
+          be served from your custom storage.
+        </Alert>
       )}
-      <div
-        className={cn("flex flex-auto pt-4 text-gray-80", {
-          "justify-between": integration,
-          "justify-end": !integration,
-        })}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: integration ? "space-between" : "flex-end",
+        }}
       >
         {integration && (
           <div>
             <Button
               type="button"
-              category="cancel"
-              className="bg-blue-20"
+              variant="contained"
+              color="primary"
               loading={deleteLoading}
+              sx={{ textTransform: "none" }}
               onClick={() => {
                 setDeleteLoading(true);
                 setSuccess(false);
@@ -258,33 +293,19 @@ const CustomStorage: React.FC<Props> = ({
             </Button>
           </div>
         )}
-        <div>
-          <Button
-            type="button"
-            category="cancel"
-            className="bg-blue-20"
-            onClick={() => {
-              const form = document.querySelector(
-                "#custom-storage-form"
-              ) as HTMLFormElement;
 
-              form.reset();
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            category="action"
-            className="ml-4"
-            disabled={!integration}
-            loading={loading}
-          >
-            Submit
-          </Button>
-        </div>
-      </div>
-    </Form>
+        <Button
+          type="submit"
+          variant="contained"
+          color="secondary"
+          disabled={!integration}
+          loading={loading}
+          sx={{ textTransform: "none", ml: 2 }}
+        >
+          Submit
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

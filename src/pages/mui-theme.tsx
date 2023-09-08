@@ -153,7 +153,6 @@ export default createTheme({
     },
     container: {
       default: "#1F1C3B",
-      // paper: "rgba(255,255,255,0.05)",
       paper: "rgba(129,114,126,0.05)",
     },
     info: {

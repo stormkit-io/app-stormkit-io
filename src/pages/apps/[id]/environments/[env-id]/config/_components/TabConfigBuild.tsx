@@ -1,7 +1,7 @@
 import type { FormValues } from "../actions";
 import { useState } from "react";
-import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Alert from "@mui/material/Alert";
