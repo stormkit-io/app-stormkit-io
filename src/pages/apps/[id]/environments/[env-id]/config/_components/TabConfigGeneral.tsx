@@ -1,5 +1,6 @@
 import type { AutoDeployValues, FormValues } from "../actions";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -13,8 +14,10 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
 import InputDesc from "~/components/InputDescription";
+import ConfirmModal from "~/components/ConfirmModal";
 import {
   updateEnvironment,
+  deleteEnvironment,
   buildFormValues,
   computeAutoDeployValue,
 } from "../actions";
@@ -30,9 +33,11 @@ export default function TabConfigGeneral({
   app,
   setRefreshToken,
 }: Props) {
+  const navigate = useNavigate();
   const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [isLoading, setLoading] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [autoDeploy, setAutoDeploy] = useState<AutoDeployValues>(
     computeAutoDeployValue(env)
   );
@@ -182,7 +187,64 @@ export default function TabConfigGeneral({
         </Box>
       )}
 
-      <Box sx={{ textAlign: "right", mb: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent:
+            env.name === "production" ? "flex-end" : "space-between",
+          mb: 2,
+        }}
+      >
+        {env.name !== "production" && (
+          <>
+            <Button
+              type="button"
+              variant="contained"
+              color="secondary"
+              aria-label={`Delete ${env.name} environment`}
+              sx={{
+                textTransform: "none",
+                opacity: 0.6,
+                "&:hover": { opacity: 1 },
+              }}
+              onClick={() => {
+                setIsDeleteModalOpen(true);
+              }}
+            >
+              <Box component="span">
+                Delete <b>{env.name}</b> environment
+              </Box>
+            </Button>
+            {isDeleteModalOpen && (
+              <ConfirmModal
+                onCancel={() => {
+                  setIsDeleteModalOpen(false);
+                }}
+                onConfirm={({ setLoading, setError }) => {
+                  setLoading(false);
+
+                  deleteEnvironment({ app, environment: env })
+                    .then(() => {
+                      setLoading(false);
+                      navigate(`/apps/${app.id}/environments`);
+                      setRefreshToken?.(Date.now());
+                    })
+                    .catch(e => {
+                      console.error(e);
+                      setError(
+                        "Something went wrong while deleting environment. Check the console."
+                      );
+                    });
+                }}
+              >
+                <span className="block">
+                  This will completely delete the environment and associated
+                  deployments.
+                </span>
+              </ConfirmModal>
+            )}
+          </>
+        )}
         <Button
           type="submit"
           variant="contained"
