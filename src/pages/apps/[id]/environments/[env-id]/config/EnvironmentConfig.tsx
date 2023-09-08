@@ -1,98 +1,135 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo } from "react";
+import { useLocation } from "react-router";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import TabEnvironmentConfig from "./_components/TabEnvironmentConfig";
 import TabCustomStorage from "./_components/TabCustomStorage";
 import TabDomainConfig from "./_components/TabDomainConfig/TabDomainConfig";
+import TabConfigEnvVars from "./_components/TabConfigEnvVars";
+import TabConfigGeneral from "./_components/TabConfigGeneral";
+import TabConfigBuild from "./_components/TabConfigBuild";
 
-type Tab = "config" | "custom storage" | "custom domain";
+const listItems = [
+  { path: "#general", text: "General" },
+  { path: "#build", text: "Build" },
+  { path: "#vars", text: "Environment variables" },
+];
 
 export default function EnvironmentConfig() {
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
-  const [tab, setTab] = useState<Tab>(
-    window.location.hash?.indexOf("custom-storage") > -1
-      ? "custom storage"
-      : window.location.hash?.indexOf("custom-domain") > -1
-      ? "custom domain"
-      : "config"
-  );
+  const { hash } = useLocation();
+
+  const Tab = useMemo(() => {
+    switch (hash) {
+      case "#general":
+        return TabConfigGeneral;
+      case "#build":
+        return TabConfigBuild;
+      case "#vars":
+        return TabConfigEnvVars;
+      case "#domain":
+        return TabDomainConfig;
+      default:
+        return TabConfigGeneral;
+    }
+  }, [hash]);
 
   return (
-    <>
-      <ToggleButtonGroup
-        value={tab}
-        exclusive
-        onChange={(_, val) => {
-          setTab(val as Tab);
-        }}
-        aria-label="active tab"
-        sx={{
-          borderRadius: 0,
-          bgcolor: "container.paper",
-          mb: 2,
-        }}
-      >
-        <ToggleButton
-          value="config"
-          aria-label="Environment config"
-          className="hover:text-gray-80"
-          sx={{
-            border: "none",
-            borderRight: "1px solid black",
-            textTransform: "capitalize",
-          }}
-        >
-          <span className="text-gray-80">Configuration</span>
-        </ToggleButton>
-        <ToggleButton
-          value="custom storage"
-          aria-label="Custom storage"
-          sx={{
-            border: "none",
-            borderRight: "1px solid black",
-            textTransform: "capitalize",
-          }}
-        >
-          <span className="text-gray-80">Custom Storage</span>
-          {environment.customStorage?.integration && (
-            <span className="w-2 h-2 rounded-full bg-green-50 ml-2 inline-block" />
-          )}
-        </ToggleButton>
-        <ToggleButton
-          value="custom domain"
-          aria-label="Custom domain"
-          sx={{
-            border: "none",
-            textTransform: "capitalize",
-          }}
-        >
-          <span className="text-gray-80">Custom Domain</span>
-        </ToggleButton>
-      </ToggleButtonGroup>
-      {tab === "config" && (
-        <TabEnvironmentConfig
+    <Box
+      bgcolor="container.paper"
+      sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
+    >
+      <Box component="nav" sx={{ m: 2, mt: 0, minWidth: "250px" }}>
+        <List>
+          <ListItem
+            sx={{
+              borderBottom: "1px solid rgba(255,255,255,0.05)",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              px: 0,
+            }}
+          >
+            <Box
+              component="span"
+              sx={{
+                display: "inline-block",
+                mx: 2,
+                width: "100%",
+                opacity: 0.5,
+                color: "white",
+              }}
+            >
+              Settings
+            </Box>
+            <List
+              sx={{
+                mt: 1,
+                pb: 0,
+                width: "100%",
+                borderTop: "1px solid rgba(255,255,255,0.05)",
+              }}
+            >
+              {listItems.map(li => (
+                <ListItem sx={{ p: 0 }} key={li.path}>
+                  <Link
+                    href={li.path}
+                    sx={{
+                      display: "block",
+                      px: 3,
+                      py: 1,
+                      width: "100%",
+                      "&:hover": { opacity: 1, bgcolor: "rgba(0,0,0,0.2)" },
+                      opacity:
+                        hash === li.path || (!hash && li.path === "#general")
+                          ? 1
+                          : 0.5,
+                    }}
+                  >
+                    {li.text}
+                  </Link>
+                </ListItem>
+              ))}
+            </List>
+          </ListItem>
+          <Box
+            component="li"
+            sx={{ p: 2, borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+          >
+            <Link
+              href="#storage"
+              sx={{
+                color: "white",
+                opacity: hash === "#storage" ? 1 : 0.5,
+                "&:hover": { opacity: 1 },
+              }}
+            >
+              Custom storage
+            </Link>
+          </Box>
+          <Box component="li" sx={{ p: 2 }}>
+            <Link
+              href="#domain"
+              sx={{
+                opacity: hash === "#domain" ? 1 : 0.5,
+                "&:hover": { opacity: 1 },
+              }}
+            >
+              Domain
+            </Link>
+          </Box>
+        </List>
+      </Box>
+      <Box sx={{ flex: 1 }}>
+        <Tab
           app={app}
           environment={environment}
           setRefreshToken={setRefreshToken}
         />
-      )}
-      {tab === "custom storage" && (
-        <TabCustomStorage
-          app={app}
-          environment={environment}
-          setRefreshToken={setRefreshToken}
-        />
-      )}
-      {tab === "custom domain" && (
-        <TabDomainConfig
-          app={app}
-          environment={environment}
-          setRefreshToken={setRefreshToken}
-        />
-      )}
-    </>
+      </Box>
+    </Box>
   );
 }

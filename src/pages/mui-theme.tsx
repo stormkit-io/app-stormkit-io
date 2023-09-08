@@ -15,12 +15,20 @@ const LinkBehavior = React.forwardRef<
   return <RouterLink ref={ref} to={href} {...other} />;
 });
 
+const fontFamily = "Inter, sans-serif";
+const fontSize = 13;
+
 export default createTheme({
   components: {
     MuiLink: {
       defaultProps: {
         component: LinkBehavior,
       } as LinkProps,
+      styleOverrides: {
+        root: {
+          color: "white",
+        },
+      },
     },
     MuiTooltip: {
       styleOverrides: {
@@ -50,6 +58,75 @@ export default createTheme({
         colorWarning: {
           backgroundColor: "#b75c22",
           color: "white",
+        },
+      },
+    },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: {
+          color: "white",
+          backgroundColor: "rgba(0,0,0,0.2)",
+          "&:hover": {
+            backgroundColor: "rgba(0,0,0,0.25)",
+          },
+          "&.Mui-focused": {
+            backgroundColor: "rgba(0,0,0,0.25)",
+          },
+          "&:before": {
+            borderColor: "rgba(255,255,255,0.1)",
+          },
+          "&:after": {
+            borderColor: "rgba(255,255,255,0.5)",
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          fontFamily,
+          fontSize,
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily,
+          fontSize: 14,
+          color: "white",
+          opacity: 0.7,
+          "&.Mui-focused": {
+            color: "white",
+          },
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          fontFamily,
+          fontSize,
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontFamily,
+          fontSize,
+        },
+        body1: {
+          fontFamily,
+          fontSize,
+        },
+        h6: {
+          fontFamily,
+          fontSize: 15,
+        },
+        subtitle2: {
+          fontFamily,
+          fontWeight: "normal",
         },
       },
     },

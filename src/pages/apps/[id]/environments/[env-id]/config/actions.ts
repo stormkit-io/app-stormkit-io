@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import { toArray } from "~/utils/helpers/array";
 import api from "~/utils/api/Api";
 
+export const computeAutoDeployValue = (env?: Environment): AutoDeployValues => {
+  if (!env) {
+    return "all";
+  }
+
+  return env?.autoDeploy
+    ? !env?.autoDeployBranches
+      ? "all"
+      : "custom"
+    : "disabled";
+};
+
 export const prepareBuildObject = (values: FormValues): BuildConfig => {
   const vars: Record<string, string> = {};
-
-  const keys = toArray<string>(values["build.vars[key]"] || "");
-  const vals = toArray<string>(values["build.vars[value]"] || "");
-
-  keys.forEach((key, i) => {
-    if (key.trim() !== "") {
-      vars[key.trim()] = vals[i].trim().replace(/^['"]+|['"]+$/g, "");
-    }
-  });
 
   values["build.vars"]?.split("\n").forEach(line => {
     if (line.indexOf("=") > 0) {
@@ -22,12 +25,31 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
   });
 
   const build: BuildConfig = {
-    cmd: values["build.cmd"]?.trim(),
+    cmd: values["build.cmd"]?.trim() || "",
     distFolder: (values["build.distFolder"] || "").trim(),
     vars,
   };
 
   return build;
+};
+
+export const buildFormValues = (
+  env: Environment,
+  form: HTMLFormElement
+): FormValues => {
+  return {
+    name: env.name,
+    branch: env.branch,
+    autoDeploy: computeAutoDeployValue(env),
+    autoDeployBranches: env.autoDeployBranches,
+    "build.cmd": env.build.cmd,
+    "build.distFolder": env.build.distFolder,
+    "build.vars": Object.keys(env.build?.vars || {})
+      .filter(key => env.build.vars[key])
+      .map(key => `${key}=${env.build.vars[key]}`)
+      .join("\n"),
+    ...Object.fromEntries(new FormData(form).entries()),
+  };
 };
 
 interface FetchRepoMetaProps {
@@ -99,51 +121,78 @@ export type AutoDeployValues = "disabled" | "all" | "custom";
 
 export interface FormValues {
   name: string;
-  autoDeploy: AutoDeployValues;
-  autoPublish: "on" | "off";
   branch: string;
+  autoDeploy?: AutoDeployValues;
+  autoPublish?: "on" | "off";
   autoDeployBranches?: string;
-  "build.cmd": string;
+  "build.cmd"?: string;
   "build.distFolder"?: string;
   "build.vars"?: string; // This is the textarea version
   "build.vars[key]"?: string; // This is the key value version
   "build.vars[value]"?: string; // This is the key value version
 }
 
-interface EditEnvironmentProps {
+interface UpdateEnvironmentProps {
   app: App;
-  environmentId: string;
+  envId: string;
   values: FormValues;
+  setLoading: (b: boolean) => void;
+  setError: (s: string) => void;
+  setSuccess: (s: string) => void;
+  setRefreshToken: (t: number) => void;
 }
 
-interface EditEnvironmentReturnValue {
-  status: boolean;
-}
-
-export const editEnvironment = ({
+export const updateEnvironment = ({
   app,
-  environmentId,
+  envId,
   values,
-}: EditEnvironmentProps): Promise<EditEnvironmentReturnValue> => {
+  setError,
+  setLoading,
+  setSuccess,
+  setRefreshToken,
+}: UpdateEnvironmentProps): Promise<void> => {
   const { name, branch, autoDeployBranches, autoDeploy } = values;
   const build = prepareBuildObject(values);
 
   if (!name || !branch) {
-    return new Promise((_, reject) => {
-      reject("Environment and branch names are required.");
-    });
+    setError("Environment and branch names are required.");
+    return Promise.resolve();
   }
 
-  return api.put<{ status: boolean }>(`/app/env`, {
-    id: environmentId,
-    appId: app.id,
-    env: name,
-    branch,
-    build,
-    autoPublish: values.autoPublish === "on",
-    autoDeploy: autoDeploy !== "disabled",
-    autoDeployBranches: autoDeployBranches || null,
-  });
+  setLoading(true);
+  setError("");
+  setSuccess("");
+
+  return api
+    .put<{ status: boolean }>(`/app/env`, {
+      id: envId,
+      appId: app.id,
+      env: name,
+      branch,
+      build,
+      autoPublish: values.autoPublish === "on",
+      autoDeploy: autoDeploy !== "disabled",
+      autoDeployBranches: autoDeployBranches || null,
+    })
+    .then(() => {
+      setSuccess("The environment has been successfully updated.");
+      setRefreshToken(Date.now());
+    })
+    .catch(async res => {
+      if (typeof res === "string") {
+        return setError(res);
+      }
+
+      try {
+        const jsonData = await res.json();
+        setError(jsonData.error);
+      } catch {
+        setError(`"Error: ${(await res?.body()) || res}`);
+      }
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 };
 
 interface InsertEnvironmentProps {
