@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from "react";
-import cn from "classnames";
-import * as mui from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableFooter from "@mui/material/TableFooter";
+import TableRow from "@mui/material/TableRow";
+import IconButton from "@mui/material/IconButton";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import AddIcon from "@mui/icons-material/Add";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Modal from "~/components/ModalV2";
 import Input from "./Input";
-import Button from "../ButtonV2";
-
-const { Table, TableBody, TableCell, TableHead, TableRow } = mui;
 
 interface Props {
   inputName: string;
@@ -16,10 +24,68 @@ interface Props {
   tdClasses?: string;
   thClasses?: string;
   resetToken?: number;
-  onChange?: () => void;
+  onChange?: (kv: Record<string, string>) => void;
+  onModalOpen?: () => void;
 }
 
-const KeyValue: React.FC<Props> = ({
+interface TextFieldModalProps {
+  rows: string[][];
+  placeholder?: string;
+  transformer?: (kv: string[][]) => string;
+  onSave: (value: string) => void;
+  onClose: () => void;
+}
+
+function TextFieldModal({
+  rows,
+  onClose,
+  onSave,
+  placeholder,
+  transformer = kv =>
+    kv.map(k => (k[0] && k[1] ? `${k[0]}=${k[1]}` : "")).join("\n"),
+}: TextFieldModalProps) {
+  const value = useMemo(() => {
+    return transformer(rows);
+  }, [rows]);
+
+  return (
+    <Modal open onClose={onClose}>
+      <Box>
+        <Box sx={{ p: 2 }}>
+          <TextField
+            id="key-value-text-area"
+            variant="filled"
+            multiline
+            maxRows={20}
+            defaultValue={value}
+            placeholder={placeholder}
+            fullWidth
+            minRows={20}
+          />
+        </Box>
+        <Box sx={{ textAlign: "center", mb: 2 }}>
+          <Button
+            type="button"
+            color="secondary"
+            variant="contained"
+            onClick={() => {
+              const input = document.querySelector(
+                "#key-value-text-area"
+              ) as HTMLTextAreaElement;
+
+              onSave(input?.value);
+              onClose();
+            }}
+          >
+            Save
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
+}
+
+export default function KeyValue({
   inputName,
   keyName,
   valName,
@@ -27,11 +93,11 @@ const KeyValue: React.FC<Props> = ({
   valPlaceholder,
   defaultValue,
   resetToken,
-  tdClasses = "border-blue-30 text-gray-80 py-2",
-  thClasses = "border-blue-30 font-bold text-white bg-blue-20",
   onChange,
-}) => {
+  onModalOpen,
+}: Props) {
   const [rows, setRows] = useState<string[][]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const newRows: string[][] = [];
@@ -43,89 +109,147 @@ const KeyValue: React.FC<Props> = ({
     setRows(newRows.length > 0 ? newRows : [["", ""]]);
   }, [defaultValue, resetToken]);
 
+  useEffect(() => {
+    if (onChange) {
+      onChange(
+        rows.reduce((obj, val) => {
+          obj[val[0]] = val[1];
+          return obj;
+        }, {} as Record<string, string>)
+      );
+    }
+  }, [rows]);
+
   const addRowsHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setRows([...rows, [`KEY_${rows.length + 1}`, `VALUE_${rows.length + 1}`]]);
-    onChange?.();
   };
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell className={thClasses}>{keyName}</TableCell>
-          <TableCell className={thClasses}>
-            <div className="flex justify-between items-center">
-              {valName}
-              <div className="flex justify-end items-center">
-                <Button
-                  styled={false}
-                  type="button"
-                  className="cursor-pointer text-xs font-thin flex items-center bg-blue-30 py-1 px-3"
-                  onClick={addRowsHandler}
-                >
-                  <span className="fa fa-plus mr-2" />
-                  add row
-                </Button>
-              </div>
-            </div>
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {rows.map(([key, value], index) => (
-          <TableRow key={`${key}_${index}`}>
-            <TableCell className={cn(tdClasses, "pl-0 pr-1 w-1/2")}>
-              <Input
-                className="bg-blue-10 no-border"
-                fullWidth
-                placeholder={keyPlaceholder}
-                inputProps={{
-                  "aria-label": `${inputName} key number ${index + 1}`,
-                }}
-                name={`${inputName}[key]`}
-                defaultValue={key}
-                onChange={onChange}
-              />
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+              {keyName}
             </TableCell>
-            <TableCell className={cn(tdClasses, "pl-0 pr-0")}>
-              <Input
-                className="bg-blue-10 no-border mr-0"
-                fullWidth
-                defaultValue={value}
-                placeholder={valPlaceholder}
-                name={`${inputName}[value]`}
-                onChange={onChange}
-                aria-label=""
-                inputProps={{
-                  "aria-label": `${inputName} value number ${index + 1}`,
-                }}
-                InputProps={{
-                  endAdornment: (
-                    <Button
-                      styled={false}
-                      type="button"
-                      aria-label={`Remove ${inputName} row number ${index + 1}`}
-                      className="py-1 px-2 flex justify-center items-center bg-blue-30 hover:bg-blue-20 mr-1 rounded-sm"
-                      onClick={() => {
-                        const copy = [...rows];
-                        copy.splice(index, 1);
-
-                        setRows(copy.length ? copy : [["", ""]]);
-                        onChange?.();
-                      }}
-                    >
-                      <span className="fas fa-times text-xs text-gray-80"></span>
-                    </Button>
-                  ),
-                }}
-              />
+            <TableCell sx={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+              <Box sx={{ pl: 1.75 }}>{valName}</Box>
             </TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-};
+        </TableHead>
+        <TableBody>
+          {rows.map(([key, value], index) => (
+            <TableRow key={`${key}_${index}`}>
+              <TableCell sx={{ borderBottom: "none", pl: 0, pb: 0 }}>
+                <Input
+                  fullWidth
+                  placeholder={keyPlaceholder}
+                  inputProps={{
+                    "aria-label": `${inputName} key number ${index + 1}`,
+                  }}
+                  name={`${inputName}[key]`}
+                  defaultValue={key}
+                />
+              </TableCell>
+              <TableCell sx={{ borderBottom: "none", pr: 0, pb: 0 }}>
+                <Input
+                  fullWidth
+                  defaultValue={value}
+                  placeholder={valPlaceholder}
+                  name={`${inputName}[value]`}
+                  aria-label=""
+                  inputProps={{
+                    "aria-label": `${inputName} value number ${index + 1}`,
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        sx={{ width: 24, height: 24 }}
+                        type="button"
+                        aria-label={`Remove ${inputName} row number ${
+                          index + 1
+                        }`}
+                        onClick={() => {
+                          const copy = [...rows];
+                          copy.splice(index, 1);
 
-export default KeyValue;
+                          setRows(copy.length ? copy : [["", ""]]);
+                        }}
+                      >
+                        <span className="fas fa-times text-xs text-gray-80"></span>
+                      </IconButton>
+                    ),
+                  }}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell
+              sx={{ borderBottom: "none", textAlign: "right", pr: 0 }}
+              colSpan={2}
+            >
+              <Button
+                color="primary"
+                variant="contained"
+                type="button"
+                sx={{
+                  display: "inline-flex",
+                  color: "white",
+                  textTransform: "none",
+                  mr: 2,
+                }}
+                onClick={addRowsHandler}
+              >
+                <AddIcon sx={{ mr: 1, fontSize: 16 }} />
+                Add Row
+              </Button>
+
+              <Button
+                type="button"
+                color="primary"
+                variant="contained"
+                sx={{
+                  display: "inline-flex",
+                  color: "white",
+                  textTransform: "none",
+                }}
+                onClick={() => {
+                  setIsModalOpen(true);
+                  onModalOpen?.();
+                }}
+              >
+                <ContentCopyIcon sx={{ mr: 1, fontSize: 16 }} />
+                Modify as a string
+              </Button>
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+      {isModalOpen && (
+        <TextFieldModal
+          rows={rows}
+          placeholder={
+            keyPlaceholder && valPlaceholder
+              ? `${keyPlaceholder}=${valPlaceholder}`
+              : ""
+          }
+          onClose={() => {
+            setIsModalOpen(false);
+          }}
+          onSave={rows => {
+            setRows(
+              rows
+                .split("\n")
+                .filter(i => i)
+                .map(r => r.split("=").map(i => i.trim()))
+            );
+          }}
+        />
+      )}
+    </>
+  );
+}
