@@ -33,6 +33,8 @@ export default function EnvironmentConfig() {
         return TabConfigEnvVars;
       case "#domain":
         return TabDomainConfig;
+      case "#storage":
+        return TabCustomStorage;
       default:
         return TabConfigGeneral;
     }
@@ -123,7 +125,7 @@ export default function EnvironmentConfig() {
           </Box>
         </List>
       </Box>
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, bgcolor: "container.paper" }}>
         <Tab
           app={app}
           environment={environment}
