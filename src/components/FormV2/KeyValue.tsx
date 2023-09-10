@@ -85,6 +85,15 @@ function TextFieldModal({
   );
 }
 
+const rowsToMap = (rows: string[][]): Record<string, string> => {
+  return rows
+    .filter(row => !row[2])
+    .reduce((obj, val) => {
+      obj[val[0]] = val[1];
+      return obj;
+    }, {} as Record<string, string>);
+};
+
 export default function KeyValue({
   inputName,
   keyName,
@@ -99,6 +108,10 @@ export default function KeyValue({
   const [rows, setRows] = useState<string[][]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const rowsWithoutDeleted = useMemo(() => {
+    return rows.filter(row => !row[2]);
+  }, [rows]);
+
   useEffect(() => {
     const newRows: string[][] = [];
 
@@ -111,80 +124,85 @@ export default function KeyValue({
 
   useEffect(() => {
     if (onChange) {
-      onChange(
-        rows.reduce((obj, val) => {
-          obj[val[0]] = val[1];
-          return obj;
-        }, {} as Record<string, string>)
-      );
+      onChange(rowsToMap(rowsWithoutDeleted));
     }
-  }, [rows]);
+  }, [rowsWithoutDeleted]);
 
   const addRowsHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setRows([...rows, [`KEY_${rows.length + 1}`, `VALUE_${rows.length + 1}`]]);
   };
 
+  const borderBottom = "1px solid rgba(255,255,255,0.1)";
+
   return (
     <>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-              {keyName}
-            </TableCell>
-            <TableCell sx={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+            <TableCell sx={{ borderBottom }}>{keyName}</TableCell>
+            <TableCell sx={{ borderBottom }}>
               <Box sx={{ pl: 1.75 }}>{valName}</Box>
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(([key, value], index) => (
-            <TableRow key={`${key}_${index}`}>
-              <TableCell sx={{ borderBottom: "none", pl: 0, pb: 0 }}>
-                <Input
-                  fullWidth
-                  placeholder={keyPlaceholder}
-                  inputProps={{
-                    "aria-label": `${inputName} key number ${index + 1}`,
-                  }}
-                  name={`${inputName}[key]`}
-                  defaultValue={key}
-                />
-              </TableCell>
-              <TableCell sx={{ borderBottom: "none", pr: 0, pb: 0 }}>
-                <Input
-                  fullWidth
-                  defaultValue={value}
-                  placeholder={valPlaceholder}
-                  name={`${inputName}[value]`}
-                  aria-label=""
-                  inputProps={{
-                    "aria-label": `${inputName} value number ${index + 1}`,
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        sx={{ width: 24, height: 24 }}
-                        type="button"
-                        aria-label={`Remove ${inputName} row number ${
-                          index + 1
-                        }`}
-                        onClick={() => {
-                          const copy = [...rows];
-                          copy.splice(index, 1);
-
-                          setRows(copy.length ? copy : [["", ""]]);
-                        }}
-                      >
-                        <span className="fas fa-times text-xs text-gray-80"></span>
-                      </IconButton>
-                    ),
-                  }}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
+          {rows.map(([key, value, isDeleted], index) =>
+            isDeleted ? undefined : (
+              <TableRow key={index}>
+                <TableCell sx={{ borderBottom: "none", pl: 0, pb: 0 }}>
+                  <Input
+                    fullWidth
+                    placeholder={keyPlaceholder}
+                    inputProps={{
+                      "aria-label": `${inputName} key number ${index + 1}`,
+                    }}
+                    name={`${inputName}[key]`}
+                    onChange={e => {
+                      const copy = JSON.parse(JSON.stringify(rows));
+                      copy[index] = [e.target.value, copy[index][1]];
+                      setRows(copy);
+                    }}
+                    value={key}
+                  />
+                </TableCell>
+                <TableCell sx={{ borderBottom: "none", pr: 0, pb: 0 }}>
+                  <Input
+                    fullWidth
+                    value={value}
+                    placeholder={valPlaceholder}
+                    name={`${inputName}[value]`}
+                    inputProps={{
+                      "aria-label": `${inputName} value number ${index + 1}`,
+                    }}
+                    onChange={e => {
+                      const copy = JSON.parse(JSON.stringify(rows));
+                      copy[index] = [copy[index][0], e.target.value];
+                      setRows(copy);
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton
+                          sx={{ width: 24, height: 24 }}
+                          type="button"
+                          aria-label={`Remove ${inputName} row number ${
+                            index + 1
+                          }`}
+                          onClick={() => {
+                            const copy = JSON.parse(JSON.stringify(rows));
+                            copy[index].push("deleted");
+                            setRows(copy);
+                          }}
+                        >
+                          <span className="fas fa-times text-xs text-gray-80"></span>
+                        </IconButton>
+                      ),
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            )
+          )}
         </TableBody>
         <TableFooter>
           <TableRow>
@@ -231,7 +249,7 @@ export default function KeyValue({
       </Table>
       {isModalOpen && (
         <TextFieldModal
-          rows={rows}
+          rows={rowsWithoutDeleted}
           placeholder={
             keyPlaceholder && valPlaceholder
               ? `${keyPlaceholder}=${valPlaceholder}`
