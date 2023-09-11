@@ -58,6 +58,8 @@ const AppName: React.FC<Props> = ({
           <Link
             href={`https://${providerHosts[app.provider]}/${nameWithoutPrefix}`}
             aria-label="Repository URL"
+            target="_blank"
+            rel="noreferrer noopener"
             sx={{ color: "white" }}
           >
             <Box
