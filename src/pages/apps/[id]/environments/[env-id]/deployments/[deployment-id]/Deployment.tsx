@@ -18,7 +18,7 @@ const splitLines = (message: string): string[] => {
   // Remove first and last empty lines
   const lines = message
     .replace(/^[\\n\s]+|[\\n\s]+$/g, "")
-    .replace(/\n\n+/g, "\n\n")
+    .replace(/\\n\\n+/g, "\n\n")
     .split("\n");
 
   return lines;
