@@ -119,9 +119,7 @@ const FormAppSettings: React.FC<Props> = ({
           <Form.Option value={NodeJS14}>NodeJS 14.x</Form.Option>
           <Form.Option value={NodeJS16}>NodeJS 16.x</Form.Option>
           <Form.Option value={NodeJS18}>NodeJS 18.x</Form.Option>
-          {window.sk?.features["BUN"] && (
-            <Form.Option value={Bun1}>Bun 1.x</Form.Option>
-          )}
+          <Form.Option value={Bun1}>Bun 1.x</Form.Option>
         </Form.Select>
       </Form.WithLabel>
       {runtime !== additionalSettings.runtime &&
