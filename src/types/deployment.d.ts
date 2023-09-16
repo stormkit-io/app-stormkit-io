@@ -20,7 +20,6 @@ type Config = {
   build: {
     cmd: string;
     entry: string;
-    isServerless: boolean;
     vars: Record<string, string>;
   };
   env: string;

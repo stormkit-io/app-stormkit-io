@@ -26,7 +26,6 @@ export default ({ id, appId, envId, isRunning }: Props = {}): Deployment => ({
     build: {
       cmd: "pnpm build",
       entry: "",
-      isServerless: false,
       vars: {
         NODE_ENV: "production",
       },
