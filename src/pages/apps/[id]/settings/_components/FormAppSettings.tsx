@@ -11,6 +11,7 @@ const NodeJS18 = "nodejs18.x";
 const NodeJS16 = "nodejs16.x";
 const NodeJS14 = "nodejs14.x";
 const NodeJS12 = "nodejs12.x";
+const Bun1 = "bun1.x";
 
 interface Props {
   app: App;
@@ -118,6 +119,9 @@ const FormAppSettings: React.FC<Props> = ({
           <Form.Option value={NodeJS14}>NodeJS 14.x</Form.Option>
           <Form.Option value={NodeJS16}>NodeJS 16.x</Form.Option>
           <Form.Option value={NodeJS18}>NodeJS 18.x</Form.Option>
+          {window.sk?.features["BUN"] && (
+            <Form.Option value={Bun1}>Bun 1.x</Form.Option>
+          )}
         </Form.Select>
       </Form.WithLabel>
       {runtime !== additionalSettings.runtime &&
