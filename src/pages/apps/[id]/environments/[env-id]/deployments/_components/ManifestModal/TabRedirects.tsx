@@ -48,15 +48,22 @@ function EmptyPage() {
   );
 }
 
-function isRedirectStatus(redirect?: number) {
-  if (!redirect) {
-    return false;
+interface RedirectStatusProps {
+  status?: number;
+  isAbsolute: boolean;
+}
+
+function redirectStatus({ status, isAbsolute }: RedirectStatusProps): string {
+  if (status) {
+    const mod = status % 300;
+
+    // Is redirect between 300 and 307?
+    if (mod >= 0 && mod < 7) {
+      return `Redirect ${status}`;
+    }
   }
 
-  const mod = redirect % 300;
-
-  // Is redirect between 300 and 307?
-  return mod >= 0 && mod < 7;
+  return isAbsolute ? "Proxy" : "Path rewrite";
 }
 
 export default function TabRedirects({ redirects }: Props) {
@@ -80,9 +87,10 @@ export default function TabRedirects({ redirects }: Props) {
               <TableCell>{redirect.from}</TableCell>
               <TableCell>{redirect.to}</TableCell>
               <TableCell>
-                {isRedirectStatus(redirect.status)
-                  ? redirect.status
-                  : "Path rewrite"}
+                {redirectStatus({
+                  status: redirect.status,
+                  isAbsolute: redirect.to?.startsWith("http"),
+                })}
               </TableCell>
             </TableRow>
           ))}
