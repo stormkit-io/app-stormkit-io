@@ -45,6 +45,16 @@ export default createTheme({
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          "&:hover": {
+            color: "white",
+          },
+        },
+      },
+    },
     MuiAlert: {
       styleOverrides: {
         standardWarning: {
