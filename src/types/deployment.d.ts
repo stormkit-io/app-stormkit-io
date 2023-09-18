@@ -53,6 +53,7 @@ interface CDNFile {
 interface Redirects {
   from: string;
   to: string;
+  status?: number;
 }
 
 interface APIFile {

@@ -8,11 +8,10 @@ import Modal from "~/components/ModalV2";
 import Container from "~/components/Container";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
-import Button from "~/components/ButtonV2";
-import emptyListSvg from "~/assets/images/empty-list.svg";
 import { useFetchManifest } from "../../actions";
 import TabAPI from "./TabAPI";
 import TabCDNFiles from "./TabCDNFiles";
+import TabRedirects from "./TabRedirects";
 
 interface Props {
   app: App;
@@ -160,36 +159,9 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
             {tab === "cdn" && (
               <TabCDNFiles manifest={manifest} deployment={deployment} />
             )}
-            {tab === "redirect" &&
-              (manifest.redirects?.map(r => (
-                <div className="bg-blue-10 mx-4 mb-3 mt-0 p-4" key={r.to}>
-                  {r.from}
-                  {" => "}
-                  {r.to}
-                </div>
-              )) || (
-                <div className="mx-4 py-4 bg-blue-10 flex-1 mb-4 flex flex-col items-center justify-center">
-                  <img
-                    src={emptyListSvg}
-                    alt="Empty redirects"
-                    className="max-w-64 mb-8"
-                  />
-                  <p className="text-center">
-                    This deployment has no redirects.
-                    <br />
-                    Create a top-level{" "}
-                    <span className="font-mono text-xs text-white font-bold">
-                      redirects.json
-                    </span>{" "}
-                    to add server side redirects.{" "}
-                  </p>
-                  <p className="text-center mt-8">
-                    <Button href="https://www.stormkit.io/docs/features/redirects-and-path-rewrites">
-                      Learn more
-                    </Button>
-                  </p>
-                </div>
-              ))}
+            {tab === "redirect" && (
+              <TabRedirects redirects={manifest.redirects} />
+            )}
             {tab === "ssr" && (
               <div className="bg-blue-10 mx-4 p-4">
                 {ssrEnabled ? (
