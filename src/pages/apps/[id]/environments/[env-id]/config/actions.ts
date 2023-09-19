@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { toArray } from "~/utils/helpers/array";
 import api from "~/utils/api/Api";
 
 export const computeAutoDeployValue = (env?: Environment): AutoDeployValues => {
@@ -317,4 +316,38 @@ export const deleteEnvironment = ({
     appId: app.id,
     env: name,
   });
+};
+
+interface FetchAPIKeyProps {
+  appId: string;
+  envId: string;
+}
+
+export const useFetchAPIKey = ({ appId, envId }: FetchAPIKeyProps) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
+  const [apiKey, setApiKey] = useState<string>();
+
+  useEffect(() => {
+    setLoading(true);
+    setError(undefined);
+
+    api
+      .fetch<{ apiKey: string }>(`/app/${appId}/env/${envId}/api-keys`)
+      .then(({ apiKey }) => {
+        setApiKey(apiKey);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching api key");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [appId, envId]);
+
+  return { loading, error, apiKey, setApiKey };
+};
+
+export const generateNewAPIKey = ({ appId, envId }: FetchAPIKeyProps) => {
+  return api.post<{ apiKey: string }>("/app/env/api-key", { appId, envId });
 };

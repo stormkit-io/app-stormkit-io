@@ -11,11 +11,13 @@ import TabDomainConfig from "./_components/TabDomainConfig/TabDomainConfig";
 import TabConfigEnvVars from "./_components/TabConfigEnvVars";
 import TabConfigGeneral from "./_components/TabConfigGeneral";
 import TabConfigBuild from "./_components/TabConfigBuild";
+import TabAPIKey from "./_components/TabAPIKey";
 
 const listItems = [
   { path: "#general", text: "General" },
   { path: "#build", text: "Build" },
   { path: "#vars", text: "Environment variables" },
+  { path: "#api", text: "API Keys" },
 ];
 
 export default function EnvironmentConfig() {
@@ -31,6 +33,8 @@ export default function EnvironmentConfig() {
         return TabConfigBuild;
       case "#vars":
         return TabConfigEnvVars;
+      case "#api":
+        return TabAPIKey;
       case "#domain":
         return TabDomainConfig;
       case "#storage":
