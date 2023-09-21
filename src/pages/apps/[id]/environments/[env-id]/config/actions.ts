@@ -323,19 +323,19 @@ interface FetchAPIKeyProps {
   envId: string;
 }
 
-export const useFetchAPIKey = ({ appId, envId }: FetchAPIKeyProps) => {
+export const useFetchAPIKeys = ({ appId, envId }: FetchAPIKeyProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
-  const [apiKey, setApiKey] = useState<string>();
+  const [keys, setKeys] = useState<APIKey[]>([]);
 
   useEffect(() => {
     setLoading(true);
     setError(undefined);
 
     api
-      .fetch<{ apiKey: string }>(`/app/${appId}/env/${envId}/api-keys`)
-      .then(({ apiKey }) => {
-        setApiKey(apiKey);
+      .fetch<{ keys: APIKey[] }>(`/app/${appId}/env/${envId}/api-keys`)
+      .then(({ keys }) => {
+        setKeys(keys);
       })
       .catch(() => {
         setError("Something went wrong while fetching api key");
@@ -345,9 +345,26 @@ export const useFetchAPIKey = ({ appId, envId }: FetchAPIKeyProps) => {
       });
   }, [appId, envId]);
 
-  return { loading, error, apiKey, setApiKey };
+  return { loading, error, keys, setKeys };
 };
 
-export const generateNewAPIKey = ({ appId, envId }: FetchAPIKeyProps) => {
-  return api.post<{ apiKey: string }>("/app/env/api-key", { appId, envId });
+interface GenerateNewAPIKeyProps {
+  appId: string;
+  envId?: string;
+  name: string;
+  scope: string;
+}
+
+export const generateNewAPIKey = ({
+  name,
+  scope,
+  appId,
+  envId,
+}: GenerateNewAPIKeyProps) => {
+  return api.post<APIKey>("/app/env/api-key", {
+    appId,
+    envId,
+    name,
+    scope,
+  });
 };

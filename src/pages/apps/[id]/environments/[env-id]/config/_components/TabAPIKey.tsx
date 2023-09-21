@@ -5,10 +5,13 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/lab/LoadingButton";
+import TextInput from "@mui/material/TextField";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import Modal from "~/components/ModalV2";
 import Spinner from "~/components/Spinner";
-import { useFetchAPIKey, generateNewAPIKey } from "../actions";
+import InputDescription from "~/components/InputDescription";
+import { useFetchAPIKeys, generateNewAPIKey } from "../actions";
 
 interface Props {
   app: App;
@@ -16,14 +19,93 @@ interface Props {
   setRefreshToken: (v: number) => void;
 }
 
+interface APIKeyModalProps {
+  onClose: () => void;
+  onSubmit: (name: string) => void;
+  error?: string;
+  loading?: boolean;
+}
+
+function APIKeyModal({ onSubmit, onClose, loading, error }: APIKeyModalProps) {
+  const [name, setName] = useState<string>("");
+
+  return (
+    <Modal open onClose={onClose}>
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6">Generate New Key</Typography>
+        <Box sx={{ pt: 2 }}>
+          <TextInput
+            variant="filled"
+            label="API Key name"
+            placeholder="e.g. Default"
+            fullWidth
+            autoFocus
+            autoComplete="off"
+            value={name}
+            onChange={e => setName(e.target.value.trim())}
+          />
+          <InputDescription>
+            The name will be used in the UI. It helps distinguishing your API
+            keys.
+          </InputDescription>
+        </Box>
+        {error && (
+          <Alert color="error" sx={{ m: 0, mt: 2 }}>
+            <AlertTitle>Error</AlertTitle>
+            <Typography>{error}</Typography>
+          </Alert>
+        )}
+        <Box sx={{ textAlign: "right", pt: 2 }}>
+          <Button
+            loading={loading}
+            variant="contained"
+            color="secondary"
+            onClick={() => onSubmit(name)}
+          >
+            Create
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
+}
+
 export default function TabAPIKey({ app, environment: env }: Props) {
-  const [isGeneratingNewAPIKey, setIsGeneratingNewAPIKey] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState<string>("");
   const [success, setSuccess] = useState(false);
-  const { loading, error, apiKey, setApiKey } = useFetchAPIKey({
+  const [modalError, setModalError] = useState("");
+  const [modalLoading, setModalLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { loading, error, keys, setKeys } = useFetchAPIKeys({
     appId: app.id,
     envId: env.id!,
   });
+
+  const handleNewKey = (name: string) => {
+    setModalLoading(true);
+    setSuccess(false);
+
+    generateNewAPIKey({
+      appId: app.id,
+      envId: env.id!,
+      name,
+      scope: "env",
+    })
+      .then(apiKey => {
+        setKeys([...keys, apiKey]);
+        setSuccess(true);
+        setIsModalOpen(false);
+      })
+      .catch(async res => {
+        if (res.status === 400) {
+          const { error } = (await res.json()) as { error: string };
+          setModalError(error);
+        }
+      })
+      .finally(() => {
+        setModalLoading(false);
+      });
+  };
 
   return (
     <Box sx={{ p: 2, color: "white" }}>
@@ -60,53 +142,64 @@ export default function TabAPIKey({ app, environment: env }: Props) {
       )}
       {!error && !loading && (
         <>
-          <Box sx={{ bgcolor: "rgba(0,0,0,0.1)", p: 2 }}>
-            {apiKey ? (
+          <Box>
+            {keys.map(apiKey => (
               <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
+                key={apiKey.token}
+                sx={{ mb: 2, bgcolor: "rgba(0,0,0,0.1)", p: 2 }}
               >
-                {isVisible ? apiKey : "*".repeat(48)}
-                <IconButton
-                  title="Toggle visibility"
-                  onClick={() => {
-                    setIsVisible(!isVisible);
+                <Typography>{apiKey.name}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  {isVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                </IconButton>
+                  <Box
+                    sx={{
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      maxWidth: { md: "300px", lg: "none" },
+                    }}
+                  >
+                    {isVisible === apiKey.id ? apiKey.token : "*".repeat(32)}
+                  </Box>
+                  <IconButton
+                    title="Toggle visibility"
+                    onClick={() => {
+                      setIsVisible(isVisible === apiKey.id ? "" : apiKey.id);
+                    }}
+                  >
+                    {isVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </IconButton>
+                </Box>
               </Box>
-            ) : (
-              "You do not have an API key associated with this environment."
-            )}
+            ))}
+            {keys.length === 0 &&
+              "You do not have an API key associated with this environment."}
           </Box>
           <Box sx={{ textAlign: "right", mt: 2 }}>
             <Button
               type="button"
               variant="contained"
               color="secondary"
-              loading={isGeneratingNewAPIKey}
               onClick={() => {
-                setIsGeneratingNewAPIKey(true);
-                setSuccess(false);
-
-                generateNewAPIKey({ appId: app.id, envId: env.id! })
-                  .then(({ apiKey }) => {
-                    setApiKey(apiKey);
-                    setSuccess(true);
-                  })
-                  .finally(() => {
-                    setIsGeneratingNewAPIKey(false);
-                  });
+                setIsModalOpen(true);
               }}
             >
-              Generate new API Key
+              New API Key
             </Button>
           </Box>
         </>
+      )}
+      {isModalOpen && (
+        <APIKeyModal
+          error={modalError}
+          loading={modalLoading}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleNewKey}
+        />
       )}
     </Box>
   );
