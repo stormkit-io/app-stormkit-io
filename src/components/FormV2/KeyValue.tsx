@@ -36,13 +36,16 @@ interface TextFieldModalProps {
   onClose: () => void;
 }
 
+const transformerFn = (kv: string[][]): string => {
+  return kv.map(k => (k[0] && k[1] ? `${k[0]}=${k[1]}` : "")).join("\n");
+};
+
 function TextFieldModal({
   rows,
   onClose,
   onSave,
   placeholder,
-  transformer = kv =>
-    kv.map(k => (k[0] && k[1] ? `${k[0]}=${k[1]}` : "")).join("\n"),
+  transformer = transformerFn,
 }: TextFieldModalProps) {
   const value = useMemo(() => {
     return transformer(rows);
@@ -130,7 +133,7 @@ export default function KeyValue({
 
   const addRowsHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
-    setRows([...rows, [`KEY_${rows.length + 1}`, `VALUE_${rows.length + 1}`]]);
+    setRows([...rows, ["", ""]]);
   };
 
   const borderBottom = "1px solid rgba(255,255,255,0.1)";
@@ -153,7 +156,9 @@ export default function KeyValue({
                 <TableCell sx={{ borderBottom: "none", pl: 0, pb: 0 }}>
                   <Input
                     fullWidth
-                    placeholder={keyPlaceholder}
+                    placeholder={
+                      index === 0 ? keyPlaceholder : `KEY_${index + 1}`
+                    }
                     inputProps={{
                       "aria-label": `${inputName} key number ${index + 1}`,
                     }}
@@ -170,7 +175,9 @@ export default function KeyValue({
                   <Input
                     fullWidth
                     value={value}
-                    placeholder={valPlaceholder}
+                    placeholder={
+                      index === 0 ? valPlaceholder : `VALUE_${index + 1}`
+                    }
                     name={`${inputName}[value]`}
                     inputProps={{
                       "aria-label": `${inputName} value number ${index + 1}`,
@@ -263,7 +270,14 @@ export default function KeyValue({
               rows
                 .split("\n")
                 .filter(i => i)
-                .map(r => r.split("=").map(i => i.trim()))
+                .map(row => {
+                  const indexOfEqual = row.indexOf("=");
+
+                  return [
+                    row.slice(0, indexOfEqual),
+                    row.slice(indexOfEqual + 1),
+                  ];
+                })
             );
           }}
         />

@@ -18,8 +18,11 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
 
   values["build.vars"]?.split("\n").forEach(line => {
     if (line.indexOf("=") > 0) {
-      const [key, value] = line.split("=");
-      vars[key.trim()] = value.trim();
+      const indexOfEqual = line.indexOf("=");
+
+      vars[line.slice(0, indexOfEqual).trim()] = line
+        .slice(indexOfEqual + 1)
+        .trim();
     }
   });
 
