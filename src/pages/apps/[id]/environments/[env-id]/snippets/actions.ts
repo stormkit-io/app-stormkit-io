@@ -38,10 +38,6 @@ interface FetchSnippetsReturnValue {
   setSnippets: SetSnippets;
 }
 
-interface FetchSnippetsAPIResponse {
-  snippets: Snippets;
-}
-
 export const useFetchSnippets = ({
   app,
   env,
@@ -57,12 +53,12 @@ export const useFetchSnippets = ({
     setLoading(true);
 
     api
-      .fetch<FetchSnippetsAPIResponse>(
-        `/app/${app.id}/envs/${env.env}/snippets`
+      .fetch<{ snippets: Snippets }>(
+        `/v1/env/snippets?aid=${app.id}&eid=${env.id}`
       )
-      .then(res => {
+      .then(({ snippets }) => {
         if (!unmounted) {
-          setSnippets(normalize(res.snippets));
+          setSnippets(normalize(snippets));
         }
       })
       .catch(() => {
