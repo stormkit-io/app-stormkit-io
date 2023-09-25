@@ -3,8 +3,8 @@ declare interface Snippet {
   content: string;
   enabled: boolean;
   prepend: boolean;
-  _injectLocation: "head" | "body";
-  _i: number;
+  location?: "head" | "body";
+  id?: number;
 }
 
 declare interface Snippets {

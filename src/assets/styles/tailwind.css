@@ -28,11 +28,3 @@
 .min-h-12 {
   min-height: 3rem;
 }
-
-.cm-theme-dark .cm-editor {
-  @apply bg-blue-10;
-}
-
-.cm-theme-dark .cm-content {
-  @apply py-0;
-}

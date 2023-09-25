@@ -1,6 +1,5 @@
 import type { Scope } from "nock/types";
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { MemoryRouter } from "react-router";
 import { waitFor, fireEvent, render } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -48,7 +47,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       snippets = mockSnippets();
       fetchSnippetsScope = mockFetchSnippets({
         appId: currentApp.id,
-        envName: currentEnv.name,
+        envId: currentEnv.id!,
         response: { snippets },
       });
 
@@ -56,18 +55,25 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
     });
 
     test("should load snippets", async () => {
+      const s1 = snippets.head[0];
+      const s2 = snippets.body[0];
+
       await waitFor(() => {
         expect(fetchSnippetsScope.isDone()).toBe(true);
-        expect(wrapper.getByText(snippets.head[0].title)).toBeTruthy();
-        expect(wrapper.getByText(snippets.body[0].title)).toBeTruthy();
+        expect(wrapper.getByText(`#${s1.id} ${s1.title}`)).toBeTruthy();
+        expect(wrapper.getByText(`#${s2.id} ${s2.title}`)).toBeTruthy();
       });
     });
 
     test("should have a new button which opens a modal", async () => {
-      fireEvent.click(wrapper.getByText("New snippet"));
+      fireEvent.click(wrapper.getByText("Create snippet"));
 
       await waitFor(() => {
-        expect(wrapper.getByText("Create snippet")).toBeTruthy();
+        expect(
+          wrapper.getByText(
+            /Turn this feature on to automatically publish successful deployments on the default branch./
+          )
+        ).toBeTruthy();
       });
     });
   });
@@ -78,7 +84,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       currentEnv = mockEnvironment({ app: currentApp });
       fetchSnippetsScope = mockFetchSnippets({
         appId: currentApp.id,
-        envName: currentEnv.name,
+        envId: currentEnv.id!,
         response: { snippets: { head: [], body: [] } },
       });
 
@@ -90,7 +96,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
         expect(fetchSnippetsScope.isDone()).toBe(true);
       });
 
-      expect(wrapper.getByText("It is quite empty here.")).toBeTruthy();
+      expect(wrapper.getByText(/It\'s quite empty in here\./)).toBeTruthy();
     });
   });
 });

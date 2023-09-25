@@ -62,3 +62,12 @@ code {
   @apply p-1;
   @apply rounded-sm;
 }
+
+.cm-theme-dark .cm-editor {
+  background-color: rgba(0, 0, 0, 0.1);
+  font-family: monospace;
+}
+
+.cm-theme-dark .cm-content .cm-activeLine {
+  background-color: rgba(0, 0, 0, 0.1);
+}

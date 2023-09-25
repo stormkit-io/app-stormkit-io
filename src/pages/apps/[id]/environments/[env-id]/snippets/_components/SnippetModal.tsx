@@ -1,63 +1,95 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
+import { html } from "@codemirror/lang-html";
+import CodeMirror from "@uiw/react-codemirror";
+import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/lab/LoadingButton";
+import AlertTitle from "@mui/material/AlertTitle";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Switch from "@mui/material/Switch";
+import Select from "@mui/material/Select";
+import Option from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import InputLabel from "@mui/material/InputLabel";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import Modal from "~/components/ModalV2";
-import Form from "~/components/FormV2";
-import InfoBox from "~/components/InfoBox";
-import Button from "~/components/ButtonV2";
-import { upsertSnippets } from "../actions";
-import { html } from "@codemirror/lang-html";
-import Container from "~/components/Container";
+import { addSnippet, updateSnippet } from "../actions";
 
 interface Props {
   snippet?: Snippet;
-  snippets: Snippets;
   closeModal: () => void;
-  setSnippets: (snippets: Snippets) => void;
+  setRefreshToken: (t: number) => void;
+}
+
+interface FormValues {
+  enabled: "on" | "off";
+  title: string;
+  content: string;
+  injectLocation:
+    | "head_append"
+    | "body_append"
+    | "head_prepend"
+    | "body_prepend";
 }
 
 const SnippetModal: React.FC<Props> = ({
   closeModal,
-  snippets,
   snippet,
-  setSnippets,
+  setRefreshToken,
 }): React.ReactElement => {
   const { app } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
-  const isSnippetEnabled = snippet?.enabled || false;
-  const isSnippetPrepend = snippet?.prepend || false;
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(isSnippetEnabled);
-  const [isPrepend, setIsPrepend] = useState(isSnippetPrepend);
   const [codeContent, setCodeContent] = useState(
     snippet?.content || "<script>\n    console.log('Hello world');\n</script>"
   );
 
-  useEffect(() => {
-    setIsEnabled(isSnippetEnabled);
-    setIsPrepend(isSnippetPrepend);
-  }, [isSnippetEnabled, isSnippetPrepend]);
-
   return (
     <Modal open onClose={closeModal} className="max-w-screen-md">
-      <Container title={snippet?.title ? "Edit snippet" : "Create snippet"}>
-        <Form<Snippet>
-          handleSubmit={values => {
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6">
+          {snippet?.id ? "Edit snippet" : "Create snippet"}
+        </Typography>
+        <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 2 }}>
+          Snippets will be injected during response time into your document.
+          <br />
+          You can enable or disable any snippet without the need of a
+          deployment.
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={e => {
+            e.preventDefault();
+
             setLoading(true);
             setError(undefined);
-            upsertSnippets({
-              app,
-              environment,
-              snippets,
-              isEnabled,
-              isPrepend,
-              injectLocation: snippet?._injectLocation,
-              index: snippet?._i,
-              values,
+
+            const handler = snippet?.id ? updateSnippet : addSnippet;
+            const values = Object.fromEntries(
+              new FormData(e.target as HTMLFormElement).entries()
+            ) as unknown as FormValues;
+
+            const [location, prependOrAppend] =
+              values.injectLocation.split("_");
+
+            handler({
+              appId: app.id,
+              envId: environment.id!,
+              snippet: {
+                id: snippet?.id,
+                title: values.title,
+                content: values.content,
+                enabled: values.enabled === "on",
+                location: location === "head" ? "head" : "body",
+                prepend: prependOrAppend === "prepend",
+              },
             })
-              .then(snippets => {
-                setSnippets(snippets);
+              .then(() => {
+                setRefreshToken(Date.now());
                 closeModal();
               })
               .catch(e => {
@@ -72,82 +104,90 @@ const SnippetModal: React.FC<Props> = ({
               });
           }}
         >
-          <Form.WithLabel label="Title" className="py-0">
-            <Form.Input
+          <Box sx={{ mb: 2 }}>
+            <TextField
+              label="Title"
               name="title"
-              className="bg-blue-10 no-border h-full"
-              placeholder="e.g. Google Analytics, Hotjar, My snippet"
-              required
-              defaultValue={snippet?.title}
-              autoFocus
               fullWidth
+              defaultValue={snippet?.title || ""}
+              variant="filled"
+              autoComplete="off"
             />
-          </Form.WithLabel>
-          <Form.WithLabel
-            label={<div className="h-full pt-4">Content</div>}
-            className="pb-0"
-          >
+          </Box>
+          <Box sx={{ mb: 2 }}>
             <input name="content" type="hidden" value={codeContent} />
-            <div className="w-full p-1">
-              <Form.Code
+            <Box sx={{ bgcolor: "rgba(0,0,0,0.1)" }}>
+              <CodeMirror
                 minHeight="200px"
                 maxHeight="200px"
-                className="bg-blue-10 border-none"
                 value={codeContent}
                 extensions={[html()]}
                 onChange={value => setCodeContent(value)}
                 theme="dark"
               />
-            </div>
-          </Form.WithLabel>
-          <Form.WithLabel label="Where to inject" className="pb-0">
-            <Form.Select
-              name="_injectLocation"
-              defaultValue={`${snippet?._injectLocation || "head"}_${
-                isSnippetPrepend ? "prepend" : "append"
-              }`}
-              className="no-border h-full"
-              onChange={e => {
-                const val = e.target.value as string;
-                console.log(val);
-                setIsPrepend(val.indexOf("_prepend") > -1);
-              }}
-            >
-              <Form.Option value="head_append">Append to Head</Form.Option>
-              <Form.Option value="head_prepend">Prepend to Head</Form.Option>
-              <Form.Option value="body_append">Append to Body</Form.Option>
-              <Form.Option value="body_prepend">Prepend to Body</Form.Option>
-            </Form.Select>
-          </Form.WithLabel>
-          <Form.WithLabel label="Enabled" className="pb-0">
-            <div className="bg-blue-10 w-full flex justify-between pr-4 items-center">
-              <Form.Switch
-                color="secondary"
-                checked={isEnabled}
-                onChange={e => setIsEnabled(e.target.checked)}
-              />
-            </div>
-          </Form.WithLabel>
+            </Box>
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <FormControl variant="standard" fullWidth>
+              <InputLabel id="inject-location" sx={{ pl: 2, pt: 1 }}>
+                Where to inject
+              </InputLabel>
+              <Select
+                labelId="inject-location"
+                name="injectLocation"
+                variant="filled"
+                fullWidth
+                defaultValue={`${snippet?.location || "head"}_${
+                  snippet?.prepend ? "prepend" : "append"
+                }`}
+              >
+                <Option value="head_append">Append to Head</Option>
+                <Option value="head_prepend">Prepend to Head</Option>
+                <Option value="body_append">Append to Body</Option>
+                <Option value="body_prepend">Prepend to Body</Option>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 2 }}>
+            <FormControlLabel
+              sx={{ pl: 0, ml: 0 }}
+              label="Enabled"
+              control={
+                <Switch
+                  name="enabled"
+                  color="secondary"
+                  defaultChecked={snippet?.enabled || false}
+                />
+              }
+              labelPlacement="start"
+            />
+            <Typography sx={{ opacity: 0.5 }}>
+              Turn this feature on to automatically publish successful
+              deployments on the default branch.
+            </Typography>
+          </Box>
           {error && (
-            <InfoBox className="mt-8" type={InfoBox.ERROR}>
-              {error}
-            </InfoBox>
+            <Alert color="error">
+              <AlertTitle>Error</AlertTitle>
+              <Typography>{error}</Typography>
+            </Alert>
           )}
           <div className="flex justify-center items-center my-4">
-            <Button
-              category="cancel"
-              className="bg-blue-20"
-              type="button"
-              onClick={closeModal}
-            >
+            <Button color="info" type="button" onClick={closeModal}>
               Cancel
             </Button>
-            <Button category="action" className="ml-4" loading={loading}>
+            <Button
+              variant="contained"
+              color="secondary"
+              type="submit"
+              sx={{ ml: 2 }}
+              loading={loading}
+            >
               {snippet ? "Update" : "Create"}
             </Button>
           </div>
-        </Form>
-      </Container>
+        </Box>
+      </Box>
     </Modal>
   );
 };

@@ -2,46 +2,51 @@ import nock from "nock";
 
 const endpoint = process.env.API_DOMAIN || "";
 
-interface SnippetAPI extends Omit<Snippet, "_injectLocation" | "_i"> {}
-
 interface MockFetchSnippetsProps {
   appId: string;
-  envName: string;
+  envId: string;
   status?: number;
-  response: { snippets: { head: SnippetAPI[]; body: SnippetAPI[] } };
+  response: { snippets: { head: Snippet[]; body: Snippet[] } };
 }
 
 export const mockFetchSnippets = ({
   appId,
-  envName,
+  envId,
   status = 200,
   response,
 }: MockFetchSnippetsProps) => {
   return nock(endpoint)
-    .get(`/app/${appId}/envs/${envName}/snippets`)
+    .get(`/app/env/snippets?appId=${appId}&envId=${envId}`)
     .reply(status, response);
 };
 
 interface MockUpsertSnippetsProps {
   appId: string;
-  envName: string;
-  snippets: { head: SnippetAPI[]; body: SnippetAPI[] };
+  envId: string;
+  snippets: any[];
   status?: number;
+  method: "post" | "put";
   response?: { ok: true };
 }
 
 export const mockUpsertSnippets = ({
   snippets,
-  envName,
+  envId,
   appId,
+  method,
   status = 200,
   response = { ok: true },
 }: MockUpsertSnippetsProps) => {
-  return nock(endpoint)
-    .put(`/app/env/snippets`, {
-      appId,
-      env: envName,
-      snippets,
-    })
-    .reply(status, response);
+  const url = "/app/env/snippets";
+  const params = {
+    appId,
+    envId,
+    snippets,
+  };
+
+  if (method === "post") {
+    return nock(endpoint).post(url, params).reply(status, response);
+  }
+
+  return nock(endpoint).put(url, params).reply(status, response);
 };

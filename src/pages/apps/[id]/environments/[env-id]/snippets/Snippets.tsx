@@ -1,204 +1,165 @@
-import React, { useState, useContext } from "react";
-import { useLocation } from "react-router";
-import { Tooltip } from "@mui/material";
+import { useState, useContext, useMemo } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import AddIcon from "@mui/icons-material/Add";
+import Switch from "@mui/material/Switch";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import Spinner from "~/components/Spinner";
-import Button from "~/components/ButtonV2";
-import InfoBox from "~/components/InfoBoxV2";
 import DotDotDot from "~/components/DotDotDotV2";
 import ConfirmModal from "~/components/ConfirmModal";
-import Form from "~/components/FormV2";
-import Link from "~/components/Link";
-import Container from "~/components/Container";
-import emptyListSvg from "~/assets/images/empty-list.svg";
-import { useFetchSnippets, deleteSnippet, enableOrDisable } from "./actions";
+import { useFetchSnippets, deleteSnippet, updateSnippet } from "./actions";
 import SnippetModal from "./_components/SnippetModal";
+import EmptyList from "./_components/EmptyList";
 
-interface RenderSnippetProps {
-  snippet: Snippet;
-  snippets: Snippets;
-  setToBeDeleted: (s?: Snippet) => void;
-  setToBeModified: (s?: Snippet) => void;
-  setToBeToggled: (s?: Snippet) => void;
-  setIsSnippetModalOpen: (v: boolean) => void;
-}
-
-const renderSnippet = ({
-  snippet,
-  setToBeDeleted,
-  setToBeModified,
-  setToBeToggled,
-  setIsSnippetModalOpen,
-}: RenderSnippetProps) => {
-  return (
-    <div
-      key={`${snippet.title}${snippet._i}`}
-      className="flex bg-blue-10 p-4 justify-between mt-4"
-    >
-      <div className="flex-1">
-        <div className="font-bold">{snippet.title}</div>
-        <div className="text-xs">
-          <span className="font-bold">
-            {snippet.prepend ? "Prepended" : "Appended"}
-          </span>{" "}
-          to the <span className="font-bold">{snippet._injectLocation}</span>{" "}
-          element.
-        </div>
-      </div>
-      <div className="flex items-center">
-        <Form.Switch
-          color="secondary"
-          className="mr-4"
-          checked={snippet.enabled}
-          onChange={() => setToBeToggled(snippet)}
-        />
-        <DotDotDot
-          items={[
-            {
-              icon: "fa fa-pencil",
-              text: "Modify",
-              onClick: () => {
-                setToBeDeleted(undefined);
-                setToBeToggled(undefined);
-                setToBeModified(snippet);
-                setIsSnippetModalOpen(true);
-              },
-            },
-            {
-              icon: "fa fa-times",
-              text: "Delete",
-              onClick: () => {
-                setToBeModified(undefined);
-                setToBeToggled(undefined);
-                setToBeDeleted(snippet);
-              },
-            },
-          ]}
-        />
-      </div>
-    </div>
-  );
-};
-
-const Snippets: React.FC = (): React.ReactElement => {
+export default function Snippets() {
   const { app } = useContext(AppContext);
   const { environment: env } = useContext(EnvironmentContext);
-  const location = useLocation();
-  const fetchOpts = { app, env, location };
-  const { loading, error, snippets, setSnippets } = useFetchSnippets(fetchOpts);
+  const [refreshToken, setRefreshToken] = useState(0);
   const [isSnippetModalOpen, setIsSnippetModalOpen] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState<Snippet | undefined>();
   const [toBeToggled, setToBeToggled] = useState<Snippet | undefined>();
   const [toBeModified, setToBeModified] = useState<Snippet | undefined>();
+  const { loading, error, snippets } = useFetchSnippets({
+    app,
+    env,
+    refreshToken,
+  });
+
+  const allSnippets = useMemo(() => {
+    return snippets
+      ? [...snippets.head, ...snippets.body].sort((s1, s2) =>
+          s1.id! < s2.id! ? -1 : 1
+        )
+      : [];
+  }, [snippets]);
 
   return (
-    <Container
-      maxWidth="max-w-none"
-      title={
-        <>
-          <span>Snippets</span>
-          <Tooltip
-            arrow
-            className="flex items-center"
-            title={
-              <p>
-                Snippets help you maintain 3rd party code in your application.{" "}
-                <br />
-                <br />
-                The codes specified here will be injected during response time
-                to your document. You can enable or disable any snippet without
-                the need of a deployment.
-              </p>
-            }
-          >
-            <span className="fas fa-question-circle text-lg ml-2" />
-          </Tooltip>
-        </>
-      }
-      actions={
-        <Button
-          type="button"
-          category="button"
-          onClick={() => {
-            setIsSnippetModalOpen(true);
-          }}
-        >
-          New snippet
-        </Button>
-      }
+    <Box
+      bgcolor="container.paper"
+      sx={{
+        color: "white",
+        p: 2,
+      }}
     >
-      <div className="w-full pb-4">
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box>
+          <Typography variant="h6">Snippets</Typography>
+          <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 2 }}>
+            Snippets will be injected during response time into your document.
+            <br />
+            You can enable or disable any snippet without the need of a
+            deployment.
+          </Typography>
+        </Box>
+        <Box sx={{ textAlign: "right" }}>
+          <Button
+            variant="text"
+            type="button"
+            sx={{ color: "white" }}
+            onClick={() => {
+              setIsSnippetModalOpen(true);
+            }}
+          >
+            <AddIcon sx={{ mr: 1 }} /> Create snippet
+          </Button>
+        </Box>
+      </Box>
+
+      <Box>
         {loading && (
-          <div className="flex justify-center">
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Spinner primary />
-          </div>
+          </Box>
         )}
         {!loading && error && (
-          <InfoBox type={InfoBox.ERROR} className="mx-4">
-            {error}
-          </InfoBox>
+          <Alert color="error" sx={{ mb: 2 }}>
+            <AlertTitle>Error</AlertTitle>
+            <Typography>{error}</Typography>
+          </Alert>
         )}
-        {!loading &&
-          snippets &&
-          (snippets.head.length > 0 || snippets.body.length > 0) && (
-            <div className="w-full relative px-4">
-              <h3 className="font-bold mb-4">Head section</h3>
-              {snippets.head.map((snippet, i) =>
-                renderSnippet({
-                  snippet,
-                  snippets,
-                  setToBeDeleted,
-                  setToBeModified,
-                  setToBeToggled,
-                  setIsSnippetModalOpen,
-                })
-              )}
-              {snippets.head.length === 0 && (
-                <div className="bg-blue-10 p-4">
-                  No snippet found for the head section.
-                </div>
-              )}
-              <h3 className="font-bold mt-4">Body section</h3>
-              {snippets.body.map((snippet, i) =>
-                renderSnippet({
-                  snippet,
-                  snippets,
-                  setToBeDeleted,
-                  setToBeModified,
-                  setToBeToggled,
-                  setIsSnippetModalOpen,
-                })
-              )}
-              {snippets.body.length === 0 && (
-                <div className="bg-blue-10 p-4 mt-4">
-                  No snippet found for the body section.
-                </div>
-              )}
-            </div>
-          )}
-        {!loading && !snippets?.body?.length && !snippets?.head?.length && (
-          <div className="p-4 flex items-center justify-center flex-col">
-            <p className="mt-8">
-              <img src={emptyListSvg} alt="Snippets empty list" />
-            </p>
-            <p className="mt-12">It is quite empty here.</p>
-            <p>
-              <Link
-                to="https://www.stormkit.io/docs/features/snippets"
-                secondary
-              >
-                Learn more
-              </Link>{" "}
-              about snippets.
-            </p>
-          </div>
+        {!loading && (
+          <Box>
+            <Box>
+              {allSnippets.map(snippet => (
+                <Box
+                  key={snippet.id}
+                  sx={{
+                    borderBottom: "1px solid rgba(255,255,255,0.05)",
+                    "&:last-child": { borderBottom: "none" },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      p: 2,
+                      bgcolor: "rgba(0,0,0,0.1)",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Box>
+                      <Typography>
+                        #{snippet.id} {snippet.title}
+                      </Typography>
+                      <Typography>
+                        {snippet.prepend ? "Prepened" : "Appended"} to{" "}
+                        <b>{snippet.location}</b> element.
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <FormControlLabel
+                        sx={{ pl: 0, ml: 0 }}
+                        label="Enabled"
+                        control={
+                          <Switch
+                            sx={{ mr: 2 }}
+                            name="autoPublish"
+                            color="secondary"
+                            checked={snippet.enabled}
+                            onChange={() => setToBeToggled(snippet)}
+                          />
+                        }
+                        labelPlacement="start"
+                      />
+                      <DotDotDot
+                        items={[
+                          {
+                            icon: "fa fa-pencil",
+                            text: "Modify",
+                            onClick: () => {
+                              setToBeDeleted(undefined);
+                              setToBeToggled(undefined);
+                              setToBeModified(snippet);
+                              setIsSnippetModalOpen(true);
+                            },
+                          },
+                          {
+                            icon: "fa fa-times",
+                            text: "Delete",
+                            onClick: () => {
+                              setToBeModified(undefined);
+                              setToBeToggled(undefined);
+                              setToBeDeleted(snippet);
+                            },
+                          },
+                        ]}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+            {!snippets?.head.length && !snippets?.body.length && <EmptyList />}
+          </Box>
         )}
         {isSnippetModalOpen && snippets && (
           <SnippetModal
-            snippets={snippets}
-            setSnippets={setSnippets}
             snippet={toBeModified}
+            setRefreshToken={setRefreshToken}
             closeModal={() => {
               setToBeModified(undefined);
               setIsSnippetModalOpen(false);
@@ -212,16 +173,16 @@ const Snippets: React.FC = (): React.ReactElement => {
             }}
             onConfirm={({ setError, setLoading }) => {
               setLoading(true);
-              enableOrDisable({
-                app,
-                environment: env,
-                snippets,
-                index: toBeToggled._i,
-                isEnabled: !toBeToggled.enabled,
-                snippet: toBeToggled,
+              updateSnippet({
+                appId: app.id,
+                envId: env.id!,
+                snippet: {
+                  ...toBeToggled,
+                  enabled: !toBeToggled.enabled,
+                },
               })
-                .then(snippets => {
-                  setSnippets(snippets);
+                .then(() => {
+                  setRefreshToken(Date.now());
                   setToBeToggled(undefined);
                 })
                 .catch(res => {
@@ -253,14 +214,12 @@ const Snippets: React.FC = (): React.ReactElement => {
             onConfirm={({ setError, setLoading }) => {
               setLoading(true);
               deleteSnippet({
-                index: toBeDeleted._i,
-                snippets,
-                app,
-                environment: env,
-                injectLocation: toBeDeleted._injectLocation,
+                snippet: toBeDeleted,
+                appId: app.id,
+                envId: env.id!,
               })
-                .then(snippets => {
-                  setSnippets(snippets);
+                .then(() => {
+                  setRefreshToken(Date.now());
                   setToBeDeleted(undefined);
                 })
                 .catch(res => {
@@ -275,14 +234,12 @@ const Snippets: React.FC = (): React.ReactElement => {
                 });
             }}
           >
-            <p>
+            <Typography>
               This will delete the snippet and it won't be injected anymore.
-            </p>
+            </Typography>
           </ConfirmModal>
         )}
-      </div>
-    </Container>
+      </Box>
+    </Box>
   );
-};
-
-export default Snippets;
+}

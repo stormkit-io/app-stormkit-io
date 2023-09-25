@@ -1,5 +1,4 @@
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { MemoryRouter } from "react-router";
 import { waitFor, fireEvent, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -19,9 +18,8 @@ interface Props {
   app: App;
   env: Environment;
   snippet?: Snippet;
-  snippets: Snippets;
   closeModal: () => void;
-  setSnippets: (s: Snippets) => void;
+  setRefreshToken: (s: Snippets) => void;
 }
 
 describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetModal.tsx", () => {
@@ -30,23 +28,17 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
   let currentEnv: Environment;
   let snippets: Snippets;
   let closeModal: jest.Mock;
-  let setSnippets: jest.Mock;
+  let setRefreshToken: jest.Mock;
 
-  const snippet = {
+  const snippet: Snippet = {
     title: "Google Analytics",
     prepend: false,
     enabled: false,
     content: "<script>\n    console.log('Hello world');\n</script>",
+    location: "head",
   };
 
-  const createWrapper = ({
-    app,
-    env,
-    closeModal,
-    setSnippets,
-    snippets,
-    snippet,
-  }: Props) => {
+  const createWrapper = ({ app, env, closeModal, snippet }: Props) => {
     wrapper = render(
       <MemoryRouter>
         <AppContext.Provider
@@ -58,9 +50,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
         >
           <EnvironmentContext.Provider value={{ environment: env }}>
             <SnippetModal
-              setSnippets={setSnippets}
+              setRefreshToken={setRefreshToken}
               closeModal={closeModal}
-              snippets={snippets}
               snippet={snippet}
             />
           </EnvironmentContext.Provider>
@@ -75,25 +66,22 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
       currentEnv = mockEnvironment({ app: currentApp });
       snippets = { head: [], body: [] };
       closeModal = jest.fn();
-      setSnippets = jest.fn();
+      setRefreshToken = jest.fn();
 
       createWrapper({
         app: currentApp,
         env: currentEnv,
-        snippets,
         closeModal,
-        setSnippets,
+        setRefreshToken,
       });
     });
 
     test("should handle form submission", async () => {
       const scope = mockUpsertSnippets({
         appId: currentApp.id,
-        envName: currentEnv.name,
-        snippets: {
-          head: [snippet],
-          body: [],
-        },
+        envId: currentEnv.id!,
+        method: "post",
+        snippets: [snippet],
       });
 
       await userEvent.type(wrapper.getByLabelText("Title"), "Google Analytics");
@@ -104,16 +92,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
       });
 
       expect(closeModal).toHaveBeenCalled();
-      expect(setSnippets).toHaveBeenCalledWith({
-        head: [
-          {
-            ...snippet,
-            _injectLocation: "head",
-            _i: 0,
-          },
-        ],
-        body: [],
-      });
+      expect(setRefreshToken).toHaveBeenCalled();
     });
   });
 
@@ -123,30 +102,27 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
       currentEnv = mockEnvironment({ app: currentApp });
       snippets = {
         head: [],
-        body: [{ ...snippet, _injectLocation: "body", _i: 0 }],
+        body: [{ ...snippet, location: "body", id: 1 }],
       };
 
       closeModal = jest.fn();
-      setSnippets = jest.fn();
+      setRefreshToken = jest.fn();
 
       createWrapper({
         app: currentApp,
         env: currentEnv,
-        snippets,
         snippet: snippets.body[0],
         closeModal,
-        setSnippets,
+        setRefreshToken,
       });
     });
 
     test("should handle form submission", async () => {
       const scope = mockUpsertSnippets({
         appId: currentApp.id,
-        envName: currentEnv.name,
-        snippets: {
-          head: [],
-          body: [{ ...snippet, title: "Hotjar" }],
-        },
+        envId: currentEnv.id!,
+        method: "put",
+        snippets: [{ ...snippet, location: "body", title: "Hotjar", id: 1 }],
       });
 
       await userEvent.clear(wrapper.getByLabelText("Title"));
@@ -158,10 +134,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
       });
 
       expect(closeModal).toHaveBeenCalled();
-      expect(setSnippets).toHaveBeenCalledWith({
-        head: [],
-        body: [{ ...snippet, _injectLocation: "body", _i: 0, title: "Hotjar" }],
-      });
+      expect(setRefreshToken).toHaveBeenCalled();
     });
   });
 });
