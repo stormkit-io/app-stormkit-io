@@ -1,4 +1,3 @@
-import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { waitFor, fireEvent, getByText, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -88,28 +87,24 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabCustomSt
       selectIntegration("Bunny CDN");
 
       await userEvent.type(
-        wrapper.getByLabelText("External URL"),
+        wrapper.getByLabelText("External URL *"),
         config.externalUrl
       );
       await userEvent.type(
-        wrapper.getByLabelText("Storage zone"),
+        wrapper.getByLabelText("Storage Zone *"),
         config.settings.STORAGE_ZONE
       );
       await userEvent.type(
-        wrapper.getByLabelText("Storage key"),
+        wrapper.getByLabelText("Storage Key *"),
         config.settings.STORAGE_KEY
       );
 
-      expect(
-        wrapper.getByText("Submit").closest("button")!.getAttribute("disabled")
-      ).toBe(null);
-
-      fireEvent.submit(wrapper.getByText("Submit"));
+      fireEvent.submit(wrapper.getByText("Submit").closest("form")!);
 
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(
-          "Custom storage configuration saved successfully. Your app will now be served from your custom storage."
+          "Custom storage configuration was saved successfully. Your app will now be served from your custom storage."
         );
       });
     });
@@ -118,15 +113,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabCustomSt
       selectIntegration("Bunny CDN");
 
       await userEvent.type(
-        wrapper.getByLabelText("External URL"),
+        wrapper.getByLabelText("External URL *"),
         "invalid-url"
       );
 
-      expect(
-        wrapper.getByText("Submit").closest("button")!.getAttribute("disabled")
-      ).toBe(null);
+      expect(wrapper.getByText("Submit").getAttribute("disabled")).toBe(null);
 
-      fireEvent.submit(wrapper.getByText("Submit"));
+      fireEvent.submit(wrapper.getByText("Submit").closest("form")!);
 
       await waitFor(() => {
         expect(

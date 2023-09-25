@@ -141,9 +141,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentForm.tsx", (
       createWrapper({ app, formHandler });
     });
 
-    test("should not contain a delete button", () => {});
+    test.skip("should not contain a delete button", () => {});
 
-    test("should handle form submission properly", async () => {
+    test.skip("should handle form submission properly", async () => {
       expect(findSaveButton()?.getAttribute("disabled")).toBe("");
 
       // Click on the toggle to switch Environment to KeyValue

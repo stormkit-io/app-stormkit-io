@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -11,7 +11,7 @@ import ConfirmModal from "~/components/ConfirmModal";
 import { useFetchMembers, deleteTeamMember } from "./actions";
 import NewMemberModal from "./_components/NewMemberModal";
 
-const Team: React.FC = (): React.ReactElement => {
+export default function Team() {
   const [deleteMember, setDeleteMember] = useState<User>();
   const { app } = useContext(AppContext);
   const { user } = useContext(AuthContext);
@@ -47,7 +47,7 @@ const Team: React.FC = (): React.ReactElement => {
               onClick={() => {
                 setIsNewModalOpen(true);
               }}
-              sx={{ textTransform: "capitalize" }}
+              sx={{ textTransform: "none" }}
             >
               Invite new member
             </Button>
@@ -61,7 +61,7 @@ const Team: React.FC = (): React.ReactElement => {
                 display: "flex",
                 alignItems: "center",
                 mt: 2,
-                "&:first-child": {
+                "&:first-of-type": {
                   mt: 0,
                 },
               }}
@@ -167,6 +167,4 @@ const Team: React.FC = (): React.ReactElement => {
       )}
     </Box>
   );
-};
-
-export default Team;
+}

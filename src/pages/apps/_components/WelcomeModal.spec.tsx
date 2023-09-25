@@ -1,5 +1,4 @@
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { fireEvent, waitFor, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { WelcomeModal } from "./";

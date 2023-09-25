@@ -1,6 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Member } from "./actions";
-import React from "react";
 import { waitFor, fireEvent, render } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -63,7 +62,13 @@ describe("~/pages/apps/[id]/team/Team.tsx", () => {
         )
       ).toThrow();
 
-      fireEvent.click(wrapper.getByText("Invite new member"));
+      let button;
+
+      await waitFor(() => {
+        button = wrapper.getByText("Invite new member");
+      });
+
+      fireEvent.click(button!);
 
       await waitFor(() => {
         expect(

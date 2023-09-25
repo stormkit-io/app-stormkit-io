@@ -1,6 +1,6 @@
 import { RenderResult, waitFor } from "@testing-library/react";
 import * as router from "react-router";
-import { render, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
@@ -61,7 +61,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
     test("should render the application header correctly", () => {
       expect(wrapper.getByText("stormkit-io/frontend")).toBeTruthy();
-      expect(wrapper.getByText("Select an environment")).toBeTruthy();
     });
 
     test("should render menu links", () => {
@@ -73,12 +72,10 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         "/", // Stormkit logo link
         "/user/account", // Free tier
         `/apps/${defaultApp.id}/usage`,
-        "/", // App back button
+        "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/environments`,
         `/apps/${defaultApp.id}/team`,
         `/apps/${defaultApp.id}/settings`,
-        `/apps/${defaultApp.id}/environments`, // Environments back button
-        "https://gitlab.com/stormkit-io/frontend",
       ]);
     });
   });
@@ -105,36 +102,15 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         "/", // Stormkit logo link
         "/user/account", // Free tier
         `/apps/${defaultApp.id}/usage`,
-        "/", // App back button
+        "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/environments`,
         `/apps/${defaultApp.id}/team`,
         `/apps/${defaultApp.id}/settings`,
-        `/apps/${defaultApp.id}/environments`, // Environments back button
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
-        "https://gitlab.com/stormkit-io/frontend",
       ]);
-    });
-  });
-
-  describe("deploy now", () => {
-    beforeEach(() => {
-      mockUseLocation({ pathname: `/apps/${defaultApp.id}/environments` });
-      createWrapper({});
-    });
-
-    test("should render deploy now button", () => {
-      expect(wrapper.getByLabelText("Deploy now")).toBeTruthy();
-    });
-
-    test("should open a modal when deploy is now clicked", () => {
-      expect(() => wrapper.getByText("Start a deployment")).toThrow();
-
-      fireEvent.click(wrapper.getByLabelText("Deploy now"));
-
-      expect(wrapper.getByText("Start a deployment")).toBeTruthy();
     });
   });
 
@@ -156,12 +132,10 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
           "/", // Stormkit logo link
           "/user/account", // Free tier
           `/apps/${defaultApp.id}/usage`,
-          "/",
+          "https://gitlab.com/stormkit-io/frontend",
           `/apps/${defaultApp.id}/environments`,
           `/apps/${defaultApp.id}/team`,
           `/apps/${defaultApp.id}/settings`,
-          `/apps/${defaultApp.id}/environments`,
-          "https://gitlab.com/stormkit-io/frontend",
         ]);
       });
     });

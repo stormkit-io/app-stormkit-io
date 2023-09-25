@@ -1,4 +1,3 @@
-import React from "react";
 import { render, RenderResult } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import mockApp from "~/testing/data/mock_app";
@@ -43,9 +42,13 @@ describe("~/components/AppName/AppName.tsx", () => {
 
   test("should contain a link to the repo", () => {
     createWrapper({ withLinkToRepo: true });
-    expect(wrapper.getByText("stormkit-io/frontend").getAttribute("href")).toBe(
+    const component = wrapper.getByLabelText("Repository URL");
+
+    expect(component.getAttribute("href")).toBe(
       "https://gitlab.com/stormkit-io/frontend"
     );
+
+    expect(component.textContent).toBe("stormkit-io/frontend");
   });
 
   test("should contain a link to the repo", () => {
