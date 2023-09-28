@@ -126,8 +126,8 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
     createWrapper({ deployments: [] });
 
     await waitFor(() => {
-      expect(wrapper.getByText("It is quite empty here.")).toBeTruthy();
-      expect(wrapper.getByText("Click to deploy")).toBeTruthy();
+      expect(wrapper.getByText(/It\'s quite empty in here\./)).toBeTruthy();
+      expect(wrapper.getByText("Deploy now")).toBeTruthy();
     });
   });
 });

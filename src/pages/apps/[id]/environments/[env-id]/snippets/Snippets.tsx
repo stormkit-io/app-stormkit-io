@@ -9,12 +9,12 @@ import AddIcon from "@mui/icons-material/Add";
 import Switch from "@mui/material/Switch";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import EmptyPage from "~/components/EmptyPage";
 import Spinner from "~/components/Spinner";
 import DotDotDot from "~/components/DotDotDotV2";
 import ConfirmModal from "~/components/ConfirmModal";
 import { useFetchSnippets, deleteSnippet, updateSnippet } from "./actions";
 import SnippetModal from "./_components/SnippetModal";
-import EmptyList from "./_components/EmptyList";
 
 export default function Snippets() {
   const { app } = useContext(AppContext);
@@ -153,7 +153,13 @@ export default function Snippets() {
                 </Box>
               ))}
             </Box>
-            {!snippets?.head.length && !snippets?.body.length && <EmptyList />}
+            {!snippets?.head.length && !snippets?.body.length && (
+              <EmptyPage>
+                It's quite empty in here.
+                <br />
+                Create a new snippet to manage them.
+              </EmptyPage>
+            )}
           </Box>
         )}
         {isSnippetModalOpen && snippets && (

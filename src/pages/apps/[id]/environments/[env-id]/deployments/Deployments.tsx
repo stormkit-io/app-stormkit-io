@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
-import Button from "~/components/ButtonV2";
+import EmptyPage from "~/components/EmptyPage";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { deployNow } from "~/utils/helpers/deployments";
 import { timeSince } from "~/utils/helpers/date";
-import emptyListSvg from "~/assets/images/empty-list.svg";
 import { useFetchDeployments } from "./actions";
 import CommitInfo from "./_components/CommitInfo";
 import DeploymentMenu from "./_components/DeploymentMenu";
@@ -75,18 +75,13 @@ export default function Deployments() {
           </Box>
         ))}
       {!loading && !error && !deployments.length && (
-        <div className="p-4 flex flex-col items-center justify-center">
-          <img src={emptyListSvg} alt="No deployments" className="block mb-4" />
-          <p className="mb-4">It is quite empty here.</p>
-          <Button
-            type="button"
-            className="text-bold"
-            onClick={deployNow}
-            onKeyUp={deployNow}
-          >
-            Click to deploy
-          </Button>
-        </div>
+        <EmptyPage>
+          It's quite empty in here. <br />
+          <Link href="#" onClick={deployNow} sx={{ fontWeight: "bold" }}>
+            Deploy now
+          </Link>{" "}
+          to start hosting your website.
+        </EmptyPage>
       )}
     </Box>
   );
