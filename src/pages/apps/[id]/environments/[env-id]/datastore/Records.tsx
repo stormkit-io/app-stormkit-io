@@ -122,7 +122,6 @@ const Records: React.FC = () => {
       {expandedContent && (
         <Modal
           open
-          maxWidth="max-w-screen-lg"
           onClose={() => {
             setExpandedContent(undefined);
           }}

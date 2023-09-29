@@ -49,7 +49,7 @@ const SnippetModal: React.FC<Props> = ({
   );
 
   return (
-    <Modal open onClose={closeModal} className="max-w-screen-md">
+    <Modal open onClose={closeModal}>
       <Box sx={{ p: 2 }}>
         <Typography variant="h6">
           {snippet?.id ? "Edit snippet" : "Create snippet"}

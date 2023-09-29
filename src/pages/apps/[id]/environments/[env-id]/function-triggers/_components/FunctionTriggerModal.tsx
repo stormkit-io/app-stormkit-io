@@ -109,7 +109,7 @@ const TriggerFunctionModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal open onClose={closeModal} maxWidth="max-w-screen-md">
+    <Modal open onClose={closeModal}>
       <Container
         maxWidth="max-w-2xl"
         title={

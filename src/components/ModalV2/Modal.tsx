@@ -1,37 +1,39 @@
+import type { SxProps } from "@mui/material";
 import React from "react";
-import cn from "classnames";
+import Box from "@mui/material/Box";
 import MuiModal, { ModalProps } from "@mui/material/Modal";
 
 interface Props extends ModalProps {
-  maxWidth?: "max-w-128" | "max-w-screen-md" | "max-w-screen-lg";
-  fullHeight?: boolean;
+  sx?: SxProps;
+  maxWidth?: "sm" | "md" | "lg";
 }
 
 const Modal: React.FC<Props> = ({
-  maxWidth = "max-w-128",
-  fullHeight,
-  className,
   children,
+  open,
+  maxWidth = "md",
   ...rest
 }) => {
   return (
-    <MuiModal {...rest}>
-      <div
-        className={cn(
-          "bg-blue-50 text-gray-80 w-full lg:ml-8 fixed left-1/2 overflow-auto",
-          maxWidth,
-          className,
-          {
-            "top-1/2 max-h-full": !fullHeight,
-            "top-4 bottom-4": fullHeight,
-          }
-        )}
-        style={{
-          transform: fullHeight ? "translate(-50%)" : "translate(-50%, -50%)",
+    <MuiModal open={open} {...rest} sx={{ ...rest.sx }}>
+      <Box
+        sx={{
+          display: "flex",
+          width: "100vw",
+          height: "100vh",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {children}
-      </div>
+        <Box
+          maxWidth={maxWidth}
+          width="100%"
+          bgcolor="background.default"
+          sx={{ color: "white" }}
+        >
+          {children}
+        </Box>
+      </Box>
     </MuiModal>
   );
 };
