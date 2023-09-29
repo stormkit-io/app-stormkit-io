@@ -1,6 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
 import type { Scope } from "nock/types";
-import React from "react";
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import mockApp from "~/testing/data/mock_app";

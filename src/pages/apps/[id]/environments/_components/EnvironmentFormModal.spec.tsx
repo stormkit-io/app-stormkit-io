@@ -21,7 +21,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
   let currentApp: App;
   let currentEnv: Environment;
 
-  const findSaveButton = () => wrapper.getByText("Save")?.closest("button");
+  const findCancelButton = () => wrapper.getByText("Cancel")?.closest("button");
+  const findSaveButton = () => wrapper.getByText("Create")?.closest("button");
+  const findNameInput = () => wrapper.getByLabelText("Environment name *");
+  const findBranchInput = () => wrapper.getByLabelText("Environment branch *");
 
   const createWrapper = ({
     app,
@@ -49,83 +52,44 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
     );
   };
 
-  const originalScrollIntoView = Element.prototype.scrollIntoView;
-
-  beforeEach(() => {
-    Element.prototype.scrollIntoView = jest.fn();
-  });
-
-  afterEach(() => {
-    Element.prototype.scrollIntoView = originalScrollIntoView;
+  const envData = ({ name, branch }: { name?: string; branch?: string }) => ({
+    id: currentEnv.id,
+    name: name || currentEnv.name,
+    env: name || currentEnv.name,
+    appId: currentApp.id,
+    branch: branch || currentEnv.branch,
+    autoPublish: true,
+    autoDeploy: true,
+    preview: currentEnv.preview,
+    domain: currentEnv.domain,
+    build: {
+      cmd: "",
+      distFolder: "",
+      vars: {},
+    },
   });
 
   test("should load the form properly", () => {
     createWrapper({});
-    expect(wrapper.getByLabelText("Branch")).toBeTruthy();
-    expect(wrapper.getByLabelText("Name")).toBeTruthy();
+    expect(findNameInput()).toBeTruthy();
+    expect(findBranchInput()).toBeTruthy();
   });
 
-  test.skip("should handle form submission properly", async () => {
+  test("should handle closing the modal", () => {
+    const onClose = jest.fn();
+    createWrapper({ onClose });
+    fireEvent.click(findCancelButton()!);
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  test("should handle form submission properly -- success", async () => {
     createWrapper({});
-    const scope = mockInsertEnvironment({ environment: currentEnv });
+    const scope = mockInsertEnvironment({
+      environment: envData({}),
+    });
 
-    expect(findSaveButton()?.getAttribute("disabled")).toBe("");
-
-    // Trigger a change event to activate the button
-    await userEvent.type(wrapper.getByLabelText("Name"), currentEnv.name);
-    await userEvent.type(wrapper.getByLabelText("Branch"), currentEnv.branch);
-    await fireEvent.mouseDown(wrapper.getByText("All branches"));
-    await fireEvent.click(wrapper.getByText("Disabled"));
-    await fireEvent.click(wrapper.getByLabelText("Auto publish"));
-    await userEvent.type(
-      wrapper.getByLabelText("Build command"),
-      "yarn test && yarn run build:console"
-    );
-    await userEvent.type(
-      wrapper.getByLabelText("Output folder"),
-      "packages/console/dist"
-    );
-
-    // Click on the toggle to switch Environment to KeyValue
-    await fireEvent.click(wrapper.getByLabelText("key value view"));
-
-    // Delete first and only environment variable
-    await fireEvent.click(
-      wrapper.getByLabelText("Remove build.vars row number 1")
-    );
-
-    // Add first env variable
-    await userEvent.type(
-      wrapper.getByLabelText("build.vars key number 1"),
-      "BABEL_ENV"
-    );
-
-    await userEvent.clear(wrapper.getByLabelText("build.vars value number 1"));
-
-    await userEvent.type(
-      wrapper.getByLabelText("build.vars value number 1"),
-      currentEnv.build.vars["BABEL_ENV"]
-    );
-
-    // Add a new row
-    await fireEvent.click(wrapper.getByText("add row"));
-
-    // Add second env variable
-    await userEvent.clear(wrapper.getByLabelText("build.vars key number 2"));
-
-    await userEvent.type(
-      wrapper.getByLabelText("build.vars key number 2"),
-      "NODE_ENV"
-    );
-
-    await userEvent.clear(wrapper.getByLabelText("build.vars value number 2"));
-
-    await userEvent.type(
-      wrapper.getByLabelText("build.vars value number 2"),
-      currentEnv.build.vars["NODE_ENV"]
-    );
-
-    expect(findSaveButton()?.getAttribute("disabled")).toBe(null);
+    await userEvent.type(findNameInput(), currentEnv.name);
+    await userEvent.type(findBranchInput(), currentEnv.branch);
     await fireEvent.click(findSaveButton()!);
 
     Object.defineProperty(window, "location", {
@@ -136,13 +100,42 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(findSaveButton()?.getAttribute("disabled")).toBe("");
     });
 
     await waitFor(() => {
       expect(window.location.assign).toHaveBeenCalledWith(
-        `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments`
+        `/apps/${currentApp.id}/environments/${currentEnv.id}`
       );
+    });
+  });
+
+  test("should handle form submission properly -- error", async () => {
+    createWrapper({});
+    const scope = mockInsertEnvironment({
+      environment: envData({ name: "production", branch: "main" }),
+      status: 400,
+      response: {
+        error: "Something went wrong",
+      },
+    });
+
+    await userEvent.type(findNameInput(), "production");
+    await userEvent.type(findBranchInput(), "main");
+    await fireEvent.click(findSaveButton()!);
+
+    Object.defineProperty(window, "location", {
+      value: {
+        assign: jest.fn(),
+      },
+    });
+
+    await waitFor(() => {
+      expect(scope.isDone()).toBe(true);
+    });
+
+    await waitFor(() => {
+      expect(window.location.assign).not.toHaveBeenCalled();
+      expect(wrapper.getByText("Something went wrong")).toBeTruthy();
     });
   });
 });

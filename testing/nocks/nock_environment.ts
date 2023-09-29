@@ -48,7 +48,7 @@ export const mockFetchRepoMeta = ({
 interface InsertEnvironmentProps {
   environment: Environment;
   status?: number;
-  response?: { envId: string | undefined };
+  response?: { envId?: string; error?: string };
 }
 
 export const mockInsertEnvironment = ({
