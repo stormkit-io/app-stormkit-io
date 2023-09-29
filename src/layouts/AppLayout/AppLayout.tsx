@@ -47,7 +47,7 @@ export const AppLayout: React.FC = () => {
             my: { md: 0, lg: 3 },
           }}
         >
-          <EnvMenu app={app} />
+          <EnvMenu />
           <Box sx={{ width: "100%" }}>
             <Routes>
               {routes.map(r => (

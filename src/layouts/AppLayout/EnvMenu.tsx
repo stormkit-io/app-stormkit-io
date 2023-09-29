@@ -8,12 +8,8 @@ import IconButton from "@mui/material/IconButton";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { envMenuItems } from "./menu_items";
 
-interface Props {
-  app: App;
-}
-
-export default function EnvMenu({ app }: Props) {
-  const { environments } = useContext(AppContext);
+export default function EnvMenu() {
+  const { app, environments } = useContext(AppContext);
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -34,6 +30,8 @@ export default function EnvMenu({ app }: Props) {
     return <></>;
   }
 
+  const border = "1px solid rgba(255,255,255,0.1)";
+
   return (
     <Box
       sx={{
@@ -44,33 +42,47 @@ export default function EnvMenu({ app }: Props) {
         px: { xs: 2, lg: 0 },
       }}
     >
-      <Select
-        variant="standard"
-        disableUnderline
-        onChange={e => {
-          if (pathname.includes(`/environments/${selectedEnvId}`)) {
-            navigate(
-              pathname.replace(
-                `/environments/${selectedEnvId}`,
-                `/environments/${e.target.value}`
-              )
-            );
-          } else {
-            navigate(`/apps/${app.id}/environments/${e.target.value}`);
-          }
+      <Box
+        sx={{
+          borderBottom: border,
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
         }}
-        sx={{ pr: 1 }}
-        value={selectedEnvId || "_"}
       >
-        <MenuItem value="_" disabled>
-          Select an environment
-        </MenuItem>
-        {environments.map(e => (
-          <MenuItem key={e.id} value={e.id}>
-            {e.env}
+        <Select
+          variant="standard"
+          disableUnderline
+          aria-label="Environment selector"
+          onChange={e => {
+            if (pathname.includes(`/environments/${selectedEnvId}`)) {
+              navigate(
+                pathname.replace(
+                  `/environments/${selectedEnvId}`,
+                  `/environments/${e.target.value}`
+                )
+              );
+            } else {
+              navigate(`/apps/${app.id}/environments/${e.target.value}`);
+            }
+          }}
+          sx={{ pr: 1 }}
+          value={selectedEnvId || "_"}
+        >
+          <MenuItem value="_" disabled>
+            Select an environment
           </MenuItem>
-        ))}
-      </Select>
+          {environments.map(e => (
+            <MenuItem
+              key={e.id}
+              value={e.id}
+              aria-label={`${e.name} environment`}
+            >
+              {e.env}
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
       <Box
         sx={{
           textAlign: "right",
@@ -83,18 +95,17 @@ export default function EnvMenu({ app }: Props) {
             sx={{
               cursor: "pointer",
               color: "white",
+              borderTopLeftRadius: 4,
+              borderTopRightRadius: 4,
+              border: item.isActive ? border : "1px solid transparent",
+              borderBottom: item.isActive ? "none" : border,
               pr: 1.5,
               pl: { xs: 1.5, lg: 0 },
               py: { xs: 1.5, lg: 0.25 },
               display: "inline-flex",
               alignItems: "center",
-              opacity: item.isActive ? 1 : 0.4,
               ":hover": {
-                opacity: 1,
-                color: "white",
-              },
-              ":last-child": {
-                pr: 0,
+                filter: "brightness(5)",
               },
             }}
           >
