@@ -110,8 +110,8 @@ class Api {
     }
 
     if (
-      document.cookie.indexOf("sk_canary=true") > -1 ||
-      window.location.search.indexOf("sk_canary=true") > -1
+      document?.cookie.indexOf("sk_canary=true") > -1 ||
+      window.location.search?.indexOf("sk_canary=true") > -1
     ) {
       if (url.indexOf("?") > -1) {
         url = url.replace("?", "?sk_canary=true&");
