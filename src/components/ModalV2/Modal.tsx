@@ -15,24 +15,25 @@ const Modal: React.FC<Props> = ({
   ...rest
 }) => {
   return (
-    <MuiModal open={open} {...rest} sx={{ ...rest.sx }}>
+    <MuiModal
+      open={open}
+      {...rest}
+      sx={{
+        display: "flex",
+        width: "100vw",
+        height: "100vh",
+        alignItems: "center",
+        justifyContent: "center",
+        ...rest.sx,
+      }}
+    >
       <Box
-        sx={{
-          display: "flex",
-          width: "100vw",
-          height: "100vh",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        maxWidth={maxWidth}
+        width="100%"
+        bgcolor="background.default"
+        sx={{ color: "white" }}
       >
-        <Box
-          maxWidth={maxWidth}
-          width="100%"
-          bgcolor="background.default"
-          sx={{ color: "white" }}
-        >
-          {children}
-        </Box>
+        {children}
       </Box>
     </MuiModal>
   );
