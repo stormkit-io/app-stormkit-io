@@ -64,7 +64,7 @@ const UserButtons: React.FC = () => {
         >
           <Box
             component="img"
-            sx={{ borderRadius: "50%", w: 24, height: 24, maxWidth: "none" }}
+            sx={{ borderRadius: "50%", w: 24, height: 24, maxWidth: 24 }}
             src={user.avatar}
             alt={`${user.fullName || user.displayName} profile`}
           />
