@@ -73,7 +73,8 @@ export const envMenuItems = ({
       path: `${envPath}/deployments`,
       text: "Deployments",
       icon: <RocketLaunch />,
-      isActive: pathname.includes("/deployments"),
+      isActive:
+        pathname.includes("/deployments") && !pathname.includes("runtime-logs"),
     },
     {
       icon: <Code />,
@@ -112,7 +113,7 @@ export const envMenuItems = ({
       icon: <Terminal />,
       text: "Runtime logs",
       path: `${envPath}/deployments/${env.published[0].deploymentId}/runtime-logs`,
-      isActive: pathname.includes("/feature-flags"),
+      isActive: pathname.includes("/runtime-logs"),
     });
   }
 
