@@ -21,11 +21,7 @@ const Welcome: React.FC<Props> = ({
   };
 
   return (
-    <Modal
-      open={isOpen}
-      onClose={close}
-      className="max-w-screen-sm h-full md:h-auto"
-    >
+    <Modal open={isOpen} onClose={close}>
       <Container className="p-4 md:p-8 justify-center h-full md:h-auto flex md:block flex-col md:flex-none">
         <h1 className="font-bold text-xl md:text-3xl text-center mb-8">
           Welcome to Stormkit 🎉
