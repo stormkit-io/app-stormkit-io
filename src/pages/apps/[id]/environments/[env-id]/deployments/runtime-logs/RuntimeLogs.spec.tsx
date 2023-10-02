@@ -17,7 +17,7 @@ interface Props {
   app?: App;
   deployment?: Deployment;
   environment?: Environment;
-  totalPage?: number;
+  hasNextPage?: boolean;
 }
 
 describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/RuntimeLogs.spec.tsx", () => {
@@ -32,7 +32,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     app,
     environment,
     deployment,
-    totalPage = 0,
+    hasNextPage = false,
   }: Props | undefined = {}) => {
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironment({ app: currentApp });
@@ -47,10 +47,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     scope = mockFetchDeploymentLogs({
       appId: currentApp.id,
       deploymentId: currentDeploy.id,
-      page: 0,
       response: {
         logs: [
           {
+            id: "123",
             appId: "592128846360",
             envId: "483571891194",
             deploymentId: "70884402118696",
@@ -58,6 +58,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
             timestamp: "1666198441",
           },
           {
+            id: "234",
             appId: "592128846360",
             envId: "483571891194",
             deploymentId: "70884402118696",
@@ -65,6 +66,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
             timestamp: "1666187604",
           },
           {
+            id: "456",
             appId: "592128846360",
             envId: "483571891194",
             deploymentId: "70884402118696",
@@ -72,7 +74,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
             timestamp: "1666187370",
           },
         ],
-        totalPage,
+        hasNextPage,
       },
     });
 
@@ -110,9 +112,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     await waitFor(() => {
       expect(wrapper.getByText("Runtime logs")).toBeTruthy();
       expect(
-        wrapper
-          .getByText(new RegExp(`\#${currentDeploy.id}`))
-          .getAttribute("href")
+        wrapper.getByText(`${currentDeploy.id}`).getAttribute("href")
       ).toBe("/apps/1/environments/1429333243019/deployments/1050101");
     });
   });
@@ -135,20 +135,21 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
   });
 
   test("should paginate", async () => {
-    createWrapper({ totalPage: 2 });
+    createWrapper({ hasNextPage: true });
 
     await waitFor(() => {
-      expect(wrapper.getByText("Load more logs")).toBeTruthy();
+      expect(wrapper.getByText("Load more")).toBeTruthy();
     });
 
     const paginationScope = mockFetchDeploymentLogs({
       appId: currentApp.id,
       deploymentId: currentDeploy.id,
-      page: 1,
+      after: "1666187370",
       response: {
-        totalPage: 2,
+        hasNextPage: false,
         logs: [
           {
+            id: "123",
             appId: currentApp.id,
             envId: currentEnv.id!,
             deploymentId: currentDeploy.id,
@@ -159,7 +160,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
       },
     });
 
-    fireEvent.click(wrapper.getByText("Load more logs"));
+    fireEvent.click(wrapper.getByText("Load more"));
 
     await waitFor(() => {
       expect(paginationScope.isDone()).toBe(true);

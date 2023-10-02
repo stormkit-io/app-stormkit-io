@@ -3,11 +3,12 @@ import api from "~/utils/api/Api";
 
 interface FetchDeploymentRuntimeLogsProps {
   appId: string;
-  deploymentId?: string;
-  page: number;
+  afterTs?: string;
+  deploymentId: string;
 }
 
 export interface Log {
+  id: string;
   appId: string;
   envId: string;
   deploymentId: string;
@@ -15,46 +16,37 @@ export interface Log {
   data: string;
 }
 
-interface FetchDeploymentRuntimeLogsReturnValue {
-  loading: boolean;
-  error?: string;
-  logs: Log[];
-  totalPage: number;
-}
-
 export const useFetchDeploymentRuntimeLogs = ({
   appId,
   deploymentId,
-  page,
-}: FetchDeploymentRuntimeLogsProps): FetchDeploymentRuntimeLogsReturnValue => {
+  afterTs,
+}: FetchDeploymentRuntimeLogsProps) => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState<Log[]>([]);
-  const [totalPage, setTotalPage] = useState(0);
+  const [hasNextPage, setHasNextPage] = useState(false);
 
   useEffect(() => {
-    if (!deploymentId) {
-      return;
-    }
-
     setLoading(true);
     setError(undefined);
 
     api
-      .fetch<{ logs: Log[]; totalPage: number }>(
-        `/app/${appId}/logs?deploymentId=${deploymentId}&page=${page}`
+      .fetch<{ logs: Log[]; hasNextPage: boolean }>(
+        `/app/${appId}/logs?deploymentId=${deploymentId}${
+          afterTs ? `&after=${afterTs}` : ""
+        }`
       )
       .then(data => {
         setLogs([...logs, ...data.logs]);
-        setTotalPage(data.totalPage);
+        setHasNextPage(data.hasNextPage);
       })
-      .catch(res => {
+      .catch(() => {
         setError("Something went wrong while fetching logs.");
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, deploymentId, page]);
+  }, [appId, deploymentId, afterTs]);
 
-  return { logs, error, loading, totalPage };
+  return { logs, error, loading, hasNextPage };
 };

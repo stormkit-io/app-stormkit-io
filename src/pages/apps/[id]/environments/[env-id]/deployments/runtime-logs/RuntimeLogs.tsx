@@ -1,14 +1,16 @@
 import type { Log } from "./actions";
 import React, { useContext, useState } from "react";
 import { useParams, useLocation } from "react-router";
-import emptyListSvg from "~/assets/images/empty-list.svg";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Button from "@mui/lab/LoadingButton";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import EmptyPage from "~/components/EmptyPage";
 import { AppContext } from "~/pages/apps/[id]/App.context";
-import Container from "~/components/Container";
 import { useFetchDeploymentRuntimeLogs } from "./actions";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBoxV2";
-import Link from "~/components/Link";
-import Button from "~/components/ButtonV2";
 
 const renderLog = (log: Log, i: number) => {
   let data = log.data.split(/END\sRequestId:/)[0];
@@ -31,85 +33,132 @@ const renderLog = (log: Log, i: number) => {
   }
 
   return (
-    <div key={`${log.timestamp}${i}`} className="whitespace-pre-wrap flex">
-      <span className="text-gray-50 bg-black p-3 flex flex-shrink-0">
+    <Box
+      key={`${log.timestamp}${i}`}
+      sx={{
+        whiteSpace: "pre-wrap",
+        display: "flex",
+        opacity: 0.5,
+        mb: 1,
+        px: 2,
+        ":hover": {
+          opacity: 1,
+          bgcolor: "rgba(0,0,0,0.1)",
+        },
+        ":last-child": { mb: 0 },
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexShrink: 0,
+          opacity: 0.5,
+        }}
+      >
         {new Date(Number(log.timestamp) * 1000)
           .toISOString()
           .split(".")[0]
           .replace("T", " ")}
-      </span>
-      <span className="inline-block p-3 break-all">{data}</span>
-    </div>
+      </Box>
+      <Box sx={{ wordBreak: "break-all", pl: 2 }}>{data}</Box>
+    </Box>
   );
 };
 
 const RuntimeLogs: React.FC = () => {
-  const { deploymentId } = useParams();
   const location = useLocation();
+  const { deploymentId } = useParams();
   const { app } = useContext(AppContext);
-  const [page, setPage] = useState<number>(0);
-  const { logs, error, loading, totalPage } = useFetchDeploymentRuntimeLogs({
+  const [afterTs, setAfterTs] = useState<string>();
+
+  const { logs, error, loading, hasNextPage } = useFetchDeploymentRuntimeLogs({
     appId: app.id,
-    deploymentId,
-    page,
+    deploymentId: deploymentId!,
+    afterTs,
   });
 
-  return (
-    <Container
-      title={
-        <p>
-          Runtime logs
-          <Link
-            className="block mt-1"
-            to={location.pathname.replace("/runtime-logs", "")}
-          >
-            <span className="fa fa-chevron-left mr-2" />#{deploymentId}
-          </Link>
-        </p>
-      }
-      maxWidth="max-w-none"
-    >
-      <div className="p-4 pt-0">
-        {loading && page === 0 && (
-          <div className="flex items-center w-full justify-center">
-            <Spinner />
-          </div>
-        )}
-        {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
-        {(!loading || page > 0) &&
-          (logs.length > 0 ? (
-            <div className="bg-blue-10 font-mono text-xs">
-              {logs.map(renderLog)}
-            </div>
-          ) : (
-            <div className="p-4 flex items-center justify-center flex-col">
-              <p className="mt-8">
-                <img src={emptyListSvg} alt="No feature flags" />
-              </p>
-              <p className="mt-8">It is quite empty here.</p>
-              <p>
-                Logs produced by server side rendered apps and APIs will be
-                displayed here.
-              </p>
-            </div>
-          ))}
-      </div>
+  const isLoadingFirstPage = loading && !afterTs;
+  const shouldDisplayLogs = (!loading || afterTs) && logs.length > 0;
 
-      {(!loading || totalPage > 0) && totalPage !== page ? (
-        <div className="mb-5 pb-5 flex justify-center">
-          <Button
-            type="button"
-            category="button"
-            loading={loading && page > 0}
-            onClick={() => {
-              setPage(page + 1);
+  return (
+    <Box
+      bgcolor="container.paper"
+      sx={{
+        color: "white",
+        p: 2,
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ width: "100%" }}>
+          <Typography variant="h6">Runtime logs</Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              opacity: 0.5,
+              mb: 2,
             }}
           >
-            Load more logs
+            Logs produced by server side rendered apps and API functions will be
+            displayed here. <br /> These logs belong to deployment{" "}
+            <Link href={location.pathname.replace("/runtime-logs", "")}>
+              {deploymentId}
+            </Link>
+            .
+          </Typography>
+        </Box>
+      </Box>
+
+      <Box>
+        {isLoadingFirstPage ? (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Spinner />
+          </Box>
+        ) : error ? (
+          <Alert color="error">
+            <AlertTitle>Error</AlertTitle>
+            <Typography>{error}</Typography>
+          </Alert>
+        ) : shouldDisplayLogs ? (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                p: 2,
+                mb: 2,
+                bgcolor: "rgba(0,0,0,0.1)",
+                borderBottom: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              <Box sx={{ width: "176px" }}>Time</Box>
+              <Box>Message</Box>
+            </Box>
+            <Box sx={{ fontFamily: "monospace" }}>{logs.map(renderLog)}</Box>
+          </>
+        ) : (
+          <EmptyPage>
+            It's quite empty in here.
+            <br />
+            Logs captured by serverless functions will be displayed here.
+          </EmptyPage>
+        )}
+      </Box>
+
+      {!loading && hasNextPage ? (
+        <Box sx={{ textAlign: "center", pt: 2 }}>
+          <Button
+            type="button"
+            variant="text"
+            color="info"
+            loading={loading}
+            onClick={() => {
+              setAfterTs(logs[logs.length - 1]?.timestamp);
+            }}
+          >
+            Load more
           </Button>
-        </div>
+        </Box>
       ) : null}
-    </Container>
+    </Box>
   );
 };
 
