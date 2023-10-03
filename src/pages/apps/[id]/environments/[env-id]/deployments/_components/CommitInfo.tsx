@@ -16,7 +16,7 @@ interface Props {
 
 const defaultMessage = (deployment: Deployment): React.ReactNode => {
   if (deployment.isRunning) {
-    return "Commit message is being parsed...";
+    return "Spinning up a worker...";
   }
 
   return deployment.exit === 0 ? (
