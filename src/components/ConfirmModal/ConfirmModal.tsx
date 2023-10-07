@@ -6,7 +6,6 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Button from "@mui/lab/LoadingButton";
 import Modal from "~/components/ModalV2";
 import Form from "~/components/FormV2";
-import Container from "~/components/Container";
 
 type ConfirmModalCallback = ({
   setLoading,
@@ -87,7 +86,7 @@ const ConfirmModal: React.FC<Props> = ({
             <Typography>{error}</Typography>
           </Alert>
         )}
-        <div className="mt-12 text-sm flex justify-center">
+        <Box sx={{ textAlign: "center", mt: 4 }}>
           <Button
             color="info"
             variant="text"
@@ -106,7 +105,7 @@ const ConfirmModal: React.FC<Props> = ({
           >
             {confirmText || "Yes, continue"}
           </Button>
-        </div>
+        </Box>
       </Box>
     </Modal>
   );
