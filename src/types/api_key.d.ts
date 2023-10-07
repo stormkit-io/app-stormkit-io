@@ -4,4 +4,5 @@ declare interface APIKey {
   appId: string;
   token: string;
   envId?: string;
+  scope: "env";
 }
