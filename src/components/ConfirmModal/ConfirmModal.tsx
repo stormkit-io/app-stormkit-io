@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Button from "@mui/lab/LoadingButton";
 import Modal from "~/components/ModalV2";
 import Form from "~/components/FormV2";
 import Container from "~/components/Container";
-import Button from "~/components/ButtonV2";
-import InfoBox from "~/components/InfoBox";
 
 type ConfirmModalCallback = ({
   setLoading,
@@ -47,14 +50,21 @@ const ConfirmModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal open onClose={onCancel} className="sm:max-w-screen-sm">
-      <Container className="p-4">
-        <h2 className="font-bold text-2xl text-center mb-12">Confirm action</h2>
-        <div className="text-sm text-center">
-          <div className="mb-2">
+    <Modal open onClose={onCancel}>
+      <Box sx={{ p: 4 }}>
+        <Typography
+          variant="h2"
+          sx={{ textAlign: "center", fontSize: 24, mb: 4, fontWeight: "bold" }}
+        >
+          Confirm action
+        </Typography>
+        <Box sx={{ textAlign: "center" }}>
+          <Box sx={{ mb: 2 }}>
             {children}
-            {!typeConfirmationText && " Are you sure you want to continue?"}
-          </div>
+            {!typeConfirmationText && (
+              <Typography>Are you sure you want to continue?</Typography>
+            )}
+          </Box>
 
           {typeConfirmationText && (
             <>
@@ -70,23 +80,26 @@ const ConfirmModal: React.FC<Props> = ({
               />
             </>
           )}
-        </div>
+        </Box>
         {error && (
-          <InfoBox className="mt-8" type={InfoBox.ERROR}>
-            {error}
-          </InfoBox>
+          <Alert color="error" sx={{ mt: 4 }}>
+            <AlertTitle>Error</AlertTitle>
+            <Typography>{error}</Typography>
+          </Alert>
         )}
         <div className="mt-12 text-sm flex justify-center">
           <Button
-            category="cancel"
+            color="info"
+            variant="text"
             type="button"
-            className="mr-4 bg-blue-20"
+            sx={{ mr: 2 }}
             onClick={onCancel}
           >
             Cancel
           </Button>
           <Button
-            category="action"
+            variant="contained"
+            color="secondary"
             loading={loading}
             disabled={!confirmButtonEnabled}
             onClick={handleSuccess}
@@ -94,7 +107,7 @@ const ConfirmModal: React.FC<Props> = ({
             {confirmText || "Yes, continue"}
           </Button>
         </div>
-      </Container>
+      </Box>
     </Modal>
   );
 };
