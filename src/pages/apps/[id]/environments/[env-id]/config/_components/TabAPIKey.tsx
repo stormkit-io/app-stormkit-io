@@ -8,15 +8,17 @@ import Button from "@mui/lab/LoadingButton";
 import TextInput from "@mui/material/TextField";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "~/components/ModalV2";
+import ConfirmModal from "~/components/ConfirmModal";
 import Spinner from "~/components/Spinner";
 import InputDescription from "~/components/InputDescription";
-import { useFetchAPIKeys, generateNewAPIKey } from "../actions";
+import { useFetchAPIKeys, generateNewAPIKey, deleteAPIKey } from "../actions";
 
 interface Props {
   app: App;
   environment: Environment;
-  setRefreshToken: (v: number) => void;
+  setRefreshToken?: (v: number) => void; // This is there just to accomodate the Tab signature. It's not really used.
 }
 
 interface APIKeyModalProps {
@@ -72,13 +74,16 @@ function APIKeyModal({ onSubmit, onClose, loading, error }: APIKeyModalProps) {
 
 export default function TabAPIKey({ app, environment: env }: Props) {
   const [isVisible, setIsVisible] = useState<string>("");
+  const [refreshToken, setRefreshToken] = useState<number>();
   const [success, setSuccess] = useState(false);
   const [modalError, setModalError] = useState("");
   const [modalLoading, setModalLoading] = useState(false);
+  const [apiKeyToDelete, setApiKeyToDelete] = useState<APIKey>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { loading, error, keys, setKeys } = useFetchAPIKeys({
     appId: app.id,
     envId: env.id!,
+    refreshToken,
   });
 
   const handleNewKey = (name: string) => {
@@ -146,9 +151,12 @@ export default function TabAPIKey({ app, environment: env }: Props) {
             {keys.map(apiKey => (
               <Box
                 key={apiKey.token}
-                sx={{ mb: 2, bgcolor: "rgba(0,0,0,0.1)", p: 2 }}
+                sx={{
+                  mb: 2,
+                  bgcolor: "rgba(0,0,0,0.1)",
+                  p: 2,
+                }}
               >
-                <Typography>{apiKey.name}</Typography>
                 <Box
                   sx={{
                     display: "flex",
@@ -156,23 +164,53 @@ export default function TabAPIKey({ app, environment: env }: Props) {
                     alignItems: "center",
                   }}
                 >
-                  <Box
-                    sx={{
-                      textOverflow: "ellipsis",
-                      overflow: "hidden",
-                      maxWidth: { md: "300px", lg: "none" },
-                    }}
-                  >
-                    {isVisible === apiKey.id ? apiKey.token : "*".repeat(32)}
+                  <Box>
+                    <Typography>{apiKey.name}</Typography>
+                    <Box
+                      sx={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        maxWidth: { md: "300px", lg: "none" },
+                      }}
+                    >
+                      {isVisible === apiKey.id ? apiKey.token : "*".repeat(32)}
+                    </Box>
                   </Box>
-                  <IconButton
-                    title="Toggle visibility"
-                    onClick={() => {
-                      setIsVisible(isVisible === apiKey.id ? "" : apiKey.id);
-                    }}
-                  >
-                    {isVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                  </IconButton>
+                  <Box>
+                    <IconButton
+                      title="Toggle visibility"
+                      size="small"
+                      sx={{
+                        scale: "0.9",
+                        opacity: 0.5,
+                        ":hover": { opacity: 1 },
+                      }}
+                      onClick={() => {
+                        setIsVisible(isVisible === apiKey.id ? "" : apiKey.id);
+                      }}
+                    >
+                      {isVisible === apiKey.id ? (
+                        <VisibilityIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </IconButton>
+                    <IconButton
+                      title="Remove API Key"
+                      aria-label="Remove API Key"
+                      size="small"
+                      sx={{
+                        scale: "0.9",
+                        opacity: 0.5,
+                        ":hover": { opacity: 1 },
+                      }}
+                      onClick={() => {
+                        setApiKeyToDelete(apiKey);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
                 </Box>
               </Box>
             ))}
@@ -200,6 +238,38 @@ export default function TabAPIKey({ app, environment: env }: Props) {
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleNewKey}
         />
+      )}
+      {apiKeyToDelete && (
+        <ConfirmModal
+          onCancel={() => {
+            setApiKeyToDelete(undefined);
+          }}
+          onConfirm={({ setLoading, setError }) => {
+            setLoading(true);
+            setError(null);
+            setSuccess(false);
+
+            deleteAPIKey(apiKeyToDelete)
+              .then(() => {
+                setRefreshToken(Date.now());
+              })
+              .catch(() => {
+                setError("Something went wrong while deleting the API key.");
+              })
+              .finally(() => {
+                setLoading(false);
+                setApiKeyToDelete(undefined);
+              });
+
+            return "";
+          }}
+        >
+          <Typography>
+            This will delete the API key.
+            <br /> If you have any integration that uses this API key, it will
+            stop working.
+          </Typography>
+        </ConfirmModal>
       )}
     </Box>
   );

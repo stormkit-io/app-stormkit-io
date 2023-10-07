@@ -324,9 +324,14 @@ export const deleteEnvironment = ({
 interface FetchAPIKeyProps {
   appId: string;
   envId: string;
+  refreshToken?: number;
 }
 
-export const useFetchAPIKeys = ({ appId, envId }: FetchAPIKeyProps) => {
+export const useFetchAPIKeys = ({
+  appId,
+  envId,
+  refreshToken,
+}: FetchAPIKeyProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
   const [keys, setKeys] = useState<APIKey[]>([]);
@@ -346,9 +351,15 @@ export const useFetchAPIKeys = ({ appId, envId }: FetchAPIKeyProps) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, envId]);
+  }, [appId, envId, refreshToken]);
 
   return { loading, error, keys, setKeys };
+};
+
+export const deleteAPIKey = (apiKey: APIKey) => {
+  return api.delete<{ keys: APIKey[] }>(
+    `/app/${apiKey.appId}/env/${apiKey.envId}/api-key?keyId=${apiKey.id}`
+  );
 };
 
 interface GenerateNewAPIKeyProps {
