@@ -65,7 +65,7 @@
     "@babel/polyfill": "7.12.1",
     "@babel/preset-env": "7.16.11",
     "@babel/preset-react": "7.16.7",
-    "@babel/preset-typescript": "7.16.7",
+    "@babel/preset-typescript": "7.23.2",
     "@mui/icons-material": "^5.14.6",
     "@mui/lab": "^5.0.0-alpha.130",
     "@mui/material": "^5.14.6",
