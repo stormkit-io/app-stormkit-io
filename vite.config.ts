@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
 
     server: {
       https: true,
+      host: true,
       proxy: {
         // with options
         [env.API_DOMAIN!]: {
