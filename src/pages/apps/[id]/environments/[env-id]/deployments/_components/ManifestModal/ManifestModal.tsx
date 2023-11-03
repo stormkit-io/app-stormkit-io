@@ -35,7 +35,7 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
   const ssrEnabled = Boolean(manifest?.functionHandler);
 
   return (
-    <Modal open onClose={onClose}>
+    <Modal open onClose={onClose} height="100%">
       <Container
         maxWidth="max-w-none"
         title={
