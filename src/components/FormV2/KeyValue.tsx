@@ -80,7 +80,7 @@ function TextFieldModal({
               onClose();
             }}
           >
-            Save
+            Set rows
           </Button>
         </Box>
       </Box>
@@ -109,12 +109,17 @@ export default function KeyValue({
   onModalOpen,
 }: Props) {
   const [rows, setRows] = useState<string[][]>([]);
+  const [isChanged, setIsChanged] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // We need to keep a reference to deleted rows because react lists get confused
+  // when `key` might be the same. In our case, we can't provide anything for the `key` value
+  // therefore it fallbacks to `index`.
   const rowsWithoutDeleted = useMemo(() => {
     return rows.filter(row => !row[2]);
   }, [rows]);
 
+  // Sync with props
   useEffect(() => {
     const newRows: string[][] = [];
 
@@ -123,18 +128,15 @@ export default function KeyValue({
     });
 
     setRows(newRows.length > 0 ? newRows : [["", ""]]);
+    setIsChanged(false); // reset this value
   }, [defaultValue, resetToken]);
 
+  // Let the parent know when rows change
   useEffect(() => {
-    if (onChange) {
+    if (onChange && isChanged) {
       onChange(rowsToMap(rowsWithoutDeleted));
     }
-  }, [rowsWithoutDeleted]);
-
-  const addRowsHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
-    e.preventDefault();
-    setRows([...rows, ["", ""]]);
-  };
+  }, [rowsWithoutDeleted, isChanged]);
 
   const borderBottom = "1px solid rgba(255,255,255,0.1)";
 
@@ -167,6 +169,7 @@ export default function KeyValue({
                       const copy = JSON.parse(JSON.stringify(rows));
                       copy[index] = [e.target.value, copy[index][1]];
                       setRows(copy);
+                      setIsChanged(true);
                     }}
                     value={key}
                   />
@@ -199,6 +202,7 @@ export default function KeyValue({
                             const copy = JSON.parse(JSON.stringify(rows));
                             copy[index].push("deleted");
                             setRows(copy);
+                            setIsChanged(true);
                           }}
                         >
                           <span className="fas fa-times text-xs text-gray-80"></span>
@@ -227,7 +231,10 @@ export default function KeyValue({
                   textTransform: "none",
                   mr: 2,
                 }}
-                onClick={addRowsHandler}
+                onClick={e => {
+                  e.preventDefault();
+                  setRows([...rows, ["", ""]]);
+                }}
               >
                 <AddIcon sx={{ mr: 1, fontSize: 16 }} />
                 Add Row
@@ -279,6 +286,8 @@ export default function KeyValue({
                   ];
                 })
             );
+
+            setIsChanged(true);
           }}
         />
       )}

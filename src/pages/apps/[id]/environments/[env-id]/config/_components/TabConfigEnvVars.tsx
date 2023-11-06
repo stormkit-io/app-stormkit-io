@@ -22,7 +22,9 @@ export default function TabConfigGeneral({
   const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [isLoading, setLoading] = useState(false);
-  const [vars, setVars] = useState<Record<string, string>>({});
+  const [vars, setVars] = useState<Record<string, string>>(
+    env.build.vars || {}
+  );
 
   if (!env) {
     return <></>;
