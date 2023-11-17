@@ -5,8 +5,8 @@ import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Speed from "@mui/icons-material/Speed";
-import UserButtons from "~/layouts/_components/UserButtons";
 import Logo from "~/components/Logo";
+import UserButtons from "./UserButtons";
 
 interface Props {
   children?: React.ReactNode;
