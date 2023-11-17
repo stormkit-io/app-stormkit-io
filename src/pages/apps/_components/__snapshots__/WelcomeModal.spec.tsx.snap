@@ -14,7 +14,7 @@ exports[`~/pages/apps/_components/WelcomeModal when is open matches the snapshot
       aria-hidden="true"
     />
     <div
-      class="MuiModal-root css-79ws1d-MuiModal-root"
+      class="MuiModal-root css-ypqs0c-MuiModal-root"
       role="presentation"
     >
       <div
@@ -27,8 +27,7 @@ exports[`~/pages/apps/_components/WelcomeModal when is open matches the snapshot
         tabindex="0"
       />
       <div
-        class="bg-blue-50 text-gray-80 w-full lg:ml-8 fixed left-1/2 overflow-auto max-w-128 max-w-screen-sm h-full md:h-auto top-1/2 max-h-full"
-        style="transform: translate(-50%, -50%);"
+        class="MuiBox-root css-hbk6y7"
         tabindex="-1"
       >
         <div
