@@ -7,8 +7,8 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import SideBar from "~/components/SideBar";
-import UserMenu from "~/components/UserMenu";
 import Spinner from "~/components/Spinner";
+import UserMenu from "./UserMenu";
 
 const UserButtons: React.FC = () => {
   const theme = useTheme();
@@ -48,7 +48,7 @@ const UserButtons: React.FC = () => {
             }}
           >
             <div>
-              <UserMenu className="p-4" onClick={() => toggleUserMenu(false)} />
+              <UserMenu user={user} onClick={() => toggleUserMenu(false)} />
             </div>
           </ClickAwayListener>
         }

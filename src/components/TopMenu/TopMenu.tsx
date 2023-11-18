@@ -63,7 +63,7 @@ export default function TopMenu({ children, app }: Props) {
           <Chip
             color="warning"
             component="span"
-            label="Free trial | Upgrade"
+            label="Free trial"
             sx={{
               cursor: "pointer",
               ":hover": { opacity: 1 },
