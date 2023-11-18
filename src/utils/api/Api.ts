@@ -110,6 +110,7 @@ class Api {
     }
 
     if (
+      localStorage.getItem("sk_canary") == 'true' ||
       document?.cookie.indexOf("sk_canary=true") > -1 ||
       window.location.search?.indexOf("sk_canary=true") > -1
     ) {
