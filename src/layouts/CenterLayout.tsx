@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Box from "@mui/material/Box";
-import TopMenu from "~/components/TopMenu";
 import { AuthContext } from "~/pages/auth/Auth.context";
+import TopMenu from "./TopMenu";
 
 interface Props {
   children: React.ReactNode;

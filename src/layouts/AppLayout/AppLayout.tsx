@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import Box from "@mui/material/Box";
 import AppContextProvider, { AppContext } from "~/pages/apps/[id]/App.context";
-import TopMenu from "~/components/TopMenu";
+import TopMenu from "../TopMenu";
 import AppMenu from "./AppMenu";
 import EnvMenu from "./EnvMenu";
 import { routes } from "./routes";

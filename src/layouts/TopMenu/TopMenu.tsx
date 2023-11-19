@@ -19,8 +19,8 @@ const isLocal = process.env.STORMKIT_ENV == "local";
 export default function TopMenu({ children, submenu, app }: Props) {
   const { user } = useContext(AuthContext);
   const [isCanary, setIsCanary] = useState(!!localStorage.getItem("sk_canary"));
-  const shouldShowEnvButton = isLocal || user?.isAdmin;
   const userPackage = user?.package?.id || "free";
+  const shouldShowEnvButton = isLocal || user?.isAdmin;
 
   return (
     <Box
@@ -45,26 +45,26 @@ export default function TopMenu({ children, submenu, app }: Props) {
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Link href="/">
-            <Logo iconSize={100} />
+            <Logo iconSize={28} iconOnly />
           </Link>
-          {shouldShowEnvButton && (
-            <Button
-              onClick={() => {
-                if (!isCanary) {
-                  localStorage.setItem("sk_canary", "true");
-                  setIsCanary(true);
-                } else {
-                  localStorage.removeItem("sk_canary");
-                  setIsCanary(false);
-                }
-              }}
-              sx={{ color: "white", fontSize: 12, opacity: 0.5 }}
-            >
-              {isCanary ? "Canary" : isLocal ? "Local" : "Prod"}
-            </Button>
-          )}
         </Box>
         <Box sx={{ flex: 1 }}>{children}</Box>
+        {shouldShowEnvButton && (
+          <Button
+            onClick={() => {
+              if (!isCanary) {
+                localStorage.setItem("sk_canary", "true");
+                setIsCanary(true);
+              } else {
+                localStorage.removeItem("sk_canary");
+                setIsCanary(false);
+              }
+            }}
+            sx={{ color: "white", fontSize: 12, opacity: 0.5 }}
+          >
+            {isCanary ? "Canary" : isLocal ? "Local" : "Prod"}
+          </Button>
+        )}
         {userPackage === "free" && user?.isPaymentRequired !== true && (
           <Link href="/user/account">
             <Chip
