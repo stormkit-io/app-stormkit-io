@@ -49,7 +49,11 @@ const AppName: React.FC<Props> = ({
     >
       <Box
         component="img"
-        sx={{ display: "inline-block", mr: 1, width: imageWidth }}
+        sx={{
+          display: "inline-block",
+          mr: 1,
+          width: imageWidth,
+        }}
         src={logo}
         alt={provider}
       />
@@ -60,15 +64,15 @@ const AppName: React.FC<Props> = ({
             aria-label="Repository URL"
             target="_blank"
             rel="noreferrer noopener"
-            sx={{ color: "white" }}
+            sx={{ display: "block", ml: 1 }}
           >
             <Box
               component="span"
               sx={{
                 maxWidth: { xs: wrapOnMobile ? "150px" : "none", md: "none" },
-                display: "inline-block",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
+                display: "block",
                 textOverflow: "ellipsis",
               }}
             >

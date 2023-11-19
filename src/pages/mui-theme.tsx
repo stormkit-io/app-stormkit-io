@@ -33,14 +33,15 @@ export default createTheme({
     MuiTooltip: {
       styleOverrides: {
         arrow: {
-          color: "#070415",
+          color: "#201e2c",
         },
         popper: {
-          padding: 4,
+          padding: 0,
         },
         tooltip: {
           color: "white",
           backgroundColor: "#070415",
+          border: "1px solid #201e2c",
           fontSize: 14,
         },
       },
@@ -83,7 +84,7 @@ export default createTheme({
             backgroundColor: "rgba(0,0,0,0.25)",
           },
           "&:before": {
-            borderColor: "rgba(255,255,255,0.1)",
+            borderColor: "#201e2c",
           },
           "&:after": {
             borderColor: "rgba(255,255,255,0.5)",

@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { useLocation } from "react-router";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import IconButton from "@mui/material/IconButton";
 import AppName from "~/components/AppName";
 import { appMenuItems } from "./menu_items";
 
@@ -28,7 +27,8 @@ export default function AppHeader({ app }: Props) {
         flexDirection: "column",
         maxWidth: "100%",
         zIndex: 100,
-        px: 2.5,
+        px: 2,
+        py: 1,
       }}
     >
       <Box
@@ -40,7 +40,7 @@ export default function AppHeader({ app }: Props) {
         <Box sx={{ mr: 2 }}>
           <AppName
             app={app}
-            imageWidth={23} // Same as Stormkit Icon
+            imageWidth={28} // Same as Stormkit Icon
             withLinkToRepo
             withMarginRight={false}
             wrapOnMobile
@@ -53,28 +53,33 @@ export default function AppHeader({ app }: Props) {
               href={item.path}
               sx={{
                 cursor: "pointer",
-                borderBottomWidth: "2px",
-                borderBottomStyle: "solid",
-                borderBottomColor: item.isActive ? "#ffa500b3" : "transparent",
                 color: "white",
-                px: { xs: 1, md: 0 },
-                pr: { md: 2 },
-                pb: 1,
+                px: { xs: 1, md: 2 },
+                py: 0.5,
                 display: "inline-flex",
+                position: "relative",
                 alignItems: "center",
-                ":hover": { opacity: 1, color: "white" },
+                borderRadius: 1,
+                ":hover": {
+                  opacity: 1,
+                  color: "white",
+                  bgcolor: "rgba(255,255,255,0.1)",
+                },
               }}
             >
-              <Box
-                component="span"
-                sx={{
-                  scale: "0.75",
-                  display: { xs: "none", md: "inline-block" },
-                }}
-              >
-                <IconButton>{item.icon}</IconButton>
-              </Box>
               {item.text}
+              {item.isActive && (
+                <Box
+                  sx={{
+                    height: "2px",
+                    bgcolor: "white",
+                    position: "absolute",
+                    bottom: -8,
+                    left: 16,
+                    right: 16,
+                  }}
+                />
+              )}
             </Link>
           ))}
         </Box>
