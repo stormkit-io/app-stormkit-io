@@ -23,9 +23,7 @@ export const AppLayout: React.FC = () => {
         width: "100%",
       }}
     >
-      <Box sx={{ display: { xs: "xs", md: "block" }, width: "100%" }}>
-        <TopMenu app={app} />
-      </Box>
+      <TopMenu app={app} submenu={<AppMenu app={app} />} />
       <Box
         sx={{
           display: "flex",
@@ -33,7 +31,6 @@ export const AppLayout: React.FC = () => {
           width: "100%",
         }}
       >
-        <AppMenu app={app} />
         <Box
           component="section"
           sx={{
