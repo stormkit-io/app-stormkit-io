@@ -4,11 +4,7 @@ import Code from "@mui/icons-material/Code";
 import Tour from "@mui/icons-material/Tour";
 import Update from "@mui/icons-material/Update";
 import Database from "@mui/icons-material/Storage";
-import AccountTree from "@mui/icons-material/AccountTree";
 import Terminal from "@mui/icons-material/Terminal";
-import Group from "@mui/icons-material/Group";
-import Settings from "@mui/icons-material/Settings";
-import React from "react";
 
 export const appMenuItems = ({
   app,
@@ -21,28 +17,25 @@ export const appMenuItems = ({
     // List environments
     path: `/apps/${app.id}/environments`,
     text: "Environments",
-    icon: <AccountTree />,
     isActive: pathname.includes("/environments"),
   },
   {
     // List team members
     path: `/apps/${app.id}/team`,
     text: "Team",
-    icon: <Group />,
     isActive: pathname.endsWith("/team"),
   },
   {
     // List settings
     path: `/apps/${app.id}/settings`,
     text: "Settings",
-    icon: <Settings />,
     isActive: pathname.endsWith("/settings"),
   },
 ];
 
 interface Path {
   path: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   text: React.ReactNode;
   isActive?: boolean;
 }
