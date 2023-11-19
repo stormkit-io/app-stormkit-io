@@ -29,7 +29,6 @@ export default function AppHeader({ app }: Props) {
         maxWidth: "100%",
         zIndex: 100,
         px: 2.5,
-        borderBottom: "1px solid rgba(255,255,255,0.3)",
       }}
     >
       <Box
@@ -60,7 +59,7 @@ export default function AppHeader({ app }: Props) {
                 color: "white",
                 px: { xs: 1, md: 0 },
                 pr: { md: 2 },
-                py: 1,
+                pb: 1,
                 display: "inline-flex",
                 alignItems: "center",
                 ":hover": { opacity: 1, color: "white" },
