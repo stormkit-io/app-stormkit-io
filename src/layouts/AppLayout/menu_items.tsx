@@ -20,12 +20,6 @@ export const appMenuItems = ({
     isActive: pathname.includes("/environments"),
   },
   {
-    // List team members
-    path: `/apps/${app.id}/team`,
-    text: "Team",
-    isActive: pathname.endsWith("/team"),
-  },
-  {
     // List settings
     path: `/apps/${app.id}/settings`,
     text: "Settings",
