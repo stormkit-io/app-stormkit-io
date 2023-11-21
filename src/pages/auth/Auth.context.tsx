@@ -1,12 +1,10 @@
-import React, { createContext, useEffect } from "react";
+import type { LoginOauthReturnValue } from "./actions";
+import React, { createContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Spinner from "~/components/Spinner";
-import {
-  loginOauth,
-  useFetchUser,
-  LoginOauthReturnValue,
-  logout,
-} from "./actions";
+import * as actions from "./actions";
+
+const { loginOauth, useFetchUser, useFetchTeams, logout } = actions;
 
 export interface AuthContextProps {
   user?: User;
@@ -14,6 +12,8 @@ export interface AuthContextProps {
   accounts?: Array<ConnectedAccount>;
   logout?: () => void;
   loginOauth?: (p: Provider) => Promise<LoginOauthReturnValue>;
+  reloadTeams?: () => void;
+  teams?: Team[];
 }
 
 export const AuthContext = createContext<AuthContextProps>({});
@@ -24,8 +24,12 @@ interface Props {
 
 export default function ContextProvider({ children }: Props) {
   const navigate = useNavigate();
+  const [teamsRefreshToken, setTeamsRefreshToken] = useState(0);
   const { pathname, search } = useLocation();
   const { error, loading, user, accounts, ...fns } = useFetchUser();
+  const { teams, loading: teamsLoading } = useFetchTeams({
+    refreshToken: teamsRefreshToken,
+  });
   const shouldRedirect = !loading && !user && !pathname.includes("/auth");
 
   useEffect(() => {
@@ -45,7 +49,7 @@ export default function ContextProvider({ children }: Props) {
     }
   }, [user?.isPaymentRequired, pathname]);
 
-  if (loading) {
+  if (loading || teamsLoading) {
     return <Spinner primary pageCenter />;
   }
 
@@ -61,6 +65,8 @@ export default function ContextProvider({ children }: Props) {
         user,
         accounts,
         authError: error,
+        teams,
+        reloadTeams: () => setTeamsRefreshToken(Date.now()),
         logout: logout(), // This function can be removed, it's no longer being injected something.
         loginOauth: loginOauth({ ...fns }),
       }}

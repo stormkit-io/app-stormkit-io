@@ -2,8 +2,9 @@ type autoDeploy = "pull_request" | "commit" | null;
 
 declare type App = {
   id: string;
-  repo: string;
+  teamId: string;
   userId: string;
+  repo: string;
   status: boolean;
   endpoint: string;
   createdAt: number;

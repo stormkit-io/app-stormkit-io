@@ -148,3 +148,32 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
     });
   };
 };
+
+interface FetchTeamsProps {
+  refreshToken: Number;
+}
+
+export const useFetchTeams = ({ refreshToken }: FetchTeamsProps) => {
+  const [teams, setTeams] = useState<Team[]>();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    setError("");
+
+    api
+      .fetch<Team[]>("/teams")
+      .then(teams => {
+        setTeams(teams);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching teams.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [refreshToken]);
+
+  return { teams, error, loading };
+};
