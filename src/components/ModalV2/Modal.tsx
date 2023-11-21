@@ -1,12 +1,13 @@
 import type { SxProps } from "@mui/material";
 import React from "react";
+import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import MuiModal, { ModalProps } from "@mui/material/Modal";
 
 interface Props extends ModalProps {
   sx?: SxProps;
   height?: string;
-  maxWidth?: "sm" | "md" | "lg";
+  maxWidth?: "sm" | "md" | "lg" | string;
 }
 
 const Modal: React.FC<Props> = ({
@@ -33,7 +34,14 @@ const Modal: React.FC<Props> = ({
         maxWidth={maxWidth}
         width="100%"
         bgcolor="background.default"
-        sx={{ color: "white", height, maxHeight: "90vh", overflow: "auto" }}
+        sx={{
+          borderRadius: 1,
+          color: "white",
+          height,
+          maxHeight: "90vh",
+          overflow: "auto",
+          border: `1px solid ${grey[900]}`,
+        }}
       >
         {children}
       </Box>

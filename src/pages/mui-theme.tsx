@@ -1,18 +1,16 @@
 import React from "react";
 import { createTheme } from "@mui/material/styles";
-import {
-  Link as RouterLink,
-  LinkProps as RouterLinkProps,
-} from "react-router-dom";
+import { grey } from "@mui/material/colors";
+import { Link as RLink, LinkProps as RLinkProps } from "react-router-dom";
 import { LinkProps } from "@mui/material/Link";
 
+// Map href (MUI) -> to (react-router)
 const LinkBehavior = React.forwardRef<
   HTMLAnchorElement,
-  Omit<RouterLinkProps, "to"> & { href: RouterLinkProps["to"] }
+  Omit<RLinkProps, "to"> & { href: RLinkProps["to"] }
 >((props, ref) => {
   const { href, ...other } = props;
-  // Map href (MUI) -> to (react-router)
-  return <RouterLink ref={ref} to={href} {...other} />;
+  return <RLink ref={ref} to={href} {...other} />;
 });
 
 const fontFamily = "Inter, sans-serif";
@@ -33,7 +31,7 @@ export default createTheme({
     MuiTooltip: {
       styleOverrides: {
         arrow: {
-          color: "#201e2c",
+          color: grey[900],
         },
         popper: {
           padding: 0,
@@ -41,7 +39,7 @@ export default createTheme({
         tooltip: {
           color: "white",
           backgroundColor: "#070415",
-          border: "1px solid #201e2c",
+          border: `1px solid ${grey[900]}`,
           fontSize: 14,
         },
       },
@@ -84,7 +82,7 @@ export default createTheme({
             backgroundColor: "rgba(0,0,0,0.25)",
           },
           "&:before": {
-            borderColor: "#201e2c",
+            borderColor: grey[900],
           },
           "&:after": {
             borderColor: "rgba(255,255,255,0.5)",
