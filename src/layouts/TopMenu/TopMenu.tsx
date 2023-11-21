@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
@@ -8,7 +7,7 @@ import Link from "@mui/material/Link";
 import Speed from "@mui/icons-material/Speed";
 import Logo from "~/components/Logo";
 import UserButtons from "./UserButtons";
-// import TeamsToggle from "./TeamsToggle";
+import TeamsToggle from "./Teams/TeamToggle";
 
 interface Props {
   children?: React.ReactNode;
@@ -49,8 +48,7 @@ export default function TopMenu({ children, submenu, app }: Props) {
           <Link href="/" sx={{ flex: "1", mr: 2 }}>
             <Logo iconSize={28} iconOnly />
           </Link>
-          <Typography sx={{ color: "white" }}>Personal Team</Typography>
-          {/* <TeamsToggle /> */}
+          <TeamsToggle app={app} />
         </Box>
         <Box sx={{ flex: 1 }}>{children}</Box>
         {shouldShowEnvButton && (

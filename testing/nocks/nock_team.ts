@@ -3,6 +3,36 @@ import nock from "nock";
 
 const endpoint = process.env.API_DOMAIN || "";
 
+interface MockCreateTeamProps {
+  name: string;
+  status?: number;
+  response: Team;
+}
+
+export const mockCreateTeam = ({
+  name,
+  status = 200,
+  response,
+}: MockCreateTeamProps) =>
+  nock(endpoint).post("/team", { name }).reply(status, response);
+
+interface MockUpdateTeamProps {
+  teamId: string;
+  name: string;
+  status?: number;
+  response: Team;
+}
+
+export const mockUpdateTeam = ({
+  name,
+  teamId,
+  status = 200,
+  response,
+}: MockUpdateTeamProps) =>
+  nock(endpoint).patch("/team", { name, teamId }).reply(status, response);
+
+// TODO: REMOVE FOLLOWING LINES AFTER MIGRATING TO TEAMS v2
+
 interface MockInviteMemberProps {
   appId: string;
   displayName: string;
