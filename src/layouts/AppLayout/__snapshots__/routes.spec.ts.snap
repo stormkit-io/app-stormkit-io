@@ -56,20 +56,6 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     >
       <UNDEFINED />
     </React.Suspense>,
-    "path": "/team",
-  },
-  {
-    "element": <React.Suspense
-      fallback={
-        <Spinner
-          height={10}
-          pageCenter={true}
-          width={10}
-        />
-      }
-    >
-      <UNDEFINED />
-    </React.Suspense>,
     "path": "/settings",
   },
   {
