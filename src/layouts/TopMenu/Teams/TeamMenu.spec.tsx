@@ -76,7 +76,7 @@ describe("~/layouts/TopMenu/Teams/TeamMenu.tsx", () => {
     });
 
     test("should list all teams", () => {
-      expect(wrapper.getByRole("list").querySelectorAll("a").length).toBe(3);
+      expect(wrapper.getByRole("list").querySelectorAll("a").length).toBe(4); // 3 links + 1 settings
     });
 
     const findTeam = (id: string) => wrapper.getByTestId(`team-${id}`);

@@ -1,5 +1,4 @@
-import { useMemo, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import SwitchRight from "@mui/icons-material/SwitchRight";
 import SwitchLeft from "@mui/icons-material/SwitchLeft";
@@ -8,6 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import TeamModal from "./TeamModal";
 import TeamMenu from "./TeamMenu";
+import { useSelectedTeam } from "./actions";
 
 const PERSONAL_TEAM = "Personal";
 
@@ -17,17 +17,9 @@ interface Props {
 
 export default function TeamsToggle({ app }: Props) {
   const { teams, reloadTeams } = useContext(AuthContext);
-  const params = useParams();
-  const [teamToBeModified, setTeamToBeModified] = useState<Team>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const selectedTeam = useMemo(() => {
-    return (
-      teams?.find(t => t.slug === params.team || app?.teamId === t.id) ||
-      teams?.find(t => t.isDefault)
-    );
-  }, [teams, params, app]);
+  const selectedTeam = useSelectedTeam({ teams, app });
 
   const Switch = isMenuOpen ? SwitchRight : SwitchLeft;
 
@@ -48,9 +40,7 @@ export default function TeamsToggle({ app }: Props) {
               onClickAway={() => {
                 setIsMenuOpen(false);
               }}
-              onSettingsClick={team => {
-                setTeamToBeModified(team);
-                setIsModalOpen(true);
+              onSettingsClick={() => {
                 setIsMenuOpen(false);
               }}
               onCreateTeamButtonClicked={() => {
@@ -79,11 +69,9 @@ export default function TeamsToggle({ app }: Props) {
 
       {isModalOpen && (
         <TeamModal
-          team={teamToBeModified}
           reload={reloadTeams}
           onClose={() => {
             setIsModalOpen(false);
-            setTeamToBeModified(undefined);
           }}
         />
       )}

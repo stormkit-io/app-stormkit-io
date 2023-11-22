@@ -5,19 +5,16 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
 import Button from "@mui/lab/LoadingButton";
-import GroupAdd from "@mui/icons-material/GroupAdd";
 import Modal from "~/components/ModalV2";
-import { upsertTeam } from "./actions";
+import { createTeam } from "./actions";
 
 interface Props {
-  team?: Team;
   reload?: () => void;
   onClose: () => void;
 }
 
-export default function TeamModal({ team, onClose, reload }: Props) {
+export default function TeamModal({ onClose, reload }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -27,16 +24,11 @@ export default function TeamModal({ team, onClose, reload }: Props) {
       <Box sx={{ p: 4 }}>
         <Box sx={{ mb: 4, display: "flex", alignItems: "flex-start" }}>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6">{team ? "Update" : "New"} Team</Typography>
+            <Typography variant="h6">New Team</Typography>
             <Typography variant="subtitle2" sx={{ opacity: 0.5 }}>
               Use teams to collaborate with other team members.
             </Typography>
           </Box>
-          {team?.id && (
-            <IconButton>
-              <GroupAdd sx={{ fontSize: 16 }} />
-            </IconButton>
-          )}
         </Box>
         <Box
           component="form"
@@ -53,7 +45,7 @@ export default function TeamModal({ team, onClose, reload }: Props) {
 
             setIsLoading(true);
 
-            upsertTeam({ name: data.name, teamId: team?.id })
+            createTeam({ name: data.name })
               .then(t => {
                 reload?.();
                 onClose();
@@ -71,7 +63,7 @@ export default function TeamModal({ team, onClose, reload }: Props) {
             label="Team name"
             variant="filled"
             autoComplete="off"
-            defaultValue={team?.name || ""}
+            defaultValue={""}
             fullWidth
             name="name"
             autoFocus
@@ -84,24 +76,14 @@ export default function TeamModal({ team, onClose, reload }: Props) {
               <Typography>{error}</Typography>
             </Alert>
           )}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: team ? "space-between" : "flex-end",
-            }}
-          >
-            {team && (
-              <Button type="button" variant="outlined" color="info">
-                Delete
-              </Button>
-            )}
+          <Box sx={{ textAlign: "right" }}>
             <Button
               type="submit"
               variant="contained"
               color="secondary"
               loading={isLoading}
             >
-              {team ? "Update" : "Create"}
+              Create
             </Button>
           </Box>
         </Box>
