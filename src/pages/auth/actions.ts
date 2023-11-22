@@ -150,15 +150,21 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
 };
 
 interface FetchTeamsProps {
+  user?: User;
   refreshToken: Number;
 }
 
-export const useFetchTeams = ({ refreshToken }: FetchTeamsProps) => {
+export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
   const [teams, setTeams] = useState<Team[]>();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -173,7 +179,7 @@ export const useFetchTeams = ({ refreshToken }: FetchTeamsProps) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [refreshToken]);
+  }, [refreshToken, user]);
 
   return { teams, error, loading };
 };

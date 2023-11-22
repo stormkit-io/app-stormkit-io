@@ -29,6 +29,7 @@ export default function ContextProvider({ children }: Props) {
   const { error, loading, user, accounts, ...fns } = useFetchUser();
   const { teams, loading: teamsLoading } = useFetchTeams({
     refreshToken: teamsRefreshToken,
+    user,
   });
   const shouldRedirect = !loading && !user && !pathname.includes("/auth");
 
