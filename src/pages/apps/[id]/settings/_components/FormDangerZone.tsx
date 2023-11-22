@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import ConfirmModal from "~/components/ConfirmModal";
-import InfoBox from "~/components/InfoBoxV2";
-import Button from "~/components/ButtonV2";
 import { deleteApp } from "../actions";
 
 interface Props {
   app: App;
 }
 
-const FormDangerZone: React.FC<Props> = ({ app }): React.ReactElement => {
+export default function FormDangerZone({ app }: Props) {
   const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
 
   return (
-    <>
-      <InfoBox className="mb-4 mx-4">
-        <p>
-          Deleting an application will remove all associated files and
-          endpoints. After confirming the deletion, we won't be able to do much
-          to recover it. <b>Please proceed cautiously</b>.
-        </p>
-      </InfoBox>
-      <div className="flex justify-end mx-4 pb-4">
+    <Card sx={{ mb: 4, borderColor: "rgba(255, 0, 0, 0.25)" }}>
+      <CardHeader>
+        <Typography variant="h2" sx={{ fontSize: 20, mb: 0.5 }} color="error">
+          Danger zone
+        </Typography>
+        <Typography variant="subtitle2">
+          Permanently delete your App and all of its contents from the Stormkit
+          platform. This action cannot be undone — proceed with caution.
+        </Typography>
+      </CardHeader>
+      <CardFooter>
         <Button
-          category="action"
+          color="secondary"
+          variant="contained"
           type="submit"
           onClick={() => {
             toggleConfirmModal(true);
@@ -30,7 +36,7 @@ const FormDangerZone: React.FC<Props> = ({ app }): React.ReactElement => {
         >
           Remove application
         </Button>
-      </div>
+      </CardFooter>
       {isConfirmModalOpen && (
         <ConfirmModal
           typeConfirmationText="permanently delete application"
@@ -56,8 +62,6 @@ const FormDangerZone: React.FC<Props> = ({ app }): React.ReactElement => {
           endpoints will be gone. Remember there is no going back from here.
         </ConfirmModal>
       )}
-    </>
+    </Card>
   );
-};
-
-export default FormDangerZone;
+}
