@@ -59,7 +59,7 @@ const ConfirmModal: React.FC<Props> = ({
         </Typography>
         <Box sx={{ textAlign: "center" }}>
           <Box sx={{ mb: 2 }}>
-            {children}
+            <Typography component="div">{children}</Typography>
             {!typeConfirmationText && (
               <Typography>Are you sure you want to continue?</Typography>
             )}
