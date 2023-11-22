@@ -100,7 +100,7 @@ export default function Apps() {
               {
                 icon: <LinkIcon />,
                 text: "Import from URL",
-                href: "/apps/new/url",
+                href: `/apps/new/url`,
               },
             ]}
           />
