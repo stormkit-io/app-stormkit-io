@@ -17,14 +17,19 @@ interface Item {
 
 interface Props {
   items: Item[];
+  label?: string;
 }
 
-const DotDotDot: React.FC<Props> = ({ items }) => {
+export default function DotDotDot({ label, items }: Props) {
   const [isOpen, toggleIsOpen] = useState(false);
 
   if (!isOpen) {
     return (
-      <Button styled={false} onClick={() => toggleIsOpen(!isOpen)}>
+      <Button
+        styled={false}
+        onClick={() => toggleIsOpen(!isOpen)}
+        aria-label={label}
+      >
         <span
           className="fas fa-ellipsis-h cursor-pointer"
           aria-label="expand"
@@ -100,6 +105,4 @@ const DotDotDot: React.FC<Props> = ({ items }) => {
       </div>
     </Tooltip>
   );
-};
-
-export default DotDotDot;
+}
