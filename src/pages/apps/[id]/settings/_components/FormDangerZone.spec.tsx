@@ -41,10 +41,9 @@ describe("~/pages/apps/[id]/settings/_components/FormDangerZone", () => {
 
     expect(modal).toBeTruthy();
 
-    await userEvent.type(
-      modal.parentNode!.querySelector("input")!,
-      "permanently delete application"
-    );
+    fireEvent.change(wrapper.getByLabelText("Confirmation"), {
+      target: { value: "permanently delete application" },
+    });
 
     const scope = mockDeleteApp({
       appId: currentApp.id,

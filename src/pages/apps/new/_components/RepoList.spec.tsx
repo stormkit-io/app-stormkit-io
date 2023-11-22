@@ -2,6 +2,9 @@ import type { RenderResult } from "@testing-library/react";
 import type { Repo } from "../types.d";
 import * as router from "react-router";
 import { render, fireEvent, waitFor } from "@testing-library/react";
+import { AuthContext } from "~/pages/auth/Auth.context";
+import mockTeams from "~/testing/data/mock_teams";
+import mockUser from "~/testing/data/mock_user";
 import * as nocks from "~/testing/nocks";
 import RepoList from "./RepoList";
 
@@ -24,6 +27,8 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
     { name: "test-repo-2", fullName: "namespace/test-repo-2" },
   ];
 
+  const teams = mockTeams();
+
   const createWrapper = ({
     provider = "github",
     loading = false,
@@ -42,15 +47,17 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
       {
         path: "*",
         element: (
-          <RepoList
-            loading={loading}
-            error={error}
-            provider={provider}
-            repositories={repositories}
-            isLoadingMore={isLoadingMore}
-            hasNextPage={hasNextPage}
-            onNextPage={onNextPage}
-          />
+          <AuthContext.Provider value={{ teams, user: mockUser() }}>
+            <RepoList
+              loading={loading}
+              error={error}
+              provider={provider}
+              repositories={repositories}
+              isLoadingMore={isLoadingMore}
+              hasNextPage={hasNextPage}
+              onNextPage={onNextPage}
+            />
+          </AuthContext.Provider>
         ),
       },
     ]);
@@ -83,6 +90,7 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
         provider: "github",
         repo: "namespace/test-repo",
         id,
+        teamId: teams[0].id,
       });
 
       createWrapper({ repositories });

@@ -1,6 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
 import { waitFor, fireEvent, render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import mockApp from "~/testing/data/mock_app";
 import mockTeams from "~/testing/data/mock_teams";
 import { mockMigrateApp } from "~/testing/nocks/nock_team";
