@@ -1,6 +1,5 @@
-import { fireEvent, RenderResult } from "@testing-library/react";
 import type { OutboundWebhook } from "../types";
-import React from "react";
+import { fireEvent, RenderResult } from "@testing-library/react";
 import { waitFor, render } from "@testing-library/react";
 import mockOutboundWebhooks from "~/testing/data/mock_outbound_webhooks";
 import mockApp from "~/testing/data/mock_app";
@@ -38,7 +37,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhooks", () => {
 
   test("the button is at loading state initially", () => {
     expect(wrapper.getByLabelText("Add new webhook").innerHTML).toContain(
-      "spinner"
+      "<svg"
     );
   });
 
@@ -83,13 +82,14 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhooks", () => {
 
   test("clicking add new webhook opens a modal", async () => {
     await waitFor(() => {
-      expect(wrapper.getByText("Add new webhook")).toBeTruthy();
+      expect(
+        wrapper.getAllByText("Triggered after a deployment is published")
+      ).toBeTruthy();
     });
 
-    await fireEvent.click(wrapper.getByText("Add new webhook"));
+    fireEvent.click(wrapper.getByText("Add new webhook"));
 
     await waitFor(() => {
-      // One for the modal title, the other for the button.
       expect(wrapper.getAllByText("Create outbound webhook")).toHaveLength(2);
     });
   });
