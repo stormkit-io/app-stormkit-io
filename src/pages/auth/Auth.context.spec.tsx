@@ -7,7 +7,8 @@ import { waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
 import Api from "~/utils/api/Api";
 import * as Auth from "~/pages/auth/Auth.context";
-import * as nocks from "~/testing/nocks";
+import { mockFetchUser } from "~/testing/nocks/nock_user";
+import { mockFetchTeam } from "~/testing/nocks/nock_team";
 
 const { AuthContext, default: ContextProvider } = Auth;
 
@@ -60,8 +61,9 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.set("skit_provider", "github");
 
       mockUseLocation();
+      mockFetchTeam({ response: [] });
 
-      scope = nocks.mockFetchUser({ response: { ok: false, user: null } });
+      scope = mockFetchUser({ response: { ok: false, user: null } });
       createWrapper();
     });
 
@@ -90,8 +92,9 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.set("skit_provider", "github");
 
       mockUseLocation();
+      mockFetchTeam({ response: [] });
 
-      scope = nocks.mockFetchUser({});
+      scope = mockFetchUser({});
       createWrapper();
     });
 

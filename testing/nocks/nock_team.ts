@@ -2,6 +2,14 @@ import nock from "nock";
 
 const endpoint = process.env.API_DOMAIN || "";
 
+interface MockFetchTeamProps {
+  status?: number;
+  response: Team[];
+}
+
+export const mockFetchTeam = ({ status = 200, response }: MockFetchTeamProps) =>
+  nock(endpoint).get("/teams").reply(status, response);
+
 interface MockCreateTeamProps {
   name: string;
   status?: number;
