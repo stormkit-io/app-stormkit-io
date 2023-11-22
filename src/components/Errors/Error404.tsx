@@ -1,31 +1,42 @@
 import React from "react";
-import Link from "~/components/Link";
-import Logo from "~/components/Logo";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 interface Props {
   withLogo?: boolean;
   children?: React.ReactNode;
 }
 
-const Error404: React.FC<Props> = ({
-  children,
-  withLogo = true,
-}): React.ReactElement => {
+export default function Error404({ children }: Props) {
   return (
-    <div className="flex flex-col m-auto max-w-lg items-center h-full justify-center">
-      <h1 className="text-pink-50 text-9xl font-bold">4 oh 4</h1>
-      <div className="text-white text-3xl text-center leading-normal">
-        {children || "There is nothing under this link."}
-      </div>
-      {withLogo && (
-        <div className="mt-32">
-          <Link to="/">
-            <Logo iconOnly />
-          </Link>
-        </div>
-      )}
-    </div>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        m: "auto",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      maxWidth="lg"
+    >
+      <Box
+        sx={{
+          color: "white",
+          textAlign: "center",
+          position: "relative",
+          top: "-6rem",
+        }}
+      >
+        <Typography
+          color="secondary"
+          sx={{ fontSize: 120, fontWeight: "bold" }}
+        >
+          4 oh 4
+        </Typography>
+        <Box sx={{ fontSize: 28, lineHeight: 1 }}>
+          {children || "There is nothing under this link."}
+        </Box>
+      </Box>
+    </Box>
   );
-};
-
-export default Error404;
+}

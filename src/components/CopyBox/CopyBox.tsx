@@ -1,24 +1,22 @@
-import React, { useState } from "react";
+import type { TextFieldProps } from "@mui/material/TextField";
+import { useState } from "react";
 import { Tooltip } from "@mui/material";
-import Form from "~/components/FormV2";
+import TextField from "@mui/material/TextField";
 import Button from "~/components/Button";
-
-type Props = {
-  value: string;
-};
 
 let id = 0;
 
-const CopyBox: React.FC<Props> = ({ value }: Props): React.ReactElement => {
+export default function CopyBox({ value, ...rest }: TextFieldProps) {
   const [clicked, setClicked] = useState(false);
   const inputId = `copy-token-${id++}`;
 
   return (
-    <Form.Input
+    <TextField
       id={inputId}
       value={value}
-      className="flex-auto"
+      fullWidth
       aria-label="Copy content"
+      {...rest}
       InputProps={{
         endAdornment: (
           <Tooltip open={clicked} title="Copied to clipboard">
@@ -47,6 +45,4 @@ const CopyBox: React.FC<Props> = ({ value }: Props): React.ReactElement => {
       }}
     />
   );
-};
-
-export default CopyBox;
+}

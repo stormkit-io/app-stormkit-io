@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Modal from "~/components/ModalV2";
-import Form from "~/components/FormV2";
 
 type ConfirmModalCallback = ({
   setLoading,
@@ -67,15 +67,19 @@ const ConfirmModal: React.FC<Props> = ({
 
           {typeConfirmationText && (
             <>
-              <p>
+              <Typography>
                 Type <b>{typeConfirmationText}</b> in order to proceed.
-              </p>
-              <Form.Input
-                className="mt-4"
+              </Typography>
+              <TextField
+                label="Confirmation"
+                type="text"
+                variant="filled"
+                autoComplete="off"
                 placeholder={typeConfirmationText}
                 onChange={verifyConfirmationInput}
                 fullWidth
                 autoFocus
+                sx={{ mt: 4 }}
               />
             </>
           )}
@@ -101,6 +105,7 @@ const ConfirmModal: React.FC<Props> = ({
             color="secondary"
             loading={loading}
             disabled={!confirmButtonEnabled}
+            sx={{ opacity: confirmButtonEnabled ? 1 : 0.5 }}
             onClick={handleSuccess}
           >
             {confirmText || "Yes, continue"}
