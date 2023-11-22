@@ -8,6 +8,7 @@ import FormAppSettings from "./_components/FormAppSettings";
 import FormTriggerDeploys from "./_components/FormTriggerDeploys";
 import FormOutboundWebhooks from "./_components/FormOutboundWebhooks";
 import FormDangerZone from "./_components/FormDangerZone";
+import FormMigrateApp from "./_components/FormMigrateApp";
 import * as actions from "./actions";
 
 const { useFetchAdditionalSettings } = actions;
@@ -19,6 +20,9 @@ const Settings: React.FC = () => {
   const { settings, loading, setSettings } = useFetchAdditionalSettings({
     app,
   });
+
+  const hasWriteAccess =
+    team?.currentUserRole === "owner" || team?.currentUserRole === "admin";
 
   useEffect(() => {
     if (window.location.hash) {
@@ -59,8 +63,9 @@ const Settings: React.FC = () => {
 
       <FormOutboundWebhooks app={app} />
 
-      {(team?.currentUserRole === "owner" ||
-        team?.currentUserRole === "admin") && <FormDangerZone app={app} />}
+      {hasWriteAccess && <FormMigrateApp teams={teams!} app={app} />}
+
+      {hasWriteAccess && <FormDangerZone app={app} />}
     </Box>
   );
 };
