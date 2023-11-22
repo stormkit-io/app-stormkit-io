@@ -2,13 +2,17 @@ import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
 import * as router from "react-router";
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import { mockFetchApps } from "~/testing/nocks";
-import { mockApp } from "~/testing/data";
-import Apps from "./Apps";
+import { AuthContext } from "~/pages/auth/Auth.context";
+import { mockFetchApps } from "~/testing/nocks/nock_app";
+import mockApp from "~/testing/data/mock_app";
+import mockTeams from "~/testing/data/mock_teams";
+import mockUser from "~/testing/data/mock_user";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
+import Apps from "./Apps";
 
 describe("~/pages/apps/Apps.tsx", () => {
+  const teams = mockTeams();
   const apps = [
     mockApp({ id: "1231231", displayName: "My-app" }),
     mockApp({ id: "5121231", displayName: "My-second-app" }),
@@ -20,8 +24,16 @@ describe("~/pages/apps/Apps.tsx", () => {
     LocalStorage.set(LS_PROVIDER, "github");
 
     const memoryRouter = router.createMemoryRouter([
-      { path: "*", element: <Apps /> },
+      {
+        path: "*",
+        element: (
+          <AuthContext.Provider value={{ user: mockUser(), teams }}>
+            <Apps />
+          </AuthContext.Provider>
+        ),
+      },
     ]);
+
     wrapper = render(<router.RouterProvider router={memoryRouter} />);
   };
 
@@ -29,7 +41,11 @@ describe("~/pages/apps/Apps.tsx", () => {
     let scope: Scope;
 
     beforeEach(() => {
-      scope = mockFetchApps({ response: { apps, hasNextPage: false } });
+      scope = mockFetchApps({
+        teamId: teams[0].id,
+        response: { apps, hasNextPage: false },
+      });
+
       createWrapper();
     });
 
@@ -72,7 +88,11 @@ describe("~/pages/apps/Apps.tsx", () => {
 
   describe("when user has more apps to load", () => {
     beforeEach(() => {
-      mockFetchApps({ response: { apps, hasNextPage: true } });
+      mockFetchApps({
+        teamId: teams[0].id,
+        response: { apps, hasNextPage: true },
+      });
+
       createWrapper();
     });
 
@@ -86,6 +106,7 @@ describe("~/pages/apps/Apps.tsx", () => {
       const newApps = [{ ...apps[0], id: "7481841" }];
 
       const scope = mockFetchApps({
+        teamId: teams[0].id,
         from: 20,
         response: { apps: newApps, hasNextPage: false },
       });
@@ -106,7 +127,10 @@ describe("~/pages/apps/Apps.tsx", () => {
 
   describe("empty list", () => {
     beforeEach(() => {
-      mockFetchApps({ response: { apps: [], hasNextPage: false } });
+      mockFetchApps({
+        teamId: teams[0].id,
+        response: { apps: [], hasNextPage: false },
+      });
       createWrapper();
     });
 
@@ -121,7 +145,11 @@ describe("~/pages/apps/Apps.tsx", () => {
     const findInput = () => wrapper.getByLabelText("Search apps");
 
     beforeEach(() => {
-      mockFetchApps({ response: { apps, hasNextPage: true } });
+      mockFetchApps({
+        teamId: teams[0].id,
+        response: { apps, hasNextPage: true },
+      });
+
       createWrapper();
     });
 
@@ -132,6 +160,7 @@ describe("~/pages/apps/Apps.tsx", () => {
       });
 
       const scope = mockFetchApps({
+        teamId: teams[0].id,
         filter: "hello",
         response: { apps: [apps[0]], hasNextPage: true },
       });
