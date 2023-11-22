@@ -45,11 +45,16 @@ export default function TeamMenu({
           {selectedTeam &&
             !selectedTeam.isDefault &&
             selectedTeam.currentUserRole !== "developer" && (
-              <IconButton aria-label="Team members">
-                <Link href={`/${selectedTeam?.slug}/settings`}>
+              <Link
+                href={`/${selectedTeam?.slug}/settings`}
+                onClick={() => {
+                  selectedTeam && onSettingsClick(selectedTeam);
+                }}
+              >
+                <IconButton aria-label="Team members">
                   <GroupAdd sx={{ fontSize: 16 }} />
-                </Link>
-              </IconButton>
+                </IconButton>
+              </Link>
             )}
         </Box>
         <Box role="list">
@@ -97,15 +102,17 @@ export default function TeamMenu({
                 />
               </Link>
               {!team.isDefault && team.currentUserRole !== "developer" && (
-                <IconButton
-                  aria-label="Team settings"
-                  sx={{ opacity: 0.5, ":hover": { opacity: 1 } }}
-                  onClick={() => {
-                    onSettingsClick(team);
-                  }}
+                <Link
+                  href={`/${team.slug}/settings`}
+                  onClick={() => onSettingsClick(team)}
                 >
-                  <Settings sx={{ fontSize: 14 }} />
-                </IconButton>
+                  <IconButton
+                    aria-label="Team settings"
+                    sx={{ opacity: 0.5, ":hover": { opacity: 1 } }}
+                  >
+                    <Settings sx={{ fontSize: 14 }} />
+                  </IconButton>
+                </Link>
               )}
             </Box>
           ))}
@@ -113,6 +120,7 @@ export default function TeamMenu({
             variant="contained"
             color="secondary"
             fullWidth
+            sx={{ mb: 1 }}
             onClick={e => {
               e.preventDefault();
               onCreateTeamButtonClicked();

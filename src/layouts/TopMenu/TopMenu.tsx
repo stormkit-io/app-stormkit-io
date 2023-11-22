@@ -8,6 +8,7 @@ import Speed from "@mui/icons-material/Speed";
 import Logo from "~/components/Logo";
 import UserButtons from "./UserButtons";
 import TeamsToggle from "./Teams/TeamToggle";
+import { grey } from "@mui/material/colors";
 
 interface Props {
   children?: React.ReactNode;
@@ -27,7 +28,7 @@ export default function TopMenu({ children, submenu, app }: Props) {
     <Box
       sx={{
         width: "100%",
-        borderBottom: "1px solid rgba(255,255,255,0.1)",
+        borderBottom: `1px solid ${grey[900]}`,
       }}
     >
       <Box
