@@ -20,14 +20,27 @@ export const useSelectedTeam = ({
   app,
 }: UseSelectedTeamProps): Team | undefined => {
   const params = useParams();
+  const findDefaultTeam = () => teams?.find(t => t.isDefault);
 
-  return useMemo(
-    () =>
-      teams?.find(
-        t =>
-          // The slug matches team id, team slug or app's teamId.
-          t.slug === params.team || app?.teamId === t.id || params.team === t.id
-      ) || teams?.find(t => t.isDefault),
-    [teams, params, app]
-  );
+  const team = useMemo(() => {
+    if (params.team) {
+      return teams?.find(t => t.slug === params.team || t.id === params.id);
+    }
+
+    if (app?.teamId) {
+      return teams?.find(t => t.id === app.teamId);
+    }
+
+    const teamId = localStorage.getItem("teamId");
+
+    if (teamId) {
+      return teams?.find(t => t.id === teamId);
+    }
+  }, [teams, params, app]);
+
+  if (team) {
+    localStorage.setItem("teamId", team.id);
+  }
+
+  return team || findDefaultTeam();
 };
