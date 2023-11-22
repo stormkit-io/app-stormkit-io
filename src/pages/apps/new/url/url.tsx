@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -10,6 +10,8 @@ import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import ArrowBack from "@mui/icons-material/ArrowBack";
+import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import { insertRepo } from "../_components/actions";
 
 interface URLError {
@@ -19,6 +21,8 @@ interface URLError {
 
 export default function ImportURL() {
   const [searchParams] = useSearchParams();
+  const { teams } = useContext(AuthContext);
+  const team = useSelectedTeam({ teams });
   const defaultURL = searchParams.get("r") || "";
   const [importUrl, setImportUrl] = useState<string>(defaultURL);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +59,7 @@ export default function ImportURL() {
     insertRepo({
       provider: "github",
       repo: repoName,
+      teamId: team?.id,
     })
       .then(app => {
         navigate(`/apps/${app.id}/environments`);

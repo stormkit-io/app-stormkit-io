@@ -1,8 +1,10 @@
 import type { Repo } from "../types.d";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useContext } from "react";
 import { useNavigate } from "react-router";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import SearchIcon from "@mui/icons-material/Search";
+import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import Form from "~/components/FormV2";
 import Button from "~/components/ButtonV2";
 import Spinner from "~/components/Spinner";
@@ -40,6 +42,8 @@ const RepoList: React.FC<Props> = ({
 }) => {
   const [filter, setFilter] = useState<string>();
   const [loadingInsert, setLoadingInsert] = useState("");
+  const { teams } = useContext(AuthContext);
+  const team = useSelectedTeam({ teams });
   const navigate = useNavigate();
   const logo = logos[provider];
   const repos = useMemo<Repo[]>(
@@ -52,6 +56,7 @@ const RepoList: React.FC<Props> = ({
     insertRepo({
       repo: r.fullName,
       provider,
+      teamId: team?.id,
     })
       .then(app => {
         navigate(`/apps/${app.id}`);

@@ -10,6 +10,7 @@ interface MockInsertAppProps {
   provider: Provider;
   repo: string;
   id: string;
+  teamId: string;
   status?: number;
 }
 
@@ -17,10 +18,11 @@ export const mockInsertApp = ({
   provider,
   repo,
   id,
+  teamId,
   status = 200,
 }: MockInsertAppProps) =>
   nock(endpoint)
-    .post(`/app`, { provider, repo })
+    .post(`/app`, { provider, repo, teamId })
     .reply(status, { app: { id } });
 
 interface MockFetchAppsProps {
