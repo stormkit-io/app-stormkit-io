@@ -50,14 +50,13 @@ const Settings: React.FC = () => {
     <Box sx={{ color: "white", m: "auto" }} maxWidth="md">
       <FormAppSettings app={app} additionalSettings={settings} />
 
-      <Container title="Trigger deploys" maxWidth="max-w-none" className="mb-4">
-        <FormTriggerDeploys
-          app={app}
-          additionalSettings={settings}
-          setAdditionalSettings={setSettings}
-          environments={environments}
-        />
-      </Container>
+      <FormTriggerDeploys
+        app={app}
+        additionalSettings={settings}
+        setAdditionalSettings={setSettings}
+        environments={environments}
+      />
+
       <Container
         title="Outbound webhooks"
         maxWidth="max-w-none"

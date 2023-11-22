@@ -7,8 +7,6 @@ interface DeleteAppProps {
   app: App;
 }
 
-type voidFn = () => void;
-
 /**
  * Action to delete an application.
  */
@@ -16,35 +14,9 @@ export const deleteApp = ({ app }: DeleteAppProps): Promise<void> => {
   return api.delete("/app", { appId: app.id });
 };
 
-interface UpdateDeployTriggerProps {
-  app: App;
-  setLoading: SetLoading;
-  setError: SetError;
-}
-
 export const deleteTrigger = (appId: string) => {
   return api.delete(`/app/${appId}/deploy-trigger`);
 };
-
-export const updateDeployTrigger =
-  ({ app, setLoading, setError }: UpdateDeployTriggerProps): voidFn =>
-  () => {
-    setLoading(true);
-    setError(null);
-
-    api
-      .put(`/app/deploy-trigger`, { appId: app.id })
-      .then(() => {
-        setLoading(false);
-        window.location.reload();
-      })
-      .catch(() => {
-        setLoading(false);
-        setError(
-          "Something went wrong while generating a new hash. Please try again and if the problem persists contact us on Discord or Email."
-        );
-      });
-  };
 
 interface UseFetchAdditionalSettings {
   app: App;
