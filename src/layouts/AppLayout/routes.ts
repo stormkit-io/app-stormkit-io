@@ -14,10 +14,6 @@ export const routes = [
     element: Async(() => import("~/pages/apps/[id]/environments/[env-id]")),
   },
   {
-    path: `/team`,
-    element: Async(() => import("~/pages/apps/[id]/team")),
-  },
-  {
     path: `/settings`,
     element: Async(() => import("~/pages/apps/[id]/settings")),
   },
