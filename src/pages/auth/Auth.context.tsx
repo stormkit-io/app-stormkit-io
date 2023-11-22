@@ -31,6 +31,7 @@ export default function ContextProvider({ children }: Props) {
     refreshToken: teamsRefreshToken,
     user,
   });
+
   const shouldRedirect = !loading && !user && !pathname.includes("/auth");
 
   useEffect(() => {
