@@ -1,5 +1,4 @@
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { waitFor, fireEvent, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import mockApp from "~/testing/data/mock_app";
@@ -26,7 +25,9 @@ describe("~/pages/apps/[id]/settings/_components/FormDangerZone", () => {
   test("displays a warning message", async () => {
     await waitFor(() => {
       expect(
-        wrapper.getByText(/Deleting an application will remove/)
+        wrapper.getByText(
+          /Permanently delete your App and all of its contents from the Stormkit platform. This action cannot be undone — proceed with caution./
+        )
       ).toBeTruthy();
     });
   });

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import Box from "@mui/material/Box";
+import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Spinner from "~/components/Spinner";
-import Container from "~/components/Container";
 import FormAppSettings from "./_components/FormAppSettings";
 import FormTriggerDeploys from "./_components/FormTriggerDeploys";
 import FormOutboundWebhooks from "./_components/FormOutboundWebhooks";
@@ -14,8 +14,8 @@ const { useFetchAdditionalSettings } = actions;
 
 const Settings: React.FC = () => {
   const { app, environments } = useContext(AppContext);
-  const { user } = useContext(AuthContext);
-  const isCurrentUserTheOwner = app.userId === user!.id;
+  const { teams } = useContext(AuthContext);
+  const team = useSelectedTeam({ teams, app });
   const { settings, loading, setSettings } = useFetchAdditionalSettings({
     app,
   });
@@ -59,11 +59,8 @@ const Settings: React.FC = () => {
 
       <FormOutboundWebhooks app={app} />
 
-      {isCurrentUserTheOwner && (
-        <Container title="Danger zone" maxWidth="max-w-none" className="mb-4">
-          <FormDangerZone app={app} />
-        </Container>
-      )}
+      {(team?.currentUserRole === "owner" ||
+        team?.currentUserRole === "admin") && <FormDangerZone app={app} />}
     </Box>
   );
 };
