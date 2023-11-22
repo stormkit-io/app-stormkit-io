@@ -57,13 +57,8 @@ const Settings: React.FC = () => {
         environments={environments}
       />
 
-      <Container
-        title="Outbound webhooks"
-        maxWidth="max-w-none"
-        className="mb-4"
-      >
-        <FormOutboundWebhooks app={app} />
-      </Container>
+      <FormOutboundWebhooks app={app} />
+
       {isCurrentUserTheOwner && (
         <Container title="Danger zone" maxWidth="max-w-none" className="mb-4">
           <FormDangerZone app={app} />

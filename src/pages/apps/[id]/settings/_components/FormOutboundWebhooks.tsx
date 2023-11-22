@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import InfoBox from "~/components/InfoBoxV2";
-import Button from "~/components/ButtonV2";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/lab/LoadingButton";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import Modal from "~/components/ModalV2";
 import Container from "~/components/Container";
 import Spinner from "~/components/Spinner";
@@ -14,6 +19,7 @@ import {
 } from "../_actions/outbound_webhook_actions";
 import type { SendSampleRequestResponse } from "../_actions/outbound_webhook_actions";
 import { OutboundWebhook } from "../types";
+import { grey } from "@mui/material/colors";
 
 interface Props {
   app: App;
@@ -31,93 +37,103 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
   });
 
   return (
-    <>
-      {error && (
-        <InfoBox type={InfoBox.ERROR} dismissable className="mx-4 mb-4">
-          {error}
-        </InfoBox>
-      )}
-      {hooks.length ? (
-        hooks.map(hook => (
-          <div
-            className="bg-blue-10 p-4 mx-4 mb-4 flex justify-between"
-            key={hook.id}
-          >
-            <div>
-              <p className="font-bold">{hook.requestMethod?.toUpperCase()}</p>
-              <p className="text-xs mt-1">{truncate(hook.requestUrl, 50)}</p>
-              <p className="text-xs mt-1">
-                {hook.triggerWhen === "on_deploy"
-                  ? "Triggered after each successful deployment"
-                  : "Triggered after a deployment is published"}
-              </p>
-            </div>
-            <div className="self-baseline">
-              <DotDotDot
-                items={[
-                  {
-                    text: "Edit",
-                    onClick: () => {
-                      setWebhookToEdit(hook);
-                      toggleModal(true);
+    <Card error={error} sx={{ mb: 4 }}>
+      <CardHeader
+        title="Outbound webhooks"
+        subtitle="Integrate external applications with Stormkit using webhooks."
+      />
+      <Box sx={{ mb: 4 }}>
+        {hooks.length ? (
+          hooks.map(hook => (
+            <Box
+              key={hook.id}
+              sx={{
+                bgcolor: "rgba(255,255,255,0.015)",
+                border: `1px solid ${grey[900]}`,
+                display: "flex",
+                alignItems: "center",
+                mb: 2,
+                p: 2,
+              }}
+            >
+              <Box sx={{ flex: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}>
+                  {hook.requestMethod?.toUpperCase()}
+                </Typography>
+                <Typography>{truncate(hook.requestUrl, 50)}</Typography>
+                <Typography>
+                  {hook.triggerWhen === "on_deploy"
+                    ? "Triggered after each successful deployment"
+                    : "Triggered after a deployment is published"}
+                </Typography>
+              </Box>
+              <div className="self-baseline">
+                <DotDotDot
+                  items={[
+                    {
+                      text: "Edit",
+                      onClick: () => {
+                        setWebhookToEdit(hook);
+                        toggleModal(true);
+                      },
                     },
-                  },
-                  {
-                    text: (
-                      <div className="flex">
-                        Trigger sample
-                        {loadingSample && (
-                          <Spinner
-                            className="ml-2"
-                            primary
-                            width={4}
-                            height={4}
-                          />
-                        )}
-                      </div>
-                    ),
-                    onClick: close => {
-                      setLoadingSample(true);
+                    {
+                      text: (
+                        <div className="flex">
+                          Trigger sample
+                          {loadingSample && (
+                            <Spinner
+                              className="ml-2"
+                              primary
+                              width={4}
+                              height={4}
+                            />
+                          )}
+                        </div>
+                      ),
+                      onClick: close => {
+                        setLoadingSample(true);
 
-                      sendSampleRequest({ app, whId: hook.id })
-                        .then(res => {
-                          setLoadingSample(false);
-                          setSampleData(res);
-                        })
-                        .finally(() => {
+                        sendSampleRequest({ app, whId: hook.id })
+                          .then(res => {
+                            setLoadingSample(false);
+                            setSampleData(res);
+                          })
+                          .finally(() => {
+                            close?.();
+                          });
+
+                        return false;
+                      },
+                    },
+                    {
+                      text: "Delete",
+                      onClick: close => {
+                        deleteOutboundWebhook({
+                          app,
+                          whId: hook.id,
+                        }).then(() => {
+                          setRefreshToken(Date.now());
                           close?.();
                         });
-
-                      return false;
+                      },
                     },
-                  },
-                  {
-                    text: "Delete",
-                    onClick: close => {
-                      deleteOutboundWebhook({
-                        app,
-                        whId: hook.id,
-                      }).then(() => {
-                        setRefreshToken(Date.now());
-                        close?.();
-                      });
-                    },
-                  },
-                ]}
-              />
-            </div>
-          </div>
-        ))
-      ) : (
-        <InfoBox className="mx-4 mb-4">
-          You don't have any webhooks installed.
-        </InfoBox>
-      )}
-      <div className="flex justify-end p-4 pt-0">
+                  ]}
+                />
+              </div>
+            </Box>
+          ))
+        ) : (
+          <Alert color="info">
+            <Typography>You don't have any webhooks installed.</Typography>
+          </Alert>
+        )}
+      </Box>
+      <CardFooter>
         <Button
-          category="action"
-          type="submit"
-          aria-label="Add new webhook"
+          color="secondary"
+          variant="contained"
+          type="button"
           loading={loading}
           onClick={() => {
             toggleModal(true);
@@ -125,7 +141,7 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
         >
           Add new webhook
         </Button>
-      </div>
+      </CardFooter>
       <Modal
         open={Boolean(sampleData)}
         className="max-w-screen-sm"
@@ -146,19 +162,21 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
         </Container>
       </Modal>
 
-      <FormNewOutboundWebhookModal
-        app={app}
-        isOpen={isModalOpen}
-        onUpdate={() => {
-          setRefreshToken(Date.now());
-        }}
-        toggleModal={(val: boolean) => {
-          toggleModal(val);
-          setWebhookToEdit(undefined);
-        }}
-        webhook={webhookToEdit}
-      />
-    </>
+      {isModalOpen && (
+        <FormNewOutboundWebhookModal
+          app={app}
+          isOpen
+          onUpdate={() => {
+            setRefreshToken(Date.now());
+          }}
+          toggleModal={(val: boolean) => {
+            toggleModal(val);
+            setWebhookToEdit(undefined);
+          }}
+          webhook={webhookToEdit}
+        />
+      )}
+    </Card>
   );
 };
 

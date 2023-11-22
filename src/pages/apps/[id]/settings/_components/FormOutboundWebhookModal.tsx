@@ -90,7 +90,6 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
       onClose={() => {
         toggleModal(false);
       }}
-      className="max-w-screen-sm"
     >
       <Container
         title={<span>{webhook ? "Update" : "Create"} outbound webhook</span>}
