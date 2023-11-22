@@ -4,6 +4,7 @@ import api from "~/utils/api/Api";
 interface FetchAppListProps {
   from?: number;
   filter?: string;
+  teamId?: string;
 }
 
 interface FetchAppListReturnValue {
@@ -21,6 +22,7 @@ interface FetchAppListAPIResponse {
 export const useFetchAppList = ({
   from = 0,
   filter,
+  teamId,
 }: FetchAppListProps): FetchAppListReturnValue => {
   const [apps, setApps] = useState<Array<App>>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +36,9 @@ export const useFetchAppList = ({
     setError(null);
 
     api
-      .fetch<FetchAppListAPIResponse>(`/apps?from=${from}&filter=${filter}`)
+      .fetch<FetchAppListAPIResponse>(
+        `/apps?from=${from}&filter=${filter}&teamId=${teamId}`
+      )
       .then(res => {
         if (unmounted !== true) {
           if (from > 0) {
@@ -56,7 +60,7 @@ export const useFetchAppList = ({
     return () => {
       unmounted = true;
     };
-  }, [api, from, filter]);
+  }, [api, from, filter, teamId]);
 
   return { apps, loading, error, hasNextPage };
 };

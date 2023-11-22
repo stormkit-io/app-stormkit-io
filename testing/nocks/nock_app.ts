@@ -26,18 +26,20 @@ export const mockInsertApp = ({
 interface MockFetchAppsProps {
   from?: number;
   filter?: string;
+  teamId?: string;
   status?: number;
   response: { apps: App[]; hasNextPage: boolean };
 }
 
 export const mockFetchApps = ({
   from = 0,
+  teamId = "",
   filter = "",
   status = 200,
   response,
 }: MockFetchAppsProps) =>
   nock(endpoint)
-    .get(`/apps?from=${from}&filter=${filter}`)
+    .get(`/apps?from=${from}&filter=${filter}&teamId=${teamId}`)
     .reply(status, response);
 
 interface DeleteAppProps {

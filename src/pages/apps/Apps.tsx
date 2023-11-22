@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
@@ -7,12 +7,14 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import ImportExport from "@mui/icons-material/ImportExport";
 import LinkIcon from "@mui/icons-material/Link";
 import Typography from "@mui/material/Typography";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import ButtonDropdown from "~/components/ButtonDropdown";
 import AppName from "~/components/AppName";
 import ContainerV2 from "~/components/ContainerV2";
 import Form from "~/components/FormV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Spinner from "~/components/Spinner";
+import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { providerToText } from "~/utils/helpers/string";
 import { useFetchAppList } from "./actions";
 import { WelcomeModal, EmptyList } from "./_components";
@@ -23,11 +25,15 @@ const welcomeModalId = "welcome_modal";
 
 export default function Apps() {
   const navigate = useNavigate();
+  const { teams } = useContext(AuthContext);
   const [from, setFrom] = useState(0);
   const [filter, setFilter] = useState("");
+  const selectedTeam = useSelectedTeam({ teams });
+
   const { apps, loading, error, hasNextPage } = useFetchAppList({
     from,
     filter,
+    teamId: selectedTeam?.id,
   });
 
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(
@@ -48,6 +54,25 @@ export default function Apps() {
   }
 
   const importFromProvider = `Import from ${providerToText[provider]}`;
+  const isLoadingFirstTime = loading && apps.length === 0;
+
+  if (isLoadingFirstTime) {
+    return (
+      <ContainerV2>
+        <Box
+          sx={{
+            p: 4,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "300px",
+          }}
+        >
+          <Spinner primary width={8} height={8} />
+        </Box>
+      </ContainerV2>
+    );
+  }
 
   if (apps.length === 0 && !loading && !filter) {
     return (
@@ -58,8 +83,6 @@ export default function Apps() {
       </ContainerV2>
     );
   }
-
-  const isLoadingFirstTime = loading && apps.length === 0;
 
   return (
     <>
@@ -107,12 +130,7 @@ export default function Apps() {
             {!loading && error && (
               <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>
             )}
-            {isLoadingFirstTime && (
-              <div className="flex w-full items-center justify-center">
-                <Spinner primary width={8} height={8} />
-              </div>
-            )}
-            {!isLoadingFirstTime && !error && (
+            {!error && (
               <>
                 <div className="flex-1 w-full">
                   {apps.length === 0 && (
