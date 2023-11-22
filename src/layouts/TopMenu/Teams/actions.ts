@@ -31,6 +31,10 @@ export const useSelectedTeam = ({
       return teams?.find(t => t.id === app.teamId);
     }
 
+    if (location.pathname == "/") {
+      return findDefaultTeam();
+    }
+
     const teamId = localStorage.getItem("teamId");
 
     if (teamId) {
