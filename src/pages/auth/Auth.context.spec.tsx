@@ -128,6 +128,8 @@ describe("pages/auth/Auth.context", () => {
           authError: null,
           loginOauth: expect.any(Function),
           logout: expect.any(Function),
+          reloadTeams: expect.any(Function),
+          teams: undefined,
         });
       });
     });
