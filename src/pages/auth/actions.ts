@@ -68,8 +68,7 @@ export const useFetchUser = (): FetchUserReturnValue => {
 
 export const logout = () => (): void => {
   api.removeAuthToken();
-  LocalStorage.del(LS_USER);
-  LocalStorage.del(LS_ACCESS_TOKEN);
+  localStorage.clear();
   window.location.href = "/";
 };
 
