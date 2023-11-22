@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import Box from "@mui/material/Box";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Spinner from "~/components/Spinner";
@@ -12,7 +13,7 @@ import * as actions from "./actions";
 const { useFetchAdditionalSettings } = actions;
 
 const Settings: React.FC = () => {
-  const { app, environments, setRefreshToken } = useContext(AppContext);
+  const { app, environments } = useContext(AppContext);
   const { user } = useContext(AuthContext);
   const isCurrentUserTheOwner = app.userId === user!.id;
   const { settings, loading, setSettings } = useFetchAdditionalSettings({
@@ -29,23 +30,26 @@ const Settings: React.FC = () => {
     }
   }, []);
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          m: "auto",
+        }}
+        maxWidth="md"
+      >
+        <Spinner secondary />
+      </Box>
+    );
+  }
+
   return (
-    <>
-      <Container title="App settings" maxWidth="max-w-none" className="mb-4">
-        {loading ? (
-          <div className="flex justify-center mb-4">
-            <Spinner primary />
-          </div>
-        ) : (
-          <FormAppSettings
-            app={app}
-            additionalSettings={settings}
-            onUpdate={() => {
-              setRefreshToken(Date.now());
-            }}
-          />
-        )}
-      </Container>
+    <Box sx={{ color: "white", m: "auto" }} maxWidth="md">
+      <FormAppSettings app={app} additionalSettings={settings} />
+
       <Container title="Trigger deploys" maxWidth="max-w-none" className="mb-4">
         <FormTriggerDeploys
           app={app}
@@ -66,7 +70,7 @@ const Settings: React.FC = () => {
           <FormDangerZone app={app} />
         </Container>
       )}
-    </>
+    </Box>
   );
 };
 

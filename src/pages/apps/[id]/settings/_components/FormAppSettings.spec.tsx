@@ -1,6 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
 import type { AppSettings } from "../types";
-import React from "react";
 import { waitFor, fireEvent, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import { mockUpdateSettings } from "~/testing/nocks/nock_update_settings";
@@ -14,16 +13,10 @@ interface Props {
 describe("~/pages/apps/[id]/settings/_components/FormAppSettings", () => {
   let currentApp: App;
   let wrapper: RenderResult;
-  let onUpdate: jest.Mock;
 
   const createWrapper = ({ app, additionalSettings }: Props) => {
-    onUpdate = jest.fn();
     wrapper = render(
-      <FormAppSettings
-        app={app}
-        additionalSettings={additionalSettings}
-        onUpdate={onUpdate}
-      />
+      <FormAppSettings app={app} additionalSettings={additionalSettings} />
     );
   };
 
@@ -60,7 +53,6 @@ describe("~/pages/apps/[id]/settings/_components/FormAppSettings", () => {
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(onUpdate).toHaveBeenCalled();
     });
   });
 });
