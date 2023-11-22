@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { formatRepo } from "./helpers";
 import api from "~/utils/api/Api";
-import type { AppSettings, Runtime } from "./types.d";
+import type { AppSettings } from "./types.d";
 
 interface DeleteAppProps {
   app: App;
@@ -24,7 +24,7 @@ interface UpdateDeployTriggerProps {
 
 export const deleteTrigger = (appId: string) => {
   return api.delete(`/app/${appId}/deploy-trigger`);
-}
+};
 
 export const updateDeployTrigger =
   ({ app, setLoading, setError }: UpdateDeployTriggerProps): voidFn =>
@@ -110,14 +110,8 @@ export const useFetchAdditionalSettings = ({
 };
 
 interface UpdateAdditionalSettingsProps {
-  values: FormValues;
+  values: Record<string, string>;
   app: App;
-}
-
-export interface FormValues {
-  repo: string;
-  displayName: string;
-  runtime: Runtime;
 }
 
 export const updateAdditionalSettings = ({
