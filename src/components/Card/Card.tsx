@@ -60,7 +60,7 @@ function Card({ sx, error, success, children, ...rest }: Props) {
           sx={{
             px: 4,
             py: 2,
-            borderTop: `1px solid rgba(255,255,255,0.02)`,
+            borderTop: `1px solid rgba(255,255,255,0.05)`,
           }}
         >
           {footer}
