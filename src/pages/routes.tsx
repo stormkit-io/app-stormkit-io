@@ -45,7 +45,7 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/apps"), centerLayout),
   },
   {
-    path:"/clone",
+    path: "/clone",
     element: Async(() => import("~/pages/clone"), centerLayout),
   },
   {
@@ -95,6 +95,18 @@ const routes: Array<RouteProps> = [
   {
     path: "/user/*",
     element: Async(() => import("~/pages/user"), centerLayout),
+  },
+  {
+    path: "/invitation/accept",
+    element: Async(() => import("~/pages/team/InvitationAccept"), centerLayout),
+  },
+  {
+    path: "/:team",
+    element: Async(() => import("~/pages/apps"), centerLayout),
+  },
+  {
+    path: "/:team/settings",
+    element: Async(() => import("~/pages/team/Settings"), centerLayout),
   },
 ];
 
