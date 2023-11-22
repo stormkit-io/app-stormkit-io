@@ -1,36 +1,33 @@
-import type { Member } from "~/pages/apps/[id]/team/actions";
-
 interface Props {
-  appId: string;
+  teamId: string;
 }
 
-export default ({ appId }: Props): Member[] => [
+export default ({ teamId }: Props): TeamMember[] => [
   {
-    appId,
-    createdAt: 1551184200,
-    isOwner: true,
-    user: {
-      displayName: "stormkit",
-      avatar: "https://avatars2.githubusercontent.com/u/3321893?v=4",
-      email: "foo@bar",
-      memberSince: 1551184200,
-      id: "1644802351",
-      fullName: "Foo Bar",
-      package: { id: "enterprise" },
-    },
+    id: "1",
+    teamId,
+    userId: "1501",
+    role: "owner",
+    status: true,
+    displayName: "dlorenzo",
+    email: "dlorenzo@stormkit.io",
   },
   {
-    appId,
-    createdAt: 1551184200,
-    isOwner: false,
-    user: {
-      displayName: "stormkit-account-2",
-      avatar: "https://avatars2.githubusercontent.com/u/3321893?v=4",
-      email: "voo@bar",
-      memberSince: 1551184200,
-      id: "16448021321",
-      fullName: "Voo Bar",
-      package: { id: "free" },
-    },
+    id: "2",
+    teamId,
+    userId: "1502",
+    role: "admin",
+    status: true,
+    displayName: "svalerie",
+    email: "svalerie@stormkit.io",
+  },
+  {
+    id: "3",
+    teamId,
+    userId: "1503",
+    role: "developer",
+    status: true,
+    displayName: "msanchez",
+    email: "msanchez@stormkit.io",
   },
 ];

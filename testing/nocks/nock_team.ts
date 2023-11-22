@@ -31,6 +31,19 @@ export const mockUpdateTeam = ({
 }: MockUpdateTeamProps) =>
   nock(endpoint).patch("/team", { name, teamId }).reply(status, response);
 
+interface MockRemoveTeamProps {
+  teamId: string;
+  status?: number;
+  response?: { ok: boolean };
+}
+
+export const mockRemoveTeam = ({
+  teamId,
+  status = 200,
+  response,
+}: MockRemoveTeamProps) =>
+  nock(endpoint).delete(`/team?teamId=${teamId}`).reply(status, response);
+
 // TODO: REMOVE FOLLOWING LINES AFTER MIGRATING TO TEAMS v2
 
 interface MockInviteMemberProps {
