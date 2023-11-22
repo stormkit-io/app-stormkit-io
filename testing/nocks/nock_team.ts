@@ -50,3 +50,20 @@ export const mockRemoveTeam = ({
   response,
 }: MockRemoveTeamProps) =>
   nock(endpoint).delete(`/team?teamId=${teamId}`).reply(status, response);
+
+interface MockMigrateTeamProps {
+  teamId: string;
+  appId: string;
+  status?: number;
+  response?: { ok: boolean };
+}
+
+export const mockMigrateApp = ({
+  teamId,
+  appId,
+  status = 200,
+  response = { ok: true },
+}: MockMigrateTeamProps) =>
+  nock(endpoint)
+    .post("/team/migrate", { teamId, appId })
+    .reply(status, response);
