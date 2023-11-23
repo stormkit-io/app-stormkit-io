@@ -33,7 +33,7 @@ function Card({ sx, error, success, children, ...rest }: Props) {
     <Box
       sx={{
         m: "auto",
-        bgcolor: "rgba(0,0,0,0.1)",
+        bgcolor: "rgba(0,0,0,0.3)",
         border: `1px solid rgba(255,255,255,0.04)`,
         borderRadius: 1,
         pb: !footer ? 4 : 0,
