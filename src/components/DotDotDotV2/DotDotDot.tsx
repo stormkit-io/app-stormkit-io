@@ -3,6 +3,7 @@ import cn from "classnames";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
+import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import Button from "~/components/ButtonV2";
 
@@ -22,21 +23,6 @@ interface Props {
 
 export default function DotDotDot({ label, items }: Props) {
   const [isOpen, toggleIsOpen] = useState(false);
-
-  if (!isOpen) {
-    return (
-      <Button
-        styled={false}
-        onClick={() => toggleIsOpen(!isOpen)}
-        aria-label={label}
-      >
-        <span
-          className="fas fa-ellipsis-h cursor-pointer"
-          aria-label="expand"
-        />
-      </Button>
-    );
-  }
 
   return (
     <Tooltip
@@ -98,11 +84,13 @@ export default function DotDotDot({ label, items }: Props) {
         </ClickAwayListener>
       }
     >
-      <div>
-        <Button styled={false} onClick={() => toggleIsOpen(!isOpen)}>
-          <span className="fas fa-ellipsis-h cursor-pointer" />
-        </Button>
-      </div>
+      <IconButton
+        onClick={() => toggleIsOpen(!isOpen)}
+        sx={{ position: "relative", right: -10 }}
+        aria-label={label}
+      >
+        <MoreHoriz sx={{ fontSize: 16 }} aria-label="expand" />
+      </IconButton>
     </Tooltip>
   );
 }

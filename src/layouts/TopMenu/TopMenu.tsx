@@ -46,7 +46,7 @@ export default function TopMenu({ children, submenu, app }: Props) {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Link href="/" sx={{ flex: "1", mr: 2 }}>
+          <Link href="/" sx={{ flex: "1", mr: 1 }}>
             <Logo iconSize={28} iconOnly />
           </Link>
           <TeamsToggle app={app} />

@@ -17,8 +17,8 @@ export default function CardHeader({
   ...rest
 }: Props) {
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ flex: 1, ...sx }} {...rest}>
+    <Box sx={{ display: "flex", alignItems: "center", ...sx }} {...rest}>
+      <Box sx={{ flex: 1 }}>
         {title && (
           <Typography
             variant="h2"
