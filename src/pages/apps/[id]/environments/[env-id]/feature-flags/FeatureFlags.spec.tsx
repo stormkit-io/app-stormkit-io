@@ -1,5 +1,4 @@
 import { fireEvent, RenderResult } from "@testing-library/react";
-import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -127,6 +126,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/feature-flags/FeatureFlags.spe
 
       await waitFor(() => {
         expect(wrapper.getByText("Yes, continue")).toBeTruthy();
+      });
+
+      mockFetchFeatureFlags({
+        appId: currentApp.id,
+        envId: currentEnv.id!,
+        response: flags,
       });
 
       fireEvent.click(wrapper.getByText("Yes, continue"));
