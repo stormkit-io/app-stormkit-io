@@ -1,6 +1,10 @@
 import React from "react";
-import cn from "classnames";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import RocketLaunch from "@mui/icons-material/RocketLaunch";
+import OpenInNew from "@mui/icons-material/OpenInNew";
+import VpnLock from "@mui/icons-material/VpnLock";
+import cn from "classnames";
 import Link from "@mui/material/Link";
 import Button from "~/components/ButtonV2";
 import { useFetchStatus } from "../actions";
@@ -33,25 +37,22 @@ const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
     return (
       <>
         <Box sx={{ display: "flex" }}>
-          <Box component="label" sx={{ width: 80, opacity: 0.5 }}>
+          <Box component="label" sx={{ width: 112, opacity: 0.5 }}>
             Endpoint
           </Box>
           <Box>
-            <span className="fa fa-external-link w-6 text-gray-50"></span>
+            <OpenInNew sx={{ fontSize: 16, mr: 1 }} />
             <Link href={endpoint} sx={{ color: "white" }}>
               {endpoint.replace(/https?:\/\//, "")}
             </Link>
           </Box>
         </Box>
         <Box sx={{ display: "flex", mt: 2 }}>
-          <Box component="label" sx={{ width: 80, opacity: 0.5 }}>
+          <Box component="label" sx={{ width: 112, opacity: 0.5 }}>
             Published
           </Box>
           <Box>
-            <span
-              className="fa fa-ship w-6 text-gray-50"
-              style={{ marginLeft: "-1px" }}
-            ></span>
+            <RocketLaunch sx={{ fontSize: 16, mr: 1 }} />
             {env.published.map(p => (
               <Link
                 key={p.deploymentId}
@@ -64,66 +65,60 @@ const EnvironmentStatus: React.FC<Props> = ({ env, app }) => {
           </Box>
         </Box>
         <Box sx={{ display: "flex", mt: 2 }}>
-          <Box component="label" sx={{ width: 80, opacity: 0.5 }}>
+          <Box component="label" sx={{ width: 112, opacity: 0.5 }}>
             Status
           </Box>
-          <span
-            className={cn({
-              "text-green-50": status === 200 || status === 304,
-            })}
+          <Typography
+            sx={{ color: status === 200 || status === 304 ? "green" : "white" }}
           >
-            <span
-              className={cn("fa fa-globe w-6", {
-                "text-gray-50": status !== 200 && status !== 304,
-              })}
-            ></span>
+            <VpnLock sx={{ fontSize: 16, mr: 1 }} />
             {status}
-          </span>
+          </Typography>
         </Box>
       </>
     );
   }
 
   return (
-    <>
-      <div className="flex items-center">
-        <label className="flex w-20 text-gray-50">Status</label>
-        <span
-          className={cn("w-2 h-2 inline-block mr-4", {
-            "bg-green-50": env.lastDeploy?.exit === 0,
-            "bg-red-50": env.lastDeploy?.exit !== 0,
-            "bg-yellow-50": !env.lastDeploy,
-          })}
-        />
-        {env.lastDeploy?.createdAt ? (
-          env.lastDeploy?.exit === 0 ? (
-            <span>
-              Deployed successfully.{" "}
-              <Link
-                href={`/apps/${app.id}/environments/${env.id}/deployments/${env.lastDeploy.id}`}
-              >
-                Go to deployment <span className="fa fa-chevron-right" />
-              </Link>
-            </span>
-          ) : (
-            "Deployment failed."
-          )
-        ) : (
-          <span>
-            Not yet deployed.{" "}
-            <Button
-              type="button"
-              styled={false}
-              onClick={deployNow}
-              onKeyUp={deployNow}
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Typography component="label" sx={{ opacity: 0.5, width: 112 }}>
+        Status
+      </Typography>
+      <span
+        className={cn("w-2 h-2 inline-block mr-4", {
+          "bg-green-50": env.lastDeploy?.exit === 0,
+          "bg-red-50": env.lastDeploy?.exit !== 0,
+          "bg-yellow-50": !env.lastDeploy,
+        })}
+      />
+      {env.lastDeploy?.createdAt ? (
+        env.lastDeploy?.exit === 0 ? (
+          <Typography>
+            Deployed successfully.{" "}
+            <Link
+              href={`/apps/${app.id}/environments/${env.id}/deployments/${env.lastDeploy.id}`}
             >
-              Deploy now
-            </Button>{" "}
-            and publish it to serve your application.
-          </span>
-        )}
-      </div>
-    </>
+              Go to deployment <span className="fa fa-chevron-right" />
+            </Link>
+          </Typography>
+        ) : (
+          "Deployment failed."
+        )
+      ) : (
+        <Typography>
+          Not yet deployed.{" "}
+          <Button
+            type="button"
+            styled={false}
+            onClick={deployNow}
+            onKeyUp={deployNow}
+          >
+            Deploy now
+          </Button>{" "}
+          and publish it to serve your application.
+        </Typography>
+      )}
+    </Box>
   );
 };
 

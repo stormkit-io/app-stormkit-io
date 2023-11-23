@@ -1,8 +1,13 @@
 import React, { useContext, useState } from "react";
 import { useLocation } from "react-router";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import ArrowForward from "@mui/icons-material/ArrowForward";
+import CallSplit from "@mui/icons-material/CallSplit";
+import Button from "@mui/material/Button";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { envMenuItems } from "~/layouts/AppLayout/menu_items";
 import DotDotDot from "~/components/DotDotDotV2";
@@ -16,7 +21,7 @@ const Environments: React.FC = (): React.ReactElement => {
 
   return (
     <Box>
-      <Box sx={{ textAlign: "right", mb: 2 }}>
+      <Box sx={{ textAlign: "right", mb: 3 }}>
         <Button
           onClick={() => toggleModal(true)}
           variant="contained"
@@ -28,12 +33,10 @@ const Environments: React.FC = (): React.ReactElement => {
         </Button>
       </Box>
       {environments.map(env => (
-        <Box
+        <Card
           key={env.id}
-          bgcolor="container.paper"
           sx={{
-            mb: 2,
-            p: 2,
+            mb: 3,
             color: "white",
             "&:last-child": { mb: 0 },
             "&:hover": {
@@ -41,22 +44,10 @@ const Environments: React.FC = (): React.ReactElement => {
             },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box>
-              <Link
-                href={`/apps/${app.id}/environments/${env.id}`}
-                sx={{ color: "white", textTransform: "capitalize" }}
-              >
-                {env.name}
-              </Link>
-            </Box>
-            <Box>
+          <CardHeader
+            // This is to fix the extra space created by the padding of the Env Name Button.
+            sx={{ position: "relative", mt: -1 }}
+            actions={
               <DotDotDot
                 items={envMenuItems({ app, env, pathname }).map(i => ({
                   text: i.text,
@@ -64,21 +55,38 @@ const Environments: React.FC = (): React.ReactElement => {
                   icon: i.icon,
                 }))}
               />
-            </Box>
-          </Box>
+            }
+          >
+            <Typography variant="h2" sx={{ position: "relative", ml: -1 }}>
+              <Link href={`/apps/${app.id}/environments/${env.id}`}>
+                <Button
+                  variant="text"
+                  color="info"
+                  sx={{
+                    color: "white",
+                    textTransform: "capitalize",
+                    fontSize: 20,
+                  }}
+                >
+                  {env.name}
+                  <ArrowForward sx={{ fontSize: 16, ml: 1 }} />
+                </Button>
+              </Link>
+            </Typography>
+          </CardHeader>
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-            <Box component="label" sx={{ width: 80, opacity: 0.5 }}>
+            <Box component="label" sx={{ width: 112, opacity: 0.5 }}>
               Branch
             </Box>
-            <Box>
-              <span className="fa fa-code-branch w-6 text-gray-50"></span>
-              {env.branch}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <CallSplit sx={{ mr: 1, fontSize: 16 }} />
+              <Typography>{env.branch}</Typography>
             </Box>
           </Box>
           <Box sx={{ mt: 2 }}>
             <EnvironmentStatus env={env} app={app} />
           </Box>
-        </Box>
+        </Card>
       ))}
       {isModalOpen && (
         <EnvironmentFormModal
