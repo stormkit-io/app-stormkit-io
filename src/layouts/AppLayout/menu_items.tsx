@@ -77,14 +77,12 @@ export const envMenuItems = ({
     },
   ];
 
-  if (app.featureFlags?.SK_TRIGGER_FUNCTION) {
-    items.push({
-      icon: <Update />,
-      text: "Triggers",
-      path: `${envPath}/function-triggers`,
-      isActive: pathname.includes("/function-triggers"),
-    });
-  }
+  items.push({
+    icon: <Update />,
+    text: "Triggers",
+    path: `${envPath}/function-triggers`,
+    isActive: pathname.includes("/function-triggers"),
+  });
 
   if (app.featureFlags?.SK_DATA_STORE) {
     items.push({
