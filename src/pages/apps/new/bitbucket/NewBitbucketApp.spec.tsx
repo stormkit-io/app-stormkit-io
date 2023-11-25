@@ -51,7 +51,7 @@ describe("~/pages/apps/new/github/NewBitbucketApp.tsx", () => {
     });
 
     test("should have a proper title", () => {
-      expect(wrapper.getByText("Import app from Bitbucket")).toBeTruthy();
+      expect(wrapper.getByText("Import from Bitbucket")).toBeTruthy();
     });
 
     test("should render repositories", async () => {

@@ -47,7 +47,7 @@ describe("~/pages/apps/new/github/NewGitlabApp.tsx", () => {
     });
 
     test("should have a proper title", () => {
-      expect(wrapper.getByText("Import app from GitLab")).toBeTruthy();
+      expect(wrapper.getByText("Import from GitLab")).toBeTruthy();
     });
 
     test("should render repositories", async () => {

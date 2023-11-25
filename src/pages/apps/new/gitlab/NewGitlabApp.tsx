@@ -1,25 +1,43 @@
-import React, { useState } from "react";
-import { BackButton } from "~/components/Buttons";
-import Container from "~/components/Container";
+import { useState } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import RepoList from "../_components/RepoList";
 import { useFetchRepos } from "./actions";
 
-const Provider: React.FC = () => {
+export default function NewGitLabApp() {
   const [page, setPage] = useState(1);
   const { repos, hasNextPage, error, loading, isLoadingMore } = useFetchRepos({
     page,
   });
 
   return (
-    <Container
-      className="flex-1"
-      title={
-        <>
-          <BackButton to="/" className="ml-0 mr-2" /> Import app from GitLab
-        </>
-      }
-    >
-      <div className="p-4 pt-0">
+    <Box maxWidth="md" sx={{ width: "100%" }}>
+      <Card
+        sx={{
+          width: "100%",
+          color: "white",
+          mb: 4,
+        }}
+      >
+        <CardHeader>
+          <Typography>
+            <Link
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                color: "white",
+              }}
+              href="/"
+            >
+              <ArrowBack sx={{ mr: 1 }} />
+              Import from GitLab
+            </Link>
+          </Typography>
+        </CardHeader>
         <RepoList
           repositories={repos}
           provider="gitlab"
@@ -29,9 +47,7 @@ const Provider: React.FC = () => {
           hasNextPage={hasNextPage}
           onNextPage={() => setPage(page + 1)}
         />
-      </div>
-    </Container>
+      </Card>
+    </Box>
   );
-};
-
-export default Provider;
+}

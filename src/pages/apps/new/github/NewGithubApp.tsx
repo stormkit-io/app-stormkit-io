@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -7,6 +7,8 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import ArrowBack from "@mui/icons-material/ArrowBack";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
 import openPopup from "~/utils/helpers/popup";
 import RepoList from "../_components/RepoList";
 import Accounts from "../_components/Accounts";
@@ -17,7 +19,7 @@ const githubAccount =
 
 const openPopupURL = `https://github.com/apps/${githubAccount}/installations/new`;
 
-const Provider: React.FC = () => {
+export default function NewGithubApp() {
   const { user } = useContext(AuthContext);
   const [page, setPage] = useState(1);
   const [refreshToken, setRefreshToken] = useState<number>();
@@ -61,102 +63,94 @@ const Provider: React.FC = () => {
   }, [accounts, user?.displayName]);
 
   return (
-    <Box
-      sx={{
-        bgcolor: "container.default",
-        width: "100%",
-        color: "white",
-        mb: 4,
-      }}
-      maxWidth="md"
-    >
-      <Box
+    <Box maxWidth="md" sx={{ width: "100%" }}>
+      <Card
         sx={{
-          display: "flex",
+          width: "100%",
           color: "white",
-          mb: 2,
-          p: 2,
-          alignItems: "center",
-          justifyContent: "space-between",
+          mb: 4,
         }}
       >
-        <Typography>
-          <Link
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              color: "white",
-            }}
-            href="/"
-          >
-            <ArrowBack sx={{ mr: 1 }} />
-            Import from GitHub
-          </Link>
-        </Typography>
-        <Button
-          color="secondary"
-          variant="contained"
-          onClick={() => {
-            openPopup({
-              url: openPopupURL,
-              title: "Add repository",
-              width: 1000,
-              onClose: () => {
-                setInstallationId(undefined);
-                setRefreshToken(Date.now());
-              },
-            });
-          }}
-        >
-          <Box
-            component="span"
-            sx={{ display: { xs: "none", md: "inline-block" } }}
-          >
-            Connect more repositories
-          </Box>
-          <Box
-            component="span"
-            sx={{ display: { xs: "inline-block", md: "none" } }}
-          >
-            More repos
-          </Box>
-        </Button>
-      </Box>
-      <Box sx={{ p: 2, pt: 0 }}>
-        {!faLoading && accounts?.length > 0 && (
-          <Box sx={{ display: "flex", mb: 2 }}>
-            <Accounts
-              accounts={accounts}
-              selected={installationId}
-              onAccountChange={id => {
-                setPage(1);
-                setInstallationId(id);
+        <CardHeader
+          actions={
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() => {
+                openPopup({
+                  url: openPopupURL,
+                  title: "Add repository",
+                  width: 1000,
+                  onClose: () => {
+                    setInstallationId(undefined);
+                    setRefreshToken(Date.now());
+                  },
+                });
               }}
-            />
-          </Box>
-        )}
+            >
+              <Box
+                component="span"
+                sx={{ display: { xs: "none", md: "inline-block" } }}
+              >
+                Connect more repositories
+              </Box>
+              <Box
+                component="span"
+                sx={{ display: { xs: "inline-block", md: "none" } }}
+              >
+                More repos
+              </Box>
+            </Button>
+          }
+        >
+          <Typography>
+            <Link
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                color: "white",
+              }}
+              href="/"
+            >
+              <ArrowBack sx={{ mr: 1 }} />
+              Import from GitHub
+            </Link>
+          </Typography>
+        </CardHeader>
+        <Box>
+          {!faLoading && accounts?.length > 0 && (
+            <Box sx={{ display: "flex", mb: 2 }}>
+              <Accounts
+                accounts={accounts}
+                selected={installationId}
+                onAccountChange={id => {
+                  setPage(1);
+                  setInstallationId(id);
+                }}
+              />
+            </Box>
+          )}
 
-        {!faLoading && accounts?.length === 0 && (
-          <Alert color="info" sx={{ mb: repos?.length > 0 ? 2 : 0 }}>
-            <AlertTitle>No connected accounts found</AlertTitle>
-            <Typography>
-              Click on "Connect More Repositories" to import from GitHub.
-            </Typography>
-          </Alert>
-        )}
+          {!faLoading && accounts?.length === 0 && (
+            <Alert color="info" sx={{ mb: repos?.length > 0 ? 2 : 0 }}>
+              <AlertTitle>No connected accounts found</AlertTitle>
+              <Typography>
+                Click on "Connect More Repositories" to import from GitHub.
+              </Typography>
+            </Alert>
+          )}
 
-        <RepoList
-          repositories={repos}
-          provider="github"
-          error={error}
-          loading={loading}
-          isLoadingMore={isLoadingMore}
-          hasNextPage={hasNextPage}
-          onNextPage={() => setPage(page + 1)}
-        />
-      </Box>
+          <RepoList
+            repositories={repos}
+            provider="github"
+            error={error}
+            loading={loading}
+            isLoadingMore={isLoadingMore}
+            hasNextPage={hasNextPage}
+            onNextPage={() => setPage(page + 1)}
+          />
+        </Box>
+      </Card>
     </Box>
   );
-};
-
-export default Provider;
+}

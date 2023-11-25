@@ -1,17 +1,19 @@
 import type { Repo } from "../types.d";
-import React, { useState, useMemo, useContext } from "react";
+import { useState, useMemo, useContext } from "react";
 import { useNavigate } from "react-router";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/lab/LoadingButton";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import Form from "~/components/FormV2";
-import Button from "~/components/ButtonV2";
 import Spinner from "~/components/Spinner";
 import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
 import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
 import { insertRepo } from "./actions";
+import { grey } from "@mui/material/colors";
 
 const logos: Record<Provider, string> = {
   github: githubLogo,
@@ -31,7 +33,7 @@ export interface Props {
 
 let filterTimer: NodeJS.Timeout;
 
-const RepoList: React.FC<Props> = ({
+export default function RepoList({
   repositories,
   provider,
   loading,
@@ -39,8 +41,8 @@ const RepoList: React.FC<Props> = ({
   error,
   hasNextPage,
   onNextPage,
-}) => {
-  const [filter, setFilter] = useState<string>();
+}: Props) {
+  const [filter, setFilter] = useState<string>("");
   const [loadingInsert, setLoadingInsert] = useState("");
   const { teams } = useContext(AuthContext);
   const team = useSelectedTeam({ teams });
@@ -68,20 +70,30 @@ const RepoList: React.FC<Props> = ({
 
   return (
     <>
-      {repos.length > 0 && !loading && (
-        <Form.Input
+      {((repos.length > 0 && !loading) || filter) && (
+        <TextField
           fullWidth
+          label="Filter repos"
           variant="filled"
-          placeholder={"Filter repos by name"}
+          placeholder="Filter repos by name"
           sx={{ mb: 2 }}
           onChange={e => {
+            setFilter(e.target.value);
             clearTimeout(filterTimer);
             filterTimer = setTimeout(() => {
               setFilter(e.target.value);
             }, 250);
           }}
+          InputLabelProps={{
+            sx: {
+              pl: 1,
+            },
+          }}
           InputProps={{
-            startAdornment: <SearchIcon sx={{ width: 24 }} />,
+            sx: {
+              pl: 0.75,
+            },
+            endAdornment: <SearchIcon sx={{ width: 24 }} />,
           }}
         />
       )}
@@ -105,12 +117,25 @@ const RepoList: React.FC<Props> = ({
               appear
               key={r.name}
             >
-              <div
-                className="flex px-3 py-6 mb-4 bg-blue-10 w-full cursor-pointer hover:bg-black transition-colors items-center"
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  px: 2,
+                  pr: 1,
+                  py: 1,
+                  borderBottom: `1px solid ${grey[900]}`,
+                  ":hover": {
+                    bgcolor: "rgba(255,255,255,0.05)",
+                  },
+                  ":last-child": {
+                    borderBottom: "none",
+                  },
+                }}
                 aria-label={r.name}
                 tabIndex={0}
                 role="button"
-                onKeyPress={e => {
+                onKeyUp={e => {
                   if (e.key === "Enter") {
                     handleRepoInsert(r);
                   }
@@ -123,34 +148,33 @@ const RepoList: React.FC<Props> = ({
                   <img src={logo} className="w-full" alt={provider} />
                 </div>
                 <div className="flex-1 leading-4">{r.name}</div>
-                <div>
+                <Box>
                   <Button
-                    styled={false}
-                    category="link"
+                    variant="text"
+                    color="info"
                     loading={loadingInsert === r.fullName}
                   >
                     <span className="uppercase text-xs font-bold">import</span>
                     <span className="fas fa-chevron-right text-base ml-2" />
                   </Button>
-                </div>
-              </div>
+                </Box>
+              </Box>
             </CSSTransition>
           ))}
         </TransitionGroup>
       )}
-      {hasNextPage && (
-        <div className="text-center mt-4">
+      {hasNextPage && repos.length > 0 && (
+        <Box sx={{ mt: 2, textAlign: "center" }}>
           <Button
-            category="action"
+            variant="contained"
+            color="secondary"
             loading={isLoadingMore}
             onClick={onNextPage}
           >
             Load more
           </Button>
-        </div>
+        </Box>
       )}
     </>
   );
-};
-
-export default RepoList;
+}
