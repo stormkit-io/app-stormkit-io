@@ -7,11 +7,19 @@ import CardHeader from "../CardHeader";
 import CardFooter from "../CardFooter";
 
 interface Props extends BoxProps {
+  errorTitle?: boolean;
   error?: React.ReactNode;
   success?: React.ReactNode;
 }
 
-function Card({ sx, error, success, children, ...rest }: Props) {
+function Card({
+  sx,
+  errorTitle = true,
+  error,
+  success,
+  children,
+  ...rest
+}: Props) {
   let header;
   let footer;
   let content: React.ReactNode[] = [];
@@ -44,13 +52,13 @@ function Card({ sx, error, success, children, ...rest }: Props) {
       {header && <Box sx={{ mb: 4, px: 4, pt: 4 }}>{header}</Box>}
       <Box sx={{ px: 4 }}>{content}</Box>
       {error && (
-        <Alert color="error" sx={{ mb: 4, px: 4 }}>
-          <AlertTitle>Error</AlertTitle>
+        <Alert color="error" sx={{ mb: footer ? 4 : 0, px: 4 }}>
+          {errorTitle && <AlertTitle>Error</AlertTitle>}
           <Box>{error}</Box>
         </Alert>
       )}
       {success && (
-        <Alert color="success" sx={{ mb: 4, px: 4 }}>
+        <Alert color="success" sx={{ mb: footer ? 4 : 0, px: 4 }}>
           <AlertTitle>Success</AlertTitle>
           <Box>{success}</Box>
         </Alert>
