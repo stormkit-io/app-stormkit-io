@@ -142,7 +142,7 @@ describe("~/pages/apps/Apps.tsx", () => {
   });
 
   describe("filtering", () => {
-    const findInput = () => wrapper.getByLabelText("Search apps");
+    const findInput = () => wrapper.getAllByLabelText("Search apps").at(1);
 
     beforeEach(() => {
       mockFetchApps({
@@ -165,7 +165,7 @@ describe("~/pages/apps/Apps.tsx", () => {
         response: { apps: [apps[0]], hasNextPage: true },
       });
 
-      fireEvent.change(findInput().querySelector("input")!, {
+      fireEvent.change(findInput()!.querySelector("input")!, {
         target: { value: "hello" },
       });
 
