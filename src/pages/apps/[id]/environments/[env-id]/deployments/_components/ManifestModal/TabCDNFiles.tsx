@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import cn from "classnames";
+import Box from "@mui/material/Box";
 import Link from "~/components/Link";
 import InfoBox from "~/components/InfoBoxV2";
 
@@ -139,7 +140,7 @@ const TabCDNFiles: React.FC<Props> = ({ manifest, deployment }) => {
           </Link>
         </InfoBox>
       )}
-      <div className="mx-4">{recursiveRender(deployment, tree["/"])}</div>
+      <Box>{recursiveRender(deployment, tree["/"])}</Box>
     </>
   );
 };

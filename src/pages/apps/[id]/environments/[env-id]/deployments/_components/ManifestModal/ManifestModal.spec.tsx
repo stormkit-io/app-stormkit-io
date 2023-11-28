@@ -1,5 +1,4 @@
 import type { Scope } from "nock";
-import React from "react";
 import {
   fireEvent,
   render,
@@ -154,7 +153,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
       fireEvent.click(wrapper.getByLabelText("server side rendering"));
 
       await waitFor(() => {
-        expect(wrapper.getByText(/detected/)).toBeTruthy();
+        expect(wrapper.getByText(/SSR Detected/)).toBeTruthy();
       });
 
       expect(

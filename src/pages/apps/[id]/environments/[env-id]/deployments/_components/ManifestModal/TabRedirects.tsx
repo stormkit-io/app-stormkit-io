@@ -5,47 +5,11 @@ import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
-import emptyListSvg from "~/assets/images/empty-list.svg";
+import Typography from "@mui/material/Typography";
+import EmptyPage from "~/components/EmptyPage";
 
 interface Props {
   redirects?: Redirects[] | null;
-}
-
-function EmptyPage() {
-  return (
-    <Box
-      sx={{
-        py: 2,
-        mx: 2,
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        bgcolor: "rgba(0,0,0,0.1)",
-      }}
-    >
-      <img src={emptyListSvg} alt="Empty redirects" className="max-w-64 mb-8" />
-      <p className="text-center">
-        This deployment has no redirects.
-        <br />
-        Create a top-level{" "}
-        <span className="font-mono text-xs text-white font-bold">
-          redirects.json
-        </span>{" "}
-        to add server side redirects.{" "}
-      </p>
-      <p className="text-center mt-8">
-        <Button
-          href="https://www.stormkit.io/docs/features/redirects-and-path-rewrites"
-          variant="contained"
-          color="secondary"
-        >
-          Learn more
-        </Button>
-      </p>
-    </Box>
-  );
 }
 
 interface RedirectStatusProps {
@@ -68,14 +32,40 @@ function redirectStatus({ status, isAbsolute }: RedirectStatusProps): string {
 
 export default function TabRedirects({ redirects }: Props) {
   if (!redirects) {
-    return <EmptyPage />;
+    return (
+      <EmptyPage sx={{ my: 6 }}>
+        <>
+          <Typography component="span" sx={{ mb: 4, display: "block" }}>
+            This deployment has no redirects.
+            <br />
+            Create a top-level{" "}
+            <span className="font-mono text-xs text-white font-bold">
+              redirects.json
+            </span>{" "}
+            to add server side redirects.{" "}
+          </Typography>
+          <Button
+            href="https://www.stormkit.io/docs/features/redirects-and-path-rewrites"
+            variant="contained"
+            color="secondary"
+          >
+            Learn more
+          </Button>
+        </>
+      </EmptyPage>
+    );
   }
 
   return (
-    <Box sx={{ px: 2 }}>
+    <Box>
       <Table>
         <TableHead>
-          <TableRow sx={{ bgcolor: "rgba(0,0,0,0.1)" }}>
+          <TableRow
+            sx={{
+              bgcolor: "rgba(0,0,0,0.3)",
+              fontWeight: "bold",
+            }}
+          >
             <TableCell>From</TableCell>
             <TableCell>To</TableCell>
             <TableCell>Status</TableCell>

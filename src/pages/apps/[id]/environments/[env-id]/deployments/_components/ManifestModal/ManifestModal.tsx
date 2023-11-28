@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import cn from "classnames";
+import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
 import Modal from "~/components/ModalV2";
-import Container from "~/components/Container";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
 import { useFetchManifest } from "../../actions";
@@ -36,44 +42,34 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
 
   return (
     <Modal open onClose={onClose} height="100%">
-      <Container
-        maxWidth="max-w-none"
-        title={
-          <>
+      <Card sx={{ height: "100%" }}>
+        <CardHeader
+          actions={
+            <ToggleButtonGroup
+              value={mode}
+              exclusive
+              sx={{ bgcolor: "rgba(0,0,0,0.3)" }}
+              onChange={(_, val) => {
+                if (val !== null) {
+                  setMode(val as Mode);
+                }
+              }}
+              aria-label="display mode"
+            >
+              <ToggleButton value="ui" aria-label="ui view">
+                <span className="fa-solid fa-list text-gray-80" />
+              </ToggleButton>
+              <ToggleButton value="json" aria-label="json view">
+                <span className="fa-solid fa-code text-gray-80" />
+              </ToggleButton>
+            </ToggleButtonGroup>
+          }
+        >
+          <Typography>
             Deployment manifest
             <br />#{deployment.id}
-          </>
-        }
-        actions={
-          <ToggleButtonGroup
-            value={mode}
-            exclusive
-            className="bg-blue-10"
-            onChange={(_, val) => {
-              if (val !== null) {
-                setMode(val as Mode);
-              }
-            }}
-            aria-label="display mode"
-          >
-            <ToggleButton
-              value="ui"
-              aria-label="ui view"
-              className="bg-blue-20"
-            >
-              <span className="fa-solid fa-list text-gray-80" />
-            </ToggleButton>
-            <ToggleButton
-              value="json"
-              aria-label="json view"
-              className="bg-blue-20"
-            >
-              <span className="fa-solid fa-code text-gray-80" />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        }
-        className="flex flex-col h-full"
-      >
+          </Typography>
+        </CardHeader>
         {loading && (
           <div className="flex justify-center w-full">
             <Spinner />
@@ -85,45 +81,26 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
         )}
         {!loading && !error && manifest && mode === "ui" && (
           <div className="flex flex-col flex-1">
-            <div className="m-4">
+            <Box sx={{ mb: 4 }}>
               <ToggleButtonGroup
                 value={tab}
                 exclusive
+                sx={{ bgcolor: "rgba(0,0,0,0.3)" }}
                 onChange={(_, val) => {
                   setTab(val as Tab);
                 }}
                 aria-label="active tab"
-                className="bg-pink-10"
               >
-                <ToggleButton
-                  value="cdn"
-                  aria-label="cdn files"
-                  className="bg-blue-20 hover:text-gray-80"
-                  classes={{
-                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
-                  }}
-                >
-                  <span className="text-gray-80">CDN Files</span>
+                <ToggleButton value="cdn" aria-label="cdn files">
+                  <Typography>CDN Files</Typography>
                 </ToggleButton>
-                <ToggleButton
-                  value="redirect"
-                  aria-label="redirects"
-                  className="bg-blue-20 hover:text-gray-80"
-                  classes={{
-                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
-                  }}
-                >
-                  <span className="text-gray-80">Redirects</span>
+                <ToggleButton value="redirect" aria-label="redirects">
+                  <Typography>Redirects</Typography>
                 </ToggleButton>
-                <ToggleButton
-                  value="ssr"
-                  aria-label="server side rendering"
-                  className="bg-blue-20 hover:text-gray-80"
-                  classes={{
-                    root: "border-t-0 border-b-0 border-l-0 border-r-2 border-solid border-blue-10 capitalize",
-                  }}
-                >
-                  <span className="text-gray-80 inline-flex items-center">
+                <ToggleButton value="ssr" aria-label="server side rendering">
+                  <Typography
+                    sx={{ display: "inline-flex", alignItems: "center" }}
+                  >
                     Server side rendering{" "}
                     <span
                       className={cn(
@@ -134,17 +111,12 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                         }
                       )}
                     />
-                  </span>
+                  </Typography>
                 </ToggleButton>
-                <ToggleButton
-                  value="api"
-                  aria-label="rest api"
-                  className="bg-blue-20 hover:text-gray-80"
-                  classes={{
-                    root: "border-0 border-solid border-black",
-                  }}
-                >
-                  <span className="text-gray-80 inline-flex items-center capitalize">
+                <ToggleButton value="api" aria-label="rest api">
+                  <Typography
+                    sx={{ display: "inline-flex", alignItems: "center" }}
+                  >
                     REST API{" "}
                     <span
                       className={cn("w-2 h-2 inline-block ml-2 rounded-full", {
@@ -152,10 +124,10 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
                         "bg-green-50": apiEnabled,
                       })}
                     />
-                  </span>
+                  </Typography>
                 </ToggleButton>
               </ToggleButtonGroup>
-            </div>
+            </Box>
             {tab === "cdn" && (
               <TabCDNFiles manifest={manifest} deployment={deployment} />
             )}
@@ -163,22 +135,29 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
               <TabRedirects redirects={manifest.redirects} />
             )}
             {tab === "ssr" && (
-              <div className="bg-blue-10 mx-4 p-4">
-                {ssrEnabled ? (
-                  <div>
-                    Server side rendering{" "}
-                    <span className="text-green-50 font-bold">detected</span>.
-                    Requests not matching any CDN file will be served from the
-                    serverless app.
-                  </div>
-                ) : (
-                  <div>
-                    Server side rendering{" "}
-                    <span className="text-red-50 font-bold">not detected</span>.
-                    Only CDN files are served.
-                  </div>
-                )}
-              </div>
+              <Alert sx={{ mb: 4 }}>
+                <Box>
+                  <AlertTitle>
+                    {ssrEnabled ? "SSR Detected" : "SSR Not detected"}
+                  </AlertTitle>
+                  <Typography>
+                    {ssrEnabled
+                      ? "Requests not matching any CDN file will be served from the serverless app."
+                      : "Requests will try to match CDN files and return 404 if not found."}
+                  </Typography>
+                </Box>
+                <Box sx={{ mt: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    href="https://www.stormkit.io/docs/deployments/how-do-we-deploy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Learn more
+                  </Button>
+                </Box>
+              </Alert>
             )}
             {tab === "api" && (
               <TabAPI
@@ -189,16 +168,14 @@ const ManifestModal: React.FC<Props> = ({ app, deployment, onClose }) => {
           </div>
         )}
         {!loading && !error && manifest && mode === "json" && (
-          <div className="w-full px-4">
-            <CodeMirror
-              value={JSON.stringify(manifest, null, 2)}
-              extensions={[json()]}
-              theme="dark"
-              readOnly
-            />
-          </div>
+          <CodeMirror
+            value={JSON.stringify(manifest, null, 2)}
+            extensions={[json()]}
+            theme="dark"
+            readOnly
+          />
         )}
-      </Container>
+      </Card>
     </Modal>
   );
 };

@@ -108,6 +108,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/snippets`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/feature-flags`,
+        `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/function-triggers`,
       ]);
     });
   });

@@ -1,8 +1,11 @@
 import React, { useMemo, useState } from "react";
-import { Tooltip } from "@mui/material";
-import cn from "classnames";
-import emptyListSvg from "~/assets/images/empty-list.svg";
-import Button from "~/components/ButtonV2";
+import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import ContentCopy from "@mui/icons-material/ContentCopy";
+import EmptyPage from "~/components/EmptyPage";
 
 interface Props {
   manifest: Manifest;
@@ -43,11 +46,7 @@ const TabAPI: React.FC<Props> = ({ manifest, previewEndpoint }) => {
   }, [manifest?.apiFiles, previewEndpoint]);
 
   return (
-    <div
-      className={cn("mx-4 py-4 flex-1 mb-4 flex flex-col", {
-        "bg-blue-10 items-center justify-center": !apiEnabled,
-      })}
-    >
+    <Box>
       {apiEnabled ? (
         apiFiles.map(entry => (
           <div
@@ -66,46 +65,45 @@ const TabAPI: React.FC<Props> = ({ manifest, previewEndpoint }) => {
               <Tooltip
                 title={curlCopied === entry.fileName ? "Copied!" : "Copy CURL"}
               >
-                <div>
-                  <Button
-                    styled={false}
-                    onMouseEnter={() => {
-                      setCurlCopied(undefined);
-                    }}
-                    onClick={() => {
-                      navigator.clipboard.writeText(entry.curl);
-                      setCurlCopied(entry.fileName);
-                    }}
-                  >
-                    <span className="fa-solid fa-copy" />
-                  </Button>
-                </div>
+                <IconButton
+                  aria-label={
+                    curlCopied === entry.fileName ? "Copied!" : "Copy CURL"
+                  }
+                  onMouseEnter={() => {
+                    setCurlCopied(undefined);
+                  }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(entry.curl);
+                    setCurlCopied(entry.fileName);
+                  }}
+                >
+                  <ContentCopy sx={{ fontSize: 16 }} />
+                </IconButton>
               </Tooltip>
             </div>
           </div>
         ))
       ) : (
-        <>
-          <img
-            src={emptyListSvg}
-            alt="Empty redirects"
-            className="max-w-64 mb-8"
-          />
-          <p className="text-center">
+        <EmptyPage sx={{ my: 6 }}>
+          <Typography component="span" sx={{ mb: 4, display: "block" }}>
             REST API not detected.
             <br />
             Create a top-level{" "}
             <span className="text-white font-bold">/api</span> folder to get
             started.
-          </p>
-          <p className="text-center mt-8">
-            <Button href="https://www.stormkit.io/docs/features/writing-api">
-              Learn more
-            </Button>
-          </p>
-        </>
+          </Typography>
+          <Button
+            color="secondary"
+            variant="contained"
+            href="https://www.stormkit.io/docs/features/writing-api"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Learn more
+          </Button>
+        </EmptyPage>
       )}
-    </div>
+    </Box>
   );
 };
 

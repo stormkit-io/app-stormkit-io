@@ -1,4 +1,3 @@
-import React from "react";
 import {
   fireEvent,
   waitFor,
@@ -71,9 +70,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
       }),
     });
 
-    const button = wrapper.getAllByLabelText("Copy CURL").at(1);
-    expect(button).toBeTruthy();
-    fireEvent.click(button?.getElementsByTagName("button")[0]!);
+    fireEvent.click(wrapper.getAllByLabelText("Copy CURL").at(1)!);
 
     await waitFor(() => {
       expect(wrapper.getByLabelText("Copied!")).toBeTruthy();
