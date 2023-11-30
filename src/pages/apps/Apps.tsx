@@ -163,11 +163,11 @@ export default function Apps() {
                     role="button"
                     onKeyUp={e => {
                       if (e.key === "Enter") {
-                        navigate(`/apps/${app.id}`);
+                        navigate(`/apps/${app.id}/environments`);
                       }
                     }}
                     onClick={() => {
-                      navigate(`/apps/${app.id}`);
+                      navigate(`/apps/${app.id}/environments`);
                     }}
                   >
                     <Box sx={{ display: "flex", alignItems: "center" }}>
