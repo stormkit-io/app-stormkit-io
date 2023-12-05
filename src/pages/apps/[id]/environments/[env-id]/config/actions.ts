@@ -341,7 +341,7 @@ export const useFetchAPIKeys = ({
     setError(undefined);
 
     api
-      .fetch<{ keys: APIKey[] }>(`/app/${appId}/env/${envId}/api-keys`)
+      .fetch<{ keys: APIKey[] }>(`/api-keys?appId=${appId}&envId=${envId}`)
       .then(({ keys }) => {
         setKeys(keys);
       })
@@ -357,9 +357,7 @@ export const useFetchAPIKeys = ({
 };
 
 export const deleteAPIKey = (apiKey: APIKey) => {
-  return api.delete<{ keys: APIKey[] }>(
-    `/app/${apiKey.appId}/env/${apiKey.envId}/api-key?keyId=${apiKey.id}`
-  );
+  return api.delete<{ keys: APIKey[] }>(`/api-keys?keyId=${apiKey.id}`);
 };
 
 interface GenerateNewAPIKeyProps {
@@ -375,7 +373,7 @@ export const generateNewAPIKey = ({
   appId,
   envId,
 }: GenerateNewAPIKeyProps) => {
-  return api.post<APIKey>("/app/env/api-key", {
+  return api.post<APIKey>("/api-keys", {
     appId,
     envId,
     name,

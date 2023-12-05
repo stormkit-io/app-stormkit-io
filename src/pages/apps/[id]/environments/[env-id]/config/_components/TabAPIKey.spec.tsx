@@ -71,8 +71,6 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAPIKey.t
     });
 
     const scope = mockDeleteAPIKey({
-      appId: currentApp.id,
-      envId: currentEnv.id!,
       keyId: "9868814106",
     });
 

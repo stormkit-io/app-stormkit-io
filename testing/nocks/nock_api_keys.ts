@@ -17,24 +17,20 @@ export const mockFetchAPIKeys = ({
   response = data.mockAPIKeysResponse(),
 }: MockFetchAPIKeysProps) => {
   return nock(endpoint)
-    .get(`/app/${appId}/env/${envId}/api-keys`)
+    .get(`/api-keys?appId=${appId}&envId=${envId}`)
     .reply(status, response);
 };
 
 interface MockDeleteAPIKeyProps {
-  appId: string;
-  envId: string;
   keyId: string;
   status?: number;
 }
 
 export const mockDeleteAPIKey = ({
-  appId,
-  envId,
   keyId,
   status = 200,
 }: MockDeleteAPIKeyProps) => {
   return nock(endpoint)
-    .delete(`/app/${appId}/env/${envId}/api-key?keyId=${keyId}`)
+    .delete(`/api-keys?keyId=${keyId}`)
     .reply(status, { ok: true });
 };
