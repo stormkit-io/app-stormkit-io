@@ -1,6 +1,7 @@
 import { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { grey } from "@mui/material/colors";
 import React from "react";
 
 interface Props extends BoxProps {
@@ -28,7 +29,7 @@ export default function CardHeader({
           </Typography>
         )}
         {title && subtitle && (
-          <Typography variant="subtitle2" sx={{ opacity: 0.5 }}>
+          <Typography variant="subtitle2" sx={{ color: grey[500] }}>
             {subtitle}
           </Typography>
         )}

@@ -9,6 +9,7 @@ import CardFooter from "../CardFooter";
 interface Props extends BoxProps {
   errorTitle?: boolean;
   error?: React.ReactNode;
+  info?: React.ReactNode;
   success?: React.ReactNode;
 }
 
@@ -17,6 +18,7 @@ function Card({
   errorTitle = true,
   error,
   success,
+  info,
   children,
   ...rest
 }: Props) {
@@ -44,13 +46,13 @@ function Card({
         bgcolor: "rgba(0,0,0,0.3)",
         border: `1px solid rgba(255,255,255,0.04)`,
         borderRadius: 1,
-        pb: !footer ? 4 : 0,
+        pb: !footer && content.length ? 4 : 0,
         ...sx,
       }}
       {...rest}
     >
-      {header && <Box sx={{ mb: 4, px: 4, pt: 4 }}>{header}</Box>}
-      <Box sx={{ px: 4 }}>{content}</Box>
+      {header && <Box sx={{ mb: content ? 4 : 0, px: 4, pt: 4 }}>{header}</Box>}
+      {content && <Box sx={{ px: 4 }}>{content}</Box>}
       {error && (
         <Alert color="error" sx={{ mb: footer ? 4 : 0, px: 4 }}>
           {errorTitle && <AlertTitle>Error</AlertTitle>}
@@ -61,6 +63,19 @@ function Card({
         <Alert color="success" sx={{ mb: footer ? 4 : 0, px: 4 }}>
           <AlertTitle>Success</AlertTitle>
           <Box>{success}</Box>
+        </Alert>
+      )}
+      {info && (
+        <Alert
+          color="info"
+          sx={{
+            mb: footer ? 4 : 0,
+            px: 4,
+            bgcolor: "rgba(255,255,255,0.025)",
+            borderRadius: 0,
+          }}
+        >
+          <Box>{info}</Box>
         </Alert>
       )}
       {footer && (
