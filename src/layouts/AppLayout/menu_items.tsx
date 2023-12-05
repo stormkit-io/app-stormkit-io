@@ -5,6 +5,7 @@ import Tour from "@mui/icons-material/Tour";
 import Update from "@mui/icons-material/Update";
 import Database from "@mui/icons-material/Storage";
 import Terminal from "@mui/icons-material/Terminal";
+import Analytics from "@mui/icons-material/Analytics";
 
 export const appMenuItems = ({
   app,
@@ -101,6 +102,13 @@ export const envMenuItems = ({
       isActive: pathname.includes("/runtime-logs"),
     });
   }
+
+  items.push({
+    icon: <Analytics />,
+    text: "Analytics",
+    path: `${envPath}/analytics`,
+    isActive: pathname.includes("/analytics"),
+  });
 
   return items;
 };
