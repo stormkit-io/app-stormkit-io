@@ -4,20 +4,22 @@ import * as data from "../data";
 const endpoint = process.env.API_DOMAIN || "";
 
 interface MockFetchAPIKeysProps {
-  appId: string;
-  envId: string;
+  appId?: string;
+  envId?: string;
+  teamId?: string;
   status?: number;
   response?: { keys: APIKey[] };
 }
 
 export const mockFetchAPIKeys = ({
-  appId,
-  envId,
+  appId = "",
+  envId = "",
+  teamId = "",
   status = 200,
   response = data.mockAPIKeysResponse(),
 }: MockFetchAPIKeysProps) => {
   return nock(endpoint)
-    .get(`/api-keys?appId=${appId}&envId=${envId}`)
+    .get(`/api-keys?appId=${appId}&envId=${envId}&teamId=${teamId}`)
     .reply(status, response);
 };
 

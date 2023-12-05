@@ -1,13 +1,11 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Chip from "@mui/material/Chip";
 import Button from "@mui/lab/LoadingButton";
-import { grey } from "@mui/material/colors";
-import DotDotDot from "~/components/DotDotDotV2";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
+import CardRow from "~/components/CardRow";
 import ConfirmModal from "~/components/ConfirmModal";
 import InviteMemberModal from "./InviteMemberModal";
 import { useFetchTeamMembers, removeMember } from "./actions";
@@ -33,38 +31,24 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
           subtitle="Invite team members to collaborate on your projects."
         />
         {teamMembers?.map(member => (
-          <Box
+          <CardRow
             key={member.userId}
-            sx={{
-              borderBottom: `1px solid ${grey[900]}`,
-              display: "flex",
-              alignItems: "center",
-              mb: 2,
-              pb: 2,
-              ":last-child": {
-                borderBottom: "none",
-              },
-            }}
-          >
-            <Box sx={{ flex: 1 }}>
-              <Typography>
-                {member.fullName?.trim() || member.displayName}
-              </Typography>
-              <Typography sx={{ opacity: 0.5 }}>{member.email}</Typography>
-            </Box>
-            <Chip label={member.role} size="small" sx={{ mr: 2 }} />
-            <DotDotDot
-              label={`Member ${member.id} menu`}
-              items={[
-                {
-                  text: member.userId === user?.id ? "Leave" : "Remove",
-                  onClick: () => {
-                    setMemberToBeRemoved(member);
-                  },
+            chipLabel={member.role}
+            menuLabel={`Member ${member.id} menu`}
+            menuItems={[
+              {
+                text: member.userId === user?.id ? "Leave" : "Remove",
+                onClick: () => {
+                  setMemberToBeRemoved(member);
                 },
-              ]}
-            />
-          </Box>
+              },
+            ]}
+          >
+            <Typography>
+              {member.fullName?.trim() || member.displayName}
+            </Typography>
+            <Typography sx={{ opacity: 0.5 }}>{member.email}</Typography>
+          </CardRow>
         ))}
         <CardFooter>
           <Button

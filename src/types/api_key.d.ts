@@ -1,8 +1,9 @@
 declare interface APIKey {
   id: string;
   name: string;
-  appId: string;
   token: string;
+  appId?: string;
   envId?: string;
-  scope: "env";
+  teamId?: string;
+  scope: "env" | "team";
 }
