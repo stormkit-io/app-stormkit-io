@@ -69,6 +69,12 @@ const routes: Array<RouteProps> = [
         )
     ),
   },
+  {
+    path: "/analytics",
+    element: Async(
+      () => import("~/pages/apps/[id]/environments/[env-id]/analytics")
+    ),
+  },
 ];
 
 export default routes;
