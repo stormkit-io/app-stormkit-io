@@ -17,7 +17,7 @@ export default function Settings() {
 
   return (
     <Box sx={{ color: "white", width: "100%" }} maxWidth="md">
-      <TeamSettings team={team} reloadTeams={reloadTeams} teams={teams} />
+      <TeamSettings team={team} reloadTeams={reloadTeams} />
       <TeamMembers user={user!} reloadTeams={reloadTeams} team={team} />
       <TeamDelete reloadTeams={reloadTeams} team={team} />
     </Box>

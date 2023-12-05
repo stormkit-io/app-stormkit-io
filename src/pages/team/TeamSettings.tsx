@@ -9,11 +9,10 @@ import { updateTeam } from "./actions";
 
 interface Props {
   team: Team;
-  teams: Team[];
   reloadTeams?: () => void;
 }
 
-export default function TeamSettings({ team, teams, reloadTeams }: Props) {
+export default function TeamSettings({ team, reloadTeams }: Props) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
