@@ -52,6 +52,7 @@
     "react-router": "^6.3.0",
     "react-router-dom": "^6.15.0",
     "react-transition-group": "^4.4.5",
+    "recharts": "^2.10.3",
     "remove": "^0.1.5",
     "tailwindcss": "2.2.19",
     "tldts": "5.7.66",
