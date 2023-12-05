@@ -69,6 +69,11 @@ export default function TeamAPIKeys({ team }: Props) {
       success={
         success ? "Your API key has been successfully updated." : undefined
       }
+      info={
+        !keys.length
+          ? "You do not have an API key associated with this team yet."
+          : undefined
+      }
     >
       <CardHeader
         title="API Keys"
@@ -124,11 +129,6 @@ export default function TeamAPIKeys({ team }: Props) {
             </Box>
           </CardRow>
         ))}
-        {keys.length === 0 && (
-          <Typography sx={{ mb: 4 }}>
-            You do not have an API key associated with this team yet.
-          </Typography>
-        )}
       </Box>
       <CardFooter>
         <Button

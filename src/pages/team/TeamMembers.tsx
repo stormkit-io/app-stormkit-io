@@ -2,6 +2,7 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/lab/LoadingButton";
+import { grey } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
@@ -47,7 +48,7 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
             <Typography>
               {member.fullName?.trim() || member.displayName}
             </Typography>
-            <Typography sx={{ opacity: 0.5 }}>{member.email}</Typography>
+            <Typography sx={{ color: grey[500] }}>{member.email}</Typography>
           </CardRow>
         ))}
         <CardFooter>
