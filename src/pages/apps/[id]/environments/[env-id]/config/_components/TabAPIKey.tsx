@@ -5,71 +5,20 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/lab/LoadingButton";
-import TextInput from "@mui/material/TextField";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Modal from "~/components/ModalV2";
 import ConfirmModal from "~/components/ConfirmModal";
 import Spinner from "~/components/Spinner";
-import InputDescription from "~/components/InputDescription";
-import { useFetchAPIKeys, generateNewAPIKey, deleteAPIKey } from "../actions";
+import APIKeyModal from "~/shared/api-keys/APIKeyModal";
+import * as actions from "~/shared/api-keys/actions";
+
+const { useFetchAPIKeys, generateNewAPIKey, deleteAPIKey } = actions;
 
 interface Props {
   app: App;
   environment: Environment;
   setRefreshToken?: (v: number) => void; // This is there just to accomodate the Tab signature. It's not really used.
-}
-
-interface APIKeyModalProps {
-  onClose: () => void;
-  onSubmit: (name: string) => void;
-  error?: string;
-  loading?: boolean;
-}
-
-function APIKeyModal({ onSubmit, onClose, loading, error }: APIKeyModalProps) {
-  const [name, setName] = useState<string>("");
-
-  return (
-    <Modal open onClose={onClose}>
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h6">Generate New Key</Typography>
-        <Box sx={{ pt: 2 }}>
-          <TextInput
-            variant="filled"
-            label="API Key name"
-            placeholder="e.g. Default"
-            fullWidth
-            autoFocus
-            autoComplete="off"
-            value={name}
-            onChange={e => setName(e.target.value.trim())}
-          />
-          <InputDescription>
-            The name will be used in the UI. It helps distinguishing your API
-            keys.
-          </InputDescription>
-        </Box>
-        {error && (
-          <Alert color="error" sx={{ m: 0, mt: 2 }}>
-            <AlertTitle>Error</AlertTitle>
-            <Typography>{error}</Typography>
-          </Alert>
-        )}
-        <Box sx={{ textAlign: "right", pt: 2 }}>
-          <Button
-            loading={loading}
-            variant="contained"
-            color="secondary"
-            onClick={() => onSubmit(name)}
-          >
-            Create
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
-  );
 }
 
 export default function TabAPIKey({ app, environment: env }: Props) {
