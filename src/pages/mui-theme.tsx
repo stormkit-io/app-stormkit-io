@@ -165,7 +165,7 @@ export default createTheme({
       paper: "rgba(129,114,126,0.05)",
     },
     info: {
-      main: "#a4a4a4",
+      main: "#0d84bf",
       contrastText: "#B7AE22",
     },
     warning: {
