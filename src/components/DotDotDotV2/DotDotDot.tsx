@@ -7,7 +7,7 @@ import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import Button from "~/components/ButtonV2";
 
-interface Item {
+export interface Item {
   text: React.ReactNode;
   href?: string;
   icon?: string | React.ReactNode;
@@ -41,6 +41,7 @@ export default function DotDotDot({ label, items }: Props) {
               <div key={index}>
                 <Button
                   styled={false}
+                  aria-label={item.text}
                   align="left"
                   href={item.href}
                   disabled={item.disabled}
@@ -69,11 +70,10 @@ export default function DotDotDot({ label, items }: Props) {
                         scale: "0.75",
                         display: "inline-flex",
                         alignItems: "center",
+                        mr: 1,
                       }}
                     >
-                      <IconButton size="small" sx={{ p: 0, m: 0, mr: 1 }}>
-                        {item.icon}
-                      </IconButton>
+                      {item.icon}
                     </Box>
                   )}
                   {item.text}
