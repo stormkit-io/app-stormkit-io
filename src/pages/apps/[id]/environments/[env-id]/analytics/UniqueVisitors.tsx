@@ -85,7 +85,8 @@ export default function UniqueVisitors() {
             <Box component="span" sx={{ color: pink[300] }}>
               {totalVisitors}
             </Box>{" "}
-            visitors in the last {timeSpan[ts]}.
+            visitors in the last {timeSpan[ts]}
+            <Box>{environment.domain?.name}</Box>
           </>
         }
         actions={
