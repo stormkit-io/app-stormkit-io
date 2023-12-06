@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   YAxis,
   AreaChart,
@@ -10,13 +10,13 @@ import {
 import Box from "@mui/material/Box";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Typography from "@mui/material/Typography";
+import { grey, pink } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
-import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import { useFetchUniqueVisitors } from "./actions";
+import CardFooter from "~/components/CardFooter";
 import Spinner from "~/components/Spinner";
-import { Typography } from "@mui/material";
-import { grey, indigo, pink, purple } from "@mui/material/colors";
+import { useFetchVisitors } from "./actions";
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -24,7 +24,7 @@ interface CustomTooltipProps {
   label?: string;
 }
 
-function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
+function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const pieces = payload[0].payload.name.split(" ");
 
@@ -34,8 +34,8 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
           p: 2,
           borderRadius: 1,
           bgcolor: "rgba(0,0,0,0.5)",
-          minWidth: "120px",
-          textAlign: "right",
+          minWidth: "200px",
+          textAlign: "center",
         }}
       >
         <Typography
@@ -47,7 +47,8 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
         >
           {pieces[1] || pieces[0]}
         </Typography>
-        <Typography>{payload[0].value} visitors</Typography>
+        <Typography>{payload[0].value} total visitors</Typography>
+        <Typography>{payload[1].value} unique visitors</Typography>
       </Box>
     );
   }
@@ -61,24 +62,27 @@ const timeSpan = {
   "30d": "30 days",
 };
 
-export default function UniqueVisitors() {
+interface Props {
+  environment: Environment;
+}
+
+export default function Visitors({ environment }: Props) {
   const [ts, setTs] = useState<"24h" | "7d" | "30d">("24h");
-  const { environment } = useContext(EnvironmentContext);
-  const { visitors, error, loading } = useFetchUniqueVisitors({
+  const { visitors, error, loading } = useFetchVisitors({
     envId: environment.id!,
     ts,
   });
 
   const totalVisitors = useMemo(() => {
     return visitors.reduce((prev, curr) => {
-      return prev + curr.count;
+      return prev + curr.total;
     }, 0);
   }, [visitors]);
 
   return (
     <Card error={error}>
       <CardHeader
-        title="Unique visitors"
+        title="Total visitors"
         subtitle={
           <>
             Total{" "}
@@ -130,14 +134,14 @@ export default function UniqueVisitors() {
       />
       {loading && <Spinner />}
       {!loading && (
-        <Box sx={{ height: 300 }}>
+        <Box sx={{ height: 300, mb: 4 }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={visitors}
               margin={{
-                top: 0,
-                right: 0,
-                left: -30,
+                top: 10,
+                right: 5,
+                left: totalVisitors > 100 ? -25 : -30,
                 bottom: 10,
               }}
             >
@@ -150,11 +154,23 @@ export default function UniqueVisitors() {
                   fontSize: 12,
                 }}
               />
-              <Area type="linear" dataKey="count" stroke="#6048b0a9" dot />
+              <Area type="linear" dataKey="total" stroke="#6048b0a9" dot />
+              <Area
+                type="linear"
+                dataKey="unique"
+                stroke="#6048b0a9"
+                fill="#a048b0a9"
+                dot
+              />
             </AreaChart>
           </ResponsiveContainer>
         </Box>
       )}
+      <CardFooter sx={{ textAlign: "left", color: grey[500] }}>
+        <Typography sx={{ fontSize: 12 }}>
+          * Bots are excluded from these statistics
+        </Typography>
+      </CardFooter>
     </Card>
   );
 }

@@ -4,17 +4,20 @@ import api from "~/utils/api/Api";
 interface FetchUniqueVisitorsProps {
   envId: string;
   refreshToken?: number;
+  unique?: "true" | "false";
   ts?: "24h" | "7d" | "30d";
 }
 
 interface ChartData {
   name: string;
-  count: number;
+  total: number;
+  unique: number;
 }
 
-export const useFetchUniqueVisitors = ({
+export const useFetchVisitors = ({
   envId,
   refreshToken,
+  unique = "false",
   ts = "24h",
 }: FetchUniqueVisitorsProps) => {
   const [visitors, setVisitors] = useState<ChartData[]>([]);
@@ -26,15 +29,19 @@ export const useFetchUniqueVisitors = ({
     setError("");
 
     api
-      .fetch<Record<string, number>>(
-        `/analytics/unique?envId=${envId}&ts=${ts}`
+      .fetch<Record<string, { total: number; unique: number }>>(
+        `/analytics/visitors?unique=${unique}&envId=${envId}&ts=${ts}`
       )
       .then(data => {
         const chartData: ChartData[] = [];
 
         if (ts === "24h") {
           Object.keys(data).forEach(name => {
-            chartData.push({ name, count: data[name] });
+            chartData.push({
+              name,
+              total: data[name]?.total || 0,
+              unique: data[name]?.unique || 0,
+            });
           });
         } else {
           const date = new Date();
@@ -45,7 +52,11 @@ export const useFetchUniqueVisitors = ({
             // increment 1 by 1 until today
             date.setDate(date.getDate() + 1);
             const name = date.toISOString().split("T")[0];
-            chartData.push({ name, count: data[name] || 0 });
+            chartData.push({
+              name,
+              total: data[name]?.total || 0,
+              unique: data[name]?.unique || 0,
+            });
           }
         }
 
@@ -57,7 +68,7 @@ export const useFetchUniqueVisitors = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [refreshToken, ts]);
+  }, [refreshToken, ts, unique]);
 
   return { visitors, error, loading };
 };
