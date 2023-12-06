@@ -19,12 +19,17 @@ export default function TopReferrers({ environment }: Props) {
   });
 
   return (
-    <Card error={error} loading={loading} sx={{ width: "100%" }}>
+    <Card error={error} loading={loading} sx={{ width: "100%", margin: "" }}>
       <CardHeader
         title="Referrers"
         subtitle="Top 50 referrers in the last 30 days."
       />
-      <Box sx={{ maxHeight: "300px", overflow: "auto" }}>
+      <Box
+        sx={{
+          maxHeight: "300px",
+          overflow: "auto",
+        }}
+      >
         {referrers.map(ref => (
           <CardRow key={ref.name} chipLabel={ref.count.toString()}>
             {truncate(ref.name)}

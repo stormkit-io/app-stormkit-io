@@ -18,7 +18,7 @@ export default function TopPaths({ environment }: Props) {
   });
 
   return (
-    <Card sx={{ width: "100%" }} error={error} loading={loading}>
+    <Card sx={{ width: "100%", margin: "" }} error={error} loading={loading}>
       <CardHeader
         title="Paths"
         subtitle="Top 50 visited paths in the last 30 days."

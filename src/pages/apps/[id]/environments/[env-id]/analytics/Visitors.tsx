@@ -46,8 +46,11 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
         >
           {pieces[1] || pieces[0]}
         </Typography>
-        <Typography>{payload[0].value} total visitors</Typography>
-        <Typography>{payload[1].value} unique visitors</Typography>
+        {payload.map((p: any) => (
+          <Typography key={p.name}>
+            {p.value} {p.name} visitors
+          </Typography>
+        ))}
       </Box>
     );
   }
@@ -67,6 +70,7 @@ interface Props {
 
 export default function Visitors({ environment }: Props) {
   const [ts, setTs] = useState<"24h" | "7d" | "30d">("24h");
+  const [display, setDisplay] = useState<"unique" | "total" | "all">("all");
   const { visitors, error, loading } = useFetchVisitors({
     envId: environment.id!,
     ts,
@@ -74,9 +78,9 @@ export default function Visitors({ environment }: Props) {
 
   const totalVisitors = useMemo(() => {
     return visitors.reduce((prev, curr) => {
-      return prev + curr.total;
+      return prev + (display === "unique" ? curr.unique : curr.total);
     }, 0);
-  }, [visitors]);
+  }, [visitors, display]);
 
   return (
     <Card error={error} loading={loading}>
@@ -84,11 +88,12 @@ export default function Visitors({ environment }: Props) {
         title="Visitors"
         subtitle={
           <>
-            Total{" "}
+            {display !== "unique" ? "Total " : ""}
             <Box component="span" sx={{ color: pink[300] }}>
               {totalVisitors}
             </Box>{" "}
-            visitors in the last {timeSpan[ts]}
+            {display === "unique" ? "unique" : ""} visits in the last{" "}
+            {timeSpan[ts]}
             <Box>{environment.domain?.name}</Box>
           </>
         }
@@ -151,8 +156,16 @@ export default function Visitors({ environment }: Props) {
                 fontSize: 12,
               }}
             />
-            <Area type="linear" dataKey="total" stroke="#6048b0a9" dot />
             <Area
+              hide={display === "unique"}
+              type="linear"
+              dataKey="total"
+              stroke="#6048b0a9"
+              fill="#1c499ca9"
+              dot
+            />
+            <Area
+              hide={display === "total"}
               type="linear"
               dataKey="unique"
               stroke="#6048b0a9"
@@ -161,6 +174,28 @@ export default function Visitors({ environment }: Props) {
             />
           </AreaChart>
         </ResponsiveContainer>
+        <Box sx={{ justifyContent: "center", display: "flex", width: "100%" }}>
+          <Typography
+            sx={{
+              color: "#1c499c",
+              mr: 2,
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setDisplay(display === "total" ? "all" : "total");
+            }}
+          >
+            Total visitors
+          </Typography>
+          <Typography
+            sx={{ color: "#7a3782", cursor: "pointer" }}
+            onClick={() => {
+              setDisplay(display === "unique" ? "all" : "unique");
+            }}
+          >
+            Unique visitors
+          </Typography>
+        </Box>
       </Box>
       <CardFooter sx={{ textAlign: "left", color: grey[500] }}>
         <Typography sx={{ fontSize: 12 }}>

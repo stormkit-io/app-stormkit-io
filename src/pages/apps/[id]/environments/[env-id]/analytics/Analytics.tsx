@@ -53,10 +53,8 @@ export default function Analytics() {
       <Box
         sx={{
           mt: 2,
-          display: "grid",
-          gridColumn: 2,
-          gridTemplateColumns: "repeat(2, auto)",
-          columnGap: 2,
+          display: "flex",
+          gap: 2,
         }}
       >
         <TopReferrers environment={environment} />
