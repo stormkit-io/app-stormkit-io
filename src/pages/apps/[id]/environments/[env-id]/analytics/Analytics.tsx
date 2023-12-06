@@ -52,10 +52,11 @@ export default function Analytics() {
       <Visitors environment={environment} />
       <Box
         sx={{
+          mt: 2,
           display: "grid",
           gridColumn: 2,
           gridTemplateColumns: "repeat(2, auto)",
-          columnGap: 4,
+          columnGap: 2,
         }}
       >
         <TopReferrers environment={environment} />

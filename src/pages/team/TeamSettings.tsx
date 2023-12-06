@@ -49,7 +49,7 @@ export default function TeamSettings({ team, reloadTeams }: Props) {
 
   return (
     <Card
-      sx={{ mb: 4 }}
+      sx={{ mb: 2 }}
       component="form"
       onSubmit={handleTeamUpdate}
       error={error}

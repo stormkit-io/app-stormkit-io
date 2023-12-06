@@ -60,7 +60,7 @@ export default function TeamAPIKeys({ team }: Props) {
 
   return (
     <Card
-      sx={{ mb: 4 }}
+      sx={{ mb: 2 }}
       error={
         error
           ? "An error occurred while fetching your API key. Please try again later."

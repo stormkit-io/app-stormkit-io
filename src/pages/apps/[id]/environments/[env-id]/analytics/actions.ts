@@ -68,7 +68,7 @@ export const useFetchVisitors = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [refreshToken, ts, unique]);
+  }, [refreshToken, ts, unique, envId]);
 
   return { visitors, error, loading };
 };
@@ -114,7 +114,7 @@ export const useFetchTopReferrers = ({
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [envId]);
 
   return { referrers, loading, error };
 };
@@ -154,7 +154,7 @@ export const useFetchTopPaths = ({ envId }: FetchTopPathsProps) => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [envId]);
 
   return { paths, loading, error };
 };

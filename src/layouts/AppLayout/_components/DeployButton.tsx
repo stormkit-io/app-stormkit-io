@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import IconButton from "@mui/material/IconButton";
+import { useState } from "react";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import RocketLaunch from "@mui/icons-material/RocketLaunch";
 import DeployModal from "./DeployModal";
 
@@ -9,35 +10,34 @@ interface Props {
   selectedEnvId: string;
 }
 
-const DeployButton: React.FC<Props> = ({
+export default function DeployButton({
   app,
   environments,
   selectedEnvId,
-}) => {
+}: Props) {
   const [isDeployModalOpen, toggleDeployModal] = useState(false);
 
   return (
     <>
-      <IconButton
+      <Button
         id="deploy-now"
         onClick={e => {
           e.preventDefault();
           toggleDeployModal(true);
         }}
+        color="secondary"
+        variant="contained"
+        size="large"
         sx={{
-          bgcolor: "secondary.main",
           borderRadius: 1,
-          fontSize: 13,
-          ":hover": {
-            bgcolor: "secondary.main",
-            filter: "brightness(1.5)",
-            transition: "all 0.25s ease-in",
-          },
+          color: "white",
         }}
       >
         <RocketLaunch sx={{ fontSize: 16 }} />
-        <div className="m-1">Deploy</div>
-      </IconButton>
+        <Typography component="span" sx={{ display: "inline-block", ml: 1 }}>
+          Deploy
+        </Typography>
+      </Button>
       {isDeployModalOpen && (
         <DeployModal
           app={app}
@@ -48,6 +48,4 @@ const DeployButton: React.FC<Props> = ({
       )}
     </>
   );
-};
-
-export default DeployButton;
+}

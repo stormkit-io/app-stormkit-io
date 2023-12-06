@@ -36,7 +36,11 @@ export default function CardRow({
     >
       <Box sx={{ flex: 1 }}>{children}</Box>
       {chipLabel && (
-        <Chip label={chipLabel} size="small" sx={{ mr: menuItems ? 2 : 0 }} />
+        <Chip
+          label={chipLabel}
+          size="small"
+          sx={{ ml: 1, mr: menuItems ? 2 : 0 }}
+        />
       )}
       {menuItems && <DotDotDot label={menuLabel} items={menuItems} />}
     </Box>

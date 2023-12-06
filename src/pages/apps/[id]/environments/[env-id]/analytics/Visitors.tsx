@@ -164,7 +164,7 @@ export default function Visitors({ environment }: Props) {
       </Box>
       <CardFooter sx={{ textAlign: "left", color: grey[500] }}>
         <Typography sx={{ fontSize: 12 }}>
-          * Bots are excluded from these statistics
+          Bots are excluded from these statistics
         </Typography>
       </CardFooter>
     </Card>

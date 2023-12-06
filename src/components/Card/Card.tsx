@@ -49,6 +49,7 @@ function Card({
         bgcolor: "rgba(0,0,0,0.3)",
         border: `1px solid rgba(255,255,255,0.04)`,
         borderRadius: 1,
+        pt: !header && content.length ? 4 : 0,
         pb: !footer && content.length ? 4 : 0,
         ...sx,
       }}

@@ -27,7 +27,6 @@ export const AppLayout: React.FC = () => {
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
           width: "100%",
         }}
       >
@@ -41,7 +40,7 @@ export const AppLayout: React.FC = () => {
             flexDirection: "column",
             alignItems: "flex-start",
             maxWidth: "1024px",
-            my: { md: 0, lg: 3 },
+            my: 2,
           }}
         >
           <EnvMenu />

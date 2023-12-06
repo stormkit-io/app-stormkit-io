@@ -36,7 +36,7 @@ export default function CenterLayout({ children }: Props) {
       )}
       <Box
         sx={{
-          mt: 4,
+          mt: 2,
           flex: 1,
           px: { xs: 2, md: 0 },
           display: "flex",

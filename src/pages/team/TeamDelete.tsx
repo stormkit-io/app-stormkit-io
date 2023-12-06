@@ -17,7 +17,7 @@ export default function TeamDelete({ team, reloadTeams }: Props) {
 
   return (
     <>
-      <Card sx={{ mb: 4, borderColor: "rgba(255, 0, 0, 0.25)" }}>
+      <Card sx={{ mb: 2, borderColor: "rgba(255, 0, 0, 0.25)" }}>
         <CardHeader>
           <Typography variant="h2" sx={{ fontSize: 20, mb: 0.5 }} color="error">
             Danger zone

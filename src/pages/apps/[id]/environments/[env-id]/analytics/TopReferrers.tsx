@@ -6,6 +6,7 @@ import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
 import CardFooter from "~/components/CardFooter";
 import { useFetchTopReferrers } from "./actions";
+import { truncate } from "./helpers";
 
 interface Props {
   environment: Environment;
@@ -18,7 +19,7 @@ export default function TopReferrers({ environment }: Props) {
   });
 
   return (
-    <Card sx={{ mt: 4 }} error={error} loading={loading}>
+    <Card error={error} loading={loading} sx={{ width: "100%" }}>
       <CardHeader
         title="Referrers"
         subtitle="Top 50 referrers in the last 30 days."
@@ -26,12 +27,14 @@ export default function TopReferrers({ environment }: Props) {
       <Box sx={{ maxHeight: "300px", overflow: "auto" }}>
         {referrers.map(ref => (
           <CardRow key={ref.name} chipLabel={ref.count.toString()}>
-            {ref.name}
+            {truncate(ref.name)}
           </CardRow>
         ))}
       </Box>
       <CardFooter sx={{ color: grey[500], textAlign: "left" }}>
-        <Typography>Same domain referrers are excluded.</Typography>
+        <Typography sx={{ fontSize: 12 }}>
+          Same domain referrers are excluded.
+        </Typography>
       </CardFooter>
     </Card>
   );

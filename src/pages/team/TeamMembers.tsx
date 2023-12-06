@@ -22,11 +22,11 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
   const tmFetchResult = useFetchTeamMembers({ team });
   const [memberToBeRemoved, setMemberToBeRemoved] = useState<TeamMember>();
 
-  const { teamMembers, error: tmError } = tmFetchResult;
+  const { teamMembers, error: tmError, loading } = tmFetchResult;
 
   return (
     <>
-      <Card error={tmError} sx={{ mb: 4 }}>
+      <Card error={tmError} sx={{ mb: 2 }} loading={loading}>
         <CardHeader
           title="Team members"
           subtitle="Invite team members to collaborate on your projects."

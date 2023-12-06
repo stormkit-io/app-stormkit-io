@@ -83,7 +83,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
 
       scope = mockFetchStatus({
         appId: defaultApp.id,
-        url: envs[0].preview,
+        url: envs[0].domain.name!,
         response: { status: 200 },
       });
 
@@ -117,7 +117,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
 
       scope = mockFetchStatus({
         appId: defaultApp.id,
-        url: envs[0].preview,
+        url: envs[0].domain.name!,
         response: { status: 404 },
       });
 

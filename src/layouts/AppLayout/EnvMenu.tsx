@@ -1,11 +1,11 @@
 import { useContext, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
+import { grey } from "@mui/material/colors";
 import { AppContext } from "~/pages/apps/[id]/App.context";
+import MenuLink from "~/components/MenuLink";
 import { envMenuItems } from "./menu_items";
 
 export default function EnvMenu() {
@@ -30,21 +30,18 @@ export default function EnvMenu() {
     return <></>;
   }
 
-  const border = "1px solid rgba(255,255,255,0.1)";
-
   return (
     <Box
       sx={{
         width: "100%",
         display: "flex",
-        justifyContent: "space-between",
+        borderBottom: `1px solid ${grey[900]}`,
         mb: { xs: 0, lg: 2 },
-        px: { xs: 2, lg: 0 },
+        pb: 1,
       }}
     >
       <Box
         sx={{
-          borderBottom: border,
           flex: 1,
           display: "flex",
           alignItems: "center",
@@ -85,42 +82,12 @@ export default function EnvMenu() {
       </Box>
       <Box
         sx={{
-          textAlign: "right",
+          display: "flex",
+          flexDirection: "row",
         }}
       >
         {envMenu.map(item => (
-          <Link
-            key={item.path}
-            href={item.path}
-            sx={{
-              cursor: "pointer",
-              color: "white",
-              borderTopLeftRadius: 4,
-              borderTopRightRadius: 4,
-              border: item.isActive ? border : "1px solid transparent",
-              borderBottom: item.isActive ? "none" : border,
-              pr: 1.5,
-              pl: { xs: 1.5, lg: 0 },
-              py: { xs: 1.5, lg: 0.25 },
-              display: "inline-flex",
-              alignItems: "center",
-              ":hover": {
-                filter: "brightness(5)",
-              },
-            }}
-          >
-            <Box
-              component="span"
-              display="inline-block"
-              sx={{
-                scale: "0.75",
-                display: { xs: "none", lg: "inline-block" },
-              }}
-            >
-              <IconButton>{item.icon}</IconButton>
-            </Box>
-            {item.text}
-          </Link>
+          <MenuLink key={item.path} item={item} />
         ))}
       </Box>
     </Box>

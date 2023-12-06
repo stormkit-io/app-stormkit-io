@@ -21,7 +21,7 @@ const Environments: React.FC = (): React.ReactElement => {
 
   return (
     <Box>
-      <Box sx={{ textAlign: "right", mb: 3 }}>
+      <Box sx={{ textAlign: "right", mb: 2 }}>
         <Button
           onClick={() => toggleModal(true)}
           variant="contained"
@@ -36,7 +36,7 @@ const Environments: React.FC = (): React.ReactElement => {
         <Card
           key={env.id}
           sx={{
-            mb: 3,
+            mb: 2,
             color: "white",
             "&:last-child": { mb: 0 },
             "&:hover": {

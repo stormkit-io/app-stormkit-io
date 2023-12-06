@@ -1,12 +1,3 @@
-import RocketLaunch from "@mui/icons-material/RocketLaunch";
-import Construction from "@mui/icons-material/Construction";
-import Code from "@mui/icons-material/Code";
-import Tour from "@mui/icons-material/Tour";
-import Update from "@mui/icons-material/Update";
-import Database from "@mui/icons-material/Storage";
-import Terminal from "@mui/icons-material/Terminal";
-import Analytics from "@mui/icons-material/Analytics";
-
 export const appMenuItems = ({
   app,
   pathname,
@@ -52,7 +43,6 @@ export const envMenuItems = ({
 
   const items = [
     {
-      icon: <Construction />,
       text: "Config",
       path: envPath,
       isActive: pathname === envPath,
@@ -60,18 +50,15 @@ export const envMenuItems = ({
     {
       path: `${envPath}/deployments`,
       text: "Deployments",
-      icon: <RocketLaunch />,
       isActive:
         pathname.includes("/deployments") && !pathname.includes("runtime-logs"),
     },
     {
-      icon: <Code />,
       text: "Snippets",
       path: `${envPath}/snippets`,
       isActive: pathname.includes("/snippets"),
     },
     {
-      icon: <Tour />,
       text: "Feature Flags",
       path: `${envPath}/feature-flags`,
       isActive: pathname.includes("/feature-flags"),
@@ -79,7 +66,6 @@ export const envMenuItems = ({
   ];
 
   items.push({
-    icon: <Update />,
     text: "Triggers",
     path: `${envPath}/function-triggers`,
     isActive: pathname.includes("/function-triggers"),
@@ -87,7 +73,6 @@ export const envMenuItems = ({
 
   if (app.featureFlags?.SK_DATA_STORE) {
     items.push({
-      icon: <Database />,
       text: "Data Store",
       path: `${envPath}/data-store`,
       isActive: pathname.includes("/data-store"),
@@ -96,7 +81,6 @@ export const envMenuItems = ({
 
   if (env.published?.length) {
     items.push({
-      icon: <Terminal />,
       text: "Runtime logs",
       path: `${envPath}/deployments/${env.published[0].deploymentId}/runtime-logs`,
       isActive: pathname.includes("/runtime-logs"),
@@ -104,7 +88,6 @@ export const envMenuItems = ({
   }
 
   items.push({
-    icon: <Analytics />,
     text: "Analytics",
     path: `${envPath}/analytics`,
     isActive: pathname.includes("/analytics"),
