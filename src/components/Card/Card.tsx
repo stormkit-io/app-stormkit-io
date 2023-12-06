@@ -3,6 +3,7 @@ import React from "react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
 import CardHeader from "../CardHeader";
 import CardFooter from "../CardFooter";
 
@@ -11,6 +12,7 @@ interface Props extends BoxProps {
   error?: React.ReactNode;
   info?: React.ReactNode;
   success?: React.ReactNode;
+  loading?: boolean;
 }
 
 function Card({
@@ -20,6 +22,7 @@ function Card({
   success,
   info,
   children,
+  loading,
   ...rest
 }: Props) {
   let header;
@@ -52,7 +55,12 @@ function Card({
       {...rest}
     >
       {header && <Box sx={{ mb: content ? 4 : 0, px: 4, pt: 4 }}>{header}</Box>}
-      {content && <Box sx={{ px: 4 }}>{content}</Box>}
+      {content && !loading && <Box sx={{ px: 4 }}>{content}</Box>}
+      {loading && (
+        <Box sx={{ px: 4, mb: footer ? 4 : 0 }}>
+          <LinearProgress color="secondary" />
+        </Box>
+      )}
       {error && (
         <Alert color="error" sx={{ mb: footer ? 4 : 0, px: 4 }}>
           {errorTitle && <AlertTitle>Error</AlertTitle>}
