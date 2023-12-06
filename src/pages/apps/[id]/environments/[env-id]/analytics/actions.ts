@@ -118,3 +118,43 @@ export const useFetchTopReferrers = ({
 
   return { referrers, loading, error };
 };
+
+interface FetchTopPathsProps {
+  envId: string;
+}
+
+interface TopPath {
+  name: string;
+  count: number;
+}
+
+export const useFetchTopPaths = ({ envId }: FetchTopPathsProps) => {
+  const [paths, setPaths] = useState<TopPath[]>([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    api
+      .fetch<Record<string, number>>(`/analytics/paths?envId=${envId}`)
+      .then(data => {
+        const paths: TopPath[] = Object.keys(data).map(ref => ({
+          name: ref,
+          count: data[ref],
+        }));
+
+        paths.sort((a, b) =>
+          a.count > b.count ? -1 : a.count === b.count ? 0 : 1
+        );
+
+        setPaths(paths);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching top paths.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  return { paths, loading, error };
+};

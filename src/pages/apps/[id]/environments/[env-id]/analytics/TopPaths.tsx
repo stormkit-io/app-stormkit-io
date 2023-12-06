@@ -4,34 +4,33 @@ import { grey } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
+import { useFetchTopPaths } from "./actions";
 import CardFooter from "~/components/CardFooter";
-import { useFetchTopReferrers } from "./actions";
 
 interface Props {
   environment: Environment;
 }
 
 export default function TopReferrers({ environment }: Props) {
-  const { referrers, error, loading } = useFetchTopReferrers({
+  const { paths, error, loading } = useFetchTopPaths({
     envId: environment.id!,
-    domainName: environment.domain.name!,
   });
 
   return (
-    <Card sx={{ mt: 4 }} error={error} loading={loading}>
+    <Card sx={{ mt: 4, width: "100%" }} error={error} loading={loading}>
       <CardHeader
-        title="Referrers"
-        subtitle="Top 50 referrers in the last 30 days."
+        title="Paths"
+        subtitle="Top 50 visited paths in the last 30 days."
       />
       <Box sx={{ maxHeight: "300px", overflow: "auto" }}>
-        {referrers.map(ref => (
-          <CardRow key={ref.name} chipLabel={ref.count.toString()}>
-            {ref.name}
+        {paths.map(path => (
+          <CardRow key={path.name} chipLabel={path.count.toString()}>
+            {path.name}
           </CardRow>
         ))}
       </Box>
       <CardFooter sx={{ color: grey[500], textAlign: "left" }}>
-        <Typography>Same domain referrers are excluded.</Typography>
+        <Typography>Client-side routing is not calculated.</Typography>
       </CardFooter>
     </Card>
   );

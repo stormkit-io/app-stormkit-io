@@ -5,9 +5,10 @@ import Box from "@mui/material/Box";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import EmptyPage from "~/components/EmptyPage";
-import Visitors from "./Visitors";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import Visitors from "./Visitors";
 import TopReferrers from "./TopReferrers";
+import TopPaths from "./TopPaths";
 
 export default function Analytics() {
   const { environment } = useContext(EnvironmentContext);
@@ -50,9 +51,15 @@ export default function Analytics() {
       </Card>
       <Visitors environment={environment} />
       <Box
-        sx={{ display: "grid", gridColumn: 2, gridTemplateColumns: "50% 50%" }}
+        sx={{
+          display: "grid",
+          gridColumn: 2,
+          gridTemplateColumns: "repeat(2, auto)",
+          columnGap: 4,
+        }}
       >
         <TopReferrers environment={environment} />
+        <TopPaths environment={environment} />
       </Box>
     </Box>
   );

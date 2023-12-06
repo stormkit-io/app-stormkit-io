@@ -81,7 +81,7 @@ export default function Visitors({ environment }: Props) {
   return (
     <Card error={error} loading={loading}>
       <CardHeader
-        title="Total visitors"
+        title="Visitors"
         subtitle={
           <>
             Total{" "}
