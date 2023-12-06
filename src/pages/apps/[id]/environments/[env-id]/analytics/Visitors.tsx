@@ -15,7 +15,6 @@ import { grey, pink } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import Spinner from "~/components/Spinner";
 import { useFetchVisitors } from "./actions";
 
 interface CustomTooltipProps {
@@ -80,7 +79,7 @@ export default function Visitors({ environment }: Props) {
   }, [visitors]);
 
   return (
-    <Card error={error}>
+    <Card error={error} loading={loading}>
       <CardHeader
         title="Total visitors"
         subtitle={
@@ -132,40 +131,37 @@ export default function Visitors({ environment }: Props) {
           </ToggleButtonGroup>
         }
       />
-      {loading && <Spinner />}
-      {!loading && (
-        <Box sx={{ height: 300, mb: 4 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={visitors}
-              margin={{
-                top: 10,
-                right: 5,
-                left: totalVisitors > 100 ? -25 : -30,
-                bottom: 10,
+      <Box sx={{ height: 300, mb: 4 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={visitors}
+            margin={{
+              top: 10,
+              right: 5,
+              left: totalVisitors > 100 ? -25 : -30,
+              bottom: 10,
+            }}
+          >
+            <CartesianGrid horizontalPoints={[0]} stroke="#181329" />
+            <Tooltip content={<CustomTooltip />} />
+            <YAxis
+              tick={{
+                fill: "white",
+                fontFamily: "Inter, sans-serif",
+                fontSize: 12,
               }}
-            >
-              <CartesianGrid horizontalPoints={[0]} stroke="#181329" />
-              <Tooltip content={<CustomTooltip />} />
-              <YAxis
-                tick={{
-                  fill: "white",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 12,
-                }}
-              />
-              <Area type="linear" dataKey="total" stroke="#6048b0a9" dot />
-              <Area
-                type="linear"
-                dataKey="unique"
-                stroke="#6048b0a9"
-                fill="#a048b0a9"
-                dot
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </Box>
-      )}
+            />
+            <Area type="linear" dataKey="total" stroke="#6048b0a9" dot />
+            <Area
+              type="linear"
+              dataKey="unique"
+              stroke="#6048b0a9"
+              fill="#a048b0a9"
+              dot
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </Box>
       <CardFooter sx={{ textAlign: "left", color: grey[500] }}>
         <Typography sx={{ fontSize: 12 }}>
           * Bots are excluded from these statistics

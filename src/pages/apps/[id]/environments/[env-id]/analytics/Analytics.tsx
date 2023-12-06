@@ -7,6 +7,7 @@ import CardHeader from "~/components/CardHeader";
 import EmptyPage from "~/components/EmptyPage";
 import Visitors from "./Visitors";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import TopReferrers from "./TopReferrers";
 
 export default function Analytics() {
   const { environment } = useContext(EnvironmentContext);
@@ -48,6 +49,11 @@ export default function Analytics() {
         />
       </Card>
       <Visitors environment={environment} />
+      <Box
+        sx={{ display: "grid", gridColumn: 2, gridTemplateColumns: "50% 50%" }}
+      >
+        <TopReferrers environment={environment} />
+      </Box>
     </Box>
   );
 }
