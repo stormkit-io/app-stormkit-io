@@ -19,7 +19,16 @@ export default function TopReferrers({ environment }: Props) {
   });
 
   return (
-    <Card error={error} loading={loading} sx={{ width: "100%", margin: "" }}>
+    <Card
+      error={error}
+      loading={loading}
+      sx={{
+        width: "100%",
+        margin: "",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <CardHeader
         title="Referrers"
         subtitle="Top 50 referrers in the last 30 days."
@@ -28,6 +37,7 @@ export default function TopReferrers({ environment }: Props) {
         sx={{
           maxHeight: "300px",
           overflow: "auto",
+          flex: 1,
         }}
       >
         {referrers.map(ref => (
