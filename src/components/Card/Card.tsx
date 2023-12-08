@@ -56,9 +56,9 @@ function Card({
       {...rest}
     >
       {header && <Box sx={{ mb: content ? 4 : 0, px: 4, pt: 4 }}>{header}</Box>}
-      {content && !loading && <Box sx={{ px: 4 }}>{content}</Box>}
+      {content && !loading && <Box sx={{ px: 4, flex: 1 }}>{content}</Box>}
       {loading && (
-        <Box sx={{ px: 4, mb: footer ? 4 : 0 }}>
+        <Box sx={{ px: 4, mb: footer ? 4 : 0, flex: 1 }}>
           <LinearProgress color="secondary" />
         </Box>
       )}

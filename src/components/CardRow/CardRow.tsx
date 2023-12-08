@@ -1,5 +1,6 @@
 import type { BoxProps } from "@mui/material";
 import type { Item } from "~/components/DotDotDotV2/DotDotDot";
+import React from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { grey } from "@mui/material/colors";
@@ -9,6 +10,7 @@ interface Props extends BoxProps {
   menuItems?: Item[];
   menuLabel?: string;
   chipLabel?: string;
+  actions?: React.ReactNode;
 }
 
 export default function CardRow({
@@ -17,6 +19,7 @@ export default function CardRow({
   menuItems,
   menuLabel,
   chipLabel,
+  actions,
   ...rest
 }: Props) {
   return (
@@ -43,6 +46,7 @@ export default function CardRow({
         />
       )}
       {menuItems && <DotDotDot label={menuLabel} items={menuItems} />}
+      {actions}
     </Box>
   );
 }
