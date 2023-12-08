@@ -75,7 +75,9 @@ export const useFetchVisitors = ({
 
 interface FetchTopReferrerProps {
   envId: string;
-  domainName: string;
+  domainName?: string;
+  requestPath?: string;
+  skip?: boolean;
 }
 
 interface Referrer {
@@ -86,15 +88,28 @@ interface Referrer {
 export const useFetchTopReferrers = ({
   envId,
   domainName,
+  requestPath = "",
+  skip,
 }: FetchTopReferrerProps) => {
   const [referrers, setReferrers] = useState<Referrer[]>([]);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setReferrers([]);
+  }, [requestPath]);
+
+  useEffect(() => {
+    if (skip) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+
     api
       .fetch<Record<string, number>>(
-        `/analytics/referrers?envId=${envId}&domainName=${domainName}`
+        `/analytics/referrers?envId=${envId}&domainName=${domainName}&requestPath=${requestPath}`
       )
       .then(data => {
         const refs: Referrer[] = Object.keys(data).map(ref => ({
@@ -114,7 +129,7 @@ export const useFetchTopReferrers = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [envId]);
+  }, [envId, requestPath, domainName, skip]);
 
   return { referrers, loading, error };
 };
