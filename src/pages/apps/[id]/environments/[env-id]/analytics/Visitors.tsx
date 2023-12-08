@@ -143,7 +143,7 @@ export default function Visitors({ environment }: Props) {
             margin={{
               top: 10,
               right: 5,
-              left: totalVisitors > 100 ? -25 : -30,
+              left: totalVisitors > 100 ? -25 : -28,
               bottom: 10,
             }}
           >
