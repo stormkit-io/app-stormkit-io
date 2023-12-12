@@ -1,5 +1,5 @@
 import React from "react";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import Form from "~/components/FormV2";
 import Button from "~/components/ButtonV2";
 import InfoBox from "~/components/InfoBoxV2";

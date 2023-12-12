@@ -1,6 +1,6 @@
 import React from "react";
 import { LocalStorage } from "~/utils/storage";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import Button from "~/components/ButtonV2";
 import Container from "~/components/Container";
 

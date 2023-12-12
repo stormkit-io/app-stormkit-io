@@ -6,7 +6,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import { createTeam } from "./actions";
 
 interface Props {

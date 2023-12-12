@@ -5,7 +5,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import TextInput from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import InputDescription from "~/components/InputDescription";
 
 interface APIKeyModalProps {

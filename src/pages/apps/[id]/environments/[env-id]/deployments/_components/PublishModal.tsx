@@ -3,7 +3,7 @@ import cn from "classnames";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Slider from "@mui/material/Slider";
 import Container from "~/components/Container";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import Button from "~/components/ButtonV2";
 import InfoBox from "~/components/InfoBoxV2";
 import Form from "~/components/FormV2";

@@ -6,7 +6,7 @@ import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import Container from "~/components/Container";
 import Spinner from "~/components/Spinner";
 import DotDotDot from "~/components/DotDotDotV2";

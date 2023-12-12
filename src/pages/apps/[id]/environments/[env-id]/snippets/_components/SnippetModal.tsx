@@ -15,7 +15,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import { addSnippet, updateSnippet } from "../actions";
 
 interface Props {

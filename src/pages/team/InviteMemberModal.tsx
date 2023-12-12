@@ -7,7 +7,7 @@ import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import Card from "~/components/Card";
 import CopyBox from "~/components/CopyBox";
 import CardHeader from "~/components/CardHeader";

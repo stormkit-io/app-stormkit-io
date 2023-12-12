@@ -11,7 +11,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBoxV2";
 import { useFetchManifest } from "../../actions";

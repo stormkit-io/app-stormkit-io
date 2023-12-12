@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { deploy } from "~/pages/apps/actions";
 import { useFetchRepoMeta } from "~/pages/apps/[id]/environments/[env-id]/config/actions";
 import { isFrameworkRecognized } from "~/pages/apps/[id]/environments/[env-id]/config/helpers";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import InfoBox from "~/components/InfoBoxV2";
 import Form from "~/components/FormV2";

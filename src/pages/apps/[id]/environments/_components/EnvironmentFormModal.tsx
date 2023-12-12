@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import InputDescription from "~/components/InputDescription";
 import { insertEnvironment } from "../[env-id]/config/actions";
 import { Typography } from "@mui/material";

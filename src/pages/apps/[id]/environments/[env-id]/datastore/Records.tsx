@@ -7,7 +7,7 @@ import InfoBox from "~/components/InfoBoxV2";
 import Link from "~/components/Link";
 import DotDotDot from "~/components/DotDotDotV2";
 import ConfirmModal from "~/components/ConfirmModal";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import { timeSince } from "~/utils/helpers/date";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { useWithRecords, deleteRecord } from "./actions";

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toArray } from "~/utils/helpers/array";
-import Modal from "~/components/ModalV2";
-import { timeout as animationTimeout } from "~/components/Modal/constants";
+import Modal from "~/components/Modal";
 import InfoBox from "~/components/InfoBoxV2";
 import Form from "~/components/FormV2";
 import Link from "~/components/Link";
@@ -59,7 +58,7 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
           setMethod("GET");
           setTrigger("on_deploy");
         }
-      }, animationTimeout);
+      }, 250);
     }
 
     return () => {

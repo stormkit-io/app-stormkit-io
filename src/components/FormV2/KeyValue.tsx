@@ -11,7 +11,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import Input from "./Input";
 
 interface Props {

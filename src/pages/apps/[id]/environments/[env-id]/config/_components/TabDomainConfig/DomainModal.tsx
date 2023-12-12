@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import Modal from "~/components/ModalV2";
+import Modal from "~/components/Modal";
 import Container from "~/components/Container";
 import Form from "~/components/FormV2";
 import InfoBox from "~/components/InfoBoxV2";
