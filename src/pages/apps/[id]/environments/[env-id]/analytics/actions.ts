@@ -173,3 +173,39 @@ export const useFetchTopPaths = ({ envId }: FetchTopPathsProps) => {
 
   return { paths, loading, error };
 };
+
+interface FetchCountriesProps {
+  envId: string;
+}
+
+interface ByCountry {
+  country: string;
+  value: number;
+}
+
+export const useFetchByCountries = ({ envId }: FetchCountriesProps) => {
+  const [countries, setCountries] = useState<ByCountry[]>([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    api
+      .fetch<Record<string, number>>(`/analytics/countries?envId=${envId}`)
+      .then(data => {
+        const countries: ByCountry[] = Object.keys(data).map(ref => ({
+          country: ref,
+          value: data[ref],
+        }));
+
+        setCountries(countries);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching countries.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [envId]);
+
+  return { countries, loading, error };
+};

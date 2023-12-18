@@ -9,6 +9,7 @@ import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.c
 import Visitors from "./Visitors";
 import TopReferrers from "./TopReferrers";
 import TopPaths from "./TopPaths";
+import ByCountries from "./Countries";
 
 export default function Analytics() {
   const { environment } = useContext(EnvironmentContext);
@@ -60,6 +61,7 @@ export default function Analytics() {
         <TopReferrers environment={environment} />
         <TopPaths environment={environment} />
       </Box>
+      <ByCountries environment={environment} />
     </Box>
   );
 }

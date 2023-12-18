@@ -51,6 +51,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.15.0",
+    "react-svg-worldmap": "^2.0.0-alpha.16",
     "react-transition-group": "^4.4.5",
     "recharts": "^2.10.3",
     "remove": "^0.1.5",
