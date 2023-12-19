@@ -14,9 +14,7 @@ import RepoList from "../_components/RepoList";
 import Accounts from "../_components/Accounts";
 import { useFetchAccounts, useFetchRepos } from "./actions";
 
-const githubAccount =
-  process.env.STORMKIT_ENV === "production" ? "stormkit-io" : "stormkit-io-dev";
-
+const githubAccount = process.env.GITHUB_ACCOUNT || "stormkit-io";
 const openPopupURL = `https://github.com/apps/${githubAccount}/installations/new`;
 
 export default function NewGithubApp() {

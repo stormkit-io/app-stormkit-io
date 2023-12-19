@@ -162,10 +162,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
     });
 
     test("clicking connect more should open a popup so that the user can configure permissions", () => {
-      const account =
-        process.env.STORMKIT_ENV === "production"
-          ? "stormkit-io"
-          : "stormkit-io-dev";
+      const account = "stormkit-io";
 
       window.open = jest.fn();
       const button = wrapper.getByText("Connect more repositories");

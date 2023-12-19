@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -16,13 +16,15 @@ interface Props {
   app?: App;
 }
 
-const isLocal = process.env.STORMKIT_ENV == "local";
+const isLocal = process.env.NODE_ENV === "development";
 
 export default function TopMenu({ children, submenu, app }: Props) {
   const { user } = useContext(AuthContext);
   const [isCanary, setIsCanary] = useState(!!localStorage.getItem("sk_canary"));
   const userPackage = user?.package?.id || "free";
-  const shouldShowEnvButton = isLocal || user?.isAdmin;
+  const shouldShowEnvButton = useMemo(() => {
+    return user?.isAdmin || isLocal;
+  }, [user]);
 
   return (
     <Box
