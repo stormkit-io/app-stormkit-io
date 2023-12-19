@@ -28,7 +28,7 @@ const paymentLinks: Record<"dev" | "prod", Record<SubscriptionTier, string>> = {
 };
 
 function paymentLink(tier: SubscriptionTier) {
-  if (process.env.STORMKIT_ENV === "local") {
+  if (process.env.NODE_ENV === "development") {
     return paymentLinks.dev[tier];
   }
 
@@ -105,12 +105,11 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
             }}
           >
             <WarningIcon sx={{ mr: 2 }} />
-            Your free trial is scheduled to conclude on {freeTrialEnds}. If
-            you want more time to explore don't hesitate to reach out.
-            We're more than happy to extend your trial!
-            If there's a specific feature you're excited to see in the
-            future, let us know. We're here to listen and make your experience
-            with Stormkit even better.
+            Your free trial is scheduled to conclude on {freeTrialEnds}. If you
+            want more time to explore don't hesitate to reach out. We're more
+            than happy to extend your trial! If there's a specific feature
+            you're excited to see in the future, let us know. We're here to
+            listen and make your experience with Stormkit even better.
           </Typography>
         )}
         {loading && <Spinner width={6} height={6} primary />}

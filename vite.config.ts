@@ -14,11 +14,10 @@ export default defineConfig(({ mode }) => {
     base: "/",
 
     define: {
-      "process.env.STRIPE_API_KEY": JSON.stringify(env.STRIPE_API_KEY),
       "process.env.API_DOMAIN": JSON.stringify(env.API_DOMAIN),
       "process.env.API_PROXY_DOMAIN": JSON.stringify(env.API_PROXY_DOMAIN),
       "process.env.SENTRY": JSON.stringify(env.SENTRY),
-      "process.env.STORMKIT_ENV": JSON.stringify(env.STORMKIT_ENV),
+      "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
     },
 
     server: {

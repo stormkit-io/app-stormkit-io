@@ -26,7 +26,6 @@ export default () => ({
             BABEL_ENV: "production",
             NODE_ENV: "production",
             ROOT: "\u003croot\u003e/packages/console",
-            STRIPE_API_KEY: "pk_live_pQIxMmRarwRKipTeFcTVW2cF00BcVT5IFj",
           },
         },
         domain: {
@@ -68,7 +67,7 @@ export default () => ({
         },
         {
           message:
-            "API_DOMAIN=https://api.stormkit.io\nBABEL_ENV=production\nNODE_ENV=production\nROOT=/home/app/repo/packages/console\nSK_APP_ID=1\nSK_CLIENT_ID=MypXlNXuA5xetiQi\nSK_CLIENT_SECRET=m6i8094GiIm-hu6MOAMdzoH4-sgcmpen4lwqjWzTspNnI2UP4Z_onqd3ZOfou4G2L0kCvVEvM8ty4hli\nSTRIPE_API_KEY=pk_live_pQIxMmRarwRKipTeFcTVW2cF00BcVT5IFj\nPUBLIC_PATH=https://cdn.stormkit.io/nwozk3kt/ybyxitlcji/\nPUBLIC_URL=https://cdn.stormkit.io/nwozk3kt/ybyxitlcji/\n",
+            "API_DOMAIN=https://api.stormkit.io\nBABEL_ENV=production\nNODE_ENV=production\nROOT=/home/app/repo/packages/console\nSK_APP_ID=1\nSK_CLIENT_ID=MypXlNXuA5xetiQi\nSK_CLIENT_SECRET=m6i8094GiIm-hu6MOAMdzoH4-sgcmpen4lwqjWzTspNnI2UP4Z_onqd3ZOfou4G2L0kCvVEvM8ty4hli\nPUBLIC_PATH=https://cdn.stormkit.io/nwozk3kt/ybyxitlcji/\nPUBLIC_URL=https://cdn.stormkit.io/nwozk3kt/ybyxitlcji/\n",
           status: true,
           title: "environment variables",
         },
@@ -127,7 +126,6 @@ export default () => ({
             BABEL_ENV: "production",
             NODE_ENV: "production",
             ROOT: "\u003croot\u003e/packages/console",
-            STRIPE_API_KEY: "pk_live_pQIxMmRarwRKipTeFcTVW2cF00BcVT5IFj",
           },
         },
         domain: {
@@ -168,7 +166,7 @@ export default () => ({
         },
         {
           message:
-            "API_DOMAIN=https://api.stormkit.io\nBABEL_ENV=production\nNODE_ENV=production\nROOT=/home/app/repo/packages/console\nSK_APP_ID=1\nSK_CLIENT_ID=MypXlNXuA5xetiQi\nSK_CLIENT_SECRET=m6i8094GiIm-hu6MOAMdzoH4-sgcmpen4lwqjWzTspNnI2UP4Z_onqd3ZOfou4G2L0kCvVEvM8ty4hli\nSTRIPE_API_KEY=pk_live_pQIxMmRarwRKipTeFcTVW2cF00BcVT5IFj\nPUBLIC_PATH=https://cdn.stormkit.io/nwozk3kt/4d9lyatkzq/\nPUBLIC_URL=https://cdn.stormkit.io/nwozk3kt/4d9lyatkzq/\n",
+            "API_DOMAIN=https://api.stormkit.io\nBABEL_ENV=production\nNODE_ENV=production\nROOT=/home/app/repo/packages/console\nSK_APP_ID=1\nSK_CLIENT_ID=MypXlNXuA5xetiQi\nSK_CLIENT_SECRET=m6i8094GiIm-hu6MOAMdzoH4-sgcmpen4lwqjWzTspNnI2UP4Z_onqd3ZOfou4G2L0kCvVEvM8ty4hli\nPUBLIC_PATH=https://cdn.stormkit.io/nwozk3kt/4d9lyatkzq/\nPUBLIC_URL=https://cdn.stormkit.io/nwozk3kt/4d9lyatkzq/\n",
           status: true,
           title: "environment variables",
         },
@@ -226,7 +224,6 @@ export default () => ({
             BABEL_ENV: "production",
             NODE_ENV: "production",
             ROOT: "\u003croot\u003e/packages/console",
-            STRIPE_API_KEY: "pk_live_pQIxMmRarwRKipTeFcTVW2cF00BcVT5IFj",
           },
         },
         domain: {
