@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 
 export interface Path {
@@ -26,6 +25,7 @@ export default function MenuLink({ item }: Props) {
         position: "relative",
         alignItems: "center",
         borderRadius: 1,
+        bgcolor: item.isActive ? "rgba(255,255,255,0.05)" : undefined,
         ":hover": {
           opacity: 1,
           color: "white",
@@ -34,18 +34,6 @@ export default function MenuLink({ item }: Props) {
       }}
     >
       {item.text}
-      {item.isActive && (
-        <Box
-          sx={{
-            height: "2px",
-            bgcolor: "white",
-            position: "absolute",
-            bottom: -8,
-            left: 16,
-            right: 16,
-          }}
-        />
-      )}
     </Link>
   );
 }

@@ -27,7 +27,7 @@ export default function DeployButton({
         }}
         color="secondary"
         variant="contained"
-        size="large"
+        size="medium"
         sx={{
           borderRadius: 1,
           color: "white",

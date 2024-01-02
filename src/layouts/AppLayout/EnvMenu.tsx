@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router";
 import Box from "@mui/material/Box";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { grey } from "@mui/material/colors";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import MenuLink from "~/components/MenuLink";
 import { envMenuItems } from "./menu_items";
@@ -35,9 +34,8 @@ export default function EnvMenu() {
       sx={{
         width: "100%",
         display: "flex",
-        borderBottom: `1px solid ${grey[900]}`,
-        mb: { xs: 0, lg: 2 },
-        pb: 1,
+        pb: 2,
+        mt: 2,
       }}
     >
       <Box
@@ -85,6 +83,7 @@ export default function EnvMenu() {
         sx={{
           display: "flex",
           flexDirection: "row",
+          pr: 2,
         }}
       >
         {envMenu.map(item => (
