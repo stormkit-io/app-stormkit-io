@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import Typography from "@mui/material/Typography";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import TabCustomStorage from "./_components/TabCustomStorage";
@@ -12,6 +13,7 @@ import TabConfigEnvVars from "./_components/TabConfigEnvVars";
 import TabConfigGeneral from "./_components/TabConfigGeneral";
 import TabConfigBuild from "./_components/TabConfigBuild";
 import TabAPIKey from "./_components/TabAPIKey";
+import { grey } from "@mui/material/colors";
 
 const listItems = [
   { path: "#general", text: "General" },
@@ -45,11 +47,8 @@ export default function EnvironmentConfig() {
   }, [hash]);
 
   return (
-    <Box
-      bgcolor="container.paper"
-      sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
-    >
-      <Box component="nav" sx={{ m: 2, mt: 0, minWidth: "250px" }}>
+    <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}>
+      <Box component="nav" sx={{ mr: 2, minWidth: "250px" }}>
         <List>
           <ListItem
             sx={{
@@ -59,18 +58,17 @@ export default function EnvironmentConfig() {
               px: 0,
             }}
           >
-            <Box
+            <Typography
               component="span"
               sx={{
                 display: "inline-block",
                 mx: 2,
                 width: "100%",
-                opacity: 0.5,
-                color: "white",
+                color: grey[500],
               }}
             >
               Settings
-            </Box>
+            </Typography>
             <List
               sx={{
                 mt: 1,
@@ -85,17 +83,17 @@ export default function EnvironmentConfig() {
                     href={li.path}
                     sx={{
                       display: "block",
-                      px: 3,
+                      px: 2,
                       py: 1,
                       width: "100%",
                       "&:hover": { opacity: 1, bgcolor: "rgba(0,0,0,0.2)" },
-                      opacity:
+                      color:
                         hash === li.path || (!hash && li.path === "#general")
-                          ? 1
-                          : 0.5,
+                          ? "white"
+                          : grey[500],
                     }}
                   >
-                    {li.text}
+                    <Typography component="span">{li.text}</Typography>
                   </Link>
                 </ListItem>
               ))}
@@ -113,7 +111,7 @@ export default function EnvironmentConfig() {
                 "&:hover": { opacity: 1 },
               }}
             >
-              Custom storage
+              <Typography component="span">Custom storage</Typography>
             </Link>
           </Box>
           <Box component="li" sx={{ p: 2 }}>
@@ -124,7 +122,7 @@ export default function EnvironmentConfig() {
                 "&:hover": { opacity: 1 },
               }}
             >
-              Domain
+              <Typography component="span">Domain</Typography>
             </Link>
           </Box>
         </List>

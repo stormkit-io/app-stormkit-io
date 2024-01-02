@@ -57,6 +57,7 @@ export default function EnvironmentHeader() {
 
   return (
     <Card
+      size="small"
       sx={{
         width: "100%",
         mb: 2,
