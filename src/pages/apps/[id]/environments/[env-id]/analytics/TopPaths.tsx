@@ -60,11 +60,12 @@ export default function TopPaths({ environment }: Props) {
               actions={
                 <IconButton
                   sx={{ ml: 2 }}
+                  size="small"
                   onClick={() => {
                     setRequestPath(path.name);
                   }}
                 >
-                  <ArrowForward sx={{ fontSize: 16 }} />
+                  <ArrowForward sx={{ fontSize: 12 }} />
                 </IconButton>
               }
             >
