@@ -13,6 +13,7 @@ interface Props extends BoxProps {
   info?: React.ReactNode;
   success?: React.ReactNode;
   loading?: boolean;
+  size?: "small" | "medium";
 }
 
 function Card({
@@ -23,6 +24,7 @@ function Card({
   info,
   children,
   loading,
+  size = "medium",
   ...rest
 }: Props) {
   let header;
@@ -42,6 +44,8 @@ function Card({
     }
   });
 
+  const p = size === "small" ? 2 : 4;
+
   return (
     <Box
       sx={{
@@ -49,27 +53,27 @@ function Card({
         bgcolor: "rgba(0,0,0,0.3)",
         border: `1px solid rgba(255,255,255,0.04)`,
         borderRadius: 1,
-        pt: !header && content.length ? 4 : 0,
-        pb: !footer && content.length ? 4 : 0,
+        pt: !header && content.length ? p : 0,
+        pb: !footer && content.length ? p : 0,
         ...sx,
       }}
       {...rest}
     >
-      {header && <Box sx={{ mb: content ? 4 : 0, px: 4, pt: 4 }}>{header}</Box>}
-      {content && !loading && <Box sx={{ px: 4, flex: 1 }}>{content}</Box>}
+      {header && <Box sx={{ mb: content ? 4 : 0, px: p, pt: p }}>{header}</Box>}
+      {content && !loading && <Box sx={{ px: p, flex: 1 }}>{content}</Box>}
       {loading && (
-        <Box sx={{ px: 4, mb: footer ? 4 : 0, flex: 1 }}>
+        <Box sx={{ px: p, mb: footer ? p : 0, flex: 1 }}>
           <LinearProgress color="secondary" />
         </Box>
       )}
       {error && (
-        <Alert color="error" sx={{ mb: footer ? 4 : 0, px: 4 }}>
+        <Alert color="error" sx={{ mb: footer ? p : 0, px: p }}>
           {errorTitle && <AlertTitle>Error</AlertTitle>}
           <Box>{error}</Box>
         </Alert>
       )}
       {success && (
-        <Alert color="success" sx={{ mb: footer ? 4 : 0, px: 4 }}>
+        <Alert color="success" sx={{ mb: footer ? p : 0, px: p }}>
           <AlertTitle>Success</AlertTitle>
           <Box>{success}</Box>
         </Alert>
@@ -78,8 +82,8 @@ function Card({
         <Alert
           color="info"
           sx={{
-            mb: footer ? 4 : 0,
-            px: 4,
+            mb: footer ? p : 0,
+            px: p,
             bgcolor: "rgba(255,255,255,0.025)",
             borderRadius: 0,
           }}
@@ -90,7 +94,7 @@ function Card({
       {footer && (
         <Box
           sx={{
-            px: 4,
+            px: p,
             py: 2,
             borderTop: `1px solid rgba(255,255,255,0.05)`,
           }}
