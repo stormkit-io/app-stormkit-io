@@ -45,6 +45,7 @@ export default function EnvMenu() {
           flex: 1,
           display: "flex",
           alignItems: "center",
+          pl: 2,
         }}
       >
         <Select
