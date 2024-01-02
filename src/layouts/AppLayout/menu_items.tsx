@@ -63,6 +63,11 @@ export const envMenuItems = ({
       path: `${envPath}/feature-flags`,
       isActive: pathname.includes("/feature-flags"),
     },
+    {
+      text: "Key Value",
+      path: `${envPath}/key-value`,
+      isActive: pathname.includes("/key-value"),
+    },
   ];
 
   items.push({

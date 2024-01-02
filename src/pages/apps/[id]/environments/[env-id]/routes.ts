@@ -21,6 +21,12 @@ const routes: Array<RouteProps> = [
     ),
   },
   {
+    path: "/key-value",
+    element: Async(
+      () => import("~/pages/apps/[id]/environments/[env-id]/kv")
+    ),
+  },
+  {
     path: "/function-triggers",
     element: Async(
       () => import("~/pages/apps/[id]/environments/[env-id]/function-triggers")
