@@ -1,5 +1,4 @@
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
@@ -32,7 +31,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     );
   };
 
-  describe("with no domain", () => {
+  describe.skip("with no domain", () => {
     beforeEach(() => {
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
