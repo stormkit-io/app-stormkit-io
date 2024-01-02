@@ -8,12 +8,12 @@ import Switch from "@mui/material/Switch";
 import Select from "@mui/material/Select";
 import Option from "@mui/material/MenuItem";
 import Button from "@mui/lab/LoadingButton";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
-import InputDesc from "~/components/InputDescription";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import ConfirmModal from "~/components/ConfirmModal";
 import {
   updateEnvironment,
@@ -51,9 +51,11 @@ export default function TabConfigGeneral({
   }
 
   return (
-    <Box
+    <Card
       component="form"
-      sx={{ p: 2, color: "white" }}
+      error={error}
+      success={success}
+      sx={{ color: "white" }}
       onSubmit={e => {
         e.preventDefault();
 
@@ -73,10 +75,10 @@ export default function TabConfigGeneral({
         });
       }}
     >
-      <Typography variant="h6">General settings</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 4 }}>
-        Use these settings to configure your environment details.
-      </Typography>
+      <CardHeader
+        title="General settings"
+        subtitle="Use these settings to configure your environment details."
+      />
       <Box sx={{ mb: 4 }}>
         <TextField
           label="Environment name"
@@ -150,51 +152,37 @@ export default function TabConfigGeneral({
               endAdornment: <code className="ml-1 text-pink-50">/i</code>,
             }}
             fullWidth
-          />
-          <InputDesc>
-            <Typography sx={{ mb: 2 }}>
-              Specify which branches should be automatically deployed to this
-              environment. Below are some examples:
-            </Typography>
-            <Box component="ol">
-              <Box component="li" sx={{ mb: 2 }}>
-                <Box component="code" sx={{ color: "white" }}>
-                  ^(?!dependabot).+
-                </Box>{" "}
-                <Typography display="block" sx={{ mt: 0.5 }}>
-                  Match anything that does not start with <b>dependabot</b>
+            helperText={
+              <>
+                <Typography sx={{ mb: 2, mt: 1 }}>
+                  Specify which branches should be automatically deployed to
+                  this environment. Below are some examples:
                 </Typography>
-              </Box>
-              <Box component="li">
-                <Box component="code" sx={{ color: "white" }}>
-                  ^release-.+
+                <Box component="ol">
+                  <Box component="li" sx={{ mb: 2 }}>
+                    <Box component="code" sx={{ color: "white" }}>
+                      ^(?!dependabot).+
+                    </Box>{" "}
+                    <Typography display="block" sx={{ mt: 0.5 }}>
+                      Match anything that does not start with <b>dependabot</b>
+                    </Typography>
+                  </Box>
+                  <Box component="li">
+                    <Box component="code" sx={{ color: "white" }}>
+                      ^release-.+
+                    </Box>
+                    <Typography display="block" sx={{ mt: 0.5 }}>
+                      Match anything that starts with <b>release-</b>
+                    </Typography>
+                  </Box>
                 </Box>
-                <Typography display="block" sx={{ mt: 0.5 }}>
-                  Match anything that starts with <b>release-</b>
-                </Typography>
-              </Box>
-            </Box>
-          </InputDesc>
+              </>
+            }
+          />
         </Box>
       )}
 
-      {(error || success) && (
-        <Box sx={{ mb: 4 }}>
-          <Alert>
-            <AlertTitle>{error ? "Error" : "Success"}</AlertTitle>
-            <Typography>{success || error}</Typography>
-          </Alert>
-        </Box>
-      )}
-
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent:
-            env.name === "production" ? "flex-end" : "space-between",
-          mb: 2,
-        }}
-      >
+      <CardFooter>
         {env.name !== "production" && (
           <>
             <Button
@@ -254,7 +242,7 @@ export default function TabConfigGeneral({
         >
           Save
         </Button>
-      </Box>
-    </Box>
+      </CardFooter>
+    </Card>
   );
 }

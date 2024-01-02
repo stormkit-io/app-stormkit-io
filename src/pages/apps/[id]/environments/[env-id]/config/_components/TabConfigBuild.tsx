@@ -4,9 +4,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import InputDesc from "~/components/InputDescription";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import Spinner from "~/components/Spinner";
 import { isFrameworkRecognized } from "../helpers";
 import {
@@ -37,9 +37,11 @@ export default function TabConfigGeneral({
   }
 
   return (
-    <Box
+    <Card
       component="form"
-      sx={{ p: 2, color: "white" }}
+      sx={{ color: "white" }}
+      error={error}
+      success={success}
       onSubmit={e => {
         e.preventDefault();
 
@@ -65,10 +67,10 @@ export default function TabConfigGeneral({
         });
       }}
     >
-      <Typography variant="h6">Build settings</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 4 }}>
-        Use these settings to configure your build options.
-      </Typography>
+      <CardHeader
+        title="Build settings"
+        subtitle="Use these settings to configure your build options."
+      />
       <Box sx={{ mb: 4 }}>
         <TextField
           label="Build command"
@@ -79,16 +81,15 @@ export default function TabConfigGeneral({
           name="build.cmd"
           autoFocus
           placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
+          helperText={
+            <Typography sx={{ mt: 1 }}>
+              Concatenate multiple commands with the logical `&&` operator:{" "}
+              <Box component="code" sx={{ color: "white" }}>
+                npm run test && npm run build
+              </Box>
+            </Typography>
+          }
         />
-        <InputDesc>
-          <Typography>
-            Concatenate multiple commands with the logical `&&` operator (e.g.{" "}
-            <Box component="code" sx={{ color: "white" }}>
-              npm run test && npm run build
-            </Box>
-            )
-          </Typography>
-        </InputDesc>
       </Box>
       <Box sx={{ mb: 4 }}>
         <TextField
@@ -107,15 +108,16 @@ export default function TabConfigGeneral({
               ? "Output folder is not needed. It is taken from the framework configuration file."
               : "Defaults to `build`, `dist`, `output` or `.stormkit`"
           }
+          helperText={
+            !metaLoading &&
+            !isFrameworkRecognized(meta?.framework) && (
+              <Typography sx={{ mt: 1 }}>
+                The output folder will be uploaded to our CDN and Functions.
+                This path is relative to your repository root folder.
+              </Typography>
+            )
+          }
         />
-        {!metaLoading && !isFrameworkRecognized(meta?.framework) && (
-          <InputDesc>
-            <Typography>
-              The output folder will be uploaded to our CDN and Functions. This
-              path is relative to your repository root folder.
-            </Typography>
-          </InputDesc>
-        )}
       </Box>
       <Box sx={{ mb: 4 }}>
         <TextField
@@ -128,25 +130,16 @@ export default function TabConfigGeneral({
           }}
           fullWidth
           placeholder="Defaults to `/`"
+          helperText={
+            <Typography sx={{ mt: 1 }}>
+              The build root specifies the working directory. Build command and
+              output folder will be relative to this path.
+            </Typography>
+          }
         />
-        <InputDesc>
-          <Typography>
-            The build root specifies the working directory. Build command and
-            output folder will be relative to this path.
-          </Typography>
-        </InputDesc>
       </Box>
 
-      {(error || success) && (
-        <Box sx={{ mb: 4 }}>
-          <Alert>
-            <AlertTitle>{error ? "Error" : "Success"}</AlertTitle>
-            <Typography>{success || error}</Typography>
-          </Alert>
-        </Box>
-      )}
-
-      <Box sx={{ textAlign: "right", mb: 2 }}>
+      <CardFooter>
         <Button
           type="submit"
           variant="contained"
@@ -156,7 +149,7 @@ export default function TabConfigGeneral({
         >
           Save
         </Button>
-      </Box>
-    </Box>
+      </CardFooter>
+    </Card>
   );
 }

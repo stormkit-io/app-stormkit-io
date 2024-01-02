@@ -1,12 +1,12 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import TextInput from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Modal from "~/components/Modal";
-import InputDescription from "~/components/InputDescription";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 
 interface APIKeyModalProps {
   onClose: () => void;
@@ -25,9 +25,9 @@ export default function APIKeyModal({
 
   return (
     <Modal open onClose={onClose}>
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h6">Generate New Key</Typography>
-        <Box sx={{ pt: 2 }}>
+      <Card error={error}>
+        <CardHeader title="Generate New Key" />
+        <Box sx={{ mb: 4 }}>
           <TextInput
             variant="filled"
             label="API Key name"
@@ -37,19 +37,15 @@ export default function APIKeyModal({
             autoComplete="off"
             value={name}
             onChange={e => setName(e.target.value)}
+            helperText={
+              <Typography sx={{ mt: 1 }}>
+                The name will be used in the UI. It helps distinguishing your
+                API keys.
+              </Typography>
+            }
           />
-          <InputDescription>
-            The name will be used in the UI. It helps distinguishing your API
-            keys.
-          </InputDescription>
         </Box>
-        {error && (
-          <Alert color="error" sx={{ m: 0, mt: 2 }}>
-            <AlertTitle>Error</AlertTitle>
-            <Typography>{error}</Typography>
-          </Alert>
-        )}
-        <Box sx={{ textAlign: "right", pt: 2 }}>
+        <CardFooter>
           <Button
             loading={loading}
             variant="contained"
@@ -58,8 +54,8 @@ export default function APIKeyModal({
           >
             Create
           </Button>
-        </Box>
-      </Box>
+        </CardFooter>
+      </Card>
     </Modal>
   );
 }

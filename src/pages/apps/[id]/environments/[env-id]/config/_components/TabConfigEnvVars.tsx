@@ -1,10 +1,10 @@
 import type { FormValues } from "../actions";
 import { useState, useMemo } from "react";
-import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/lab/LoadingButton";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import KeyValue from "~/components/FormV2/KeyValue";
 import { updateEnvironment, buildFormValues } from "../actions";
 
@@ -42,9 +42,11 @@ export default function TabConfigGeneral({
   delete defaultValue.SK_CWD;
 
   return (
-    <Box
+    <Card
       component="form"
-      sx={{ p: 2, color: "white" }}
+      sx={{ color: "white" }}
+      error={error}
+      success={success}
       onSubmit={e => {
         e.preventDefault();
 
@@ -70,10 +72,10 @@ export default function TabConfigGeneral({
         });
       }}
     >
-      <Typography variant="h6">Environment variables</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 2 }}>
-        These variables will be available to build time and Functions runtime.
-      </Typography>
+      <CardHeader
+        title="Environment variables"
+        subtitle="These variables will be available to build time and Functions runtime."
+      />
       <Box sx={{ mb: 2 }}>
         <KeyValue
           inputName="build.vars"
@@ -92,16 +94,7 @@ export default function TabConfigGeneral({
         />
       </Box>
 
-      {(error || success) && (
-        <Box sx={{ mb: 4 }}>
-          <Alert>
-            <AlertTitle>{error ? "Error" : "Success"}</AlertTitle>
-            <Typography>{success || error}</Typography>
-          </Alert>
-        </Box>
-      )}
-
-      <Box sx={{ textAlign: "right", mb: 2 }}>
+      <CardFooter>
         <Button
           type="submit"
           variant="contained"
@@ -111,7 +104,7 @@ export default function TabConfigGeneral({
         >
           Save
         </Button>
-      </Box>
-    </Box>
+      </CardFooter>
+    </Card>
   );
 }

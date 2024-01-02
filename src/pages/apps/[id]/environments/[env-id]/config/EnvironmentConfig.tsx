@@ -127,7 +127,7 @@ export default function EnvironmentConfig() {
           </Box>
         </List>
       </Box>
-      <Box sx={{ flex: 1, bgcolor: "container.paper" }}>
+      <Box sx={{ flex: 1 }}>
         <Tab
           app={app}
           environment={environment}

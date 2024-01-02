@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import CardHeader from "../CardHeader";
 import CardFooter from "../CardFooter";
+import CardRow from "../CardRow";
 
 interface Props extends BoxProps {
   errorTitle?: boolean;
@@ -30,6 +31,7 @@ function Card({
   let header;
   let footer;
   let content: React.ReactNode[] = [];
+  let isCardRow = false;
 
   React.Children.forEach(children, child => {
     if (!React.isValidElement(child)) {
@@ -40,7 +42,18 @@ function Card({
     } else if (child.type === CardFooter) {
       footer = child;
     } else {
-      content.push(child);
+      const { children } = child.props || {};
+
+      if (Array.isArray(children) && children[0]?.type === CardRow) {
+        isCardRow = true;
+        content.push(
+          React.Children.map(children, child => {
+            return React.cloneElement(child, { size });
+          })
+        );
+      } else {
+        content.push(child);
+      }
     }
   });
 
@@ -60,7 +73,9 @@ function Card({
       {...rest}
     >
       {header && <Box sx={{ mb: content ? 4 : 0, px: p, pt: p }}>{header}</Box>}
-      {content && !loading && <Box sx={{ px: p, flex: 1 }}>{content}</Box>}
+      {content && !loading && (
+        <Box sx={{ px: isCardRow ? 0 : p, flex: 1 }}>{content}</Box>
+      )}
       {loading && (
         <Box sx={{ px: p, mb: footer ? p : 0, flex: 1 }}>
           <LinearProgress color="secondary" />

@@ -1,15 +1,16 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/lab/LoadingButton";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
+import CardRow from "~/components/CardRow";
 import ConfirmModal from "~/components/ConfirmModal";
-import Spinner from "~/components/Spinner";
 import APIKeyModal from "~/shared/api-keys/APIKeyModal";
 import * as actions from "~/shared/api-keys/actions";
 
@@ -62,124 +63,101 @@ export default function TabAPIKey({ app, environment: env }: Props) {
   };
 
   return (
-    <Box sx={{ p: 2, color: "white" }}>
-      <Typography variant="h6">API Key</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 2 }}>
-        This key will allow you to interact with our API and modify this
-        environment.
-      </Typography>
-      {loading && (
-        <Box
-          sx={{
-            p: 2,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Spinner />
-        </Box>
-      )}
-      {error && (
-        <Alert color="error" sx={{ m: 0, mb: 2 }}>
-          <AlertTitle>Error</AlertTitle>
-          <Typography>
-            An error occurred while fetching your API key. Please try again
-            later.
-          </Typography>
-        </Alert>
-      )}
-      {success && (
-        <Alert color="success" sx={{ m: 0, mb: 2 }}>
-          <AlertTitle>Success</AlertTitle>
-          <Typography>Your API key has been successfully updated.</Typography>
-        </Alert>
-      )}
-      {!error && !loading && (
-        <>
-          <Box>
-            {keys.map(apiKey => (
-              <Box
-                key={apiKey.token}
-                sx={{
-                  mb: 2,
-                  bgcolor: "rgba(0,0,0,0.1)",
-                  p: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box>
-                    <Typography>{apiKey.name}</Typography>
-                    <Box
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                        maxWidth: { md: "300px", lg: "none" },
-                      }}
-                    >
-                      {isVisible === apiKey.id ? apiKey.token : "*".repeat(32)}
-                    </Box>
-                  </Box>
-                  <Box>
-                    <IconButton
-                      title="Toggle visibility"
-                      size="small"
-                      sx={{
-                        scale: "0.9",
-                        opacity: 0.5,
-                        ":hover": { opacity: 1 },
-                      }}
-                      onClick={() => {
-                        setIsVisible(isVisible === apiKey.id ? "" : apiKey.id);
-                      }}
-                    >
-                      {isVisible === apiKey.id ? (
-                        <VisibilityIcon />
-                      ) : (
-                        <VisibilityOffIcon />
-                      )}
-                    </IconButton>
-                    <IconButton
-                      title="Remove API Key"
-                      aria-label="Remove API Key"
-                      size="small"
-                      sx={{
-                        scale: "0.9",
-                        opacity: 0.5,
-                        ":hover": { opacity: 1 },
-                      }}
-                      onClick={() => {
-                        setApiKeyToDelete(apiKey);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Box>
-            ))}
-            {keys.length === 0 &&
-              "You do not have an API key associated with this environment."}
-          </Box>
-          <Box sx={{ textAlign: "right", mt: 2 }}>
-            <Button
-              type="button"
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                setIsModalOpen(true);
+    <Card
+      sx={{ color: "white" }}
+      loading={loading}
+      info={
+        !loading && keys.length === 0
+          ? "You do not have an API key associated with this environment."
+          : ""
+      }
+      error={
+        error
+          ? "An error occurred while fetching your API key. Please try again later."
+          : ""
+      }
+      success={success ? "Your API key has been successfully updated." : ""}
+    >
+      <CardHeader
+        title="API Key"
+        subtitle="This key will allow you to interact with our API and modify this environment."
+      />
+
+      <Box>
+        {keys.map(apiKey => (
+          <CardRow key={apiKey.token}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              New API Key
-            </Button>
-          </Box>
-        </>
-      )}
+              <Box>
+                <Typography>{apiKey.name}</Typography>
+                <Box
+                  sx={{
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    maxWidth: { md: "300px", lg: "none" },
+                  }}
+                >
+                  {isVisible === apiKey.id ? apiKey.token : "*".repeat(32)}
+                </Box>
+              </Box>
+              <Box>
+                <IconButton
+                  title="Toggle visibility"
+                  size="small"
+                  sx={{
+                    scale: "0.9",
+                    opacity: 0.5,
+                    ":hover": { opacity: 1 },
+                  }}
+                  onClick={() => {
+                    setIsVisible(isVisible === apiKey.id ? "" : apiKey.id);
+                  }}
+                >
+                  {isVisible === apiKey.id ? (
+                    <VisibilityIcon />
+                  ) : (
+                    <VisibilityOffIcon />
+                  )}
+                </IconButton>
+                <IconButton
+                  title="Remove API Key"
+                  aria-label="Remove API Key"
+                  size="small"
+                  sx={{
+                    scale: "0.9",
+                    opacity: 0.5,
+                    ":hover": { opacity: 1 },
+                  }}
+                  onClick={() => {
+                    setApiKeyToDelete(apiKey);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            </Box>
+          </CardRow>
+        ))}
+      </Box>
+
+      <CardFooter>
+        <Button
+          type="button"
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          New API Key
+        </Button>
+      </CardFooter>
+
       {isModalOpen && (
         <APIKeyModal
           error={modalError}
@@ -220,6 +198,6 @@ export default function TabAPIKey({ app, environment: env }: Props) {
           </Typography>
         </ConfirmModal>
       )}
-    </Box>
+    </Card>
   );
 }

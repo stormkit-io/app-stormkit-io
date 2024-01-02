@@ -31,26 +31,28 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
           title="Team members"
           subtitle="Invite team members to collaborate on your projects."
         />
-        {teamMembers?.map(member => (
-          <CardRow
-            key={member.userId}
-            chipLabel={member.role}
-            menuLabel={`Member ${member.id} menu`}
-            menuItems={[
-              {
-                text: member.userId === user?.id ? "Leave" : "Remove",
-                onClick: () => {
-                  setMemberToBeRemoved(member);
+        <Box>
+          {teamMembers?.map(member => (
+            <CardRow
+              key={member.userId}
+              chipLabel={member.role}
+              menuLabel={`Member ${member.id} menu`}
+              menuItems={[
+                {
+                  text: member.userId === user?.id ? "Leave" : "Remove",
+                  onClick: () => {
+                    setMemberToBeRemoved(member);
+                  },
                 },
-              },
-            ]}
-          >
-            <Typography>
-              {member.fullName?.trim() || member.displayName}
-            </Typography>
-            <Typography sx={{ color: grey[500] }}>{member.email}</Typography>
-          </CardRow>
-        ))}
+              ]}
+            >
+              <Typography>
+                {member.fullName?.trim() || member.displayName}
+              </Typography>
+              <Typography sx={{ color: grey[500] }}>{member.email}</Typography>
+            </CardRow>
+          ))}
+        </Box>
         <CardFooter>
           <Button
             variant="contained"

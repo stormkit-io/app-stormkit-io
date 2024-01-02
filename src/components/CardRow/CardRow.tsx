@@ -11,6 +11,7 @@ interface Props extends BoxProps {
   menuLabel?: string;
   chipLabel?: string;
   actions?: React.ReactNode;
+  size?: "small" | "medium";
 }
 
 export default function CardRow({
@@ -20,17 +21,24 @@ export default function CardRow({
   menuLabel,
   chipLabel,
   actions,
+  size,
   ...rest
 }: Props) {
+  const space = size === "medium" ? 4 : 2;
+
   return (
     <Box
       sx={{
         borderBottom: `1px solid ${grey[900]}`,
         display: "flex",
         alignItems: "center",
-        mb: 2,
-        pb: 2,
+        px: space,
+        py: 2,
+        "&:nth-of-type(odd)": {
+          bgcolor: "rgba(0,0,0,0.2)",
+        },
         ":last-child": {
+          mb: space,
           borderBottom: "none",
         },
         ...sx,

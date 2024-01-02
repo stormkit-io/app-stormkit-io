@@ -8,8 +8,9 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import InputDesc from "~/components/InputDescription";
 import { updateIntegration, deleteIntegration } from "../actions";
 
@@ -33,9 +34,15 @@ const CustomStorage: React.FC<Props> = ({
   );
 
   return (
-    <Box
+    <Card
       component="form"
-      sx={{ p: 2, color: "white" }}
+      sx={{ color: "white" }}
+      error={error}
+      success={
+        success
+          ? "Custom storage configuration was saved successfully. Your app will now be served from your custom storage."
+          : ""
+      }
       onSubmit={e => {
         e.preventDefault();
 
@@ -77,10 +84,10 @@ const CustomStorage: React.FC<Props> = ({
           });
       }}
     >
-      <Typography variant="h6">Environment variables</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 4 }}>
-        These variables will be available to build time and Functions runtime.
-      </Typography>
+      <CardHeader
+        title="Custom storage"
+        subtitle="Host your assets in your provider."
+      />
 
       <Box sx={{ mb: 4 }}>
         <FormControl variant="standard" fullWidth>
@@ -244,21 +251,7 @@ const CustomStorage: React.FC<Props> = ({
           </Box>
         </>
       )}
-
-      {error && (
-        <Alert color="error" sx={{ mb: 4 }}>
-          <AlertTitle>Error</AlertTitle>
-          {error}
-        </Alert>
-      )}
-      {success && (
-        <Alert color="success" sx={{ mb: 4 }}>
-          <AlertTitle>Success</AlertTitle>
-          Custom storage configuration was saved successfully. Your app will now
-          be served from your custom storage.
-        </Alert>
-      )}
-      <Box
+      <CardFooter
         sx={{
           display: "flex",
           justifyContent: integration ? "space-between" : "flex-end",
@@ -304,8 +297,8 @@ const CustomStorage: React.FC<Props> = ({
         >
           Submit
         </Button>
-      </Box>
-    </Box>
+      </CardFooter>
+    </Card>
   );
 };
 
