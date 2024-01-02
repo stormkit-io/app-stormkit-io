@@ -1,17 +1,17 @@
 import type { BoxProps } from "@mui/material";
 import type { Item } from "~/components/DotDotDotV2/DotDotDot";
-import React from "react";
+import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { grey } from "@mui/material/colors";
 import DotDotDot from "~/components/DotDotDotV2";
+import CardContext from "../Card/Card.context";
 
 interface Props extends BoxProps {
   menuItems?: Item[];
   menuLabel?: string;
   chipLabel?: string;
   actions?: React.ReactNode;
-  size?: "small" | "medium";
 }
 
 export default function CardRow({
@@ -21,9 +21,9 @@ export default function CardRow({
   menuLabel,
   chipLabel,
   actions,
-  size,
   ...rest
 }: Props) {
+  const { size } = useContext(CardContext);
   const space = size === "medium" ? 4 : 2;
 
   return (
