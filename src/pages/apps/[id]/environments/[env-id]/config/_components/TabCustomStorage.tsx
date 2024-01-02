@@ -261,7 +261,7 @@ const CustomStorage: React.FC<Props> = ({
           <div>
             <Button
               type="button"
-              variant="contained"
+              variant="outlined"
               color="primary"
               loading={deleteLoading}
               sx={{ textTransform: "none" }}

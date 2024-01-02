@@ -4,6 +4,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
+import { grey } from "@mui/material/colors";
 import CardHeader from "../CardHeader";
 import CardFooter from "../CardFooter";
 import CardRow from "../CardRow";
@@ -110,7 +111,7 @@ function Card({
             sx={{
               px: p,
               py: 2,
-              borderTop: `1px solid rgba(255,255,255,0.05)`,
+              borderTop: `1px solid ${grey[900]}`,
             }}
           >
             {footer}

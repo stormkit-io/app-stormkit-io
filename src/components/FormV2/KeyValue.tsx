@@ -223,7 +223,7 @@ export default function KeyValue({
             >
               <Button
                 color="primary"
-                variant="contained"
+                variant="outlined"
                 type="button"
                 sx={{
                   display: "inline-flex",
@@ -241,9 +241,9 @@ export default function KeyValue({
               </Button>
 
               <Button
-                type="button"
                 color="primary"
-                variant="contained"
+                type="button"
+                variant="outlined"
                 sx={{
                   display: "inline-flex",
                   color: "white",

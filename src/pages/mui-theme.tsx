@@ -25,6 +25,7 @@ export default createTheme({
       styleOverrides: {
         root: {
           color: "white",
+          textDecoration: "none",
         },
       },
     },
@@ -143,7 +144,7 @@ export default createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#0F092B",
+      main: grey[600],
       light: "#e7e5ee",
       contrastText: "#e7e5ee",
     },
