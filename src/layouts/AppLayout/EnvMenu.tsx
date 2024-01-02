@@ -83,7 +83,6 @@ export default function EnvMenu() {
         sx={{
           display: "flex",
           flexDirection: "row",
-          pr: 2,
         }}
       >
         {envMenu.map(item => (
