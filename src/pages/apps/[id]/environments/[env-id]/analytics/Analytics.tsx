@@ -1,4 +1,5 @@
-import { useContext } from "react";
+import type { TimeSpan } from "./index.d";
+import { useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
@@ -12,6 +13,7 @@ import TopPaths from "./TopPaths";
 import ByCountries from "./Countries";
 
 export default function Analytics() {
+  const [timeSpan, setTimeSpan] = useState<TimeSpan>("24h");
   const { environment } = useContext(EnvironmentContext);
 
   if (!environment?.domain?.name) {
@@ -42,6 +44,7 @@ export default function Analytics() {
       </Card>
     );
   }
+
   return (
     <Box sx={{ color: "white" }}>
       <Card sx={{ mb: 2 }}>
@@ -50,7 +53,11 @@ export default function Analytics() {
           subtitle="Monitor user analytics for the specified domain within this environment configuration."
         />
       </Card>
-      <Visitors environment={environment} />
+      <Visitors
+        environment={environment}
+        ts={timeSpan}
+        onTimeSpanChange={setTimeSpan}
+      />
       <Box
         sx={{
           mt: 2,
