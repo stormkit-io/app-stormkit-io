@@ -1,3 +1,4 @@
+import type { TimeSpan } from "./index.d";
 import { useMemo, useState } from "react";
 import {
   YAxis,
@@ -58,7 +59,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   return null;
 }
 
-const timeSpan = {
+const timeSpan: Record<TimeSpan, string> = {
   "24h": "24 hours",
   "7d": "7 days",
   "30d": "30 days",
@@ -66,10 +67,11 @@ const timeSpan = {
 
 interface Props {
   environment: Environment;
+  ts: TimeSpan;
+  onTimeSpanChange: (t: TimeSpan) => void;
 }
 
-export default function Visitors({ environment }: Props) {
-  const [ts, setTs] = useState<"24h" | "7d" | "30d">("24h");
+export default function Visitors({ environment, onTimeSpanChange, ts }: Props) {
   const [display, setDisplay] = useState<"unique" | "total" | "all">("all");
   const { visitors, error, loading } = useFetchVisitors({
     envId: environment.id!,
@@ -104,7 +106,7 @@ export default function Visitors({ environment }: Props) {
             sx={{ bgcolor: "rgba(0,0,0,0.3)" }}
             onChange={(_, val) => {
               if (val !== null) {
-                setTs(val);
+                onTimeSpanChange(val);
               }
             }}
             aria-label="display mode"
