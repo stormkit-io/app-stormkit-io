@@ -1,5 +1,5 @@
 import type { BoxProps } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
@@ -34,11 +34,19 @@ function Card({
   let footer;
   let content: React.ReactNode[] = [];
   let isCardRow = false;
+  const [isLoadingFirstTime, setIsLoadingFirstTime] = useState<boolean>();
+
+  useEffect(() => {
+    if (typeof isLoadingFirstTime === "undefined" || isLoadingFirstTime) {
+      setIsLoadingFirstTime(loading);
+    }
+  }, [loading]);
 
   React.Children.forEach(children, child => {
     if (!React.isValidElement(child)) {
       return;
     }
+
     if (child.type === CardHeader) {
       header = child;
     } else if (child.type === CardFooter) {
@@ -64,6 +72,7 @@ function Card({
           bgcolor: "rgba(0,0,0,0.3)",
           border: `1px solid rgba(255,255,255,0.04)`,
           borderRadius: 1,
+          position: "relative",
           pt: !header && content.length ? p : 0,
           pb: !footer && content.length ? p : 0,
           ...sx,
@@ -73,11 +82,18 @@ function Card({
         {header && (
           <Box sx={{ mb: content ? 4 : 0, px: p, pt: p }}>{header}</Box>
         )}
-        {content && !loading && (
+        {content && !isLoadingFirstTime && (
           <Box sx={{ px: isCardRow ? 0 : p, flex: 1 }}>{content}</Box>
         )}
         {loading && (
-          <Box sx={{ px: p, mb: footer ? p : 0, flex: 1 }}>
+          <Box
+            sx={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              flex: 1,
+            }}
+          >
             <LinearProgress color="secondary" />
           </Box>
         )}
@@ -111,6 +127,7 @@ function Card({
             sx={{
               px: p,
               py: 2,
+              pt: isLoadingFirstTime ? p : 2,
               borderTop: `1px solid ${grey[900]}`,
             }}
           >
