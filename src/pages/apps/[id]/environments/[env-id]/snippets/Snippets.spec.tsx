@@ -55,8 +55,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
     });
 
     test("should load snippets", async () => {
-      const s1 = snippets.head[0];
-      const s2 = snippets.body[0];
+      const s1 = snippets[0];
+      const s2 = snippets[0];
 
       await waitFor(() => {
         expect(fetchSnippetsScope.isDone()).toBe(true);
@@ -66,7 +66,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
     });
 
     test("should have a new button which opens a modal", async () => {
-      fireEvent.click(wrapper.getByText("Create snippet"));
+      fireEvent.click(wrapper.getByText("New Snippet"));
 
       await waitFor(() => {
         expect(
@@ -85,7 +85,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       fetchSnippetsScope = mockFetchSnippets({
         appId: currentApp.id,
         envId: currentEnv.id!,
-        response: { snippets: { head: [], body: [] } },
+        response: { snippets: [] },
       });
 
       createWrapper({ app: currentApp, env: currentEnv });

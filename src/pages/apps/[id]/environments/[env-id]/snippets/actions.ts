@@ -10,7 +10,7 @@ interface FetchSnippetsProps {
 interface FetchSnippetsReturnValue {
   loading: boolean;
   error: string | null;
-  snippets?: Snippets;
+  snippets?: Snippet[];
 }
 
 export const useFetchSnippets = ({
@@ -18,9 +18,9 @@ export const useFetchSnippets = ({
   env,
   refreshToken,
 }: FetchSnippetsProps): FetchSnippetsReturnValue => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [snippets, setSnippets] = useState<Snippets>({ head: [], body: [] });
+  const [snippets, setSnippets] = useState<Snippet[]>([]);
 
   useEffect(() => {
     let unmounted = false;
@@ -29,15 +29,12 @@ export const useFetchSnippets = ({
     setLoading(true);
 
     api
-      .fetch<{ snippets: Snippets }>(
-        `/app/env/snippets?appId=${app.id}&envId=${env.id}`
+      .fetch<{ snippets: Snippet[] }>(
+        `/snippets?appId=${app.id}&envId=${env.id}`
       )
       .then(({ snippets }) => {
         if (!unmounted) {
-          setSnippets({
-            head: snippets.head.map(s => ({ ...s, location: "head" })),
-            body: snippets.body.map(s => ({ ...s, location: "body" })),
-          });
+          setSnippets(snippets);
         }
       })
       .catch(e => {
@@ -74,7 +71,7 @@ export const addSnippet = ({
     return Promise.reject("Title and content are required fields.");
   }
 
-  return api.post(`/app/env/snippets`, {
+  return api.post(`/snippets`, {
     appId,
     envId,
     snippets: [snippet],
@@ -91,10 +88,8 @@ export const deleteSnippet = ({
   snippet,
   appId,
   envId,
-}: DeleteSnippetProps): Promise<Snippets> => {
-  return api.delete(
-    `/app/env/snippets?id=${snippet.id}&envId=${envId}&appId=${appId}`
-  );
+}: DeleteSnippetProps): Promise<Snippet[]> => {
+  return api.delete(`/snippets?id=${snippet.id}&envId=${envId}&appId=${appId}`);
 };
 
 interface UpdateSnippetProps {
@@ -107,10 +102,10 @@ export const updateSnippet = ({
   snippet,
   appId,
   envId,
-}: UpdateSnippetProps): Promise<Snippets> => {
-  return api.put(`/app/env/snippets`, {
+}: UpdateSnippetProps): Promise<Snippet[]> => {
+  return api.put(`/snippets`, {
     appId,
     envId,
-    snippets: [snippet],
+    snippet,
   });
 };

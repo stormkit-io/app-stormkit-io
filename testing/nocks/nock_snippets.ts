@@ -6,7 +6,7 @@ interface MockFetchSnippetsProps {
   appId: string;
   envId: string;
   status?: number;
-  response: { snippets: { head: Snippet[]; body: Snippet[] } };
+  response: { snippets: Snippet[] };
 }
 
 export const mockFetchSnippets = ({
@@ -16,37 +16,56 @@ export const mockFetchSnippets = ({
   response,
 }: MockFetchSnippetsProps) => {
   return nock(endpoint)
-    .get(`/app/env/snippets?appId=${appId}&envId=${envId}`)
+    .get(`/snippets?appId=${appId}&envId=${envId}`)
     .reply(status, response);
 };
 
-interface MockUpsertSnippetsProps {
+interface MockInsertSnippetsProps {
   appId: string;
   envId: string;
   snippets: any[];
   status?: number;
-  method: "post" | "put";
   response?: { ok: true };
 }
 
-export const mockUpsertSnippets = ({
+export const mockInsertSnippet = ({
   snippets,
   envId,
   appId,
-  method,
   status = 200,
   response = { ok: true },
-}: MockUpsertSnippetsProps) => {
-  const url = "/app/env/snippets";
+}: MockInsertSnippetsProps) => {
+  const url = "/snippets";
   const params = {
     appId,
     envId,
     snippets,
   };
 
-  if (method === "post") {
-    return nock(endpoint).post(url, params).reply(status, response);
-  }
+  return nock(endpoint).post(url, params).reply(status, response);
+};
+
+interface MockUpdateSnippetProps {
+  appId: string;
+  envId: string;
+  snippet: any;
+  status?: number;
+  response?: { ok: true };
+}
+
+export const mockUpdateSnippet = ({
+  snippet,
+  envId,
+  appId,
+  status = 200,
+  response = { ok: true },
+}: MockUpdateSnippetProps) => {
+  const url = "/snippets";
+  const params = {
+    appId,
+    envId,
+    snippet,
+  };
 
   return nock(endpoint).put(url, params).reply(status, response);
 };

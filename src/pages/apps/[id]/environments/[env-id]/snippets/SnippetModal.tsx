@@ -16,7 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import Modal from "~/components/Modal";
-import { addSnippet, updateSnippet } from "../actions";
+import { addSnippet, updateSnippet } from "./actions";
 
 interface Props {
   snippet?: Snippet;

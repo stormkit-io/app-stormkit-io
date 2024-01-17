@@ -4,7 +4,10 @@ import { waitFor, fireEvent, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import { mockUpsertSnippets } from "~/testing/nocks/nock_snippets";
+import {
+  mockUpdateSnippet,
+  mockInsertSnippet,
+} from "~/testing/nocks/nock_snippets";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
 import SnippetModal from "./SnippetModal";
@@ -19,14 +22,14 @@ interface Props {
   env: Environment;
   snippet?: Snippet;
   closeModal: () => void;
-  setRefreshToken: (s: Snippets) => void;
+  setRefreshToken: (s: number) => void;
 }
 
-describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetModal.tsx", () => {
+describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", () => {
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let snippets: Snippets;
+  let snippets: Snippet[];
   let closeModal: jest.Mock;
   let setRefreshToken: jest.Mock;
 
@@ -64,7 +67,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
     beforeEach(() => {
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
-      snippets = { head: [], body: [] };
+      snippets = [];
       closeModal = jest.fn();
       setRefreshToken = jest.fn();
 
@@ -77,10 +80,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
     });
 
     test("should handle form submission", async () => {
-      const scope = mockUpsertSnippets({
+      const scope = mockInsertSnippet({
         appId: currentApp.id,
         envId: currentEnv.id!,
-        method: "post",
         snippets: [snippet],
       });
 
@@ -100,10 +102,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
     beforeEach(() => {
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
-      snippets = {
-        head: [],
-        body: [{ ...snippet, location: "body", id: 1 }],
-      };
+      snippets = [{ ...snippet, location: "body", id: 1 }];
 
       closeModal = jest.fn();
       setRefreshToken = jest.fn();
@@ -111,18 +110,17 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/_components/SnippetMo
       createWrapper({
         app: currentApp,
         env: currentEnv,
-        snippet: snippets.body[0],
+        snippet: snippets[0],
         closeModal,
         setRefreshToken,
       });
     });
 
     test("should handle form submission", async () => {
-      const scope = mockUpsertSnippets({
+      const scope = mockUpdateSnippet({
         appId: currentApp.id,
         envId: currentEnv.id!,
-        method: "put",
-        snippets: [{ ...snippet, location: "body", title: "Hotjar", id: 1 }],
+        snippet: { ...snippet, location: "body", title: "Hotjar", id: 1 },
       });
 
       await userEvent.clear(wrapper.getByLabelText("Title"));

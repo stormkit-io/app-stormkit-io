@@ -4,10 +4,10 @@ declare interface Snippet {
   enabled: boolean;
   prepend: boolean;
   location?: "head" | "body";
+  rules?: SnippetRules;
   id?: number;
 }
 
-declare interface Snippets {
-  head: Array<Snippet>;
-  body: Array<Snippet>;
+declare interface SnippetRules {
+  domainName?: string;
 }
