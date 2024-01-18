@@ -1,9 +1,17 @@
-import React from "react";
-import ProviderButton, { OmittedProps } from "./_components/ProviderButton";
-import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
+import type { ButtonProps } from "@mui/material";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import bbLogo from "~/assets/logos/bitbucket-logo.svg";
 
-const BitbucketButton = (props: OmittedProps): React.ReactElement => {
-  return <ProviderButton {...props} logo={bitbucketLogo} text="Bitbucket" />;
-};
-
-export default BitbucketButton;
+export default function BitbucketButton(props: ButtonProps) {
+  return (
+    <Button
+      variant="outlined"
+      size="large"
+      {...props}
+      startIcon={<Box component="img" src={bbLogo} alt="Bitbucket" />}
+    >
+      Bitbucket
+    </Button>
+  );
+}

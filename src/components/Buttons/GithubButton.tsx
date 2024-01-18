@@ -1,9 +1,17 @@
-import React from "react";
-import ProviderButton, { OmittedProps } from "./_components/ProviderButton";
+import type { ButtonProps } from "@mui/material";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import githubLogo from "~/assets/logos/github-logo.svg";
 
-const GithubButton = (props: OmittedProps): React.ReactElement => {
-  return <ProviderButton {...props} logo={githubLogo} text="GitHub" />;
-};
-
-export default GithubButton;
+export default function GitHubButton(props: ButtonProps) {
+  return (
+    <Button
+      variant="outlined"
+      size="large"
+      {...props}
+      startIcon={<Box component="img" src={githubLogo} alt="GitHub" />}
+    >
+      GitHub
+    </Button>
+  );
+}
