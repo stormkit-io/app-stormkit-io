@@ -1,12 +1,15 @@
+import type { Scope } from "nock";
 import * as router from "react-router";
 import { mockUser } from "~/testing/data";
 import { render, waitFor, RenderResult } from "@testing-library/react";
 import { AuthContext, AuthContextProps } from "./Auth.context";
+import { mockFetchAuthProviders } from "~/testing/nocks/nock_auth";
 import Auth from "./Auth";
 
 describe("~/pages/auth/Auth.tsx", () => {
   let wrapper: RenderResult;
   let navigate: jest.Func;
+  let scope: Scope;
 
   const createWrapper = (context?: AuthContextProps) => {
     navigate = jest.fn();
@@ -66,6 +69,10 @@ describe("~/pages/auth/Auth.tsx", () => {
     let loginOauthSpy;
 
     beforeEach(() => {
+      scope = mockFetchAuthProviders({
+        response: { gitlab: true, bitbucket: true, github: true },
+      });
+
       loginOauthSpy = jest.fn();
       mockUseLocation();
       createWrapper({ user: undefined, loginOauth: loginOauthSpy });
@@ -85,6 +92,30 @@ describe("~/pages/auth/Auth.tsx", () => {
         expect(wrapper.getByText("Bitbucket")).toBeTruthy();
         expect(wrapper.getByText("GitLab")).toBeTruthy();
       });
+
+      expect(scope.isDone()).toBe(true);
+    });
+  });
+
+  describe("when user is not logged in and some providers are not configured", () => {
+    beforeEach(() => {
+      scope = mockFetchAuthProviders({
+        response: { gitlab: true, bitbucket: false, github: false },
+      });
+
+      mockUseLocation();
+      createWrapper({ user: undefined, loginOauth: jest.fn() });
+    });
+
+    test("displays one button", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("GitLab")).toBeTruthy();
+      });
+
+      expect(() => wrapper.getByText("GitHub")).toThrow();
+      expect(() => wrapper.getByText("Bitbucket")).toThrow();
+
+      expect(scope.isDone()).toBe(true);
     });
   });
 

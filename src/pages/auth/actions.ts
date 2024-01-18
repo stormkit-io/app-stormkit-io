@@ -66,6 +66,35 @@ export const useFetchUser = (): FetchUserReturnValue => {
   return { error, user, accounts, loading, setError, setUser };
 };
 
+interface Providers {
+  github: boolean;
+  gitlab: boolean;
+  bitbucket: boolean;
+}
+
+export const useFetchActiveProviders = () => {
+  const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState(true);
+  const [providers, setProviders] = useState<Providers>();
+
+  useEffect(() => {
+    setLoading(true);
+    setError(undefined);
+
+    api
+      .fetch<Providers>("/auth/providers")
+      .then(p => setProviders(p))
+      .catch(() => {
+        setError("Something went wrong, try again.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  return { error, loading, providers };
+};
+
 export const logout = () => (): void => {
   api.removeAuthToken();
   localStorage.clear();

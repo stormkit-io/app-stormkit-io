@@ -1,16 +1,23 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import qs from "query-string";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
 import Logo from "~/components/Logo";
 import { AuthContext } from "./Auth.context";
-import InfoBox from "~/components/InfoBoxV2";
-import * as buttons from "~/components/Buttons";
+import {
+  GithubButton,
+  BitbucketButton,
+  GitlabButton,
+} from "~/components/Buttons";
 import { LocalStorage } from "~/utils/storage";
+import { useFetchActiveProviders } from "./actions";
 
-const Auth: React.FC = () => {
+export default function Auth() {
   const { user, authError, loginOauth } = useContext(AuthContext);
+  const { providers, loading } = useFetchActiveProviders();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -24,7 +31,7 @@ const Auth: React.FC = () => {
         if (template !== undefined) {
           navigate(`/clone?template=${template}`);
         } else {
-         navigate(redirect);
+          navigate(redirect);
         }
       }
     }
@@ -98,41 +105,46 @@ const Auth: React.FC = () => {
             </Box>
           </Box>
         </Box>
-        <Box
+        <Card
           sx={{
-            bgcolor: "rgba(0,0,0,0.25)",
-            py: 6,
             px: 3,
-            textAlign: "center",
             maxWidth: { sm: "28rem" },
             minWidth: { sm: "28rem" },
           }}
+          error={authError}
+          loading={loading}
         >
-          <Typography variant="h2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-            Authentication
-          </Typography>
-          <Typography sx={{ mb: 4, mt: 1, opacity: 0.5 }}>
-            Log in with your provider
-          </Typography>
-          <Box>
-            <buttons.GithubButton
-              onClick={() => loginOauth?.("github")}
-              className="mb-8 mx-12"
-            />
-            <buttons.GitlabButton
-              onClick={() => loginOauth?.("gitlab")}
-              className="mb-8 mx-12"
-            />
-            <buttons.BitbucketButton
-              onClick={() => loginOauth?.("bitbucket")}
-              className="mx-12"
-            />
-            {authError && <InfoBox className="mt-8 mx-10">{authError}</InfoBox>}
+          <CardHeader
+            title="Authentication"
+            subtitle="Log in with your provider"
+            sx={{ textAlign: "center" }}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              px: 4,
+              mb: authError ? 4 : 2,
+            }}
+          >
+            {providers?.github && (
+              <GithubButton
+                sx={{ mb: providers?.gitlab || providers.bitbucket ? 4 : 0 }}
+                onClick={() => loginOauth?.("github")}
+              />
+            )}
+            {providers?.gitlab && (
+              <GitlabButton
+                sx={{ mb: providers?.bitbucket ? 4 : 0 }}
+                onClick={() => loginOauth?.("gitlab")}
+              />
+            )}
+            {providers?.bitbucket && (
+              <BitbucketButton onClick={() => loginOauth?.("bitbucket")} />
+            )}
           </Box>
-        </Box>
+        </Card>
       </Box>
     </Box>
   );
-};
-
-export default Auth;
+}
