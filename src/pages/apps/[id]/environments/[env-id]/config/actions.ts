@@ -29,6 +29,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
   const build: BuildConfig = {
     cmd: values["build.cmd"]?.trim() || "",
     distFolder: (values["build.distFolder"] || "").trim(),
+    headersFile: values["build.headersFile"],
     vars,
   };
 
@@ -129,6 +130,7 @@ export interface FormValues {
   autoDeployBranches?: string;
   "build.cmd"?: string;
   "build.distFolder"?: string;
+  "build.headersFile"?: string;
   "build.vars"?: string; // This is the textarea version
   "build.vars[key]"?: string; // This is the key value version
   "build.vars[value]"?: string; // This is the key value version

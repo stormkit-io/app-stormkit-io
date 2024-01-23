@@ -1,4 +1,5 @@
 declare type BuildConfig = {
+  headersFile?: string;
   distFolder: string;
   cmd: string;
   vars: Record<string, string>;

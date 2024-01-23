@@ -29,7 +29,7 @@ export default function TabConfigGeneral({
   const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [isLoading, setLoading] = useState(false);
-  const [root, setRoot] = useState(env?.build?.vars?.["SK_CWD"] || "");
+  const [root, setRoot] = useState(env?.build?.vars?.["SK_CWD"] || "/.");
   const { meta, loading: metaLoading } = useFetchRepoMeta({ app, env });
 
   if (!env) {
@@ -112,8 +112,7 @@ export default function TabConfigGeneral({
             !metaLoading &&
             !isFrameworkRecognized(meta?.framework) && (
               <Typography sx={{ mt: 1 }}>
-                The output folder will be uploaded to our CDN and Functions.
-                This path is relative to your repository root folder.
+                The content of this folder will be served by Stormkit.
               </Typography>
             )
           }
@@ -129,11 +128,29 @@ export default function TabConfigGeneral({
             setRoot(e.target.value);
           }}
           fullWidth
-          placeholder="Defaults to `/`"
+          placeholder="Defaults to `/.`"
           helperText={
             <Typography sx={{ mt: 1 }}>
-              The build root specifies the working directory. Build command and
-              output folder will be relative to this path.
+              The working directory relative to the Repository root.
+            </Typography>
+          }
+        />
+      </Box>
+      <Box sx={{ mb: 4 }}>
+        <TextField
+          label="Headers file"
+          variant="filled"
+          autoComplete="off"
+          defaultValue={env?.build.headersFile || ""}
+          name="build.headersFile"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+          placeholder="/_headers"
+          helperText={
+            <Typography sx={{ mt: 1 }}>
+              The relative path to the `headers` file from the build root.
             </Typography>
           }
         />
