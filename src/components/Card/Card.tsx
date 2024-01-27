@@ -4,7 +4,6 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
-import { grey } from "@mui/material/colors";
 import CardHeader from "../CardHeader";
 import CardFooter from "../CardFooter";
 import CardRow from "../CardRow";
@@ -15,6 +14,7 @@ interface Props extends BoxProps {
   error?: React.ReactNode;
   info?: React.ReactNode;
   success?: React.ReactNode;
+  contentPadding?: boolean; // When false, the content will not have padding x.
   loading?: boolean;
   size?: Size;
 }
@@ -27,6 +27,7 @@ function Card({
   info,
   children,
   loading,
+  contentPadding = true,
   size = "medium",
   ...rest
 }: Props) {
@@ -83,7 +84,9 @@ function Card({
           <Box sx={{ mb: content ? 4 : 0, px: p, pt: p }}>{header}</Box>
         )}
         {content && !isLoadingFirstTime && (
-          <Box sx={{ px: isCardRow ? 0 : p, flex: 1 }}>{content}</Box>
+          <Box sx={{ px: isCardRow || !contentPadding ? 0 : p, flex: 1 }}>
+            {content}
+          </Box>
         )}
         {loading && (
           <Box
@@ -128,7 +131,7 @@ function Card({
               px: p,
               py: 2,
               pt: isLoadingFirstTime ? p : 2,
-              borderTop: `1px solid ${grey[900]}`,
+              borderTop: `1px solid rgba(255,255,255,0.04)`,
             }}
           >
             {footer}
