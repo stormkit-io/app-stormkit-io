@@ -172,7 +172,11 @@ export default function Apps() {
                   >
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Box sx={{ display: "flex", flex: 1 }}>
-                        <AppName app={app} withDisplayName imageWidth={23} />
+                        <AppName
+                          displayName={app.displayName}
+                          repo={app.repo}
+                          imageSx={{ width: 23 }}
+                        />
                       </Box>
                       <ArrowForward sx={{ fontSize: 16 }} />
                     </Box>
