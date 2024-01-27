@@ -20,8 +20,8 @@ describe("~/components/AppName/AppName.tsx", () => {
     wrapper = render(
       <MemoryRouter>
         <AppName
-          app={app}
-          withDisplayName={withDisplayName}
+          repo={app.repo}
+          displayName={app.displayName}
           withLinkToRepo={withLinkToRepo}
         />
       </MemoryRouter>

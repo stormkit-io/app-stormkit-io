@@ -39,11 +39,11 @@ export default function AppMenu({ app }: Props) {
       >
         <Box sx={{ mr: 2 }}>
           <AppName
-            app={app}
-            imageWidth={28} // Same as Stormkit Icon
+            repo={app.repo}
             withLinkToRepo
-            withMarginRight={false}
             wrapOnMobile
+            sx={{ mr: 2 }}
+            imageSx={{ width: 28 }} // Same as Stormkit Icon
           />
         </Box>
         <Box>

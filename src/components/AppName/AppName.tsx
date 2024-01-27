@@ -1,4 +1,4 @@
-import React from "react";
+import type { SxProps } from "@mui/material";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import githubLogo from "~/assets/logos/github-logo.svg";
@@ -6,10 +6,11 @@ import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
 import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
 
 interface Props {
-  app: App;
-  imageWidth?: number;
+  sx?: SxProps;
+  imageSx?: SxProps;
+  repo: string;
+  displayName?: string;
   withLinkToRepo?: boolean;
-  withDisplayName?: boolean;
   withMarginRight?: boolean;
   wrapOnMobile?: boolean;
 }
@@ -20,15 +21,15 @@ const providerHosts: Record<Provider, string> = {
   gitlab: "gitlab.com",
 };
 
-const AppName: React.FC<Props> = ({
-  app,
-  withDisplayName,
+export default function AppName({
+  repo,
+  sx,
+  imageSx,
+  displayName,
   withLinkToRepo,
-  withMarginRight = true,
-  imageWidth = 8,
   wrapOnMobile,
-}) => {
-  const pieces = app.repo.split("/") || [];
+}: Props) {
+  const pieces = repo.split("/") || [];
   const provider = pieces.shift() as Provider;
   const nameWithoutPrefix = pieces.join("/");
   const logo =
@@ -44,7 +45,7 @@ const AppName: React.FC<Props> = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        mr: withMarginRight ? 2 : 0,
+        ...sx,
       }}
     >
       <Box
@@ -52,7 +53,8 @@ const AppName: React.FC<Props> = ({
         sx={{
           display: "inline-block",
           mr: 1,
-          width: imageWidth,
+          width: 8,
+          ...imageSx,
         }}
         src={logo}
         alt={provider}
@@ -60,7 +62,7 @@ const AppName: React.FC<Props> = ({
       <Box>
         {withLinkToRepo && (
           <Link
-            href={`https://${providerHosts[app.provider]}/${nameWithoutPrefix}`}
+            href={`https://${providerHosts[provider]}/${nameWithoutPrefix}`}
             aria-label="Repository URL"
             target="_blank"
             rel="noreferrer noopener"
@@ -81,19 +83,17 @@ const AppName: React.FC<Props> = ({
           </Link>
         )}
         {!withLinkToRepo && nameWithoutPrefix}
-        {withDisplayName && (
+        {displayName && (
           <Box
             sx={{
               fontSize: 12,
               opacity: 0.7,
             }}
           >
-            {app.displayName}
+            {displayName}
           </Box>
         )}
       </Box>
     </Box>
   );
-};
-
-export default AppName;
+}
