@@ -12,8 +12,9 @@ interface MenuItem {
 
 const menuItems: MenuItem[][] = [
   [
-    { to: "/", text: "My Apps" },
     { to: `/apps/new/${LocalStorage.get(LS_PROVIDER)}`, text: "New App" },
+    { to: "/", text: "My Apps" },
+    // { to: "/my/deployments", text: "My Deployments" },
   ],
   [
     {

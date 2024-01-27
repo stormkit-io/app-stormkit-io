@@ -45,6 +45,10 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/apps"), centerLayout),
   },
   {
+    path: "/my/deployments",
+    element: Async(() => import("~/pages/my/deployments"), centerLayout),
+  },
+  {
     path: "/clone",
     element: Async(() => import("~/pages/clone"), centerLayout),
   },

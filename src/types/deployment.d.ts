@@ -45,6 +45,28 @@ declare type Deployment = {
   preview: string; // The preview endpoint
 };
 
+declare type DeploymentV2 = {
+  id: string;
+  appId: string;
+  envId: string;
+  envName: string;
+  branch: string;
+  repo: string;
+  displayName: string;
+  commit: Commit;
+  snapshot: Config;
+  createdAt: number;
+  stoppedAt: number;
+  exit: number;
+  isAutoDeploy: boolean;
+  status: "failed" | "success" | "running";
+  previewUrl?: string;
+  detailsUrl: string;
+  clientPackageSize?: number;
+  serverPackageSize?: number;
+  apiPackageSize?: number;
+};
+
 interface CDNFile {
   fileName: string;
   headers: Record<string, string>;
