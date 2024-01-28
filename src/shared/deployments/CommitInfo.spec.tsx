@@ -1,58 +1,74 @@
-// import { MemoryRouter } from "react-router";
-// import { render, RenderResult } from "@testing-library/react";
-// import mockApp from "~/testing/data/mock_app";
-// import mockDeployment from "~/testing/data/mock_deployment";
-// import mockEnvironment from "~/testing//data/mock_environment";
-// import CommitInfo from "./CommitInfo";
+import { MemoryRouter } from "react-router";
+import { render, RenderResult } from "@testing-library/react";
+import mockDeployments from "~/testing/data/mock_deployments_v2";
+import CommitInfo from "./CommitInfo";
 
-// interface Props {
-//   showStatus?: boolean;
-//   clickable?: boolean;
-// }
+interface Props {
+  deployment: DeploymentV2;
+  showStatus?: boolean;
+  showProject?: boolean;
+  showNotPublishedInfo?: boolean;
+  clickable?: boolean;
+}
 
-// describe("~/shared/deployments/CommitInfo.tsx", () => {
-//   let wrapper: RenderResult;
-//   const app = mockApp();
-//   const env = mockEnvironment({ app });
-//   const deploy = mockDeployment({ appId: app.id, envId: env.id });
+describe("~/shared/deployments/CommitInfo.tsx", () => {
+  let wrapper: RenderResult;
 
-//   const createWrapper = ({
-//     showStatus = false,
-//     clickable = true,
-//   }: Props = {}) => {
-//     wrapper = render(
-//       <MemoryRouter>
-//         <CommitInfo
-//           app={app}
-//           environment={env}
-//           deployment={deploy}
-//           showStatus={showStatus}
-//           clickable={clickable}
-//         />
-//       </MemoryRouter>
-//     );
-//   };
+  const createWrapper = ({
+    deployment,
+    showNotPublishedInfo,
+    showProject,
+    clickable = true,
+  }: Props) => {
+    wrapper = render(
+      <MemoryRouter>
+        <CommitInfo
+          deployment={deployment}
+          showProject={showProject}
+          showNotPublishedInfo={showNotPublishedInfo}
+          clickable={clickable}
+        />
+      </MemoryRouter>
+    );
+  };
 
-//   test("should display information properly", () => {
-//     createWrapper();
-//     expect(wrapper.getByText("chore: bump version")).toBeTruthy();
-//     expect(wrapper.getByText("by John Doe")).toBeTruthy();
-//     expect(wrapper.getByText("main")).toBeTruthy();
-//     expect(wrapper.getByText("main")).toBeTruthy();
-//     expect(wrapper.getByText("Published: 100")).toBeTruthy();
-//     expect(() => wrapper.getByLabelText("Successful")).toThrow();
-//   });
+  test("should display information properly", () => {
+    const deployment = mockDeployments()[0];
+    deployment.detailsUrl = "/my-test/url";
+    createWrapper({ deployment, showProject: true });
+    expect(wrapper.getByText("chore: update packages")).toBeTruthy();
+    expect(wrapper.getByText("by Joe Doe")).toBeTruthy();
+    expect(wrapper.getByText("published: 100%")).toBeTruthy();
 
-//   test("should display the status properly", () => {
-//     createWrapper({ showStatus: true });
-//     expect(wrapper.getByLabelText("Successful")).toBeTruthy();
-//   });
+    expect(
+      wrapper.getByText("chore: update packages").getAttribute("href")
+    ).toBe("/my-test/url");
 
-//   test("should not contain a link to deployments page when it's not clickable", () => {
-//     createWrapper({ clickable: false });
-//     expect(wrapper.container.querySelectorAll("a")).toHaveLength(1);
-//     expect(
-//       wrapper.container.querySelector("a")?.getAttribute("href")
-//     ).not.toContain("/deployments");
-//   });
-// });
+    expect(wrapper.getByText("sample-project").getAttribute("href")).toBe(
+      "/apps/1644802351/environments/1644802351/deployments"
+    );
+  });
+
+  test("should display the status properly", () => {
+    createWrapper({
+      deployment: mockDeployments()[1],
+      showNotPublishedInfo: true,
+    });
+
+    expect(wrapper.getByText("not published")).toBeTruthy();
+  });
+
+  test("should not contain a link to deployments page when it's not clickable", () => {
+    createWrapper({ deployment: mockDeployments()[0], clickable: false });
+
+    expect(
+      wrapper.getByText("chore: update packages").getAttribute("href")
+    ).toBe(null);
+  });
+
+  test("should not display project when the showProject property is false", () => {
+    createWrapper({ deployment: mockDeployments()[0], showProject: false });
+
+    expect(() => wrapper.getByText("sample-project")).toThrow();
+  });
+});

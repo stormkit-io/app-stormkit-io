@@ -2,26 +2,27 @@ import { useEffect, useState } from "react";
 import api from "~/utils/api/Api";
 
 interface Filters {
-  envId?: string;
+  teamId?: string;
   branch?: string;
   published?: boolean;
   status?: boolean;
 }
 
 interface UseFetchDeploymentsProps {
-  app: App;
   from?: number;
+  refreshToken?: number;
   filters?: Filters;
 }
 
 export const useFetchDeployments = ({
   from,
   filters,
+  refreshToken,
 }: UseFetchDeploymentsProps) => {
   const [deployments, setDeployments] = useState<DeploymentV2[]>([]);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let unmounted = false;
@@ -29,9 +30,11 @@ export const useFetchDeployments = ({
     setLoading(true);
     setError(null);
 
+    const params = new URLSearchParams(JSON.parse(JSON.stringify(filters)));
+
     api
       .fetch<{ deployments: DeploymentV2[]; hasNextPage: boolean }>(
-        "/my/deployments"
+        "/my/deployments?" + params.toString()
       )
       .then(res => {
         if (unmounted !== true) {
@@ -56,7 +59,7 @@ export const useFetchDeployments = ({
     return () => {
       unmounted = true;
     };
-  }, []);
+  }, [refreshToken]);
 
   return {
     deployments,

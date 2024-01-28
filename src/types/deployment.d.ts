@@ -19,7 +19,7 @@ type Commit = {
 type Config = {
   build: {
     cmd: string;
-    entry: string;
+    distFolder: string;
     vars: Record<string, string>;
   };
   env: string;
@@ -55,16 +55,20 @@ declare type DeploymentV2 = {
   displayName: string;
   commit: Commit;
   snapshot: Config;
-  createdAt: number;
-  stoppedAt: number;
-  exit: number;
+  createdAt: string;
+  stoppedAt: string;
   isAutoDeploy: boolean;
+  isAutoPublish: boolean;
   status: "failed" | "success" | "running";
   previewUrl?: string;
   detailsUrl: string;
   clientPackageSize?: number;
   serverPackageSize?: number;
   apiPackageSize?: number;
+  published: {
+    envId: string;
+    percentage: number;
+  }[];
 };
 
 interface CDNFile {

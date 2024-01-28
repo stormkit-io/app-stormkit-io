@@ -1,4 +1,3 @@
-import React from "react";
 import { render, RenderResult } from "@testing-library/react";
 import Sha from "./Sha";
 
@@ -8,7 +7,7 @@ interface Props {
   sha: string;
 }
 
-describe("~/apps/[id]/environments/[env-id]/deployments/_components/Sha.tsx", () => {
+describe("~/shared/deployments/Sha.tsx", () => {
   let wrapper: RenderResult;
 
   const createWrapper = ({ repo, provider, sha }: Props) => {

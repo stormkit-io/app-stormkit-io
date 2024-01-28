@@ -14,16 +14,15 @@ import { deleteForever, stopDeployment } from "./actions";
 import { useWithMenuItems } from "./actions";
 
 interface Props {
-  environment?: Environment;
   deployment: DeploymentV2;
+  showProject?: boolean;
   setRefreshToken: (v: number) => void;
-  withAppName?: boolean;
 }
 
 export default function DeploymentRow({
   deployment,
   setRefreshToken,
-  withAppName,
+  showProject,
 }: Props) {
   const isRunning = deployment.status === "running";
   const isSuccess = deployment.status === "success";
@@ -49,6 +48,7 @@ export default function DeploymentRow({
 
   return (
     <CardRow
+      menuLabel={`Deployment ${deployment.id} menu`}
       menuItems={menuItems}
       actions={
         <Typography
@@ -57,7 +57,7 @@ export default function DeploymentRow({
             color: grey[500],
           }}
         >
-          {timeSince(deployment.createdAt * 1000)} ago
+          {timeSince(Number(deployment.createdAt) * 1000)} ago
         </Typography>
       }
     >
@@ -80,7 +80,7 @@ export default function DeploymentRow({
           <LensIcon color={isSuccess ? "success" : "error"} sx={iconProps} />
         )}
         <Box sx={{ flex: 1 }}>
-          <CommitInfo deployment={deployment} />
+          <CommitInfo deployment={deployment} showProject={showProject} />
         </Box>
       </Box>
       {showDeleteModal && (

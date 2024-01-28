@@ -3,29 +3,31 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import AltRoute from "@mui/icons-material/AltRoute";
-import Sha from "./Sha";
-import ReleaseInfo from "./ReleaseInfo";
+import Tooltip from "@mui/material/Tooltip";
+import Chip from "@mui/material/Chip";
 import { grey } from "@mui/material/colors";
+import Dot from "~/components/Dot";
+import Sha from "./Sha";
+import AppChip from "./AppChip";
 
 interface Props {
   deployment: DeploymentV2;
   showNotPublishedInfo?: boolean;
+  showProject?: boolean;
   clickable?: boolean;
 }
 
 const defaultMessage = (deployment: DeploymentV2): React.ReactNode => {
   if (deployment.status === "running") {
-    return "Spinning up a worker...";
+    return <>Spinning up a worker...</>;
   }
 
   return deployment.status === "success" ? (
     `#${deployment.id}`
   ) : (
     <>
-      <div>Deployment failed.</div>
-      <div>
-        Stormkit has no access to the repo or the branch does not exist.
-      </div>
+      Deployment failed. <br />
+      Stormkit has no access to the repo or the branch does not exist.
     </>
   );
 };
@@ -38,77 +40,106 @@ const author = (author?: string) => {
   return <>by {author.split("<")[0].trim()}</>;
 };
 
-const appName = (deployment: DeploymentV2) => {
-  const pieces = deployment.repo.split("/");
-  const provider = pieces.shift();
-
-  return (
-    <>
-      <Box component="span">{pieces.join("/")}</Box>{" "}
-      <Box component="span" sx={{ color: grey[500] }}>
-        {"("}
-        {deployment.displayName}
-        {")"}
-      </Box>
-    </>
-  );
-};
-
 export default function CommitInfo({
   deployment,
   showNotPublishedInfo,
+  showProject,
   clickable = true,
 }: Props) {
   const message =
     deployment.commit?.message?.split("\n")[0] || defaultMessage(deployment);
 
   return (
-    <Box sx={{ flex: 1, display: "flex", alignItems: "baseline" }}>
+    <Box
+      sx={{
+        flex: 1,
+        display: "flex",
+        alignItems: "baseline",
+      }}
+    >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
-        {clickable ? (
-          <Link href={deployment.detailsUrl}>
-            {appName(deployment)}
-            <br /> {message}
-          </Link>
-        ) : (
-          <Typography>{message}</Typography>
-        )}
-        <ReleaseInfo
-          showNotPublishedInfo={deployment.exit === 0 && showNotPublishedInfo}
-          percentage={
-            0
-            // deployment.published?.find(p => p.envId === environment?.id)
-            //   ?.percentage ||
-            // environment?.published?.find(p => p.deploymentId === deployment.id)
-            //   ?.percentage
-          }
-        />
-        {deployment.branch && deployment.commit.sha && (
-          <Typography
-            sx={{
-              display: "flex",
-              alignItems: "baseline",
-              mt: 1,
-              color: grey[500],
-              fontSize: 12,
-            }}
-          >
-            <Box component="span">
-              <AltRoute sx={{ fontSize: 11, mr: 0.5 }} />
-              {deployment.branch} {"("}
-              <Sha
-                repo={deployment.repo}
-                provider={deployment.repo.split("/")[0] as Provider}
-                sha={deployment.commit.sha}
-              />
-              {")"}
-            </Box>
-            <Box component="span" sx={{ mx: 1, opacity: 0.5 }}>
-              |
-            </Box>
-            <Box>{author(deployment.commit.author)}</Box>
-          </Typography>
-        )}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {clickable ? (
+            <Link href={deployment.detailsUrl}>{message}</Link>
+          ) : (
+            <Typography>{message}</Typography>
+          )}
+          {(deployment.published?.length > 0 || showNotPublishedInfo) && (
+            <Chip
+              color={deployment.published.length ? "success" : "info"}
+              label={
+                deployment.published.length
+                  ? `published: ${deployment.published[0].percentage}%`
+                  : "not published"
+              }
+              size="small"
+              sx={{ ml: 1, fontSize: 11, height: 20 }}
+            />
+          )}
+        </Box>
+
+        <Typography
+          sx={{
+            display: "flex",
+            alignItems: "baseline",
+            color: grey[500],
+            fontSize: 12,
+            my: 0.5,
+          }}
+        >
+          <Box component="span">
+            <AltRoute sx={{ fontSize: 11, mr: 0.5 }} />
+            {deployment.branch}
+            {deployment.commit.sha && (
+              <>
+                <Dot />
+                <Sha
+                  repo={deployment.repo}
+                  provider={deployment.repo.split("/")[0] as Provider}
+                  sha={deployment.commit.sha}
+                />
+              </>
+            )}
+          </Box>
+          {deployment.commit.author && (
+            <>
+              <Dot />
+              <Box component="span">{author(deployment.commit.author)}</Box>
+            </>
+          )}
+          {showProject && (
+            <>
+              <Dot />
+              <Tooltip
+                arrow
+                placement="right"
+                componentsProps={{
+                  arrow: {
+                    sx: {
+                      color: "#1F1C3B",
+                      left: "2px !important",
+                    },
+                  },
+                  tooltip: {
+                    sx: {
+                      p: 0,
+                      bgcolor: "transparent !important",
+                      border: "none",
+                    },
+                  },
+                }}
+                title={<AppChip deployment={deployment} />}
+              >
+                <Link
+                  href={`/apps/${deployment.appId}/environments/${deployment.envId}/deployments`}
+                  sx={{ color: grey[500] }}
+                >
+                  {deployment.displayName}
+                </Link>
+              </Tooltip>
+            </>
+          )}
+        </Typography>
       </Box>
     </Box>
   );

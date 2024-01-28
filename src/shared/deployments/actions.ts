@@ -127,7 +127,7 @@ export const useWithMenuItems = ({
     items.push({
       text: "Publish",
       className: "text-green-50",
-      disabled: deployment.exit !== 0,
+      disabled: deployment.status !== "success",
       onClick: onPublishClick,
     });
 

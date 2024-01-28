@@ -1,108 +1,73 @@
-import React from "react";
 import {
   fireEvent,
   render,
   RenderResult,
   waitFor,
 } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import mockApp from "~/testing/data/mock_app";
-import mockDeployment from "~/testing/data/mock_deployment";
-import mockEnvironment from "~/testing//data/mock_environment";
-import { mockPublishDeploymentsCall } from "~/testing/nocks/nock_deployments";
+import mockDeployments from "~/testing/data/mock_deployments_v2";
+import { mockPublishDeployments } from "~/testing/nocks/nock_deployments_v2";
 import PublishModal from "./PublishModal";
 
 interface Props {
   onClose?: () => void;
   onUpdate?: () => void;
-  app?: App;
-  environment?: Environment;
-  deployment?: Deployment;
+  deployment?: DeploymentV2;
 }
 
-describe("~/apps/[id]/environments/[env-id]/deployments/_components/PublishModal.tsx", () => {
+describe("~/shared/deployments/PublishModal", () => {
   let wrapper: RenderResult;
-  let currentApp: App;
-  let currentEnv: Environment;
-  let currentDepl: Deployment;
+  let currentDepl: DeploymentV2;
 
   const createWrapper = ({
     onClose = jest.fn(),
     onUpdate = jest.fn(),
-    app,
-    environment,
     deployment,
-  }: Props | undefined = {}) => {
-    currentApp = app || mockApp();
-    currentEnv = environment || mockEnvironment({ app: currentApp });
-    currentDepl =
-      deployment ||
-      mockDeployment({ appId: currentApp.id, envId: currentEnv.id });
+  }: Props = {}) => {
+    currentDepl = deployment || mockDeployments()[0];
 
     wrapper = render(
-      <MemoryRouter>
-        <PublishModal
-          onClose={onClose}
-          onUpdate={onUpdate}
-          app={currentApp}
-          deployment={currentDepl}
-          environment={currentEnv}
-        />
-      </MemoryRouter>
+      <PublishModal
+        onClose={onClose}
+        onUpdate={onUpdate}
+        deployment={currentDepl}
+      />
     );
   };
 
   test("should render the title properly", () => {
     createWrapper();
-    expect(wrapper.getByText(/Publish deployment/)).toBeTruthy();
+    expect(wrapper.getByText("Publish deployment")).toBeTruthy();
+    expect(
+      wrapper.getByText(
+        "A published deployment will be promoted to the environment endpoint."
+      )
+    ).toBeTruthy();
   });
 
   test("should render the deployment properly", () => {
     createWrapper();
-    expect(wrapper.getByText(/chore: bump version/)).toBeTruthy();
+    expect(wrapper.getByText(/chore: update packages/)).toBeTruthy();
     expect(wrapper.getByText(/by/)).toBeTruthy();
-    expect(wrapper.getByText(/John Doe/)).toBeTruthy();
+    expect(wrapper.getByText(/Joe Doe/)).toBeTruthy();
   });
 
   test("should render the publish button properly", () => {
     createWrapper();
     expect(wrapper.getByText(/Publish to/)).toBeTruthy();
-    expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
+    expect(wrapper.getByText(/stormkit-io\/sample-project/)).toBeTruthy();
+    expect(wrapper.getByText(/production/)).toBeTruthy();
   });
 
   test("publish gradually", async () => {
-    const app = mockApp();
-    const env = mockEnvironment({ app });
-    env.published = [
-      {
-        deploymentId: "482858",
-        commitAuthor: "Jane Doe",
-        commitSha: "38817691491",
-        commitMessage: "fix: author name",
-        branch: "main",
-        percentage: 100,
-      },
-    ];
-
-    const scope = mockPublishDeploymentsCall({
-      appId: app.id,
-      envId: env.id!,
-      publish: [
-        { percentage: 50, deploymentId: "482858" },
-        { percentage: 50, deploymentId: currentDepl.id },
-      ],
+    const scope = mockPublishDeployments({
+      appId: currentDepl.appId,
+      envId: currentDepl.envId,
+      publish: [{ percentage: 100, deploymentId: currentDepl.id }],
     });
 
     const onUpdate = jest.fn();
 
-    createWrapper({ environment: env, onUpdate });
-    expect(() => wrapper.getByText(/fix: author name/)).toThrow();
-
-    fireEvent.click(wrapper.getByText("Publish gradually"));
-
-    await waitFor(() => {
-      expect(wrapper.getByText(/fix: author name/)).toBeTruthy();
-    });
+    createWrapper({ onUpdate });
 
     fireEvent.click(wrapper.getByText(/Publish to/));
 
