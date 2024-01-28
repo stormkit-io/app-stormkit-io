@@ -52,10 +52,11 @@ export default function TabConfigGeneral({
 
   return (
     <Card
+      id="general"
       component="form"
       error={error}
       success={success}
-      sx={{ color: "white" }}
+      sx={{ color: "white", mb: 2 }}
       onSubmit={e => {
         e.preventDefault();
 

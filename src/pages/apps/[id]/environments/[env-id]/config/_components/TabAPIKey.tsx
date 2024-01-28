@@ -64,6 +64,7 @@ export default function TabAPIKey({ app, environment: env }: Props) {
 
   return (
     <Card
+      id="api-keys"
       sx={{ color: "white" }}
       loading={loading}
       info={

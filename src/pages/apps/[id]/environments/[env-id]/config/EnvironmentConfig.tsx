@@ -1,5 +1,5 @@
-import { useContext, useMemo } from "react";
-import { useLocation } from "react-router";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
@@ -18,38 +18,73 @@ import { grey } from "@mui/material/colors";
 const listItems = [
   { path: "#general", text: "General" },
   { path: "#build", text: "Build" },
-  { path: "#vars", text: "Environment variables" },
-  { path: "#api", text: "API Keys" },
+  { path: "#env-vars", text: "Environment variables" },
+  { path: "#api-keys", text: "API Keys" },
 ];
 
+interface TabProps {
+  app: App;
+  environment: Environment;
+  setRefreshToken: (v: number) => void;
+}
+
 export default function EnvironmentConfig() {
+  const [selectedItem, setSelectedItem] = useState<string>("#general");
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const { hash } = useLocation();
+  const navigate = useNavigate();
 
   const Tab = useMemo(() => {
     switch (hash) {
-      case "#general":
-        return TabConfigGeneral;
-      case "#build":
-        return TabConfigBuild;
-      case "#vars":
-        return TabConfigEnvVars;
-      case "#api":
-        return TabAPIKey;
       case "#domain":
         return TabDomainConfig;
       case "#storage":
         return TabCustomStorage;
       default:
-        return TabConfigGeneral;
+        return ({ app, environment, setRefreshToken }: TabProps) => (
+          <>
+            <TabConfigGeneral
+              app={app}
+              environment={environment}
+              setRefreshToken={setRefreshToken}
+            />
+            <TabConfigBuild
+              app={app}
+              environment={environment}
+              setRefreshToken={setRefreshToken}
+            />
+            <TabConfigEnvVars
+              app={app}
+              environment={environment}
+              setRefreshToken={setRefreshToken}
+            />
+            <TabAPIKey
+              app={app}
+              environment={environment}
+              setRefreshToken={setRefreshToken}
+            />
+          </>
+        );
     }
   }, [hash]);
+
+  useEffect(() => {
+    if (selectedItem) {
+      document
+        ?.querySelector(selectedItem)
+        ?.scrollIntoView?.({ behavior: "smooth" });
+    }
+  }, [selectedItem]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}>
       <Box component="nav" sx={{ mr: 2, minWidth: "250px" }}>
-        <List>
+        <List
+          sx={{ position: "sticky", top: 0 }}
+          data-testid="env-config-nav"
+          data-selected={selectedItem}
+        >
           <ListItem
             sx={{
               borderBottom: "1px solid rgba(255,255,255,0.05)",
@@ -81,16 +116,18 @@ export default function EnvironmentConfig() {
                 <ListItem sx={{ p: 0 }} key={li.path}>
                   <Link
                     href={li.path}
+                    onClick={e => {
+                      e.preventDefault();
+                      navigate({ hash: "" });
+                      setSelectedItem(li.path);
+                    }}
                     sx={{
                       display: "block",
                       px: 2,
                       py: 1,
                       width: "100%",
                       "&:hover": { opacity: 1, bgcolor: "rgba(0,0,0,0.2)" },
-                      color:
-                        hash === li.path || (!hash && li.path === "#general")
-                          ? "white"
-                          : grey[500],
+                      color: li.path === selectedItem ? "white" : grey[500],
                     }}
                   >
                     <Typography component="span">{li.text}</Typography>
@@ -105,6 +142,9 @@ export default function EnvironmentConfig() {
           >
             <Link
               href="#storage"
+              onClick={() => {
+                setSelectedItem("");
+              }}
               sx={{
                 color: "white",
                 opacity: hash === "#storage" ? 1 : 0.5,
@@ -117,6 +157,9 @@ export default function EnvironmentConfig() {
           <Box component="li" sx={{ p: 2 }}>
             <Link
               href="#domain"
+              onClick={() => {
+                setSelectedItem("");
+              }}
               sx={{
                 opacity: hash === "#domain" ? 1 : 0.5,
                 "&:hover": { opacity: 1 },

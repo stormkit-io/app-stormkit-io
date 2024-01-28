@@ -43,8 +43,9 @@ export default function TabConfigGeneral({
 
   return (
     <Card
+      id="env-vars"
       component="form"
-      sx={{ color: "white" }}
+      sx={{ color: "white", mb: 2 }}
       error={error}
       success={success}
       onSubmit={e => {

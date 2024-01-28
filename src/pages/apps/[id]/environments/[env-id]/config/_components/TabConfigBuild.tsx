@@ -37,8 +37,9 @@ export default function TabConfigGeneral({
 
   return (
     <Card
+      id="build"
       component="form"
-      sx={{ color: "white" }}
+      sx={{ color: "white", mb: 2 }}
       error={error}
       success={success}
       onSubmit={e => {
@@ -78,7 +79,6 @@ export default function TabConfigGeneral({
           defaultValue={env?.build.cmd || ""}
           fullWidth
           name="build.cmd"
-          autoFocus
           placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
           helperText={
             <>

@@ -53,7 +53,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     expect(wrapper.getByText("General settings")).toBeTruthy();
 
     expect(wrapper.getByLabelText("Environment name")).toBeTruthy();
-    expect(wrapper.getByDisplayValue(currentEnv.name)).toBeTruthy();
+    expect(wrapper.getAllByDisplayValue(currentEnv.name)).toHaveLength(3); // env vars (2) and env name
 
     expect(wrapper.getByLabelText("Branch")).toBeTruthy();
     expect(wrapper.getByDisplayValue(currentEnv.branch)).toBeTruthy();
@@ -66,17 +66,17 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     createWrapper({});
     expect(wrapper.getByText("General")).toBeTruthy();
     expect(wrapper.getByText("Build")).toBeTruthy();
-    expect(wrapper.getByText("Environment variables")).toBeTruthy();
+    expect(wrapper.getAllByText("Environment variables").at(0)).toBeTruthy();
     expect(wrapper.getByText("API Keys")).toBeTruthy();
     expect(wrapper.getByText("Custom storage")).toBeTruthy();
   });
 
   test.each`
-    hash          | expectedString
-    ${"#general"} | ${"Use these settings to configure your environment details."}
-    ${"#vars"}    | ${"These variables will be available to build time and Functions runtime."}
-    ${"#build"}   | ${"Use these settings to configure your build options."}
-    ${"#api"}     | ${"This key will allow you to interact with our API and modify this environment."}
+    hash  | expectedString
+    ${""} | ${"Use these settings to configure your environment details."}
+    ${""} | ${"These variables will be available to build time and Functions runtime."}
+    ${""} | ${"Use these settings to configure your build options."}
+    ${""} | ${"This key will allow you to interact with our API and modify this environment."}
   `(
     "should load different tab based on hash: $hash",
     ({ hash, expectedString }) => {
@@ -88,11 +88,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
   test("should switch between tabs", async () => {
     createWrapper({});
 
-    fireEvent.click(wrapper.getByText("Environment variables"));
-    expect(window.location.hash).toBe("");
+    fireEvent.click(wrapper.getAllByText("Environment variables").at(0)!);
 
     await waitFor(() => {
-      expect(window.location.hash).toBe("#vars");
+      expect(
+        wrapper.getByTestId("env-config-nav").getAttribute("data-selected")
+      ).toBe("#env-vars");
     });
   });
 });
