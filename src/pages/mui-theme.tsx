@@ -39,7 +39,7 @@ export default createTheme({
         },
         tooltip: {
           color: "white",
-          backgroundColor: "#070415",
+          backgroundColor: "#1F1C3B",
           border: `1px solid ${grey[900]}`,
           fontSize: 14,
         },
@@ -171,6 +171,16 @@ export default createTheme({
     },
     warning: {
       main: "#ffffff",
+    },
+    error: {
+      main: "#d32f2f",
+      light: "#ef5350",
+      dark: "#c62828",
+    },
+    success: {
+      main: "#1d5a20",
+      light: "#4caf50",
+      dark: "#1b5e20",
     },
   },
   breakpoints: {

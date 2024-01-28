@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import DotDotDot from "~/components/DotDotDotV2";
 import CardContext from "../Card/Card.context";
-import { grey } from "@mui/material/colors";
 
 interface Props extends BoxProps {
   menuItems?: Item[];
@@ -32,7 +31,7 @@ export default function CardRow({
         borderBottom: `1px solid rgba(255,255,255,0.04)`,
         display: "flex",
         flexDirection: "column",
-        ":first-child": {
+        ":first-of-type": {
           borderTop: `1px solid rgba(255,255,255,0.04)`,
         },
         ":last-child": {
