@@ -87,7 +87,7 @@ const UserButtons: React.FC = () => {
                 height: "100%",
                 bgcolor: theme.palette.background.default,
               }}
-              src="https://www.stormkit.io/blog/whats-new?ui=no-menu,no-footer,no-posts,no-header"
+              src="https://www.stormkit.io/blog/whats-new?raw=true"
             />
           )}
           <Box
