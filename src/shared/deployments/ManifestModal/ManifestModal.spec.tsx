@@ -5,18 +5,14 @@ import {
   RenderResult,
   waitFor,
 } from "@testing-library/react";
-import mockApp from "~/testing/data/mock_app";
-import mockDeployment from "~/testing/data/mock_deployment";
-import mockEnvironment from "~/testing//data/mock_environment";
+import mockDeployments from "~/testing/data/mock_deployments_v2";
 import mockManifest from "~/testing/data/mock_deployment_manifest";
-import { mockFetchManifestCall } from "~/testing/nocks/nock_deployments";
+import { mockFetchManifest } from "~/testing/nocks/nock_deployments_v2";
 import ManifestModal from "./ManifestModal";
 
 interface Props {
   onClose?: () => void;
-  app?: App;
-  env?: Environment;
-  deployment?: Deployment;
+  deployment?: DeploymentV2;
   manifest?: Manifest;
 }
 
@@ -27,36 +23,24 @@ jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
 
 describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModal/ManifestModal.tsx", () => {
   let wrapper: RenderResult;
-  let currentApp: App;
-  let currentEnv: Environment;
-  let currentDepl: Deployment;
+  let currentDepl: DeploymentV2;
   let scope: Scope;
 
   const createWrapper = ({
     onClose = jest.fn(),
-    app,
-    env,
     deployment,
     manifest = {},
   }: Props | undefined = {}) => {
-    currentApp = app || mockApp();
-    currentEnv = env || mockEnvironment({ app: currentApp });
-    currentDepl =
-      deployment ||
-      mockDeployment({ appId: currentApp.id, envId: currentEnv.id });
+    currentDepl = deployment || mockDeployments()[0];
 
-    scope = mockFetchManifestCall({
-      appId: currentApp.id,
+    scope = mockFetchManifest({
+      appId: currentDepl.appId,
       deploymentId: currentDepl.id,
       response: { manifest },
     });
 
     wrapper = render(
-      <ManifestModal
-        onClose={onClose}
-        app={currentApp}
-        deployment={currentDepl}
-      />
+      <ManifestModal onClose={onClose} deployment={currentDepl} />
     );
   };
 
@@ -113,7 +97,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
       // The preview URL for the CDN file
       expect(
         wrapper.getByText(
-          `${currentDepl.preview}${manifest.cdnFiles?.[0].fileName}`
+          `${currentDepl.previewUrl}${manifest.cdnFiles?.[0].fileName}`
         )
       ).toBeTruthy();
     });

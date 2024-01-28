@@ -4,38 +4,38 @@ import mockApp from "~/testing/data/mock_app";
 import AppName from "./AppName";
 
 interface Props {
-  app?: App;
-  withDisplayName?: boolean;
+  displayName?: string;
   withLinkToRepo?: boolean;
 }
 
 describe("~/components/AppName/AppName.tsx", () => {
   let wrapper: RenderResult;
+  let app: App;
 
-  const createWrapper = ({
-    app = mockApp(),
-    withDisplayName,
-    withLinkToRepo,
-  }: Props) => {
+  const createWrapper = ({ displayName, withLinkToRepo }: Props) => {
     wrapper = render(
       <MemoryRouter>
         <AppName
           repo={app.repo}
-          displayName={app.displayName}
+          displayName={displayName}
           withLinkToRepo={withLinkToRepo}
         />
       </MemoryRouter>
     );
   };
 
+  beforeEach(() => {
+    app = mockApp();
+  });
+
   test("should display the app name without the display name", () => {
-    createWrapper({ withDisplayName: false });
+    createWrapper({});
     expect(wrapper.getByText("stormkit-io/frontend")).toBeTruthy();
     expect(() => wrapper.getByText("app")).toThrow();
   });
 
   test("should display the app name with the display name", () => {
-    createWrapper({ withDisplayName: true });
+    createWrapper({ displayName: app.displayName });
     expect(wrapper.getByText("stormkit-io/frontend")).toBeTruthy();
     expect(wrapper.getByText("app")).toBeTruthy();
   });

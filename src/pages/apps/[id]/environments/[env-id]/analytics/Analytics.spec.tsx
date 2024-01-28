@@ -4,6 +4,17 @@ import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
 import Analytics from "./Analytics";
 
+jest.mock("recharts", () => ({
+  YAxis: jest.fn(),
+  AreaChart: jest.fn(),
+  Area: jest.fn(),
+  Tooltip: jest.fn(),
+  CartesianGrid: jest.fn(),
+  ResponsiveContainer: ({ children }: { children: any }) => (
+    <div>{children}</div>
+  ),
+}));
+
 interface WrapperProps {
   hasDomain?: boolean;
 }

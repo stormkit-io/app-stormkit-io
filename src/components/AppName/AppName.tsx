@@ -11,7 +11,6 @@ interface Props {
   repo: string;
   displayName?: string;
   withLinkToRepo?: boolean;
-  withMarginRight?: boolean;
   wrapOnMobile?: boolean;
 }
 

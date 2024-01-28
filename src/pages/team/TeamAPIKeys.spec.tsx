@@ -53,7 +53,7 @@ describe("~/pages/team/TeamAPIKeys.tsx", () => {
     });
 
     await fireEvent.click(wrapper.getByLabelText("CI menu"));
-    fireEvent.click(wrapper.getByLabelText("Delete"));
+    fireEvent.click(wrapper.getByText("Delete"));
 
     await waitFor(() => {
       expect(wrapper.getByText("Confirm action")).toBeTruthy();

@@ -1,7 +1,6 @@
 import type { FormValues } from "../actions";
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
@@ -82,12 +81,15 @@ export default function TabConfigGeneral({
           autoFocus
           placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
           helperText={
-            <Typography sx={{ mt: 1 }}>
-              Concatenate multiple commands with the logical `&&` operator:{" "}
-              <Box component="code" sx={{ color: "white" }}>
+            <>
+              Concatenate multiple commands:{" "}
+              <Box
+                component="code"
+                sx={{ color: "white", fontSize: 11, px: 0.5, py: 0.25 }}
+              >
                 npm run test && npm run build
               </Box>
-            </Typography>
+            </>
           }
         />
       </Box>
@@ -110,11 +112,8 @@ export default function TabConfigGeneral({
           }
           helperText={
             !metaLoading &&
-            !isFrameworkRecognized(meta?.framework) && (
-              <Typography sx={{ mt: 1 }}>
-                The content of this folder will be served by Stormkit.
-              </Typography>
-            )
+            !isFrameworkRecognized(meta?.framework) &&
+            "The content of this folder will be served by Stormkit."
           }
         />
       </Box>
@@ -129,11 +128,7 @@ export default function TabConfigGeneral({
           }}
           fullWidth
           placeholder="Defaults to `/.`"
-          helperText={
-            <Typography sx={{ mt: 1 }}>
-              The working directory relative to the Repository root.
-            </Typography>
-          }
+          helperText={"The working directory relative to the Repository root."}
         />
       </Box>
       <Box sx={{ mb: 4 }}>
@@ -149,9 +144,7 @@ export default function TabConfigGeneral({
           }}
           placeholder="/_headers"
           helperText={
-            <Typography sx={{ mt: 1 }}>
-              The relative path to the `headers` file from the build root.
-            </Typography>
+            "The relative path to the `headers` file from the build root."
           }
         />
       </Box>

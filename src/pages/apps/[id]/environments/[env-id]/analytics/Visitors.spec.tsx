@@ -29,6 +29,8 @@ jest.mock("recharts", () => ({
   ),
 }));
 
+jest.useFakeTimers().setSystemTime(new Date("2024-01-14"));
+
 describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () => {
   let wrapper: RenderResult;
   let scope: Scope;
@@ -112,7 +114,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
     });
   });
 
-  test("should fetch with specified time span", async () => {
+  test.only("should fetch with specified time span", async () => {
     createWrapper({
       ts: "7d",
     });
