@@ -43,6 +43,7 @@ export default function Deployment() {
   const showEmptyPackageWarning =
     deployment &&
     !isRunning &&
+    !deployment.stoppedAt &&
     !deployment.clientPackageSize &&
     !deployment.serverPackageSize;
 
@@ -63,11 +64,15 @@ export default function Deployment() {
       loading={loading}
       contentPadding={false}
       info={
-        showEmptyPackageWarning && (
+        showEmptyPackageWarning ? (
           <>
             Deployment package is empty. Make sure that the build folder is
             specified properly.
           </>
+        ) : deployment?.stoppedAt ? (
+          <>Deployment was manually stopped.</>
+        ) : (
+          ""
         )
       }
     >
@@ -174,7 +179,7 @@ export default function Deployment() {
       ))}
       <CardFooter sx={{ display: "flex", justifyContent: "center" }}>
         {isRunning && <Spinner primary />}
-        {!isRunning && deployment && (
+        {deployment?.status === "success" && (
           <Button
             href={deployment.previewUrl}
             variant="contained"
