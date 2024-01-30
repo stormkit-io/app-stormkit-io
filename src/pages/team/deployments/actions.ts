@@ -40,13 +40,9 @@ export const useFetchDeployments = ({
         if (unmounted !== true) {
           setHasNextPage(res.hasNextPage);
           setDeployments(
-            (from && from > 0
+            from && from > 0
               ? [...deployments, ...res.deployments]
               : res.deployments
-            ).map(d => ({
-              ...d,
-              detailsUrl: `/apps/${d.appId}/environments/${d.envId}/deployments/${d.id}`,
-            }))
           );
         }
       })

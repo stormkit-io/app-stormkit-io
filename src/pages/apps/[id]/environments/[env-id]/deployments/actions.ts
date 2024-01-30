@@ -103,30 +103,19 @@ interface Filters {
 
 interface UseFetchDeploymentsProps {
   app: App;
+  refreshToken: number;
   from?: number;
   filters?: Filters;
-}
-
-interface UseFetchDeploymentsReturnValue {
-  deployments: Array<Deployment>;
-  error: string | null;
-  success?: string;
-  loading: boolean;
-  hasNextPage: boolean;
-}
-
-interface FetchDeploymentsAPIResponse {
-  hasNextPage: boolean;
-  deploys: Array<Deployment>;
 }
 
 export const useFetchDeployments = ({
   app,
   from,
+  refreshToken,
   filters,
-}: UseFetchDeploymentsProps): UseFetchDeploymentsReturnValue => {
-  const [deployments, setDeployments] = useState<Array<Deployment>>([]);
-  const [hasNextPage, setHasNextPage] = useState(false);
+}: UseFetchDeploymentsProps) => {
+  const [deployments, setDeployments] = useState<DeploymentV2[]>([]);
+  // const [hasNextPage, setHasNextPage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { envId, status, published, branch } = filters || {};
@@ -142,22 +131,23 @@ export const useFetchDeployments = ({
     setLoading(true);
     setError(null);
 
+    const params = new URLSearchParams(JSON.parse(JSON.stringify(filters)));
+
     api
-      .post<FetchDeploymentsAPIResponse>("/app/deployments", {
-        appId: app.id,
-        from,
-        envId,
-        status,
-        published,
-        branch,
-      })
+      .fetch<{ deployments: DeploymentV2[] }>(
+        `/my/deployments?${params.toString()}`
+      )
       .then(res => {
         if (unmounted !== true) {
-          setHasNextPage(res.hasNextPage);
           setDeployments(
-            from && from > 0 ? [...deployments, ...res.deploys] : res.deploys
+            from && from > 0
+              ? [...deployments, ...res.deployments]
+              : res.deployments
           );
         }
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching deployments.");
       })
       .finally(() => {
         if (unmounted !== true) {
@@ -168,13 +158,12 @@ export const useFetchDeployments = ({
     return () => {
       unmounted = true;
     };
-  }, [app.id, app.refreshToken, envId, published, branch, status, from]);
+  }, [app.id, refreshToken, envId, published, branch, status, from]);
 
   return {
     deployments,
     error,
     loading,
-    hasNextPage,
   };
 };
 
@@ -191,42 +180,23 @@ export const stopDeployment = ({
 };
 
 interface FetchDeploymentProps {
-  app: App;
   deploymentId?: string;
+  refreshToken?: number;
 }
-
-interface FetchDeployResponse {
-  error?: string;
-  loading: boolean;
-  deployment?: Deployment;
-}
-
-interface FetchDeployAPIResponse {
-  deploy: Deployment;
-}
-
-const cache: Record<string, Deployment> = {};
 
 export const useFetchDeployment = ({
-  app,
   deploymentId,
-}: FetchDeploymentProps): FetchDeployResponse => {
+  refreshToken,
+}: FetchDeploymentProps) => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
-  const [deploy, setDeploy] = useState<Deployment>();
+  const [deploy, setDeploy] = useState<DeploymentV2>();
   const [time, setTime] = useState<number>();
 
   useEffect(() => {
     let unmounted = false;
 
     if (!deploymentId) {
-      return;
-    }
-
-    if (cache[deploymentId]) {
-      setDeploy(cache[deploymentId]);
-      setLoading(false);
-      setError(undefined);
       return;
     }
 
@@ -237,46 +207,49 @@ export const useFetchDeployment = ({
     }
 
     api
-      .fetch<FetchDeployAPIResponse>(`/app/${app.id}/deploy/${deploymentId}`)
+      .fetch<{ deployments: DeploymentV2[] }>(
+        `/my/deployments?deploymentId=${deploymentId}`
+      )
       .then(res => {
-        if (unmounted !== true) {
-          // res.deploy.branch = res.deploy.
-          setDeploy(res.deploy);
-          setLoading(false);
+        const deployment = res.deployments[0];
 
-          if (!res.deploy.isRunning) {
-            cache[res.deploy.id] = res.deploy;
-          }
+        if (!deployment) {
+          return;
+        }
+
+        if (unmounted !== true) {
+          setDeploy(deployment);
         }
 
         // If the deployment is still running, then refetch it every 5 seconds
         // by refreshing the time to trigger a new call.
         setTimeout(() => {
-          if (unmounted !== true && res.deploy.isRunning) {
-            delete cache[res.deploy.id];
+          if (unmounted !== true && deployment.status === "running") {
             setTime(Date.now());
           }
         }, 5000);
       })
       .catch(() => {
         if (unmounted !== true) {
-          setLoading(false);
           setError(
             "Something went wrong on our side while fetching deployments. Please try again and if the problem persists contact us from Discord or email."
           );
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
 
     return () => {
       unmounted = false;
     };
-  }, [api, app, deploymentId, time]);
+  }, [deploymentId, refreshToken, time]);
 
   return { deployment: deploy, loading, error };
 };
 
 interface WithPageRefreshProps {
-  deployment?: Deployment;
+  deployment?: DeploymentV2;
   setRefreshToken: (val: number) => void;
 }
 
@@ -288,17 +261,15 @@ export const useWithPageRefresh = ({
   setRefreshToken,
 }: WithPageRefreshProps) => {
   useEffect(() => {
-    if (!deployment) {
-      return;
-    }
+    const isRunning = deployment?.status === "running";
 
-    if (deployment.isRunning) {
+    if (isRunning) {
       shouldRefresh = true;
       return;
     }
 
-    if (!deployment.isRunning && shouldRefresh) {
+    if (shouldRefresh) {
       setRefreshToken?.(Date.now());
     }
-  }, [deployment?.isRunning]);
+  }, [deployment?.status]);
 };

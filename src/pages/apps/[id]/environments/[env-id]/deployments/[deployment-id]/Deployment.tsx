@@ -1,18 +1,18 @@
-import { useContext } from "react";
-import cn from "classnames";
-import Box from "@mui/material/Box";
+import { useState } from "react";
 import { useParams } from "react-router";
-import { formattedDate } from "~/utils/helpers/deployments";
-import { AppContext } from "~/pages/apps/[id]/App.context";
-import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import Container from "~/components/Container";
-import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBoxV2";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import LensIcon from "@mui/icons-material/Lens";
+import Typography from "@mui/material/Typography";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import Error404 from "~/components/Errors/Error404";
-import Button from "~/components/ButtonV2";
-import CommitInfo from "../_components/CommitInfo";
-import DeploymentMenu from "../_components/DeploymentMenu";
+import Spinner from "~/components/Spinner";
 import { useFetchDeployment, useWithPageRefresh } from "../actions";
+import DeploymentRow from "~/shared/deployments/DeploymentRow";
+import { grey } from "@mui/material/colors";
 
 const splitLines = (message: string): string[] => {
   // Remove first and last empty lines
@@ -24,165 +24,166 @@ const splitLines = (message: string): string[] => {
   return lines;
 };
 
+const iconProps = {
+  fontSize: 12,
+};
+
 export default function Deployment() {
   const { deploymentId } = useParams();
-  const { app, setRefreshToken } = useContext(AppContext);
-  const { environment } = useContext(EnvironmentContext);
+  const [refreshToken, setRefreshToken] = useState<number>();
   const { deployment, error, loading } = useFetchDeployment({
-    app,
     deploymentId,
+    refreshToken,
   });
 
   useWithPageRefresh({ deployment, setRefreshToken });
 
-  if (loading || error) {
+  const isRunning = deployment?.status === "running";
+
+  const showEmptyPackageWarning =
+    deployment &&
+    !isRunning &&
+    !deployment.clientPackageSize &&
+    !deployment.serverPackageSize;
+
+  if (!deployment && !loading && !error) {
     return (
-      <Container maxWidth="max-w-none">
-        <div className="w-full flex justify-center p-4">
-          {loading && <Spinner />}
-          {error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
-        </div>
-      </Container>
+      <Card>
+        <Error404>
+          <Typography>Deployment is not found.</Typography>
+        </Error404>
+      </Card>
     );
   }
 
-  if (!deployment) {
-    return <Error404>The deployment is not found.</Error404>;
-  }
-
-  const showEmptyPackageWarning =
-    deployment.exit === 0 &&
-    !deployment.totalSizeInBytes &&
-    !deployment.serverPackageSize;
-
   return (
-    <Container
-      maxWidth="max-w-none"
-      className="pb-4"
-      title={
-        <CommitInfo
-          clickable={false}
-          environment={environment}
-          app={app}
-          deployment={deployment}
-          showStatus
-          showNotPublishedInfo
-        />
-      }
-      actions={
-        <div className="flex flex-col items-end justify-between">
-          <DeploymentMenu
-            deployment={deployment}
-            app={app}
-            environment={environment}
-            setRefreshToken={setRefreshToken}
-            omittedItems={["view-details"]}
-          />
-          <div className="text-xs">{formattedDate(deployment.createdAt)}</div>
-        </div>
-      }
-    >
-      <div className="py-4">
-        {showEmptyPackageWarning && (
-          <InfoBox type={InfoBox.WARNING} className="mx-4 mb-8">
+    <Card
+      sx={{ width: "100%" }}
+      error={error}
+      loading={loading}
+      contentPadding={false}
+      info={
+        showEmptyPackageWarning && (
+          <>
             Deployment package is empty. Make sure that the build folder is
             specified properly.
-          </InfoBox>
+          </>
+        )
+      }
+    >
+      <CardHeader
+        sx={{
+          py: 2,
+          px: 0,
+          pb: 0,
+          mb: 2,
+        }}
+      >
+        {deployment && (
+          <DeploymentRow
+            deployment={deployment}
+            setRefreshToken={setRefreshToken}
+            viewDetails={false}
+            exactTime
+            sx={{ borderTop: "none !important" }}
+          />
         )}
-        {deployment.logs?.map(({ title, status, message = "" }, i) => (
-          <Box key={title} data-testid={`deployment-step-${i}`} sx={{ mx: 2 }}>
+      </CardHeader>
+      {deployment?.logs?.map(({ title, status, message = "" }, i) => (
+        <Box
+          key={title}
+          data-testid={`deployment-step-${i}`}
+          sx={{ px: 3, mb: 2, ":last-of-type": { mb: 0 } }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              borderBottom: `1px solid ${grey[900]}`,
+              color: "white",
+              p: 1,
+              pb: 2,
+            }}
+          >
+            {typeof status === "undefined" ? (
+              <CircularProgress
+                size={12}
+                color="error"
+                variant="indeterminate"
+                sx={iconProps}
+              />
+            ) : (
+              <LensIcon color={status ? "success" : "error"} sx={iconProps} />
+            )}
             <Box
+              component="span"
               sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 2,
-                bgcolor: "rgba(0,0,0,0.1)",
+                fontFamily: "monospace",
+                ml: 2,
+                display: "inline-block",
               }}
             >
-              <span
-                className={cn("inline-block w-2 h-2", {
-                  "bg-red-50": status === false,
-                  "bg-blue-40": typeof status === "undefined" || null,
-                  "bg-green-70":
-                    status &&
-                    (!showEmptyPackageWarning ||
-                      i < deployment.logs.length - 1),
-                  "bg-yellow-10":
-                    status &&
-                    showEmptyPackageWarning &&
-                    deployment.logs.length - 1 === i,
-                })}
-              />
-              <Box
-                component="span"
-                sx={{
-                  fontFamily: "monospace",
-                  ml: 1.75,
-                  display: "inline-block",
-                }}
-              >
-                {title}
-              </Box>
+              {title}
             </Box>
-            {message.length ? (
-              <Box
-                component="code"
-                bgcolor="transparent"
-                sx={{
-                  fontFamily: "monospace",
-
-                  display: "block",
-                  py: 2,
-                  lineHeight: 1.5,
-                  overflow: "auto",
-                  color: "white",
-                }}
-                style={{ maxHeight: "400px" }}
-              >
-                {splitLines(message).map((line, i) => (
+          </Box>
+          {message.length ? (
+            <Box
+              component="code"
+              bgcolor="transparent"
+              sx={{
+                fontFamily: "monospace",
+                fontSize: 12,
+                display: "block",
+                py: 2,
+                lineHeight: 1.5,
+                overflow: "auto",
+                color: "white",
+              }}
+              style={{ maxHeight: "400px" }}
+            >
+              {splitLines(message).map((line, i) => (
+                <Box
+                  key={i}
+                  sx={{
+                    display: "flex",
+                    color: grey[500],
+                    "&:hover": { color: "white", bgcolor: "rgba(0,0,0,0.1)" },
+                  }}
+                >
                   <Box
-                    key={i}
+                    component="span"
                     sx={{
-                      display: "flex",
-                      opacity: 0.5,
-                      "&:hover": { opacity: 1, bgcolor: "rgba(0,0,0,0.1)" },
+                      display: "inline-block",
+                      minWidth: "50px",
+                      maxWidth: "50px",
+                      width: "100%",
+                      textAlign: "right",
+                      mr: 1,
                     }}
                   >
-                    <Box
-                      component="span"
-                      sx={{
-                        display: "inline-block",
-                        minWidth: "50px",
-                        maxWidth: "50px",
-                        width: "100%",
-                        textAlign: "right",
-                        mr: 1,
-                      }}
-                    >
-                      {i + 1}.
-                    </Box>{" "}
-                    {line}
-                  </Box>
-                ))}
-              </Box>
-            ) : (
-              ""
-            )}
-          </Box>
-        ))}
-        {deployment.isRunning && (
-          <div className="flex justify-center mt-4" id="deploy-spinner-running">
-            <Spinner primary />
-          </div>
+                    {i + 1}.
+                  </Box>{" "}
+                  {line}
+                </Box>
+              ))}
+            </Box>
+          ) : (
+            ""
+          )}
+        </Box>
+      ))}
+      <CardFooter sx={{ display: "flex", justifyContent: "center" }}>
+        {isRunning && <Spinner primary />}
+        {!isRunning && deployment && (
+          <Button
+            href={deployment.previewUrl}
+            variant="contained"
+            color="secondary"
+          >
+            Preview
+          </Button>
         )}
-        {!deployment.isRunning && deployment.exit === 0 && (
-          <div className="flex justify-center mt-4">
-            <Button href={deployment.preview} category="action">
-              Preview
-            </Button>
-          </div>
-        )}
-      </div>
-    </Container>
+      </CardFooter>
+    </Card>
   );
 }

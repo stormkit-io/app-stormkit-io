@@ -4,18 +4,27 @@ const endpoint = process.env.API_DOMAIN || "localhost";
 
 interface MockFetchDeploymentCallProps {
   teamId?: string;
+  envId?: string;
+  deploymentId?: string;
   status?: number;
   response: { deployments: DeploymentV2[] };
 }
 
 export const mockFetchDeployments = ({
   teamId,
+  deploymentId,
+  envId,
   status = 200,
   response,
-}: MockFetchDeploymentCallProps) =>
-  nock(endpoint)
-    .get(`/my/deployments?teamId=${teamId}`)
+}: MockFetchDeploymentCallProps) => {
+  const params = new URLSearchParams(
+    JSON.parse(JSON.stringify({ teamId, deploymentId, envId }))
+  );
+
+  return nock(endpoint)
+    .get(`/my/deployments?${params}`)
     .reply(status, response);
+};
 
 interface MockStopDeploymentProps {
   appId: string;

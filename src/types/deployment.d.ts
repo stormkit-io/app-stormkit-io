@@ -60,6 +60,7 @@ declare type DeploymentV2 = {
   isAutoDeploy: boolean;
   isAutoPublish: boolean;
   status: "failed" | "success" | "running";
+  logs?: Log[];
   previewUrl?: string;
   detailsUrl: string;
   clientPackageSize?: number;

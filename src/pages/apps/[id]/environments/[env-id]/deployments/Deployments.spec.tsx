@@ -6,21 +6,20 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router";
-import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import mockApp from "~/testing/data/mock_app";
-import mockDeployment from "~/testing/data/mock_deployment";
+import mockDeployments from "~/testing/data/mock_deployments_v2";
 import mockEnvironment from "~/testing//data/mock_environment";
 import {
-  mockFetchDeploymentsCall,
-  mockDeleteDeploymentCall,
-} from "~/testing/nocks/nock_deployments";
+  mockFetchDeployments,
+  mockDeleteDeployment,
+} from "~/testing/nocks/nock_deployments_v2";
 import Deployments from "./Deployments";
 
 interface Props {
   app?: App;
   environment?: Environment;
-  deployments?: Deployment[];
+  deployments?: DeploymentV2[];
 }
 
 jest.mock("~/utils/helpers/date", () => ({
@@ -31,9 +30,8 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let currentDeploys: Deployment[];
+  let currentDeploys: DeploymentV2[];
   let scope: Scope;
-  let id = 1050101;
 
   const createWrapper = ({
     app,
@@ -42,36 +40,20 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
   }: Props | undefined = {}) => {
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironment({ app: currentApp });
-    currentDeploys = deployments || [
-      mockDeployment({
-        appId: currentApp.id,
-        envId: currentEnv.id,
-        id: id++ + "",
-      }),
-    ];
+    currentDeploys = deployments || mockDeployments();
 
-    scope = mockFetchDeploymentsCall({
-      appId: currentApp.id,
-      from: 0,
-      filters: { envId: currentEnv.id! },
-      response: { hasNextPage: false, deploys: currentDeploys },
+    scope = mockFetchDeployments({
+      envId: currentEnv.id,
+      response: { deployments: currentDeploys },
     });
 
     const memoryRouter = createMemoryRouter([
       {
         path: "*",
         element: (
-          <AppContext.Provider
-            value={{
-              app: currentApp,
-              environments: [currentEnv],
-              setRefreshToken: jest.fn(),
-            }}
-          >
-            <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-              <Deployments />
-            </EnvironmentContext.Provider>
-          </AppContext.Provider>
+          <EnvironmentContext.Provider value={{ environment: currentEnv }}>
+            <Deployments />
+          </EnvironmentContext.Provider>
         ),
       },
     ]);
@@ -84,26 +66,31 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(wrapper.getByText("chore: bump version")).toBeTruthy();
-      expect(wrapper.getByText("2 hours ago")).toBeTruthy();
+      expect(wrapper.getByText("chore: update packages")).toBeTruthy();
+      expect(wrapper.getAllByText("2 hours ago")).toBeTruthy();
       expect(wrapper.getByText("main")).toBeTruthy();
     });
   });
 
-  test("should handle deleting deployment", async () => {
+  test.only("should handle deleting deployment", async () => {
     createWrapper();
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(wrapper.getByText("chore: bump version")).toBeTruthy();
+      expect(wrapper.getByText("chore: update packages")).toBeTruthy();
     });
 
-    const deleteScope = mockDeleteDeploymentCall({
-      appId: currentApp.id,
+    const deleteScope = mockDeleteDeployment({
+      appId: currentDeploys[0].appId,
       deploymentId: currentDeploys[0].id,
     });
 
-    fireEvent.click(wrapper.getByLabelText("expand"));
+    const refetchScope = mockFetchDeployments({
+      envId: currentEnv.id,
+      response: { deployments: [] },
+    });
+
+    fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
 
     await waitFor(() => {
       expect(wrapper.getByText("Delete")).toBeTruthy();
@@ -119,6 +106,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
 
     await waitFor(() => {
       expect(deleteScope.isDone()).toBe(true);
+      expect(refetchScope.isDone()).toBe(true);
     });
   });
 
@@ -127,7 +115,11 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
 
     await waitFor(() => {
       expect(wrapper.getByText(/It\'s quite empty in here\./)).toBeTruthy();
-      expect(wrapper.getByText("Deploy now")).toBeTruthy();
+      expect(
+        wrapper.getByText(
+          /Click the Deploy Now button to start your first deployment\./
+        )
+      ).toBeTruthy();
     });
   });
 });

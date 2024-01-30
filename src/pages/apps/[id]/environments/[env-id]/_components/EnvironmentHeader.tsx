@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Tooltip from "@mui/material/Tooltip";
@@ -10,7 +10,6 @@ import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.c
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { useFetchStatus, isEmpty } from "../../actions";
 import DomainStatus from "./DomainStatus";
-import ManifestModal from "../deployments/_components/ManifestModal";
 
 const getDomain = (env: Environment): string => {
   if (env?.domain?.verified) {
@@ -46,7 +45,6 @@ export default function EnvironmentHeader() {
   const { environments } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const { app } = useContext(AppContext);
-  const [deploymentToDebug, setDeploymentToDebug] = useState<Deployment>();
   const domainName = getDomain(environment);
 
   const { status, loading } = useFetchStatus({
@@ -153,28 +151,7 @@ export default function EnvironmentHeader() {
                                 }}
                                 key={p.deploymentId}
                               >
-                                <Button
-                                  variant="contained"
-                                  color="secondary"
-                                  onClick={() => {
-                                    setDeploymentToDebug({
-                                      id: p.deploymentId,
-                                      branch: p.branch,
-                                      preview: `${
-                                        domainName.indexOf(environment.name) >
-                                        -1
-                                          ? domainName.replace(
-                                              environment.name,
-                                              p.deploymentId
-                                            )
-                                          : domainName.replace(
-                                              ".",
-                                              `--${p.deploymentId}.`
-                                            )
-                                      }`,
-                                    } as Deployment);
-                                  }}
-                                >
+                                <Button variant="contained" color="secondary">
                                   #{p.deploymentId}
                                 </Button>
                               </Box>
@@ -210,15 +187,6 @@ export default function EnvironmentHeader() {
             />
           </Box>
         </Box>
-        {deploymentToDebug && (
-          <ManifestModal
-            app={app}
-            deployment={deploymentToDebug}
-            onClose={() => {
-              setDeploymentToDebug(undefined);
-            }}
-          />
-        )}
       </Box>
     </Card>
   );

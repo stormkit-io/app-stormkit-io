@@ -1,8 +1,9 @@
+import { useContext } from "react";
 import { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { grey } from "@mui/material/colors";
-import React from "react";
+import CardContext from "../Card/Card.context";
 
 interface Props extends BoxProps {
   subtitle?: React.ReactNode;
@@ -17,8 +18,14 @@ export default function CardHeader({
   children,
   ...rest
 }: Props) {
+  const { size } = useContext(CardContext);
+  const space = size === "medium" ? 4 : 2;
+
   return (
-    <Box sx={{ display: "flex", alignItems: "center", ...sx }} {...rest}>
+    <Box
+      sx={{ p: space, display: "flex", alignItems: "center", ...sx }}
+      {...rest}
+    >
       <Box sx={{ flex: 1 }}>
         {title && (
           <Typography

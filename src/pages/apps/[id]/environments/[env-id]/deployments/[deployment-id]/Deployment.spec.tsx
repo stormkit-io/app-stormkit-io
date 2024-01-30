@@ -1,18 +1,12 @@
 import type { Scope } from "nock";
 import { render, RenderResult, waitFor } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
-import { AppContext } from "~/pages/apps/[id]/App.context";
-import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import mockApp from "~/testing/data/mock_app";
-import mockDeployment from "~/testing/data/mock_deployment";
-import mockEnvironment from "~/testing//data/mock_environment";
-import { mockFetchDeploymentCall } from "~/testing/nocks/nock_deployments";
+import mockDeployments from "~/testing/data/mock_deployments_v2";
+import { mockFetchDeployments } from "~/testing/nocks/nock_deployments_v2";
 import Deployment from "./Deployment";
 
 interface Props {
-  app?: App;
-  deployment?: Deployment;
-  environment?: Environment;
+  deployment?: DeploymentV2;
 }
 
 jest.mock("~/utils/helpers/deployments", () => ({
@@ -21,55 +15,28 @@ jest.mock("~/utils/helpers/deployments", () => ({
 
 describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
   let wrapper: RenderResult;
-  let currentApp: App;
-  let currentEnv: Environment;
-  let currentDeploy: Deployment;
+  let currentDeploy: DeploymentV2;
   let scope: Scope;
-  let id = 1050101;
 
-  const createWrapper = ({
-    app,
-    environment,
-    deployment,
-  }: Props | undefined = {}) => {
-    currentApp = app || mockApp();
-    currentEnv = environment || mockEnvironment({ app: currentApp });
-    currentDeploy =
-      deployment ||
-      mockDeployment({
-        appId: currentApp.id,
-        envId: currentEnv.id,
-        id: id++ + "",
-      });
+  const createWrapper = ({ deployment }: Props | undefined = {}) => {
+    currentDeploy = deployment || mockDeployments()[0];
 
-    scope = mockFetchDeploymentCall({
-      deploy: currentDeploy,
-      response: { deploy: currentDeploy },
+    scope = mockFetchDeployments({
+      deploymentId: currentDeploy.id,
+      response: { deployments: [currentDeploy] },
     });
 
     const memoryRouter = createMemoryRouter(
       [
         {
           path: "/apps/:appId/environments/:envId/deployments/:deploymentId",
-          element: (
-            <AppContext.Provider
-              value={{
-                app: currentApp,
-                environments: [currentEnv],
-                setRefreshToken: jest.fn(),
-              }}
-            >
-              <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-                <Deployment />
-              </EnvironmentContext.Provider>
-            </AppContext.Provider>
-          ),
+          element: <Deployment />,
         },
       ],
       {
         initialIndex: 0,
         initialEntries: [
-          `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${currentDeploy.id}`,
+          `/apps/${currentDeploy.appId}/environments/${currentDeploy.envId}/deployments/${currentDeploy.id}`,
         ],
       }
     );
@@ -82,14 +49,25 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(wrapper.getByText("chore: bump version")).toBeTruthy();
+      expect(wrapper.getByText("chore: update packages")).toBeTruthy();
+      expect(wrapper.getByText("published: 100%")).toBeTruthy();
       expect(wrapper.getByText("21.09.2022 - 21:30")).toBeTruthy();
       expect(wrapper.getByText("main")).toBeTruthy();
     });
   });
 
   test("should display the logs", async () => {
-    createWrapper();
+    const deployment = mockDeployments()[0];
+    deployment.logs = [
+      {
+        title: "npm run build",
+        message: "Nuxt CLI v3.0.0-rc.8",
+        status: true,
+        payload: "",
+      },
+    ];
+
+    createWrapper({ deployment });
 
     await waitFor(() => {
       expect(wrapper.getByText("Nuxt CLI v3.0.0-rc.8")).toBeTruthy();
@@ -108,7 +86,9 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
     createWrapper();
 
     await waitFor(() => {
-      expect(wrapper.getByLabelText("expand")).toBeTruthy();
+      expect(
+        wrapper.getByLabelText(`Deployment ${currentDeploy.id} menu`)
+      ).toBeTruthy();
     });
   });
 });

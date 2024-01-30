@@ -1,3 +1,4 @@
+import type { SxProps } from "@mui/material";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -12,17 +13,31 @@ import PublishModal from "./PublishModal";
 import ManifestModal from "./ManifestModal";
 import { deleteForever, stopDeployment } from "./actions";
 import { useWithMenuItems } from "./actions";
+import { formattedDate } from "~/utils/helpers/deployments";
 
 interface Props {
   deployment: DeploymentV2;
   showProject?: boolean;
+  exactTime?: boolean;
+  viewDetails?: boolean;
   setRefreshToken: (v: number) => void;
+  sx?: SxProps;
 }
+
+const iconProps = {
+  fontSize: 12,
+  position: "relative",
+  top: 3.5,
+  mr: 2,
+};
 
 export default function DeploymentRow({
   deployment,
   setRefreshToken,
   showProject,
+  viewDetails = true,
+  exactTime,
+  sx,
 }: Props) {
   const isRunning = deployment.status === "running";
   const isSuccess = deployment.status === "success";
@@ -32,19 +47,12 @@ export default function DeploymentRow({
   const [showPublishModal, setShowPublishModal] = useState<boolean>();
   const menuItems = useWithMenuItems({
     deployment,
-    omittedItems: [],
+    omittedItems: viewDetails ? [] : ["view-details"],
     onManifestClick: () => setShowManifest(true),
     onStateChangeClick: () =>
       isRunning ? setShowStopModal(true) : setShowDeleteModal(true),
     onPublishClick: () => setShowPublishModal(true),
   });
-
-  const iconProps = {
-    fontSize: 12,
-    position: "relative",
-    top: 3.5,
-    mr: 2,
-  };
 
   return (
     <CardRow
@@ -57,9 +65,12 @@ export default function DeploymentRow({
             color: grey[500],
           }}
         >
-          {timeSince(Number(deployment.createdAt) * 1000)} ago
+          {exactTime
+            ? formattedDate(Number(deployment.createdAt))
+            : timeSince(Number(deployment.createdAt) * 1000) + " ago"}
         </Typography>
       }
+      sx={sx}
     >
       <Box
         sx={{

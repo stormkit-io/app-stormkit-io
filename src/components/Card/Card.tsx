@@ -1,4 +1,4 @@
-import type { BoxProps } from "@mui/material";
+import type { BoxProps, SxProps } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -80,9 +80,7 @@ function Card({
         }}
         {...rest}
       >
-        {header && (
-          <Box sx={{ mb: content ? 4 : 0, px: p, pt: p }}>{header}</Box>
-        )}
+        {header}
         {content && !isLoadingFirstTime && (
           <Box sx={{ px: isCardRow || !contentPadding ? 0 : p, flex: 1 }}>
             {content}
