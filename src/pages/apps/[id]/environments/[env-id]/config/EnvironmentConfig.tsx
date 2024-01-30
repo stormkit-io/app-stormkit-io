@@ -29,7 +29,7 @@ interface TabProps {
 }
 
 export default function EnvironmentConfig() {
-  const [selectedItem, setSelectedItem] = useState<string>("#general");
+  const [selectedItem, setSelectedItem] = useState<string>("");
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const { hash } = useLocation();
@@ -127,7 +127,11 @@ export default function EnvironmentConfig() {
                       py: 1,
                       width: "100%",
                       "&:hover": { opacity: 1, bgcolor: "rgba(0,0,0,0.2)" },
-                      color: li.path === selectedItem ? "white" : grey[500],
+                      color:
+                        li.path === selectedItem || // If selected
+                        (li.path === "#general" && !selectedItem && !hash) // or in it's default state
+                          ? "white"
+                          : grey[500],
                     }}
                   >
                     <Typography component="span">{li.text}</Typography>
