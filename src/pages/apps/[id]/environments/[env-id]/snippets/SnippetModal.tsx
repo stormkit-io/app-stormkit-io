@@ -141,10 +141,18 @@ const SnippetModal: React.FC<Props> = ({
                   snippet?.prepend ? "prepend" : "append"
                 }`}
               >
-                <Option value="head_append">Append to Head</Option>
-                <Option value="head_prepend">Prepend to Head</Option>
-                <Option value="body_append">Append to Body</Option>
-                <Option value="body_prepend">Prepend to Body</Option>
+                <Option value="head_append">
+                  Append to Head {"(inserted before </head>)"}
+                </Option>
+                <Option value="head_prepend">
+                  Prepend to Head {"(inserted after <head>)"}
+                </Option>
+                <Option value="body_append">
+                  Append to Body {"(inserted after <body>)"}
+                </Option>
+                <Option value="body_prepend">
+                  Prepend to Body {"(inserted before </head>)"}
+                </Option>
               </Select>
             </FormControl>
           </Box>
