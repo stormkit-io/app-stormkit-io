@@ -1,5 +1,6 @@
 declare type BuildConfig = {
   headersFile?: string;
+  redirectsFile?: string;
   distFolder: string;
   cmd: string;
   vars: Record<string, string>;

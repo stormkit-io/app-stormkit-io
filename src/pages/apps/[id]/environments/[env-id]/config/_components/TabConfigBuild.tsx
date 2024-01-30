@@ -1,6 +1,7 @@
 import type { FormValues } from "../actions";
 import { useState } from "react";
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
@@ -127,13 +128,13 @@ export default function TabConfigGeneral({
             setRoot(e.target.value);
           }}
           fullWidth
-          placeholder="Defaults to `/.`"
+          placeholder="Defaults to `./`"
           helperText={"The working directory relative to the Repository root."}
         />
       </Box>
       <Box sx={{ mb: 4 }}>
         <TextField
-          label="Headers file"
+          label="Headers file location"
           variant="filled"
           autoComplete="off"
           defaultValue={env?.build.headersFile || ""}
@@ -142,9 +143,37 @@ export default function TabConfigGeneral({
           InputLabelProps={{
             shrink: true,
           }}
-          placeholder="/_headers"
+          placeholder="./_headers"
           helperText={
-            "The relative path to the `headers` file from the build root."
+            <>
+              The relative path to the `headers` file from the build root.
+              <Link
+                href="https://stormkit.io/docs/features/custom-headers"
+                target="_blank"
+                rel="noreferrer noopener"
+                sx={{ ml: 0.5, fontSize: "inherit" }}
+              >
+                Read more.
+              </Link>
+            </>
+          }
+        />
+      </Box>
+
+      <Box sx={{ mb: 4 }}>
+        <TextField
+          label="Redirects file location"
+          variant="filled"
+          autoComplete="off"
+          defaultValue={env?.build.redirectsFile || ""}
+          name="build.redirectsFile"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+          placeholder="./_redirects"
+          helperText={
+            "The relative path to the `redirects` file from the build root."
           }
         />
       </Box>
