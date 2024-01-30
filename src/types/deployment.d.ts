@@ -8,6 +8,7 @@ type Log = {
   message: string;
   payload: unknown;
   status: boolean;
+  duration?: number;
 };
 
 type Commit = {

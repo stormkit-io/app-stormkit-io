@@ -57,6 +57,10 @@ export default function Deployment() {
     );
   }
 
+  const hasDurationSupport = deployment?.logs?.some(
+    d => d.duration && d.duration > 0
+  );
+
   return (
     <Card
       sx={{ width: "100%" }}
@@ -69,7 +73,7 @@ export default function Deployment() {
             Deployment package is empty. Make sure that the build folder is
             specified properly.
           </>
-        ) : deployment?.stoppedAt ? (
+        ) : deployment?.stoppedAt && deployment.status !== "success" ? (
           <>Deployment was manually stopped.</>
         ) : (
           ""
@@ -94,7 +98,7 @@ export default function Deployment() {
           />
         )}
       </CardHeader>
-      {deployment?.logs?.map(({ title, status, message = "" }, i) => (
+      {deployment?.logs?.map(({ title, status, duration, message = "" }, i) => (
         <Box
           key={title}
           data-testid={`deployment-step-${i}`}
@@ -121,8 +125,8 @@ export default function Deployment() {
               <LensIcon color={status ? "success" : "error"} sx={iconProps} />
             )}
             <Box
-              component="span"
               sx={{
+                flex: 1,
                 fontFamily: "monospace",
                 ml: 2,
                 display: "inline-block",
@@ -130,6 +134,17 @@ export default function Deployment() {
             >
               {title}
             </Box>
+            {hasDurationSupport &&
+            !(isRunning && deployment.logs!.length - 1 !== i) ? (
+              <Typography
+                component="span"
+                sx={{ color: grey[500], fontSize: 11 }}
+              >
+                {duration}s
+              </Typography>
+            ) : (
+              ""
+            )}
           </Box>
           {message.length ? (
             <Box
