@@ -1,4 +1,4 @@
-import type { BoxProps, SxProps } from "@mui/material";
+import type { BoxProps } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
