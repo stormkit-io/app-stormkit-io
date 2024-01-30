@@ -105,7 +105,7 @@ export default function Deployment() {
               pb: 2,
             }}
           >
-            {typeof status === "undefined" ? (
+            {isRunning && deployment.logs!.length - 1 === i ? (
               <CircularProgress
                 size={12}
                 color="error"
