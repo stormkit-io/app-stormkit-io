@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import { grey } from "@mui/material/colors";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import Card from "~/components/Card";
@@ -80,9 +81,14 @@ export default function Snippets() {
                 <Typography>
                   #{snippet.id} {snippet.title}
                 </Typography>
-                <Typography>
-                  {snippet.prepend ? "Prepened" : "Appended"} to{" "}
-                  <b>{snippet.location}</b> element.
+                <Typography sx={{ color: grey[500] }}>
+                  Inserted {snippet.prepend ? "before" : "after"}{" "}
+                  <Typography
+                    component="span"
+                    sx={{ fontFamily: "monospace", fontSize: 11 }}
+                  >
+                    {`<${snippet.prepend ? "/" : ""}${snippet.location}>`}
+                  </Typography>
                 </Typography>
               </Box>
               <FormControlLabel
