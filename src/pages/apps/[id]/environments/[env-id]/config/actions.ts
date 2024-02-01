@@ -46,6 +46,8 @@ export const buildFormValues = (
     branch: env.branch,
     autoDeploy: computeAutoDeployValue(env),
     autoDeployBranches: env.autoDeployBranches,
+    "build.headersFile": env.build.headersFile,
+    "build.redirectsFile": env.build.redirectsFile,
     "build.cmd": env.build.cmd,
     "build.distFolder": env.build.distFolder,
     "build.vars": Object.keys(env.build?.vars || {})
