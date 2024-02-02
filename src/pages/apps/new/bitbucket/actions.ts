@@ -1,5 +1,6 @@
 import type { Repo } from "../types.d";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import bitbucketApi from "~/utils/api/Bitbucket";
 
 const errorMessage =
@@ -26,6 +27,8 @@ export const useFetchRepos = ({
   const [error, setError] = useState<string>();
   const [repos, setRepos] = useState<Repo[]>([]);
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [searchParams, _] = useSearchParams();
+  const role = searchParams.get("role");
 
   useEffect(() => {
     if (page > 1) {
@@ -37,7 +40,7 @@ export const useFetchRepos = ({
     bitbucketApi
       .repositories({
         params: {
-          role: "admin",
+          role: role === "member" ? role : "admin",
           pagelen: 100,
         },
       })
@@ -67,7 +70,7 @@ export const useFetchRepos = ({
         setLoading(false);
         setIsLoadingMore(false);
       });
-  }, [page]);
+  }, [page, role]);
 
   return { repos, hasNextPage, loading, isLoadingMore, error };
 };

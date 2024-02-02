@@ -6,7 +6,7 @@ import { LS_ACCESS_TOKEN } from "./Api";
 interface RepositoriesProps {
   team?: string;
   params?: {
-    role?: "admin";
+    role?: "admin" | "member";
     pagelen?: number;
   };
 }
@@ -26,7 +26,7 @@ class Bitbucket {
   baseurl = "https://api.bitbucket.org/2.0";
 
   // This is the access token required to fetch repositories.
-  accessToken = LocalStorage.get(LS_ACCESS_TOKEN);
+  accessToken = LocalStorage.get(LS_ACCESS_TOKEN) as string;
 
   user() {
     return new Promise((resolve, reject) => {
