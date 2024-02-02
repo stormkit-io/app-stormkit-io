@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import SwitchRight from "@mui/icons-material/SwitchRight";
 import SwitchLeft from "@mui/icons-material/SwitchLeft";
 import Button from "@mui/material/Button";
@@ -16,11 +17,11 @@ interface Props {
 }
 
 export default function TeamsToggle({ app }: Props) {
-  const { teams, reloadTeams } = useContext(AuthContext);
+  const { user, teams, reloadTeams } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const selectedTeam = useSelectedTeam({ teams, app });
-
+  const userPackage = user?.package?.id || "free";
   const Switch = isMenuOpen ? SwitchRight : SwitchLeft;
 
   return (
@@ -62,6 +63,14 @@ export default function TeamsToggle({ app }: Props) {
             }}
           >
             {selectedTeam?.isDefault ? PERSONAL_TEAM : selectedTeam?.name}
+            {userPackage === "free" && user?.isPaymentRequired && (
+              <Chip
+                component="span"
+                label="Free trial"
+                size="small"
+                sx={{ ml: 1 }}
+              />
+            )}
             <Switch sx={{ transform: "rotate(90deg)", ml: 1, fontSize: 16 }} />
           </Button>
         </Box>

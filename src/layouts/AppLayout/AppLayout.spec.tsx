@@ -70,7 +70,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
       expect(links).toEqual([
         "/", // Stormkit logo link
-        "/user/account", // Free tier
         `/apps/${defaultApp.id}/usage`,
         "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/environments`,
@@ -99,7 +98,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
       expect(links).toEqual([
         "/", // Stormkit logo link
-        "/user/account", // Free tier
         `/apps/${defaultApp.id}/usage`,
         "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/environments`,
@@ -130,7 +128,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
       await waitFor(() => {
         expect(links).toEqual([
           "/", // Stormkit logo link
-          "/user/account", // Free tier
           `/apps/${defaultApp.id}/usage`,
           "https://gitlab.com/stormkit-io/frontend",
           `/apps/${defaultApp.id}/environments`,

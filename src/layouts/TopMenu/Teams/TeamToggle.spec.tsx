@@ -11,19 +11,25 @@ describe("~/layouts/TopMenu/Teams/TeamToggle.tsx", () => {
 
   interface Props {
     app?: App;
+    user?: User;
     teams?: Team[];
     initialPath?: string;
   }
 
   const teams = mockTeams();
 
-  const createWrapper = ({ app, teams, initialPath = "/personal" }: Props) => {
+  const createWrapper = ({
+    app,
+    user,
+    teams,
+    initialPath = "/personal",
+  }: Props) => {
     const memoryRouter = createMemoryRouter(
       [
         {
           path: "/:team?",
           element: (
-            <AuthContext.Provider value={{ user: mockUser(), teams }}>
+            <AuthContext.Provider value={{ user: user || mockUser(), teams }}>
               <TeamToggle app={app} />
             </AuthContext.Provider>
           ),
@@ -55,5 +61,18 @@ describe("~/layouts/TopMenu/Teams/TeamToggle.tsx", () => {
     expect(
       wrapper.getByText("Use teams to collaborate with other team members.")
     ).toBeTruthy();
+  });
+
+  test("should not display free trial chip", () => {
+    createWrapper({});
+    expect(() => wrapper.getByText("Free trial")).toThrow();
+  });
+
+  test("should display free trial chip", () => {
+    const user = mockUser();
+    user.isPaymentRequired = true;
+    user.package = { id: "free" };
+    createWrapper({ user });
+    expect(wrapper.getByText("Free trial")).toBeTruthy();
   });
 });

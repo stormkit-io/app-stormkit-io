@@ -1,6 +1,9 @@
+import { useMemo } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import Alert from "@mui/material/Alert";
+import ReportIcon from "@mui/icons-material/Report";
 import { LS_PROVIDER } from "~/utils/api/Api";
 import { LocalStorage } from "~/utils/storage";
 
@@ -47,6 +50,19 @@ interface Props {
 }
 
 export default function UserMenu({ user, onClick }: Props) {
+  const userPackage = user?.package?.id || "free";
+  const isPaymentRequired = userPackage === "free" && user?.isPaymentRequired;
+
+  const freeTrialEnds = useMemo(() => {
+    if (user?.freeTrialEnds) {
+      return new Date(user.freeTrialEnds * 1000).toLocaleDateString("en", {
+        year: "2-digit",
+        month: "2-digit",
+        day: "2-digit",
+      });
+    }
+  }, [user?.freeTrialEnds]);
+
   return (
     <Box component="section" role="menu" sx={{ p: 2, minWidth: "250px" }}>
       <Box className="flex flex-col flex-1">
@@ -55,6 +71,13 @@ export default function UserMenu({ user, onClick }: Props) {
         >
           <Typography>{user.fullName || user.displayName}</Typography>
           <Typography>{user.email}</Typography>
+          {isPaymentRequired && (
+            <Alert icon={<ReportIcon />} color="info" sx={{ mt: 1.5 }}>
+              <Link href="/user/account">
+                Free trial ends on {freeTrialEnds}
+              </Link>
+            </Alert>
+          )}
         </Box>
         {menuItems.map((section, index) => (
           <Box
