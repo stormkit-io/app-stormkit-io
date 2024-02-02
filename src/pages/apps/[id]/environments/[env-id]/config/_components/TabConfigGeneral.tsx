@@ -183,18 +183,15 @@ export default function TabConfigGeneral({
         </Box>
       )}
 
-      <CardFooter>
+      <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
         {env.name !== "production" && (
           <>
             <Button
               type="button"
-              variant="contained"
-              color="secondary"
+              variant="text"
               aria-label={`Delete ${env.name} environment`}
               sx={{
                 textTransform: "none",
-                opacity: 0.6,
-                "&:hover": { opacity: 1 },
               }}
               onClick={() => {
                 setIsDeleteModalOpen(true);
