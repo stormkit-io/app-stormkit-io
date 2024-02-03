@@ -17,9 +17,3 @@ interface TLS {
     organization: string[];
   };
 }
-
-declare interface Domain {
-  tls: TLS | null;
-  dns: DNS;
-  domainName: string;
-}

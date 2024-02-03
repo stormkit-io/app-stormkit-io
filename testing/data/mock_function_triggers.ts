@@ -4,7 +4,7 @@ export default (): FunctionTrigger[] => [
     cron: "2 0 2 * *",
     status: true,
     options: {
-      url: "https://grinmesquite-pzqmep.stormkit.dev/api/test",
+      url: "https://app.stormkit.io/api/test",
       method: "POST",
       payload: "hello-world",
       headers: "",

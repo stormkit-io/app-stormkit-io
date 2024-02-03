@@ -1,4 +1,4 @@
-export default () => ({
+export default (): DomainLookup => ({
   tls: {
     startDate: 1593500298,
     endDate: 1601276298,
@@ -12,12 +12,14 @@ export default () => ({
     serialNo: "343486059919871512067800302572875759206296",
     signatureAlgorithm: "SHA256-RSA",
   },
+  domainName: "app.stormkit.io",
   dns: {
     verified: true,
     txt: {
-      name: "22c6d6c1871fb4655e2b6e01aa59c8e7",
-      value: "3745d5f22e46c8eb4a9b1400f92c8b0d",
+      value: "txt-value",
+      name: "TXT",
+      lookup: "txt-value.app.stormkit.io",
+      records: {},
     },
   },
-  domainName: "app.stormkit.io",
 });

@@ -10,6 +10,7 @@ interface Props extends BoxProps {
   menuItems?: Item[];
   menuLabel?: string;
   chipLabel?: string;
+  chipColor?: "success" | "info" | "warning";
   actions?: React.ReactNode;
 }
 
@@ -19,6 +20,7 @@ export default function CardRow({
   menuItems,
   menuLabel,
   chipLabel,
+  chipColor,
   actions,
   ...rest
 }: Props) {
@@ -30,7 +32,9 @@ export default function CardRow({
       sx={{
         borderBottom: `1px solid rgba(255,255,255,0.04)`,
         display: "flex",
-        flexDirection: "column",
+        alignItems: "center",
+        px: space,
+        py: 2,
         ":first-of-type": {
           borderTop: `1px solid rgba(255,255,255,0.04)`,
         },
@@ -41,37 +45,28 @@ export default function CardRow({
       }}
       {...rest}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flex: 1,
-          alignItems: "stretch",
-          px: space,
-          py: 2,
-        }}
-      >
-        <Box sx={{ flex: 1 }}>{children}</Box>
-        {chipLabel && (
-          <Chip
-            label={chipLabel}
-            size="small"
-            sx={{ ml: 1, mr: menuItems ? 2 : 0 }}
-          />
-        )}
-        {(menuItems || actions) && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              flexDirection: "column",
-            }}
-          >
-            {menuItems && <DotDotDot label={menuLabel} items={menuItems} />}
-            {actions}
-          </Box>
-        )}
-      </Box>
+      <Box sx={{ flex: 1 }}>{children}</Box>
+      {chipLabel && (
+        <Chip
+          color={chipColor}
+          label={chipLabel}
+          size="small"
+          sx={{ ml: 1, mr: menuItems ? 2 : 0 }}
+        />
+      )}
+      {(menuItems || actions) && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            flexDirection: "column",
+          }}
+        >
+          {menuItems && <DotDotDot label={menuLabel} items={menuItems} />}
+          {actions}
+        </Box>
+      )}
     </Box>
   );
 }

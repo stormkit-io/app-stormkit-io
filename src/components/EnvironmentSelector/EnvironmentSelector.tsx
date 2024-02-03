@@ -37,9 +37,7 @@ const EnvironmentSelector: React.FC<Props> = ({
           <Form.Option value={env.id!} key={env.id}>
             <span>
               <span>{env.name || env.env}</span>{" "}
-              <span className="text-xs opacity-75">
-                ({env.getDomainName && env.getDomainName()})
-              </span>
+              <span className="text-xs opacity-75">{env.preview}</span>
             </span>
           </Form.Option>
         ))}

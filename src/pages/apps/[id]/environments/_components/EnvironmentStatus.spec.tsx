@@ -21,7 +21,7 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
   const createWrapper = ({ app, env }: Props) => {
     fetchStatusScope = mockFetchStatus({
       appId: app.id,
-      url: env.domain.name ? `https://${env.domain.name}` : env.preview,
+      url: env.preview,
     });
 
     wrapper = render(
@@ -56,9 +56,7 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
       await waitFor(() => {
         expect(wrapper.getByText("200")).toBeTruthy();
         expect(
-          wrapper.getByText(
-            currentEnv?.domain?.name?.replace(/https?:\/\//, "")!
-          )
+          wrapper.getByText(currentEnv?.preview.split("https://")[1])
         ).toBeTruthy();
       });
     });
