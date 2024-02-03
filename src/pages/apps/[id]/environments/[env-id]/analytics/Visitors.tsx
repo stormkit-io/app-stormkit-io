@@ -96,7 +96,7 @@ export default function Visitors({ environment, onTimeSpanChange, ts }: Props) {
             </Box>{" "}
             {display === "unique" ? "unique" : ""} visits in the last{" "}
             {timeSpan[ts]}
-            <Box>{environment.domain?.name}</Box>
+            <Box>{environment.preview}</Box>
           </>
         }
         actions={

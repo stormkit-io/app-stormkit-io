@@ -32,11 +32,6 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/_components/Functi
     closeModal = jest.fn();
     successHandler = jest.fn();
 
-    if (trigger) {
-      currentEnv.getDomainName = () =>
-        trigger.options.url.split("/api")[0].replace("https://", "");
-    }
-
     const memoryRouter = createMemoryRouter([
       {
         path: "*",
@@ -87,7 +82,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/_components/Functi
       envId: currentEnv.id!,
       status: false,
       options: {
-        url: "https://app.stormkit.io/api/test",
+        url: `${currentEnv.preview}/api/test`,
         method: "GET",
         headers: "",
         payload: "",

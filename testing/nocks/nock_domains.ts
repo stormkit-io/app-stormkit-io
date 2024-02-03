@@ -2,9 +2,26 @@ import nock from "nock";
 
 const endpoint = process.env.API_DOMAIN || "localhost";
 
+interface MockDomainsFetchProps {
+  appId: string;
+  envId: string;
+  status?: number;
+  response: { domains: Domain[] };
+}
+
+export const mockFetchDomains = ({
+  appId,
+  envId,
+  status,
+  response,
+}: MockDomainsFetchProps) =>
+  nock(endpoint)
+    .get(`/domains?appId=${appId}&envId=${envId}`)
+    .reply(status, response);
+
 interface MockDomainInsertProps {
   appId: string;
-  envName: string;
+  envId: string;
   domain: string;
   status?: number;
   response?: { ok: boolean };
@@ -12,52 +29,50 @@ interface MockDomainInsertProps {
 
 export const mockDomainInsert = ({
   appId,
-  envName,
+  envId,
   domain,
   status = 200,
   response = { ok: true },
 }: MockDomainInsertProps) =>
   nock(endpoint)
-    .put(`/app/env/domain`, { appId: appId, env: envName, domain })
+    .post(`/domains`, { appId, envId, domain })
     .reply(status, response);
 
 interface MockFetchDomainsInfoProps {
   appId: string;
-  envName: string;
+  envId: string;
+  domainId: string;
   status?: number;
-  response: Domain;
+  response: any;
 }
 
 export const mockFetchDomainsInfo = ({
   appId,
-  envName,
+  envId,
+  domainId,
   status = 200,
   response,
 }: MockFetchDomainsInfoProps) =>
   nock(endpoint)
-    .get(`/app/${appId}/envs/${envName}/lookup`)
+    .get(`/domains/lookup?appId=${appId}&envId=${envId}&domainId=${domainId}`)
     .reply(status, response);
 
 interface MockDeleteDomainProps {
   appId: string;
-  envName: string;
-  domainName: string;
+  envId: string;
+  domainId: string;
   status?: number;
   response: { ok: boolean };
 }
 
 export const mockDeleteDomain = ({
   appId,
-  envName,
-  domainName,
+  envId,
+  domainId,
   status = 200,
   response = { ok: true },
 }: MockDeleteDomainProps) => {
   return nock(endpoint)
-    .delete("/app/env/domain", {
-      appId,
-      env: envName,
-      domain: domainName,
-    })
+    .delete(`/domains?appId=${appId}&domainId=${domainId}&envId=${envId}`)
     .reply(status, response);
 };

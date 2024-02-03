@@ -6,12 +6,6 @@ declare type BuildConfig = {
   vars: Record<string, string>;
 };
 
-type DomainConfig = {
-  name?: string;
-  cname?: string;
-  verified: boolean;
-};
-
 type LastDeploy = {
   id: string;
   createdAt: number;
@@ -43,12 +37,37 @@ declare type Environment = {
   branch: string;
   autoPublish: boolean;
   build: BuildConfig;
-  domain: DomainConfig;
   autoDeploy: boolean;
   autoDeployBranches?: string;
   lastDeploy?: LastDeploy;
   customStorage?: CustomStorage;
   published?: PublishedInfo[];
   preview: string;
-  getDomainName?: () => string;
 };
+
+declare interface Domain {
+  id: string;
+  domainName: string;
+  verified: boolean;
+  token?: string;
+}
+
+declare interface DomainLookup {
+  dns: {
+    txt: {
+      err?: {
+        Err: string;
+        IsNotFound: boolean;
+        IsTemporary: boolean;
+        IsTimeout: boolean;
+      };
+      lookup: string;
+      name: string;
+      records: any;
+      value: string;
+    };
+    verified: boolean;
+  };
+  tls?: any;
+  domainName: string;
+}

@@ -72,7 +72,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
       expect(
-        wrapper.getByText("https://grinmesquite-pzqmep.stormkit.dev/api/test")
+        wrapper.getByText("https://app.stormkit.io/api/test")
       ).toBeTruthy();
       expect(wrapper.getByText("2 0 2 * *")).toBeTruthy();
     });
@@ -84,7 +84,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
       expect(
-        wrapper.getByText("https://grinmesquite-pzqmep.stormkit.dev/api/test")
+        wrapper.getByText("https://app.stormkit.io/api/test")
       ).toBeTruthy();
     });
 

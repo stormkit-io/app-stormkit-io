@@ -11,14 +11,6 @@ import { AppContext } from "~/pages/apps/[id]/App.context";
 import { useFetchStatus, isEmpty } from "../../actions";
 import DomainStatus from "./DomainStatus";
 
-const getDomain = (env: Environment): string => {
-  if (env?.domain?.verified) {
-    return env.domain.name!;
-  }
-
-  return env.customStorage?.externalUrl || env?.preview || "";
-};
-
 interface ColumnProps {
   children: React.ReactNode;
 }
@@ -45,7 +37,7 @@ export default function EnvironmentHeader() {
   const { environments } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const { app } = useContext(AppContext);
-  const domainName = getDomain(environment);
+  const domainName = environment.preview;
 
   const { status, loading } = useFetchStatus({
     environment,

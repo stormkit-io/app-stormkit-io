@@ -37,7 +37,7 @@ export default function EnvironmentConfig() {
 
   const Tab = useMemo(() => {
     switch (hash) {
-      case "#domain":
+      case "#domains":
         return TabDomainConfig;
       case "#storage":
         return TabCustomStorage;
@@ -160,16 +160,16 @@ export default function EnvironmentConfig() {
           </Box>
           <Box component="li" sx={{ p: 2 }}>
             <Link
-              href="#domain"
+              href="#domains"
               onClick={() => {
                 setSelectedItem("");
               }}
               sx={{
-                opacity: hash === "#domain" ? 1 : 0.5,
+                opacity: hash === "#domains" ? 1 : 0.5,
                 "&:hover": { opacity: 1 },
               }}
             >
-              <Typography component="span">Domain</Typography>
+              <Typography component="span">Custom domains</Typography>
             </Link>
           </Box>
         </List>

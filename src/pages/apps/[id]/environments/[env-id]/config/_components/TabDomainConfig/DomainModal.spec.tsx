@@ -1,5 +1,4 @@
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -48,7 +47,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
   test("inserts a domain", async () => {
     const scope = mockDomainInsert({
       appId: currentApp.id,
-      envName: currentEnv.name,
+      envId: currentEnv.id!,
       domain: "www.stormkit.io",
     });
 

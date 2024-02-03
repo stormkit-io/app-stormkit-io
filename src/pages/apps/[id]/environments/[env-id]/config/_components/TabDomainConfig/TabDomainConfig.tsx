@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import Tooltip from "@mui/material/Tooltip";
+import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
+import CardRow from "~/components/CardRow";
 import CardFooter from "~/components/CardFooter";
 import EmptyPage from "~/components/EmptyPage";
 import ConfirmModal from "~/components/ConfirmModal";
 import DomainModal from "./DomainModal";
-import DomainVerificationStatus from "./DomainVerificationStatus";
-import DomainTLSStatus from "./DomainTLSStatus";
-import { useDomainLookup, deleteDomain } from "./actions";
-import { Typography } from "@mui/material";
+import DomainVerifyModal from "./DomainVerifyModal";
+import { deleteDomain, useFetchDomains } from "./actions";
 
 interface Props {
   app: App;
@@ -19,84 +20,54 @@ interface Props {
   setRefreshToken: (val: number) => void;
 }
 
-const isTopLevel = (domainName: string): boolean => {
-  return domainName?.split(".")?.length === 2;
-};
-
-const TabDomainConfig: React.FC<Props> = ({
-  app,
-  environment,
-  setRefreshToken,
-}) => {
+const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
+  const [refreshToken, setRefreshToken] = useState(0);
   const [isDomainModalOpen, toggleDomainModal] = useState(false);
-  const [domainToDelete, setDomainToDelete] = useState<string>();
-  const info = useDomainLookup({ app, environment });
-  const { loading, error, domainsInfo, setDomainsInfo } = info;
+  const [domainToVerify, setDomainToVerify] = useState<Domain>();
+  const [domainToDelete, setDomainToDelete] = useState<Domain>();
+  const { domains, error, loading } = useFetchDomains({
+    appId: app.id,
+    envId: environment.id!,
+    refreshToken,
+  });
 
   return (
     <Card error={error} loading={loading} sx={{ color: "white" }}>
       <CardHeader
-        title="Custom domain"
+        title="Custom domains"
         subtitle="Set custom domains to serve your application from."
       />
+      <Alert color="info" sx={{ px: 4 }}>
+        Use following A Records to point your domains:
+        <Box sx={{ mt: 1 }}>
+          <ArrowRightIcon /> 54.93.169.167
+          <br />
+          <ArrowRightIcon /> 3.64.188.62
+        </Box>
+      </Alert>
       <Box>
-        {domainsInfo.length > 0 && (
-          <div className="pb-4">
-            {domainsInfo.map((domain, i) => (
-              <Box key={domain.domainName || i}>
-                <div className="flex items-center mb-4 border-b border-blue-20">
-                  <div className="bg-black p-4 md:min-w-56">Domain name</div>
-                  <div className="pl-4 pr-0 flex justify-between items-center w-full">
-                    <span>{domain.domainName}</span>
-                    <Button
-                      color="primary"
-                      variant="outlined"
-                      type="button"
-                      onClick={() => {
-                        setDomainToDelete(domain.domainName);
-                      }}
-                    >
-                      {domain.dns.verified ? "Remove" : "Cancel"}
-                    </Button>
-                  </div>
-                </div>
-                <div className="flex items-center mb-4 border-b border-blue-20">
-                  <div className="bg-black p-4 md:min-w-56">
-                    {isTopLevel(domain.domainName) ? "A Record" : "CNAME"}
-                  </div>
-                  <div className="p-4 pr-0 flex justify-between items-center w-full">
-                    <span>
-                      {isTopLevel(domain.domainName)
-                        ? "3.64.188.62"
-                        : `${app.displayName}.stormkit.dev`}
-                    </span>
-                    <Tooltip
-                      title={
-                        "Domain should point to this value. This can be configured inside your DNS provider."
-                      }
-                      arrow
-                      classes={{
-                        tooltip: "bg-black custom-tooltip p-4 text-sm",
-                        arrow: "text-black",
-                      }}
-                    >
-                      <span className="fas fa-question-circle" />
-                    </Tooltip>
-                  </div>
-                </div>
-                <DomainVerificationStatus
-                  app={app}
-                  environment={environment}
-                  domain={domain}
-                  setDomainsInfo={setDomainsInfo}
-                />
-                <DomainTLSStatus domain={domain} />
-              </Box>
-            ))}
-          </div>
-        )}
+        {domains.map(domain => (
+          <CardRow
+            key={domain.id}
+            chipLabel={domain.verified ? "verified" : "not yet verified"}
+            chipColor={domain.verified ? "success" : undefined}
+            menuItems={[
+              {
+                text: "Verify",
+                disabled: domain.verified,
+                onClick: () => setDomainToVerify(domain),
+              },
+              {
+                text: "Delete",
+                onClick: () => setDomainToDelete(domain),
+              },
+            ]}
+          >
+            <Typography sx={{ flex: 1 }}>{domain.domainName}</Typography>
+          </CardRow>
+        ))}
       </Box>
-      {!loading && !error && !domainsInfo.length && (
+      {!loading && !error && !domains.length && (
         <EmptyPage>
           <Typography component="span" sx={{ display: "block" }}>
             No custom domain configuration found.
@@ -122,9 +93,9 @@ const TabDomainConfig: React.FC<Props> = ({
           onConfirm={({ setLoading, setError }) => {
             setLoading(true);
             deleteDomain({
-              app,
-              environment,
-              domainName: domainToDelete,
+              appId: app.id,
+              envId: environment.id!,
+              domainId: domainToDelete.id,
             })
               .then(() => {
                 setDomainToDelete(undefined);
@@ -144,16 +115,24 @@ const TabDomainConfig: React.FC<Props> = ({
               });
           }}
         >
-          <p>
-            This will completely remove the domain and it won't be reachable
-            anymore.
-          </p>
+          This will completely remove the domain and it won't be reachable
+          anymore.
         </ConfirmModal>
       )}
       {isDomainModalOpen && (
         <DomainModal
           setRefreshToken={setRefreshToken}
           onClose={() => toggleDomainModal(false)}
+        />
+      )}
+      {domainToVerify && (
+        <DomainVerifyModal
+          domain={domainToVerify}
+          environment={environment}
+          app={app}
+          onClose={() => {
+            setDomainToVerify(undefined);
+          }}
         />
       )}
     </Card>

@@ -2,9 +2,10 @@ import type { RenderResult } from "@testing-library/react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
+import mockDomain from "~/testing/data/mock_domain";
 import {
-  mockFetchDomainsInfo,
   mockDeleteDomain,
+  mockFetchDomains,
 } from "~/testing/nocks/nock_domains";
 import TabDomainConfig from "./TabDomainConfig";
 
@@ -18,6 +19,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
   let setRefreshToken: jest.Mock;
   let currentApp: App;
   let currentEnv: Environment;
+  let domain: Domain;
 
   const createWrapper = ({ app, environment }: Props) => {
     setRefreshToken = jest.fn();
@@ -32,12 +34,22 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
   };
 
   describe.skip("with no domain", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
-      currentEnv.domain = { verified: false };
+
+      const scope = mockFetchDomains({
+        envId: currentEnv.id!,
+        appId: currentApp.id,
+        status: 200,
+        response: { domains: [] },
+      });
 
       createWrapper({ app: currentApp, environment: currentEnv });
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+      });
     });
 
     test("should display a configure domain button", async () => {
@@ -58,35 +70,23 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
   });
 
   describe("with domain", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
-      currentEnv.domain = { verified: true, name: "www.stormkit.io" };
+      domain = mockDomain();
 
-      mockFetchDomainsInfo({
+      const scope = mockFetchDomains({
+        envId: currentEnv.id!,
         appId: currentApp.id,
-        envName: currentEnv.name,
         status: 200,
-        response: {
-          domainName: "www.stormkit.io",
-          tls: {
-            startDate: Date.now(),
-            endDate: Date.now(),
-            serialNo: "serial-no",
-            signatureAlgorithm: "signature-algorithm",
-          },
-          dns: {
-            verified: true,
-            txt: {
-              value: "txt-value",
-              name: "TXT",
-              lookup: "txt-value.www.stormkit.io",
-            },
-          },
-        },
+        response: { domains: [domain] },
       });
 
       createWrapper({ app: currentApp, environment: currentEnv });
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+      });
     });
 
     test("should not display the configure domain buttony anymore", async () => {
@@ -97,16 +97,17 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
 
     test("should allow removing a domain", async () => {
       await waitFor(() => {
-        expect(wrapper.getByText("Domain name")).toBeTruthy();
-        expect(wrapper.getByText("www.stormkit.io")).toBeTruthy();
+        expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
       });
 
-      fireEvent.click(wrapper.getByText("Remove"));
+      fireEvent.click(wrapper.getByLabelText("expand"));
+
+      fireEvent.click(wrapper.getByText("Delete"));
 
       const scope = mockDeleteDomain({
         appId: currentApp.id,
-        envName: currentEnv.name,
-        domainName: "www.stormkit.io",
+        envId: currentEnv.id!,
+        domainId: domain.id,
         response: { ok: true },
       });
 
@@ -118,7 +119,6 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
 
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
-        expect(setRefreshToken).toHaveBeenCalled();
       });
     });
   });

@@ -36,8 +36,8 @@ const DomainModal: React.FC<Props> = ({ onClose, setRefreshToken }) => {
           setLoading(true);
           setError(undefined);
           setDomain({
-            app,
-            environment,
+            appId: app.id,
+            envId: environment.id!,
             values: { domain: data.domain },
           })
             .then(() => {

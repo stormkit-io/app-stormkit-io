@@ -16,15 +16,7 @@ export default ({ app }: { app: App }): Environment[] => [
     autoPublish: true,
     appId: app.id,
     lastDeploy: { id: "10556341488718", createdAt: 1588622630, exit: 0 },
-    domain: {
-      name: "app.stormkit.io",
-      verified: true,
-      cname: "app-stormkit-io-cnmiji6et.hosting.stormkit.io.",
-    },
     preview: "https://app.stormkit.io",
-    getDomainName() {
-      return "app.stormkit.io";
-    },
   },
   {
     id: "863521234275",
@@ -46,11 +38,5 @@ export default ({ app }: { app: App }): Environment[] => [
     appId: app.id,
     lastDeploy: { id: "3414609680676", createdAt: 1568463533, exit: 0 },
     preview: "https://app.stormkit.io",
-    domain: {
-      verified: false,
-    },
-    getDomainName() {
-      return `${app.displayName}--development.stormkit.dev`;
-    },
   },
 ];

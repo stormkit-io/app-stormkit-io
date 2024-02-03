@@ -1,91 +1,100 @@
 import { useEffect, useState } from "react";
 import api from "~/utils/api/Api";
 
+interface FetchDomainsProps {
+  appId: string;
+  envId: string;
+  refreshToken: number;
+}
+
+export const useFetchDomains = ({
+  appId,
+  envId,
+  refreshToken,
+}: FetchDomainsProps) => {
+  const [domains, setDomains] = useState<Domain[]>([]);
+  const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api
+      .fetch<{ domains: Domain[] }>(`/domains?appId=${appId}&envId=${envId}`)
+      .then(({ domains }) => {
+        setDomains(domains);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching domains.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [appId, envId, refreshToken]);
+
+  return { domains, error, loading };
+};
+
 interface SetDomainProps {
-  app: App;
-  environment: Environment;
+  appId: string;
+  envId: string;
   values: { domain: string };
 }
 
 export const setDomain = ({
-  app,
-  environment,
+  appId,
+  envId,
   values,
 }: SetDomainProps): Promise<void> => {
-  return api.put("/app/env/domain", {
-    appId: app.id,
+  return api.post("/domains", {
+    appId,
+    envId,
     domain: values.domain.trim(),
-    env: environment.env,
   });
 };
 
 interface DeleteDomainProps {
-  app: App;
-  environment: Environment;
-  domainName: string;
+  appId: string;
+  envId: string;
+  domainId: string;
 }
 
 export const deleteDomain = ({
-  app,
-  environment,
-  domainName,
+  appId,
+  envId,
+  domainId,
 }: DeleteDomainProps): Promise<void> => {
-  return api.delete("/app/env/domain", {
-    appId: app.id,
-    domain: domainName,
-    env: environment.env,
-  });
-};
-
-interface FetchDomainsInfoProps {
-  app: App;
-  environment: Environment;
-}
-
-export const fetchDomainsInfo = ({
-  app,
-  environment,
-}: FetchDomainsInfoProps): Promise<Domain> => {
-  return api.fetch<Domain>(`/app/${app.id}/envs/${environment.env}/lookup`);
+  return api.delete(
+    `/domains?appId=${appId}&domainId=${domainId}&envId=${envId}`
+  );
 };
 
 interface DomainLookupProps {
-  app: App;
-  environment: Environment;
-}
-
-interface DomainLookupReturnValue {
-  loading: boolean;
-  error?: string;
-  domainsInfo: Domain[];
-  setDomainsInfo: (val: Domain[]) => void;
+  domainId: string;
+  appId: string;
+  envId: string;
+  refreshToken: number;
 }
 
 export const useDomainLookup = ({
-  app,
-  environment,
-}: DomainLookupProps): DomainLookupReturnValue => {
-  const [loading, setLoading] = useState(false);
+  domainId,
+  appId,
+  envId,
+  refreshToken,
+}: DomainLookupProps) => {
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
-  const [domainsInfo, setDomainsInfo] = useState<Domain[]>([]);
-  const domainName = environment.domain.name;
+  const [info, setDomainsInfo] = useState<DomainLookup>();
 
   useEffect(() => {
-    if (!domainName) {
-      setDomainsInfo([]);
-      return;
-    }
-
     setLoading(true);
     setError(undefined);
 
-    fetchDomainsInfo({
-      app,
-      environment,
-    })
+    api
+      .fetch<DomainLookup>(
+        `/domains/lookup?appId=${appId}&envId=${envId}&domainId=${domainId}`
+      )
       .then(res => {
         if (res.domainName) {
-          setDomainsInfo([res]);
+          setDomainsInfo(res);
         }
       })
       .catch(() => {
@@ -94,7 +103,7 @@ export const useDomainLookup = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [app, environment, domainName]);
+  }, [appId, envId, domainId, refreshToken]);
 
-  return { loading, error, domainsInfo, setDomainsInfo };
+  return { loading, error, info };
 };

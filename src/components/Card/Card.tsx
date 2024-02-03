@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
+import ReportIcon from "@mui/icons-material/Report";
 import LinearProgress from "@mui/material/LinearProgress";
 import CardHeader from "../CardHeader";
 import CardFooter from "../CardFooter";
@@ -113,6 +114,7 @@ function Card({
         {info && (
           <Alert
             color="info"
+            icon={<ReportIcon />}
             sx={{
               mb: footer ? p : 0,
               px: p,

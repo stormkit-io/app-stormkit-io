@@ -61,7 +61,7 @@ const TriggerFunctionModal: React.FC<Props> = ({
   const [showHeaders, setShowHeaders] = useState(Boolean(options?.headers));
   const [showPayload, setShowPayload] = useState(Boolean(options?.payload));
   const [codeContent, setCodeContent] = useState(options?.payload || "");
-  const urlPrefix = `https://${environment?.getDomainName?.()}/api/`;
+  const urlPrefix = `${environment?.preview}/api/`;
 
   const handleSubmit = async (values: FormValues) => {
     setLoading(true);

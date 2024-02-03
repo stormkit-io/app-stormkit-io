@@ -11,12 +11,18 @@ import Visitors from "./Visitors";
 import TopReferrers from "./TopReferrers";
 import TopPaths from "./TopPaths";
 import ByCountries from "./Countries";
+import { useFetchDomains } from "../config/_components/TabDomainConfig/actions";
 
 export default function Analytics() {
   const [timeSpan, setTimeSpan] = useState<TimeSpan>("24h");
   const { environment } = useContext(EnvironmentContext);
+  const { domains, loading, error } = useFetchDomains({
+    appId: environment.appId,
+    envId: environment.id!,
+    refreshToken: 0,
+  });
 
-  if (!environment?.domain?.name) {
+  if (!loading && !domains?.length) {
     return (
       <Card sx={{ color: "white", width: "100%" }}>
         <CardHeader title="Analytics" />
@@ -47,7 +53,7 @@ export default function Analytics() {
 
   return (
     <Box sx={{ color: "white" }}>
-      <Card sx={{ mb: 2 }}>
+      <Card sx={{ mb: 2 }} loading={loading} error={error}>
         <CardHeader
           title="Analytics"
           subtitle="Monitor user analytics for the specified domain within this environment configuration."
@@ -65,7 +71,10 @@ export default function Analytics() {
           gap: 2,
         }}
       >
-        <TopReferrers environment={environment} />
+        <TopReferrers
+          environment={environment}
+          domainName={domains?.[0]?.domainName}
+        />
         <TopPaths environment={environment} />
       </Box>
       <ByCountries environment={environment} />
