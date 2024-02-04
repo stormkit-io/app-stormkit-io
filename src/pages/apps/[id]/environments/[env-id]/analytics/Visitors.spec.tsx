@@ -10,6 +10,7 @@ import recharts from "recharts";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
 import mockVisitors from "~/testing/data/mock_analytics_visitors";
+import mockDomain from "~/testing/data/mock_domain";
 import { mockFetchVisitors } from "~/testing/nocks/nock_analytics";
 import Visitors from "./Visitors";
 
@@ -41,6 +42,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
   const data = mockVisitors();
 
   const createWrapper = ({ app, ts = "24h" }: WrapperProps) => {
+    const domain = mockDomain();
     currentApp = app || mockApp();
     currentEnvs = mockEnvironments({ app: currentApp });
     currentEnv = currentEnvs[0];
@@ -50,6 +52,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
       unique: "false",
       ts,
       envId: currentEnv.id,
+      domainId: domain.id,
       response: data,
     });
 
@@ -57,6 +60,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
       <Visitors
         environment={currentEnv}
         onTimeSpanChange={onTimeSpanChange}
+        domain={domain}
         ts={ts}
       />
     );

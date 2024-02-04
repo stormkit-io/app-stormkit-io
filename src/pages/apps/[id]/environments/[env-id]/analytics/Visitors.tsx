@@ -68,13 +68,20 @@ const timeSpan: Record<TimeSpan, string> = {
 interface Props {
   environment: Environment;
   ts: TimeSpan;
+  domain: Domain;
   onTimeSpanChange: (t: TimeSpan) => void;
 }
 
-export default function Visitors({ environment, onTimeSpanChange, ts }: Props) {
+export default function Visitors({
+  environment,
+  onTimeSpanChange,
+  ts,
+  domain,
+}: Props) {
   const [display, setDisplay] = useState<"unique" | "total" | "all">("all");
   const { visitors, error, loading } = useFetchVisitors({
     envId: environment.id!,
+    domainId: domain?.id,
     ts,
   });
 
@@ -96,7 +103,6 @@ export default function Visitors({ environment, onTimeSpanChange, ts }: Props) {
             </Box>{" "}
             {display === "unique" ? "unique" : ""} visits in the last{" "}
             {timeSpan[ts]}
-            <Box>{environment.preview}</Box>
           </>
         }
         actions={

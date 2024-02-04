@@ -3,6 +3,7 @@ import api from "~/utils/api/Api";
 
 interface FetchUniqueVisitorsProps {
   envId: string;
+  domainId?: string;
   refreshToken?: number;
   unique?: "true" | "false";
   ts?: "24h" | "7d" | "30d";
@@ -17,6 +18,7 @@ interface VisitorsChartData {
 export const useFetchVisitors = ({
   envId,
   refreshToken,
+  domainId,
   unique = "false",
   ts = "24h",
 }: FetchUniqueVisitorsProps) => {
@@ -28,9 +30,13 @@ export const useFetchVisitors = ({
     // setLoading(true) is not called here because we want to display the spinner only the first time.
     setError("");
 
+    if (!domainId) {
+      return;
+    }
+
     api
       .fetch<Record<string, { total: number; unique: number }>>(
-        `/analytics/visitors?unique=${unique}&envId=${envId}&ts=${ts}`
+        `/analytics/visitors?unique=${unique}&envId=${envId}&ts=${ts}&domainId=${domainId}`
       )
       .then(data => {
         const VisitorsChartData: VisitorsChartData[] = [];
@@ -68,14 +74,14 @@ export const useFetchVisitors = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [refreshToken, ts, unique, envId]);
+  }, [refreshToken, ts, unique, envId, domainId]);
 
   return { visitors, error, loading };
 };
 
 interface FetchTopReferrerProps {
   envId: string;
-  domainName?: string;
+  domainId?: string;
   requestPath?: string;
   skip?: boolean;
 }
@@ -87,7 +93,7 @@ interface Referrer {
 
 export const useFetchTopReferrers = ({
   envId,
-  domainName,
+  domainId,
   requestPath = "",
   skip,
 }: FetchTopReferrerProps) => {
@@ -105,11 +111,15 @@ export const useFetchTopReferrers = ({
       return;
     }
 
+    if (!domainId) {
+      return;
+    }
+
     setLoading(true);
 
     api
       .fetch<Record<string, number>>(
-        `/analytics/referrers?envId=${envId}&domainName=${domainName}&requestPath=${requestPath}`
+        `/analytics/referrers?envId=${envId}&domainId=${domainId}&requestPath=${requestPath}`
       )
       .then(data => {
         const refs: Referrer[] = Object.keys(data).map(ref => ({
@@ -129,13 +139,14 @@ export const useFetchTopReferrers = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [envId, requestPath, domainName, skip]);
+  }, [envId, requestPath, domainId, skip]);
 
   return { referrers, loading, error };
 };
 
 interface FetchTopPathsProps {
   envId: string;
+  domainId?: string;
 }
 
 interface TopPath {
@@ -143,14 +154,20 @@ interface TopPath {
   count: number;
 }
 
-export const useFetchTopPaths = ({ envId }: FetchTopPathsProps) => {
+export const useFetchTopPaths = ({ envId, domainId }: FetchTopPathsProps) => {
   const [paths, setPaths] = useState<TopPath[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!domainId) {
+      return;
+    }
+
     api
-      .fetch<Record<string, number>>(`/analytics/paths?envId=${envId}`)
+      .fetch<Record<string, number>>(
+        `/analytics/paths?envId=${envId}&domainId=${domainId}`
+      )
       .then(data => {
         const paths: TopPath[] = Object.keys(data).map(ref => ({
           name: ref,
@@ -169,13 +186,14 @@ export const useFetchTopPaths = ({ envId }: FetchTopPathsProps) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [envId]);
+  }, [envId, domainId]);
 
   return { paths, loading, error };
 };
 
 interface FetchCountriesProps {
   envId: string;
+  domainId?: string;
 }
 
 interface ByCountry {
@@ -183,14 +201,23 @@ interface ByCountry {
   value: number;
 }
 
-export const useFetchByCountries = ({ envId }: FetchCountriesProps) => {
+export const useFetchByCountries = ({
+  envId,
+  domainId,
+}: FetchCountriesProps) => {
   const [countries, setCountries] = useState<ByCountry[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!domainId) {
+      return;
+    }
+
     api
-      .fetch<Record<string, number>>(`/analytics/countries?envId=${envId}`)
+      .fetch<Record<string, number>>(
+        `/analytics/countries?envId=${envId}&domainId=${domainId}`
+      )
       .then(data => {
         const countries: ByCountry[] = Object.keys(data).map(ref => ({
           country: ref,
@@ -205,7 +232,7 @@ export const useFetchByCountries = ({ envId }: FetchCountriesProps) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [envId]);
+  }, [envId, domainId]);
 
   return { countries, loading, error };
 };

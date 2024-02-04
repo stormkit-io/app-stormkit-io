@@ -15,18 +15,24 @@ import { truncate } from "./helpers";
 
 interface Props {
   environment: Environment;
+  domain: Domain;
 }
 
-export default function TopPaths({ environment }: Props) {
+export default function TopPaths({ environment, domain }: Props) {
   const envId = environment.id!;
   const [requestPath, setRequestPath] = useState("");
-  const { paths, error, loading } = useFetchTopPaths({ envId });
+  const { paths, error, loading } = useFetchTopPaths({
+    envId,
+    domainId: domain?.id,
+  });
+
   const {
     referrers,
     error: refsError,
     loading: refsLoading,
   } = useFetchTopReferrers({
     envId,
+    domainId: domain?.id,
     requestPath,
     skip: requestPath == "",
   });

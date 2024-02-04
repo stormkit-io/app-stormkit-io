@@ -11,12 +11,13 @@ import { truncate } from "./helpers";
 interface Props {
   environment: Environment;
   domainName?: string;
+  domain: Domain;
 }
 
-export default function TopReferrers({ environment, domainName }: Props) {
+export default function TopReferrers({ environment, domain }: Props) {
   const { referrers, error, loading } = useFetchTopReferrers({
     envId: environment.id!,
-    domainName,
+    domainId: domain?.id,
   });
 
   return (

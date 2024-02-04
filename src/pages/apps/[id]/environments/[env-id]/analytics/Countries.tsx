@@ -9,11 +9,13 @@ import { useFetchByCountries } from "./actions";
 
 interface Props {
   environment: Environment;
+  domain?: Domain;
 }
 
-export default function TopReferrers({ environment }: Props) {
+export default function TopReferrers({ environment, domain }: Props) {
   const { countries, error, loading } = useFetchByCountries({
     envId: environment.id!,
+    domainId: domain?.id,
   });
 
   return (
