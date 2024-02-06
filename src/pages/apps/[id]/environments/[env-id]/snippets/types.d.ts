@@ -9,5 +9,5 @@ declare interface Snippet {
 }
 
 declare interface SnippetRules {
-  domainName?: string;
+  hosts?: string[];
 }

@@ -83,10 +83,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       const scope = mockInsertSnippet({
         appId: currentApp.id,
         envId: currentEnv.id!,
-        snippets: [snippet],
+        snippets: [{ ...snippet, rules: { hosts: ["www.e.org", "e.org"] } }],
       });
 
       await userEvent.type(wrapper.getByLabelText("Title"), "Google Analytics");
+      await userEvent.type(wrapper.getByLabelText("Hosts"), "www.e.org, e.org");
+
       await fireEvent.click(wrapper.getByText("Create"));
 
       await waitFor(() => {
