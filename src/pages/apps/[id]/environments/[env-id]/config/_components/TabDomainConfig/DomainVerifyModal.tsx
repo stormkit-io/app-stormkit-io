@@ -71,7 +71,18 @@ const DomainVerificationStatus: React.FC<Props> = ({
               <Typography sx={{ color: grey[500], mb: 2 }}>
                 Login to your external DNS provider and create the following TXT
                 record.
-              </Typography>
+               <div style={{ display: "flex", alignItems: "center" }}>
+                <TextField
+                  value={info.dns.txt.lookup}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  label="Txt Lookup"
+                  variant="outlined"
+                  margin="normal"
+                />
+              </div></Typography>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <TextField
                   value={info.dns.txt.name}
@@ -79,7 +90,7 @@ const DomainVerificationStatus: React.FC<Props> = ({
                     readOnly: true,
                   }}
                   fullWidth
-                  label="Txt Name"
+                  label="Txt Host"
                   variant="outlined"
                   margin="normal"
                 />
