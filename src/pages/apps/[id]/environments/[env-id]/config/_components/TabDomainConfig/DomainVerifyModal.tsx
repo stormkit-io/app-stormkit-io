@@ -10,6 +10,9 @@ import Card from "~/components/Card";
 import CardRow from "~/components/CardRow";
 import { useDomainLookup } from "./actions";
 import { grey } from "@mui/material/colors";
+import TextField from "@mui/material/TextField";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import { IconButton } from "@mui/material";
 
 interface Props {
   domain: Domain;
@@ -31,6 +34,10 @@ const DomainVerificationStatus: React.FC<Props> = ({
     domainId: domain.id,
     refreshToken,
   });
+
+  const handleCopyClick = (text: string) => {
+    navigator.clipboard.writeText(text)
+  };
 
   return (
     <Modal open onClose={onClose}>
@@ -65,11 +72,42 @@ const DomainVerificationStatus: React.FC<Props> = ({
                 Login to your external DNS provider and create the following TXT
                 record.
               </Typography>
-              <Chip
-                sx={{ color: "white" }}
-                label={info.dns.txt.lookup}
-                size="small"
-              />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <TextField
+                  value={info.dns.txt.name}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  label="Txt Name"
+                  variant="outlined"
+                  margin="normal"
+                />
+                <IconButton
+                  onClick={() => handleCopyClick(info.dns.txt.name)}
+                  aria-label="copy"
+                >
+                  <FileCopyIcon fontSize="small" />
+                </IconButton>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <TextField
+                  value={info.dns.txt.value}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  label="Txt Value"
+                  variant="outlined"
+                  margin="normal"
+                />
+                <IconButton
+                  onClick={() => handleCopyClick(info.dns.txt.value)}
+                  aria-label="copy"
+                >
+                  <FileCopyIcon fontSize="small" />
+                </IconButton>
+              </div>
             </CardRow>
           </Box>
         )}
