@@ -46,7 +46,7 @@ const DomainVerificationStatus: React.FC<Props> = ({
         error={error}
         contentPadding={false}
         info={
-          refreshToken > 0
+          refreshToken > 0 && !info?.dns.verified
             ? "Domain is still not yet verified. If you updated your TXT record, please give it a bit time to propagate."
             : ""
         }
