@@ -57,7 +57,7 @@ export default function TabConfigGeneral({
         title="Redirects"
         subtitle="Configure redirects and path rewrites for your application."
       />
-      <Box>
+      <Box sx={{ mb: 4 }}>
         <TextField
           label="Redirects file location"
           variant="filled"

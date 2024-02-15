@@ -58,7 +58,7 @@ export default function TabConfigGeneral({
         title="Headers"
         subtitle="Configure your application's headers for static files."
       />
-      <Box>
+      <Box sx={{ mb: 4 }}>
         <TextField
           label="Headers file location"
           variant="filled"
