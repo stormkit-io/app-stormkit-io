@@ -17,7 +17,7 @@ export default (): DomainLookup => ({
     verified: true,
     txt: {
       value: "txt-value",
-      name: "TXT",
+      name: "txt-host",
       lookup: "txt-value.app.stormkit.io",
       records: {},
     },

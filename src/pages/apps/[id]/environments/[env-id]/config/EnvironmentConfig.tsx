@@ -12,12 +12,16 @@ import TabDomainConfig from "./_components/TabDomainConfig/TabDomainConfig";
 import TabConfigEnvVars from "./_components/TabConfigEnvVars";
 import TabConfigGeneral from "./_components/TabConfigGeneral";
 import TabConfigBuild from "./_components/TabConfigBuild";
+import TabConfigHeaders from "./_components/TabConfigHeaders";
+import TabConfigRedirects from "./_components/TabConfigRedirects";
 import TabAPIKey from "./_components/TabAPIKey";
 import { grey } from "@mui/material/colors";
 
 const listItems = [
   { path: "#general", text: "General" },
   { path: "#build", text: "Build" },
+  { path: "#headers", text: "Headers" },
+  { path: "#redirects", text: "Redirects" },
   { path: "#env-vars", text: "Environment variables" },
   { path: "#api-keys", text: "API Keys" },
 ];
@@ -50,6 +54,16 @@ export default function EnvironmentConfig() {
               setRefreshToken={setRefreshToken}
             />
             <TabConfigBuild
+              app={app}
+              environment={environment}
+              setRefreshToken={setRefreshToken}
+            />
+            <TabConfigHeaders
+              app={app}
+              environment={environment}
+              setRefreshToken={setRefreshToken}
+            />
+            <TabConfigRedirects
               app={app}
               environment={environment}
               setRefreshToken={setRefreshToken}

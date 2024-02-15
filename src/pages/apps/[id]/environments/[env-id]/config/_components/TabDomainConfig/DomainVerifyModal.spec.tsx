@@ -75,7 +75,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
         ).toBeTruthy();
       });
 
-      expect(wrapper.getByText("txt-value.app.stormkit.io")).toBeTruthy();
+      expect(wrapper.getByLabelText("Txt Host").getAttribute("value")).toBe(
+        "txt-host"
+      );
     });
 
     test("should make a new call when Verify Now is clicked", async () => {
