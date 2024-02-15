@@ -2,17 +2,16 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/lab/LoadingButton";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { grey } from "@mui/material/colors";
 import CardFooter from "~/components/CardFooter";
 import CardHeader from "~/components/CardHeader";
 import Modal from "~/components/Modal";
 import Card from "~/components/Card";
 import CardRow from "~/components/CardRow";
+import CopyBox from "~/components/CopyBox";
 import { useDomainLookup } from "./actions";
-import { grey } from "@mui/material/colors";
-import TextField from "@mui/material/TextField";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import { IconButton } from "@mui/material";
 
 interface Props {
   domain: Domain;
@@ -36,7 +35,7 @@ const DomainVerificationStatus: React.FC<Props> = ({
   });
 
   const handleCopyClick = (text: string) => {
-    navigator.clipboard.writeText(text)
+    navigator.clipboard.writeText(text);
   };
 
   return (
@@ -71,54 +70,27 @@ const DomainVerificationStatus: React.FC<Props> = ({
               <Typography sx={{ color: grey[500], mb: 2 }}>
                 Login to your external DNS provider and create the following TXT
                 record.
-               <div style={{ display: "flex", alignItems: "center" }}>
-                <TextField
-                  value={info.dns.txt.lookup}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  fullWidth
-                  label="Txt Lookup"
-                  variant="outlined"
-                  margin="normal"
-                />
-              </div></Typography>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <TextField
-                  value={info.dns.txt.name}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  fullWidth
-                  label="Txt Host"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <IconButton
-                  onClick={() => handleCopyClick(info.dns.txt.name)}
-                  aria-label="copy"
-                >
-                  <FileCopyIcon fontSize="small" />
-                </IconButton>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <TextField
-                  value={info.dns.txt.value}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  fullWidth
-                  label="Txt Value"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <IconButton
-                  onClick={() => handleCopyClick(info.dns.txt.value)}
-                  aria-label="copy"
-                >
-                  <FileCopyIcon fontSize="small" />
-                </IconButton>
-              </div>
+              </Typography>
+              <CopyBox
+                value={info.dns.txt.name}
+                InputProps={{
+                  readOnly: true,
+                }}
+                fullWidth
+                label="Txt Host"
+                variant="outlined"
+                margin="normal"
+              />
+              <CopyBox
+                value={info.dns.txt.value}
+                InputProps={{
+                  readOnly: true,
+                }}
+                fullWidth
+                label="Txt Value"
+                variant="outlined"
+                margin="normal"
+              />
             </CardRow>
           </Box>
         )}
