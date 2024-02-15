@@ -6,7 +6,11 @@ import Button from "~/components/Button";
 
 let id = 0;
 
-export default function CopyBox({ value, ...rest }: TextFieldProps) {
+export default function CopyBox({
+  value,
+  InputProps,
+  ...rest
+}: TextFieldProps) {
   const [clicked, setClicked] = useState(false);
   const inputId = `copy-token-${id++}`;
 
@@ -18,6 +22,7 @@ export default function CopyBox({ value, ...rest }: TextFieldProps) {
       aria-label="Copy content"
       {...rest}
       InputProps={{
+        ...InputProps,
         endAdornment: (
           <Tooltip open={clicked} title="Copied to clipboard">
             <span>
