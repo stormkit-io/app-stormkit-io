@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/lab/LoadingButton";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { grey } from "@mui/material/colors";
 import CardFooter from "~/components/CardFooter";
@@ -33,10 +32,6 @@ const DomainVerificationStatus: React.FC<Props> = ({
     domainId: domain.id,
     refreshToken,
   });
-
-  const handleCopyClick = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
 
   return (
     <Modal open onClose={onClose}>
