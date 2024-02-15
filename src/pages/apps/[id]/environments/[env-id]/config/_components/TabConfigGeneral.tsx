@@ -50,6 +50,8 @@ export default function TabConfigGeneral({
     return <></>;
   }
 
+  const isProduction = env.name?.toLowerCase() === "production";
+
   return (
     <Card
       id="general"
@@ -183,8 +185,13 @@ export default function TabConfigGeneral({
         </Box>
       )}
 
-      <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
-        {env.name !== "production" && (
+      <CardFooter
+        sx={{
+          display: "flex",
+          justifyContent: isProduction ? "flex-end" : "space-between",
+        }}
+      >
+        {!isProduction && (
           <>
             <Button
               type="button"
