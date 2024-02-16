@@ -1,4 +1,5 @@
 declare type BuildConfig = {
+  apiFolder?: string;
   headersFile?: string;
   redirectsFile?: string;
   distFolder: string;
