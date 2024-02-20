@@ -13,6 +13,7 @@ import CardFooter from "~/components/CardFooter";
 import CardRow from "~/components/CardRow";
 import EmptyPage from "~/components/EmptyPage";
 import ConfirmModal from "~/components/ConfirmModal";
+import { useFetchDomains } from "~/shared/domains/actions";
 import { useFetchSnippets, deleteSnippet, updateSnippet } from "./actions";
 import SnippetModal from "./SnippetModal";
 
@@ -29,6 +30,15 @@ export default function Snippets() {
     env,
     refreshToken,
   });
+
+  const domainsRes = useFetchDomains({
+    appId: app.id,
+    envId: env.id!,
+  });
+
+  const domains = domainsRes.domains
+    .filter(d => d.verified === true)
+    .map(d => d.domainName);
 
   return (
     <Card
@@ -90,6 +100,9 @@ export default function Snippets() {
                     {`<${snippet.prepend ? "/" : ""}${snippet.location}>`}
                   </Typography>
                 </Typography>
+                <Typography sx={{ color: grey[500] }}>
+                  {snippet.rules?.hosts?.join(", ") || "All hosts"}
+                </Typography>
               </Box>
               <FormControlLabel
                 sx={{ pl: 0, ml: 0 }}
@@ -130,6 +143,7 @@ export default function Snippets() {
       </CardFooter>
       {isSnippetModalOpen && snippets && (
         <SnippetModal
+          domains={domains}
           snippet={toBeModified}
           setRefreshToken={setRefreshToken}
           closeModal={() => {

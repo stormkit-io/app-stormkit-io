@@ -5,6 +5,7 @@ import { waitFor, fireEvent, render } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { mockFetchSnippets } from "~/testing/nocks/nock_snippets";
+import { mockFetchDomains } from "~/testing/nocks/nock_domains";
 import mockSnippets from "~/testing/data/mock_snippets";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
@@ -17,12 +18,19 @@ interface Props {
 
 describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => {
   let fetchSnippetsScope: Scope;
+  let fetchDomainsScope: Scope;
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
   let snippets = mockSnippets();
 
   const createWrapper = ({ app, env }: Props) => {
+    fetchDomainsScope = mockFetchDomains({
+      appId: app.id,
+      envId: env.id!,
+      response: { domains: [] },
+    });
+
     wrapper = render(
       <MemoryRouter>
         <AppContext.Provider
@@ -52,6 +60,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       });
 
       createWrapper({ app: currentApp, env: currentEnv });
+    });
+
+    test("should fetch domains", async () => {
+      await waitFor(() => {
+        expect(fetchDomainsScope.isDone()).toBe(true);
+      });
     });
 
     test("should load snippets", async () => {
