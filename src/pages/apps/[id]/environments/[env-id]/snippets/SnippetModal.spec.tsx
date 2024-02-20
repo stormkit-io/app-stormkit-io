@@ -1,6 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-import { waitFor, fireEvent, render } from "@testing-library/react";
+import { waitFor, fireEvent, render, getByText } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -41,6 +41,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
     location: "head",
   };
 
+  const findDropdown = () => wrapper.getByLabelText("Hosts");
+  const findOption = (text: string) => getByText(document.body, text);
+
   const createWrapper = ({ app, env, closeModal, snippet }: Props) => {
     wrapper = render(
       <MemoryRouter>
@@ -55,6 +58,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
             <SnippetModal
               setRefreshToken={setRefreshToken}
               closeModal={closeModal}
+              domains={["www.e.org", "e.org"]}
               snippet={snippet}
             />
           </EnvironmentContext.Provider>
@@ -83,20 +87,28 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       const scope = mockInsertSnippet({
         appId: currentApp.id,
         envId: currentEnv.id!,
-        snippets: [{ ...snippet, rules: { hosts: ["www.e.org", "e.org"] } }],
+        snippets: [
+          { ...snippet, rules: { hosts: ["*.dev", "www.e.org", "e.org"] } },
+        ],
       });
 
       await userEvent.type(wrapper.getByLabelText("Title"), "Google Analytics");
-      await userEvent.type(wrapper.getByLabelText("Hosts"), "www.e.org, e.org");
+
+      const selector = findDropdown();
+      expect(selector).toBeTruthy();
+      fireEvent.mouseDown(selector);
+
+      fireEvent.click(findOption("All development endpoints (*.dev)"));
+      fireEvent.click(findOption("www.e.org"));
+      fireEvent.click(findOption("e.org"));
 
       await fireEvent.click(wrapper.getByText("Create"));
 
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
+        expect(closeModal).toHaveBeenCalled();
+        expect(setRefreshToken).toHaveBeenCalled();
       });
-
-      expect(closeModal).toHaveBeenCalled();
-      expect(setRefreshToken).toHaveBeenCalled();
     });
   });
 
@@ -122,7 +134,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       const scope = mockUpdateSnippet({
         appId: currentApp.id,
         envId: currentEnv.id!,
-        snippet: { ...snippet, location: "body", title: "Hotjar", id: 1 },
+        snippet: {
+          ...snippet,
+          location: "body",
+          title: "Hotjar",
+          id: 1,
+        },
       });
 
       await userEvent.clear(wrapper.getByLabelText("Title"));

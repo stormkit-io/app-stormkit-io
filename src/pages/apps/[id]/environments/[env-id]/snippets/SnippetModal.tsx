@@ -11,6 +11,7 @@ import Option from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
+import MultiSelect from "~/components/MultiSelect";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
@@ -21,6 +22,7 @@ import { addSnippet, updateSnippet } from "./actions";
 
 interface Props {
   snippet?: Snippet;
+  domains?: string[];
   closeModal: () => void;
   setRefreshToken: (t: number) => void;
 }
@@ -41,11 +43,15 @@ const SnippetModal: React.FC<Props> = ({
   closeModal,
   snippet,
   setRefreshToken,
+  domains,
 }): React.ReactElement => {
   const { app } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [selectedHosts, setSelectedHosts] = useState<string[]>(
+    snippet?.rules?.hosts || []
+  );
   const [codeContent, setCodeContent] = useState(
     snippet?.content || "<script>\n    console.log('Hello world');\n</script>"
   );
@@ -62,10 +68,6 @@ const SnippetModal: React.FC<Props> = ({
     ) as unknown as FormValues;
 
     const [location, prependOrAppend] = values.injectLocation.split("_");
-    const hosts = values.hosts
-      .split(",")
-      .map(i => i.trim().toLowerCase())
-      .filter(i => i);
 
     handler({
       appId: app.id,
@@ -77,7 +79,7 @@ const SnippetModal: React.FC<Props> = ({
         enabled: values.enabled === "on",
         location: location === "head" ? "head" : "body",
         prepend: prependOrAppend === "prepend",
-        rules: hosts?.length ? { hosts } : undefined,
+        rules: selectedHosts?.length ? { hosts: selectedHosts } : undefined,
       },
     })
       .then(() => {
@@ -110,6 +112,7 @@ const SnippetModal: React.FC<Props> = ({
             </>
           }
         />
+
         <Box sx={{ mb: 4 }}>
           <TextField
             label="Title"
@@ -167,16 +170,17 @@ const SnippetModal: React.FC<Props> = ({
           </FormControl>
         </Box>
         <Box sx={{ mb: 4 }}>
-          <TextField
+          <MultiSelect
             label="Hosts"
-            name="hosts"
-            fullWidth
-            defaultValue={snippet?.rules?.hosts?.join(", ") || ""}
-            variant="filled"
-            autoComplete="off"
-            helperText="Limit this snippet to specified hosts. Separate multiple hosts with a comma `,`."
-            InputLabelProps={{
-              shrink: true,
+            items={[
+              { value: "*.dev", text: "All development endpoints (*.dev)" },
+              ...(domains?.length
+                ? domains?.map(d => ({ value: d, text: d }))
+                : []),
+            ]}
+            selected={selectedHosts}
+            onSelect={value => {
+              setSelectedHosts(value);
             }}
           />
         </Box>
