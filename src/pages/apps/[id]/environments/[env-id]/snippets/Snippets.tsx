@@ -34,11 +34,10 @@ export default function Snippets() {
   const domainsRes = useFetchDomains({
     appId: app.id,
     envId: env.id!,
+    verified: true,
   });
 
-  const domains = domainsRes.domains
-    .filter(d => d.verified === true)
-    .map(d => d.domainName);
+  const domains = domainsRes.domains.map(d => d.domainName);
 
   return (
     <Card

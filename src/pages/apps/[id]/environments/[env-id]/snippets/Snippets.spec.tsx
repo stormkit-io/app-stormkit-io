@@ -28,6 +28,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
     fetchDomainsScope = mockFetchDomains({
       appId: app.id,
       envId: env.id!,
+      verified: true,
       response: { domains: [] },
     });
 
