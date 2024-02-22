@@ -5,11 +5,13 @@ interface FetchDomainsProps {
   appId: string;
   envId: string;
   refreshToken?: number;
+  verified?: boolean;
 }
 
 export const useFetchDomains = ({
   appId,
   envId,
+  verified,
   refreshToken,
 }: FetchDomainsProps) => {
   const [domains, setDomains] = useState<Domain[]>([]);
@@ -17,8 +19,18 @@ export const useFetchDomains = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const qs = new URLSearchParams(
+      JSON.parse(
+        JSON.stringify({
+          verified,
+          envId,
+          appId,
+        })
+      )
+    );
+
     api
-      .fetch<{ domains: Domain[] }>(`/domains?appId=${appId}&envId=${envId}`)
+      .fetch<{ domains: Domain[] }>(`/domains?${qs.toString()}`)
       .then(({ domains }) => {
         setDomains(domains);
       })
@@ -28,7 +40,7 @@ export const useFetchDomains = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, envId, refreshToken]);
+  }, [appId, envId, verified, refreshToken]);
 
   return { domains, error, loading };
 };
