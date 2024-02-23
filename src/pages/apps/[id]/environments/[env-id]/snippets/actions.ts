@@ -4,6 +4,7 @@ import api from "~/utils/api/Api";
 interface FetchSnippetsProps {
   app: App;
   env: Environment;
+  hosts?: string;
   refreshToken?: number;
 }
 
@@ -16,6 +17,7 @@ interface FetchSnippetsReturnValue {
 export const useFetchSnippets = ({
   app,
   env,
+  hosts,
   refreshToken,
 }: FetchSnippetsProps): FetchSnippetsReturnValue => {
   const [loading, setLoading] = useState(true);
@@ -28,10 +30,12 @@ export const useFetchSnippets = ({
     setError(null);
     setLoading(true);
 
+    const qs = new URLSearchParams(
+      JSON.parse(JSON.stringify({ appId: app.id, envId: env.id, hosts }))
+    );
+
     api
-      .fetch<{ snippets: Snippet[] }>(
-        `/snippets?appId=${app.id}&envId=${env.id}`
-      )
+      .fetch<{ snippets: Snippet[] }>(`/snippets?${qs.toString()}`)
       .then(({ snippets }) => {
         if (!unmounted) {
           setSnippets(snippets);
@@ -51,7 +55,7 @@ export const useFetchSnippets = ({
     return () => {
       unmounted = true;
     };
-  }, [app.id, env.id, refreshToken]);
+  }, [app.id, env.id, refreshToken, hosts]);
 
   return { loading, error, snippets };
 };

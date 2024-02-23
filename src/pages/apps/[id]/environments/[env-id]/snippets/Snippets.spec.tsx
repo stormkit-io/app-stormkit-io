@@ -75,20 +75,23 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
 
       await waitFor(() => {
         expect(fetchSnippetsScope.isDone()).toBe(true);
-        expect(wrapper.getByText(`#${s1.id} ${s1.title}`)).toBeTruthy();
-        expect(wrapper.getByText(`#${s2.id} ${s2.title}`)).toBeTruthy();
+        expect(wrapper.getByText(`${s1.title}`)).toBeTruthy();
+        expect(wrapper.getByText(`${s2.title}`)).toBeTruthy();
       });
     });
 
     test("should have a new button which opens a modal", async () => {
       fireEvent.click(wrapper.getByText("New Snippet"));
 
+      const fetchDomainsScopeModal = mockFetchDomains({
+        appId: currentApp.id,
+        envId: currentEnv.id!,
+        verified: true,
+        response: { domains: [] },
+      });
+
       await waitFor(() => {
-        expect(
-          wrapper.getByText(
-            /Turn this feature on to automatically publish successful deployments on the default branch./
-          )
-        ).toBeTruthy();
+        expect(fetchDomainsScopeModal.isDone()).toBe(true);
       });
     });
   });

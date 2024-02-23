@@ -1,51 +1,78 @@
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import { useEffect, useMemo } from "react";
+import MultiSelect from "~/components/MultiSelect";
 import { useFetchDomains } from "./actions";
-import { useEffect, useState } from "react";
 
 interface Props {
   envId: string;
   appId: string;
-  onDomainSelect: (d: Domain | null) => void;
+  multiple?: boolean;
+  selected?: string[];
+  variant?: "outlined" | "filled";
+  size?: "small" | "medium";
+  label?: string;
+  fullWidth?: boolean;
+  withDevDomains?: boolean;
+  onFetch?: (d: Domain[]) => void;
+  // If withDevDomains is true, returns selected domain names
+  // Otherwise, returns the domains.
+  onDomainSelect: (d: Domain[] | string[] | null) => void;
 }
 
 export default function DomainSelector({
   appId,
   envId,
+  fullWidth,
+  multiple = false,
+  withDevDomains = false,
+  selected,
+  label,
+  size = "small",
+  variant = "outlined",
+  onFetch,
   onDomainSelect,
 }: Props) {
-  const [selected, setSelected] = useState<string>();
   const { domains, loading, error } = useFetchDomains({
     appId,
     envId,
+    verified: true,
   });
 
   useEffect(() => {
-    if (!loading && !error && !domains.length) {
-      return onDomainSelect(null);
+    if (!loading && !error) {
+      onFetch?.(domains);
     }
+  }, [domains, loading, error]);
 
-    if (!selected && domains.length) {
-      return onDomainSelect(domains[0]);
-    }
-  }, [domains, loading, error, selected]);
+  const items = useMemo(() => {
+    return [
+      withDevDomains
+        ? { value: "*.dev", text: "All development endpoints (*.dev)" }
+        : { value: "", text: "" },
+      ...domains?.map(d => ({ value: d.domainName, text: d.domainName })),
+    ].filter(i => i.value);
+  }, [withDevDomains, domains]);
+
+  if (loading || error) {
+    return <></>;
+  }
 
   return (
-    <Select
-      value={selected || domains?.[0]?.id || ""}
-      size="small"
-      onChange={e => {
-        setSelected(e.target.value);
-        onDomainSelect(domains.find(d => d.id === e.target.value)!);
+    <MultiSelect
+      label={label}
+      variant={variant}
+      size={size}
+      placeholder="All domains"
+      fullWidth={fullWidth}
+      multiple={multiple}
+      items={items}
+      selected={selected}
+      onSelect={values => {
+        if (withDevDomains) {
+          onDomainSelect(values);
+        } else {
+          onDomainSelect(domains.filter(d => values.includes(d.domainName)));
+        }
       }}
-    >
-      {domains
-        ?.filter(d => d.verified)
-        ?.map(domain => (
-          <MenuItem value={domain.id} key={domain.id}>
-            {domain.domainName}
-          </MenuItem>
-        ))}
-    </Select>
+    />
   );
 }

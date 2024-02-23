@@ -34,7 +34,7 @@ export default function Analytics() {
             }}
           >
             <Link
-              href={`/apps/${environment.appId}/environments/${environment.id}#domain`}
+              href={`/apps/${environment.appId}/environments/${environment.id}#domains`}
               sx={{
                 color: "white",
                 ":hover": { color: "inherit", textDecoration: "none" },
@@ -56,14 +56,19 @@ export default function Analytics() {
           subtitle="Monitor user analytics for the specified domain within this environment configuration."
           actions={
             <DomainSelector
+              selected={domain ? [domain.domainName] : []}
               appId={environment.appId}
               envId={environment.id!}
-              onDomainSelect={d => {
-                if (d === null) {
-                  setNoDomainYet(true);
+              fullWidth={false}
+              onFetch={d => {
+                if (d?.[0]) {
+                  setDomain(d[0]);
                 } else {
-                  setDomain(d);
+                  setNoDomainYet(true);
                 }
+              }}
+              onDomainSelect={d => {
+                setDomain(d ? (d[0] as Domain) : undefined);
               }}
             />
           }

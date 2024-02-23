@@ -13,7 +13,7 @@ import CardFooter from "~/components/CardFooter";
 import CardRow from "~/components/CardRow";
 import EmptyPage from "~/components/EmptyPage";
 import ConfirmModal from "~/components/ConfirmModal";
-import { useFetchDomains } from "~/shared/domains/actions";
+import DomainSelector from "~/shared/domains/DomainSelector";
 import { useFetchSnippets, deleteSnippet, updateSnippet } from "./actions";
 import SnippetModal from "./SnippetModal";
 
@@ -25,19 +25,15 @@ export default function Snippets() {
   const [toBeDeleted, setToBeDeleted] = useState<Snippet | undefined>();
   const [toBeToggled, setToBeToggled] = useState<Snippet | undefined>();
   const [toBeModified, setToBeModified] = useState<Snippet | undefined>();
+  const [hosts, setHosts] = useState<string>();
   const { loading, error, snippets } = useFetchSnippets({
     app,
     env,
     refreshToken,
+    hosts,
   });
 
-  const domainsRes = useFetchDomains({
-    appId: app.id,
-    envId: env.id!,
-    verified: true,
-  });
-
-  const domains = domainsRes.domains.map(d => d.domainName);
+  const hasFilters = Boolean(hosts);
 
   return (
     <Card
@@ -59,6 +55,21 @@ export default function Snippets() {
           </>
         }
       />
+      {(hasFilters || snippets?.length) && (
+        <Box sx={{ mb: 4, px: snippets?.length ? 4 : 0 }}>
+          <DomainSelector
+            variant="outlined"
+            appId={app.id}
+            envId={env.id!}
+            fullWidth={false}
+            onDomainSelect={d => {
+              setHosts(d?.join(","));
+            }}
+            withDevDomains
+            multiple
+          />
+        </Box>
+      )}
       <Box>
         {snippets?.map(snippet => (
           <CardRow
@@ -87,9 +98,7 @@ export default function Snippets() {
           >
             <Box sx={{ display: "flex" }}>
               <Box sx={{ flex: 1 }}>
-                <Typography>
-                  #{snippet.id} {snippet.title}
-                </Typography>
+                <Typography>{snippet.title}</Typography>
                 <Typography sx={{ color: grey[500] }}>
                   Inserted {snippet.prepend ? "before" : "after"}{" "}
                   <Typography
@@ -123,9 +132,15 @@ export default function Snippets() {
       </Box>
       {!snippets?.length && (
         <EmptyPage>
-          It's quite empty in here.
-          <br />
-          Create a new snippet to manage them.
+          {hasFilters ? (
+            "Your search produced no results."
+          ) : (
+            <>
+              It's quite empty in here.
+              <br />
+              Create a new snippet to manage them.
+            </>
+          )}
         </EmptyPage>
       )}
       <CardFooter>
@@ -140,9 +155,8 @@ export default function Snippets() {
           New Snippet
         </Button>
       </CardFooter>
-      {isSnippetModalOpen && snippets && (
+      {isSnippetModalOpen && (
         <SnippetModal
-          domains={domains}
           snippet={toBeModified}
           setRefreshToken={setRefreshToken}
           closeModal={() => {
