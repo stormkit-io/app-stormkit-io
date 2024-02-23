@@ -1,4 +1,4 @@
-import React, { useState, useContext, FormEventHandler } from "react";
+import { useState, useContext, FormEventHandler } from "react";
 import { html } from "@codemirror/lang-html";
 import CodeMirror from "@uiw/react-codemirror";
 import Box from "@mui/material/Box";
@@ -11,18 +11,17 @@ import Option from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
-import MultiSelect from "~/components/MultiSelect";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import DomainSelector from "~/shared/domains/DomainSelector";
 import Modal from "~/components/Modal";
 import { addSnippet, updateSnippet } from "./actions";
 
 interface Props {
   snippet?: Snippet;
-  domains?: string[];
   closeModal: () => void;
   setRefreshToken: (t: number) => void;
 }
@@ -39,21 +38,20 @@ interface FormValues {
     | "body_prepend";
 }
 
-const SnippetModal: React.FC<Props> = ({
+const defaultContent = "<script>\n    console.log('Hello world');\n</script>";
+
+export default function SnippetModal({
   closeModal,
   snippet,
   setRefreshToken,
-  domains,
-}): React.ReactElement => {
+}: Props) {
   const { app } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
-  const [selectedHosts, setSelectedHosts] = useState<string[]>(
-    snippet?.rules?.hosts || []
-  );
-  const [codeContent, setCodeContent] = useState(
-    snippet?.content || "<script>\n    console.log('Hello world');\n</script>"
+  const [selectedHosts, setSelectedHosts] = useState<string[]>();
+  const [codeContent, setCodeContent] = useState<string>(
+    snippet?.content || defaultContent
   );
 
   const handleSubmit: FormEventHandler = e => {
@@ -79,7 +77,10 @@ const SnippetModal: React.FC<Props> = ({
         enabled: values.enabled === "on",
         location: location === "head" ? "head" : "body",
         prepend: prependOrAppend === "prepend",
-        rules: selectedHosts?.length ? { hosts: selectedHosts } : undefined,
+        rules: {
+          ...snippet?.rules,
+          hosts: selectedHosts ? selectedHosts : snippet?.rules?.hosts,
+        },
       },
     })
       .then(() => {
@@ -102,7 +103,7 @@ const SnippetModal: React.FC<Props> = ({
     <Modal open onClose={closeModal}>
       <Card component="form" error={error} onSubmit={handleSubmit}>
         <CardHeader
-          title={snippet?.id ? "Edit snippet" : "Create snippet"}
+          title={snippet?.id ? `Edit snippet #${snippet.id}` : "Create snippet"}
           subtitle={
             <>
               Snippets will be injected during response time into your document.
@@ -164,24 +165,24 @@ const SnippetModal: React.FC<Props> = ({
                 Append to Body {"(inserted after <body>)"}
               </Option>
               <Option value="body_prepend">
-                Prepend to Body {"(inserted before </head>)"}
+                Prepend to Body {"(inserted before </body>)"}
               </Option>
             </Select>
           </FormControl>
         </Box>
         <Box sx={{ mb: 4 }}>
-          <MultiSelect
-            label="Hosts"
-            items={[
-              { value: "*.dev", text: "All development endpoints (*.dev)" },
-              ...(domains?.length
-                ? domains?.map(d => ({ value: d, text: d }))
-                : []),
-            ]}
-            selected={selectedHosts}
-            onSelect={value => {
-              setSelectedHosts(value);
+          <DomainSelector
+            variant="filled"
+            label="Domains"
+            appId={app.id}
+            envId={environment.id!}
+            selected={snippet?.rules?.hosts}
+            onDomainSelect={value => {
+              setSelectedHosts(value as string[]);
             }}
+            multiple
+            withDevDomains
+            fullWidth
           />
         </Box>
         <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 2 }}>
@@ -219,6 +220,4 @@ const SnippetModal: React.FC<Props> = ({
       </Card>
     </Modal>
   );
-};
-
-export default SnippetModal;
+}

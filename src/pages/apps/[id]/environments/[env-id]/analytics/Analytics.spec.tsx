@@ -35,6 +35,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       envId: currentEnv.id!,
       appId: currentApp.id!,
       status: 200,
+      verified: true,
       response: {
         domains: hasDomain
           ? [{ domainName: "www.stormkit.io", verified: true, id: "15" }]
@@ -101,7 +102,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       await waitFor(() => {
         expect(
           wrapper.getByText("Setup a custom domain").getAttribute("href")
-        ).toBe(`/apps/${currentApp.id}/environments/${currentEnv.id}#domain`);
+        ).toBe(`/apps/${currentApp.id}/environments/${currentEnv.id}#domains`);
       });
     });
   });

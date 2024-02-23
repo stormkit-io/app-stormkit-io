@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import type { Scope } from "nock";
 import { MemoryRouter } from "react-router";
 import { waitFor, fireEvent, render, getByText } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -8,6 +9,7 @@ import {
   mockUpdateSnippet,
   mockInsertSnippet,
 } from "~/testing/nocks/nock_snippets";
+import { mockFetchDomains } from "~/testing/nocks/nock_domains";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
 import SnippetModal from "./SnippetModal";
@@ -32,6 +34,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
   let snippets: Snippet[];
   let closeModal: jest.Mock;
   let setRefreshToken: jest.Mock;
+  let fetchDomainsScope: Scope;
 
   const snippet: Snippet = {
     title: "Google Analytics",
@@ -41,10 +44,22 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
     location: "head",
   };
 
-  const findDropdown = () => wrapper.getByLabelText("Hosts");
+  const findDropdown = () => wrapper.getByLabelText("Domains");
   const findOption = (text: string) => getByText(document.body, text);
 
   const createWrapper = ({ app, env, closeModal, snippet }: Props) => {
+    fetchDomainsScope = mockFetchDomains({
+      appId: app.id,
+      envId: env.id!,
+      verified: true,
+      response: {
+        domains: [
+          { domainName: "www.e.org", verified: true, id: "2" },
+          { domainName: "e.org", verified: true, id: "2" },
+        ],
+      },
+    });
+
     wrapper = render(
       <MemoryRouter>
         <AppContext.Provider
@@ -58,7 +73,6 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
             <SnippetModal
               setRefreshToken={setRefreshToken}
               closeModal={closeModal}
-              domains={["www.e.org", "e.org"]}
               snippet={snippet}
             />
           </EnvironmentContext.Provider>
@@ -83,6 +97,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       });
     });
 
+    test("should fetch domains", async () => {
+      await waitFor(() => {
+        expect(fetchDomainsScope.isDone()).toBe(true);
+      });
+    });
+
     test("should handle form submission", async () => {
       const scope = mockInsertSnippet({
         appId: currentApp.id,
@@ -101,6 +121,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       fireEvent.click(findOption("All development endpoints (*.dev)"));
       fireEvent.click(findOption("www.e.org"));
       fireEvent.click(findOption("e.org"));
+
+      // Closes the dropdown
+      await userEvent.keyboard("{Escape}");
 
       await fireEvent.click(wrapper.getByText("Create"));
 
@@ -139,6 +162,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
           location: "body",
           title: "Hotjar",
           id: 1,
+          rules: {},
         },
       });
 
