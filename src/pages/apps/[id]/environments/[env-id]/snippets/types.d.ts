@@ -10,4 +10,5 @@ declare interface Snippet {
 
 declare interface SnippetRules {
   hosts?: string[];
+  path?: string;
 }

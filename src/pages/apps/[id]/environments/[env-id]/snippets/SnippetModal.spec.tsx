@@ -44,7 +44,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
     location: "head",
   };
 
-  const findDropdown = () => wrapper.getByLabelText("Domains");
+  const findDropdown = () =>
+    wrapper.getByLabelText("Inject only for specified domains");
   const findOption = (text: string) => getByText(document.body, text);
 
   const createWrapper = ({ app, env, closeModal, snippet }: Props) => {

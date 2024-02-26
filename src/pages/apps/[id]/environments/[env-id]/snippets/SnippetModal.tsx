@@ -30,7 +30,7 @@ interface FormValues {
   enabled: "on" | "off";
   title: string;
   content: string;
-  hosts: string;
+  path: string;
   injectLocation:
     | "head_append"
     | "body_append"
@@ -78,7 +78,7 @@ export default function SnippetModal({
         location: location === "head" ? "head" : "body",
         prepend: prependOrAppend === "prepend",
         rules: {
-          ...snippet?.rules,
+          path: values.path || snippet?.rules?.path,
           hosts: selectedHosts ? selectedHosts : snippet?.rules?.hosts,
         },
       },
@@ -173,7 +173,7 @@ export default function SnippetModal({
         <Box sx={{ mb: 4 }}>
           <DomainSelector
             variant="filled"
-            label="Domains"
+            label="Inject only for specified domains"
             appId={app.id}
             envId={environment.id!}
             selected={snippet?.rules?.hosts}
@@ -183,6 +183,20 @@ export default function SnippetModal({
             multiple
             withDevDomains
             fullWidth
+          />
+        </Box>
+        <Box sx={{ mb: 4 }}>
+          <TextField
+            label="Inject only for specified paths"
+            name="path"
+            fullWidth
+            defaultValue={snippet?.rules?.path || ""}
+            variant="filled"
+            autoComplete="off"
+            helperText="Accepts POSIX regular expressions (e.g. ^(b|c)d.*"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
         </Box>
         <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 2 }}>
