@@ -24,6 +24,22 @@ const splitLines = (message: string): string[] => {
   return lines;
 };
 
+const shouldShowDuration = (
+  hasDurationSupport: boolean | undefined,
+  d: DeploymentV2,
+  i: number
+): boolean => {
+  if (!hasDurationSupport) {
+    return false;
+  }
+
+  if (d.status === "running") {
+    return (d.logs?.length || 1) - 1 !== i;
+  }
+
+  return true;
+};
+
 const iconProps = {
   fontSize: 12,
 };
@@ -139,8 +155,7 @@ export default function Deployment() {
             >
               {title}
             </Box>
-            {hasDurationSupport &&
-            !(isRunning && deployment.logs!.length - 1 !== i) ? (
+            {shouldShowDuration(hasDurationSupport, deployment, i) ? (
               <Typography
                 component="span"
                 sx={{ color: grey[500], fontSize: 11 }}
