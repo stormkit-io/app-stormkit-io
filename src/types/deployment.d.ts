@@ -60,6 +60,7 @@ declare type DeploymentV2 = {
   stoppedAt: string;
   isAutoDeploy: boolean;
   isAutoPublish: boolean;
+  error?: string;
   status: "failed" | "success" | "running";
   logs?: Log[];
   previewUrl?: string;
