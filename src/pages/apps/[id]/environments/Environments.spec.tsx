@@ -1,5 +1,4 @@
 import { fireEvent, RenderResult } from "@testing-library/react";
-import React from "react";
 import { waitFor, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { AppContext } from "../App.context";
@@ -56,11 +55,14 @@ describe("~/pages/apps/[id]/environments/Environments.tsx", () => {
   test("should list environments", async () => {
     await waitFor(() => {
       expect(currentEnvs.length).toBe(1);
+
       currentEnvs.forEach(env => {
         expect(wrapper.getByText(env.branch)).toBeTruthy();
         expect(wrapper.getByText(env.name)).toBeTruthy();
-        expect(wrapper.getAllByText(/Status/)).toBeTruthy();
-        expect(wrapper.getAllByText(/Deployed successfully./)).toBeTruthy();
+        expect(
+          wrapper.getByText(env?.preview.split("https://")[1])
+        ).toBeTruthy();
+        expect(wrapper.getAllByText(/Last deployed 3 years ago/)).toBeTruthy();
       });
     });
   });

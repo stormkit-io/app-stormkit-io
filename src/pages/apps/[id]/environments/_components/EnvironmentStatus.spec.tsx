@@ -55,9 +55,6 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
     test("should display a text on the published version", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("200")).toBeTruthy();
-        expect(
-          wrapper.getByText(currentEnv?.preview.split("https://")[1])
-        ).toBeTruthy();
       });
     });
   });
@@ -80,15 +77,6 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
     test("should not fetch the status for the environment", async () => {
       await waitFor(() => {
         expect(fetchStatusScope.isDone()).toBe(false);
-      });
-    });
-
-    test("should display a text to publish", async () => {
-      await waitFor(() => {
-        expect(wrapper.getByText("Deployed successfully.")).toBeTruthy();
-        expect(wrapper.getByText("Go to deployment").getAttribute("href")).toBe(
-          `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${deploymentId}`
-        );
       });
     });
   });
