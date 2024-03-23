@@ -64,17 +64,19 @@ export const envMenuItems = ({
       isActive: pathname.includes("/feature-flags"),
     },
     {
+      text: "Triggers",
+      path: `${envPath}/function-triggers`,
+      isActive: pathname.includes("/function-triggers"),
+    }
+  ];
+
+  if (app.featureFlags?.onprem) {
+    items.push({
       text: "Key Value",
       path: `${envPath}/key-value`,
       isActive: pathname.includes("/key-value"),
-    },
-  ];
-
-  items.push({
-    text: "Triggers",
-    path: `${envPath}/function-triggers`,
-    isActive: pathname.includes("/function-triggers"),
-  });
+    })
+  }
 
   if (app.featureFlags?.SK_DATA_STORE) {
     items.push({
