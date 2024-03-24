@@ -150,31 +150,40 @@ export default function TabConfigGeneral({
             variant="filled"
             name="autoDeployBranches"
             label="Auto deploy branches"
-            defaultValue={env?.branch || ""}
+            defaultValue={env?.autoDeployBranches || ""}
             InputProps={{
               endAdornment: <code className="ml-1 text-pink-50">/i</code>,
             }}
             fullWidth
             helperText={
               <>
-                <Typography sx={{ mb: 2, mt: 1 }}>
+                <Typography
+                  component="span"
+                  sx={{ mb: 2, mt: 1, display: "block" }}
+                >
                   Specify which branches should be automatically deployed to
                   this environment. Below are some examples:
                 </Typography>
-                <Box component="ol">
-                  <Box component="li" sx={{ mb: 2 }}>
+                <Box component="span" sx={{ display: "block" }}>
+                  <Box component="span" sx={{ mb: 2, display: "block" }}>
                     <Box component="code" sx={{ color: "white" }}>
                       ^(?!dependabot).+
                     </Box>{" "}
-                    <Typography display="block" sx={{ mt: 0.5 }}>
+                    <Typography
+                      component="span"
+                      sx={{ mt: 0.5, display: "block" }}
+                    >
                       Match anything that does not start with <b>dependabot</b>
                     </Typography>
                   </Box>
-                  <Box component="li">
+                  <Box component="span" sx={{ display: "block" }}>
                     <Box component="code" sx={{ color: "white" }}>
                       ^release-.+
                     </Box>
-                    <Typography display="block" sx={{ mt: 0.5 }}>
+                    <Typography
+                      component="span"
+                      sx={{ mt: 0.5, display: "block" }}
+                    >
                       Match anything that starts with <b>release-</b>
                     </Typography>
                   </Box>

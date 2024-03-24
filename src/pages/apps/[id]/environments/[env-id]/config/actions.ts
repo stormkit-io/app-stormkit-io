@@ -32,6 +32,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     headersFile: values["build.headersFile"],
     redirectsFile: values["build.redirectsFile"],
     apiFolder: values["build.apiFolder"],
+    apiPath: values["build.apiPath"],
     vars,
   };
 
@@ -42,6 +43,17 @@ export const buildFormValues = (
   env: Environment,
   form: HTMLFormElement
 ): FormValues => {
+  const values = Object.fromEntries(new FormData(form).entries());
+
+  if (typeof values.autoPublish === "undefined") {
+    values.autoPublish = env.autoPublish ? "on" : "off";
+  }
+
+  // Normalize autoDeploy values
+  if (values.autoDeploy && values.autoDeploy !== "custom") {
+    values.autoDeployBranches = "";
+  }
+
   return {
     name: env.name,
     branch: env.branch,
@@ -50,13 +62,14 @@ export const buildFormValues = (
     "build.headersFile": env.build.headersFile,
     "build.redirectsFile": env.build.redirectsFile,
     "build.apiFolder": env.build.apiFolder,
+    "build.apiPath": env.build.apiPath,
     "build.cmd": env.build.cmd,
     "build.distFolder": env.build.distFolder,
     "build.vars": Object.keys(env.build?.vars || {})
       .filter(key => env.build.vars[key])
       .map(key => `${key}=${env.build.vars[key]}`)
       .join("\n"),
-    ...Object.fromEntries(new FormData(form).entries()),
+    ...values,
   };
 };
 
@@ -138,6 +151,7 @@ export interface FormValues {
   "build.headersFile"?: string;
   "build.redirectsFile"?: string;
   "build.apiFolder"?: string;
+  "build.apiPath"?: string;
   "build.vars"?: string; // This is the textarea version
   "build.vars[key]"?: string; // This is the key value version
   "build.vars[value]"?: string; // This is the key value version
@@ -183,7 +197,7 @@ export const updateEnvironment = ({
       build,
       autoPublish: values.autoPublish === "on",
       autoDeploy: autoDeploy !== "disabled",
-      autoDeployBranches: autoDeployBranches || null,
+      autoDeployBranches: autoDeployBranches,
     })
     .then(() => {
       setSuccess("The environment has been successfully updated.");

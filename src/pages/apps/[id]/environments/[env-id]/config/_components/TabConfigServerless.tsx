@@ -42,8 +42,6 @@ export default function TabConfigGeneral({
           e.target as HTMLFormElement
         );
 
-        console.log(values);
-
         updateEnvironment({
           app,
           envId: env.id!,
@@ -73,6 +71,21 @@ export default function TabConfigGeneral({
           placeholder="./api"
           helperText={`The relative path to the \`api\` folder where your serverless
               functions reside. This path is relative to the repository root.`}
+        />
+      </Box>
+      <Box sx={{ mb: 4 }}>
+        <TextField
+          label="API path prefix"
+          variant="filled"
+          autoComplete="off"
+          defaultValue={env?.build.apiPath || "/api"}
+          name="build.apiPath"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+          placeholder="/api"
+          helperText={`Path prefix for API endpoints. Default is \`/api\`.`}
         />
       </Box>
 
