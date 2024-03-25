@@ -79,7 +79,7 @@ export default function TabConfigGeneral({
           variant="filled"
           autoComplete="off"
           defaultValue={env?.build.apiPathPrefix || "/api"}
-          name="build.apiPath"
+          name="build.apiPathPrefix"
           fullWidth
           InputLabelProps={{
             shrink: true,
