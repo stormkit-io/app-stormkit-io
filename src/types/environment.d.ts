@@ -1,6 +1,6 @@
 declare type BuildConfig = {
-  apiPath?: string;
   apiFolder?: string;
+  apiPathPrefix?: string;
   headersFile?: string;
   redirectsFile?: string;
   distFolder: string;

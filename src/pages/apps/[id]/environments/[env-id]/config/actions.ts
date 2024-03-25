@@ -32,7 +32,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     headersFile: values["build.headersFile"],
     redirectsFile: values["build.redirectsFile"],
     apiFolder: values["build.apiFolder"],
-    apiPath: values["build.apiPath"],
+    apiPathPrefix: values["build.apiPathPrefix"],
     vars,
   };
 
@@ -62,7 +62,7 @@ export const buildFormValues = (
     "build.headersFile": env.build.headersFile,
     "build.redirectsFile": env.build.redirectsFile,
     "build.apiFolder": env.build.apiFolder,
-    "build.apiPath": env.build.apiPath,
+    "build.apiPathPrefix": env.build.apiPathPrefix,
     "build.cmd": env.build.cmd,
     "build.distFolder": env.build.distFolder,
     "build.vars": Object.keys(env.build?.vars || {})
@@ -151,7 +151,7 @@ export interface FormValues {
   "build.headersFile"?: string;
   "build.redirectsFile"?: string;
   "build.apiFolder"?: string;
-  "build.apiPath"?: string;
+  "build.apiPathPrefix"?: string;
   "build.vars"?: string; // This is the textarea version
   "build.vars[key]"?: string; // This is the key value version
   "build.vars[value]"?: string; // This is the key value version
