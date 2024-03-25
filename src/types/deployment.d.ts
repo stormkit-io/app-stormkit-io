@@ -68,6 +68,7 @@ declare type DeploymentV2 = {
   clientPackageSize?: number;
   serverPackageSize?: number;
   apiPackageSize?: number;
+  apiPathPrefix?: string;
   published: {
     envId: string;
     percentage: number;

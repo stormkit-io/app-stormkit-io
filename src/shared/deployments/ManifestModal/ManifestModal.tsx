@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import cn from "classnames";
@@ -27,7 +27,7 @@ interface Props {
 type Mode = "json" | "ui";
 type Tab = "cdn" | "redirect" | "ssr" | "api";
 
-const ManifestModal: React.FC<Props> = ({ deployment, onClose }) => {
+export default function ManifestModal({ deployment, onClose }: Props) {
   const [mode, setMode] = useState<Mode>("ui");
   const [tab, setTab] = useState<Tab>("cdn");
 
@@ -162,6 +162,7 @@ const ManifestModal: React.FC<Props> = ({ deployment, onClose }) => {
               <TabAPI
                 manifest={manifest}
                 previewEndpoint={deployment.previewUrl!}
+                apiPathPrefix={deployment.apiPathPrefix || "/api"}
               />
             )}
           </div>
@@ -177,6 +178,4 @@ const ManifestModal: React.FC<Props> = ({ deployment, onClose }) => {
       </Card>
     </Modal>
   );
-};
-
-export default ManifestModal;
+}

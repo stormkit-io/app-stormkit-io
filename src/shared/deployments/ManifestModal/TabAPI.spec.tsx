@@ -20,7 +20,11 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
     manifest = mockManifest(),
   }: Props | undefined = {}) => {
     wrapper = render(
-      <TabAPI previewEndpoint={previewEndpoint} manifest={manifest} />
+      <TabAPI
+        previewEndpoint={previewEndpoint}
+        manifest={manifest}
+        apiPathPrefix="/api"
+      />
     );
   };
 

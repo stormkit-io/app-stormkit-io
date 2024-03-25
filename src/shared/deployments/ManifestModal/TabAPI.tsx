@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -10,6 +10,7 @@ import EmptyPage from "~/components/EmptyPage";
 interface Props {
   manifest: Manifest;
   previewEndpoint: string;
+  apiPathPrefix: string;
 }
 
 interface Endpoint {
@@ -21,7 +22,11 @@ interface Endpoint {
 
 const methods = ["get", "post", "head", "put", "delete", "patch", "put"];
 
-const TabAPI: React.FC<Props> = ({ manifest, previewEndpoint }) => {
+export default function TabAPI({
+  manifest,
+  previewEndpoint,
+  apiPathPrefix,
+}: Props) {
   const [curlCopied, setCurlCopied] = useState<string>();
   const apiEnabled = manifest.apiFiles && manifest.apiFiles?.length > 0;
   const apiFiles: Endpoint[] = useMemo(() => {
@@ -31,7 +36,7 @@ const TabAPI: React.FC<Props> = ({ manifest, previewEndpoint }) => {
         const methodOrExt = pieces[1]?.toLowerCase();
         const method = methods.find(v => methodOrExt === v) || "ALL";
         const name = pieces[0].replace(/^\//, "").replace(/\[(.*)\]/, ":$1");
-        const endpoint = `/api/${name}`.replace("/index", "");
+        const endpoint = `${apiPathPrefix}/${name}`.replace("/index", "");
 
         return {
           method,
@@ -105,6 +110,4 @@ const TabAPI: React.FC<Props> = ({ manifest, previewEndpoint }) => {
       )}
     </Box>
   );
-};
-
-export default TabAPI;
+}
