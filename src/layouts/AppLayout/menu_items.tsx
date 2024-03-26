@@ -1,3 +1,5 @@
+import { isOnPrem } from "~/utils/api/helpers";
+
 export const appMenuItems = ({
   app,
   pathname,
@@ -70,7 +72,7 @@ export const envMenuItems = ({
     }
   ];
 
-  if (app.featureFlags?.onprem) {
+  if (isOnPrem()){
     items.push({
       text: "Key Value",
       path: `${envPath}/key-value`,
