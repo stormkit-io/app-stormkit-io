@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
       "process.env.API_PROXY_DOMAIN": JSON.stringify(env.API_PROXY_DOMAIN),
       "process.env.SENTRY": JSON.stringify(env.SENTRY),
       "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
+      "process.env.GITHUB_ACCOUNT": JSON.stringify(env.GITHUB_ACCOUNT),
     },
 
     server: {
