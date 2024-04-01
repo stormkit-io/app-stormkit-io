@@ -50,9 +50,9 @@ export const useFetchKeys = ({
           setKeys(result.keys);
         }
       })
-      .catch(() => {
+      .catch((error: Response) => {
         if (!unmounted) {
-          setError("Something went wrong while fetching keys");
+          error.text().then(msg => setError(msg))
         }
       })
       .finally(() => {
