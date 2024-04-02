@@ -14,14 +14,21 @@ const logos: Record<string, string> = {
 };
 
 interface Props {
+  repo: string;
   sx?: SxProps;
   children?: React.ReactNode;
-  deployment: DeploymentV2;
+  envName?: string;
   color?: "secondary" | "info";
 }
 
-export default function AppChip({ children, deployment, color, sx }: Props) {
-  const pieces = deployment.repo.split("/");
+export default function AppChip({
+  children,
+  repo: repoNameWithProvider,
+  envName,
+  color,
+  sx,
+}: Props) {
+  const pieces = repoNameWithProvider?.split("/") || [];
   const provider = pieces.shift();
   const repo = pieces.join("/");
 
@@ -36,7 +43,7 @@ export default function AppChip({ children, deployment, color, sx }: Props) {
               <Dot />
             </>
           )}
-          {repo} <Dot /> {deployment.envName}
+          {repo} <Dot /> {envName}
         </>
       }
       sx={color ? sx : { bgcolor: "#1F1C3B", color: "white", ...sx }}

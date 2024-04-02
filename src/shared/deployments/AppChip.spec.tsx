@@ -13,7 +13,7 @@ describe("~/shared/deployments/AppChip.tsx", () => {
   const createWrapper = ({ deployment }: Props) => {
     wrapper = render(
       <MemoryRouter>
-        <AppChip deployment={deployment} />
+        <AppChip repo={deployment.repo} envName={deployment.envName} />
       </MemoryRouter>
     );
   };

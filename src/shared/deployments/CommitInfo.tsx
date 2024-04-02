@@ -128,7 +128,12 @@ export default function CommitInfo({
                     },
                   },
                 }}
-                title={<AppChip deployment={deployment} />}
+                title={
+                  <AppChip
+                    repo={deployment.repo}
+                    envName={deployment.envName}
+                  />
+                }
               >
                 <Link
                   href={`/apps/${deployment.appId}/environments/${deployment.envId}/deployments`}
