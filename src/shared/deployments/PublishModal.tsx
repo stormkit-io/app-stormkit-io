@@ -71,7 +71,8 @@ export default function PublishModal({ deployment, onClose, onUpdate }: Props) {
             }}
           >
             <AppChip
-              deployment={deployment}
+              repo={deployment.repo}
+              envName={deployment.envName}
               sx={{ alignSelf: "flex-start", bgcolor: "transparent" }}
             >
               Publish to
