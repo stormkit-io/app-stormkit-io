@@ -71,6 +71,8 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
       expect(links).toEqual([
         "/", // Stormkit logo link
         `/apps/${defaultApp.id}/usage`,
+        "/", // <- My apps Link
+        `/apps/${defaultApp.id}/environments`, // <- app display name link
         "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/environments`,
         `/apps/${defaultApp.id}/settings`,
@@ -99,6 +101,8 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
       expect(links).toEqual([
         "/", // Stormkit logo link
         `/apps/${defaultApp.id}/usage`,
+        "/", // <- My apps Link
+        `/apps/${defaultApp.id}/environments`, // <- app display name link
         "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/environments`,
         `/apps/${defaultApp.id}/settings`,
@@ -130,6 +134,8 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         expect(links).toEqual([
           "/", // Stormkit logo link
           `/apps/${defaultApp.id}/usage`,
+          "/", // <- My apps Link
+          `/apps/${defaultApp.id}/environments`, // <- app display name link
           "https://gitlab.com/stormkit-io/frontend",
           `/apps/${defaultApp.id}/environments`,
           `/apps/${defaultApp.id}/settings`,
