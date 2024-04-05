@@ -6,6 +6,7 @@ import Dot from "~/components/Dot";
 import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
 import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
+import { parseRepo } from "~/utils/helpers/providers";
 
 const logos: Record<string, string> = {
   github: githubLogo,
@@ -28,9 +29,7 @@ export default function AppChip({
   color,
   sx,
 }: Props) {
-  const pieces = repoNameWithProvider?.split("/") || [];
-  const provider = pieces.shift();
-  const repo = pieces.join("/");
+  const { repo, provider } = parseRepo(repoNameWithProvider);
 
   return (
     <Chip
