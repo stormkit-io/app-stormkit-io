@@ -1,17 +1,13 @@
-import type { SxProps } from "@mui/material";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
-import githubLogo from "~/assets/logos/github-logo.svg";
-import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
-import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
+import Typography from "@mui/material/Typography";
+import { grey } from "@mui/material/colors";
+import Dot from "~/components/Dot";
+import { getLogoForProvider, parseRepo } from "~/utils/helpers/providers";
 
 interface Props {
-  sx?: SxProps;
-  imageSx?: SxProps;
-  repo: string;
-  displayName?: string;
-  withLinkToRepo?: boolean;
-  wrapOnMobile?: boolean;
+  app: App;
+  imageSize?: number;
 }
 
 const providerHosts: Record<Provider, string> = {
@@ -20,31 +16,16 @@ const providerHosts: Record<Provider, string> = {
   gitlab: "gitlab.com",
 };
 
-export default function AppName({
-  repo,
-  sx,
-  imageSx,
-  displayName,
-  withLinkToRepo,
-  wrapOnMobile,
-}: Props) {
-  const pieces = repo.split("/") || [];
-  const provider = pieces.shift() as Provider;
-  const nameWithoutPrefix = pieces.join("/");
-  const logo =
-    provider === "github"
-      ? githubLogo
-      : provider === "gitlab"
-      ? gitlabLogo
-      : bitbucketLogo;
+export default function AppName({ app, imageSize = 18 }: Props) {
+  const { repo, provider } = parseRepo(app.repo);
+  const providerLogo = getLogoForProvider(provider);
+  const linkToRepo = `https://${providerHosts[provider]}/${repo}`;
 
   return (
     <Box
       sx={{
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        ...sx,
+        alignItems: "flex-start",
       }}
     >
       <Box
@@ -52,47 +33,26 @@ export default function AppName({
         sx={{
           display: "inline-block",
           mr: 1,
-          width: 8,
-          ...imageSx,
+          width: imageSize,
         }}
-        src={logo}
+        src={providerLogo}
         alt={provider}
       />
-      <Box>
-        {withLinkToRepo && (
-          <Link
-            href={`https://${providerHosts[provider]}/${nameWithoutPrefix}`}
-            aria-label="Repository URL"
-            target="_blank"
-            rel="noreferrer noopener"
-            sx={{ display: "block", ml: 1 }}
-          >
-            <Box
-              component="span"
-              sx={{
-                maxWidth: { xs: wrapOnMobile ? "150px" : "none", md: "none" },
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                display: "block",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {nameWithoutPrefix}
-            </Box>
-          </Link>
-        )}
-        {!withLinkToRepo && nameWithoutPrefix}
-        {displayName && (
-          <Box
-            sx={{
-              fontSize: 12,
-              opacity: 0.7,
-            }}
-          >
-            {displayName}
-          </Box>
-        )}
-      </Box>
+
+      <Typography>
+        <Link href={`/apps/${app.id}/environments`}>{app.displayName}</Link>
+      </Typography>
+      <Dot />
+      <Typography>
+        <Link
+          href={linkToRepo}
+          target="_blank"
+          rel="noreferrer noopener"
+          sx={{ color: grey[500] }}
+        >
+          {repo}
+        </Link>
+      </Typography>
     </Box>
   );
 }

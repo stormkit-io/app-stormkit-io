@@ -17,6 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ArrowForward from "@mui/icons-material/ArrowForwardIos";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import ButtonDropdown from "~/components/ButtonDropdown";
+import AppName from "~/components/AppName";
 import Dot from "~/components/Dot";
 import { parseRepo, getLogoForProvider } from "~/utils/helpers/providers";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
@@ -135,29 +136,7 @@ export default function Apps() {
                 </IconButton>
               }
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Box
-                  component="img"
-                  sx={{
-                    display: "inline-block",
-                    mr: 1,
-                    width: 20,
-                  }}
-                  src={providerLogo}
-                  alt={provider}
-                />
-
-                <Typography>
-                  <Link href={environmentsUrl}>{app.displayName}</Link>
-                </Typography>
-                <Dot />
-                <Typography color={grey[500]}>{repo}</Typography>
-              </Box>
+              <AppName app={app} />
             </CardRow>
           );
         })}

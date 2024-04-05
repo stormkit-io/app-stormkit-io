@@ -2,13 +2,17 @@ import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import Box from "@mui/material/Box";
 import AppContextProvider, { AppContext } from "~/pages/apps/[id]/App.context";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import TopMenu from "../TopMenu";
+import { useSelectedTeam } from "../TopMenu/Teams/actions";
 import AppMenu from "./AppMenu";
 import EnvMenu from "./EnvMenu";
 import { routes } from "./routes";
 
-export const AppLayout: React.FC = () => {
+export function AppLayout() {
   const { app, environments } = useContext(AppContext);
+  const { teams } = useContext(AuthContext);
+  const selectedTeam = useSelectedTeam({ teams, app });
 
   if (environments.length === 0) {
     return <></>;
@@ -23,7 +27,7 @@ export const AppLayout: React.FC = () => {
         width: "100%",
       }}
     >
-      <TopMenu app={app} submenu={<AppMenu app={app} />} />
+      <TopMenu app={app} submenu={<AppMenu team={selectedTeam} app={app} />} />
       <Box
         sx={{
           display: "flex",
@@ -55,7 +59,7 @@ export const AppLayout: React.FC = () => {
       </Box>
     </Box>
   );
-};
+}
 
 const WithAppProvider: React.FC = () => (
   <AppContextProvider>
