@@ -1,32 +1,35 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
+import CardRow from "~/components/CardRow";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ImportExport from "@mui/icons-material/ImportExport";
+import Link from "@mui/material/Link";
 import LinkIcon from "@mui/icons-material/Link";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowForward from "@mui/icons-material/ArrowForwardIos";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import ButtonDropdown from "~/components/ButtonDropdown";
-import AppName from "~/components/AppName";
-import InfoBox from "~/components/InfoBoxV2";
-import Spinner from "~/components/Spinner";
+import Dot from "~/components/Dot";
+import { parseRepo, getLogoForProvider } from "~/utils/helpers/providers";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { providerToText } from "~/utils/helpers/string";
 import { useFetchAppList } from "./actions";
 import { WelcomeModal, EmptyList } from "./_components";
+import { grey } from "@mui/material/colors";
 
 let timeout: NodeJS.Timeout;
 const limit = 20;
 const welcomeModalId = "welcome_modal";
 
 export default function Apps() {
-  const navigate = useNavigate();
   const { teams } = useContext(AuthContext);
   const [from, setFrom] = useState(0);
   const [filter, setFilter] = useState("");
@@ -56,27 +59,6 @@ export default function Apps() {
   }
 
   const importFromProvider = `Import from ${providerToText[provider]}`;
-  const isLoadingFirstTime = loading && apps.length === 0;
-
-  if (isLoadingFirstTime) {
-    return (
-      <Box maxWidth="md" sx={{ width: "100%", color: "white" }}>
-        <Card>
-          <Box
-            sx={{
-              p: 4,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              minHeight: "200px",
-            }}
-          >
-            <Spinner primary width={8} height={8} />
-          </Box>
-        </Card>
-      </Box>
-    );
-  }
 
   if (apps.length === 0 && !loading && !filter) {
     return (
@@ -91,11 +73,12 @@ export default function Apps() {
   return (
     <Box maxWidth="md" sx={{ width: "100%", color: "white" }}>
       <Card
+        contentPadding={false}
         errorTitle={false}
+        loading={loading}
         error={
-          !loading && apps.length === 0
-            ? "This search produced no results."
-            : ""
+          error ||
+          (!loading && apps.length === 0 && "This search produced no results.")
         }
       >
         <CardHeader
@@ -118,7 +101,7 @@ export default function Apps() {
             />
           }
         />
-        <Box>
+        <Box sx={{ mx: 4, mb: 2 }}>
           <TextField
             fullWidth
             autoFocus
@@ -126,7 +109,6 @@ export default function Apps() {
             aria-label="Search apps"
             label="Search apps"
             variant="filled"
-            sx={{ mb: 4 }}
             onChange={e => {
               clearTimeout(timeout);
               timeout = setTimeout(() => {
@@ -138,76 +120,72 @@ export default function Apps() {
               endAdornment: <SearchIcon sx={{ fontSize: 16 }} />,
             }}
           />
-          {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
-          {!error && (
-            <>
-              <Box>
-                {apps.map(app => (
-                  <Box
-                    key={app.id}
-                    bgcolor="container.paper"
-                    sx={{
-                      p: 2,
-                      mb: 2,
-                      width: "100%",
-                      cursor: "pointer",
-                      "&:hover": {
-                        filter: "brightness(1.5)",
-                        transition: "all 0.25s ease-in",
-                      },
-                      ":last-child": {
-                        mb: 0,
-                      },
-                    }}
-                    tabIndex={0}
-                    role="button"
-                    onKeyUp={e => {
-                      if (e.key === "Enter") {
-                        navigate(`/apps/${app.id}/environments`);
-                      }
-                    }}
-                    onClick={() => {
-                      navigate(`/apps/${app.id}/environments`);
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Box sx={{ display: "flex", flex: 1 }}>
-                        <AppName
-                          displayName={app.displayName}
-                          repo={app.repo}
-                          imageSx={{ width: 23 }}
-                        />
-                      </Box>
-                      <ArrowForward sx={{ fontSize: 16 }} />
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-              {hasNextPage && (
-                <div className="my-4 flex justify-center">
-                  <LoadingButton
-                    variant="contained"
-                    color="secondary"
-                    loading={loading}
-                    onClick={() => {
-                      setFrom(from + limit);
-                    }}
-                  >
-                    Load more
-                  </LoadingButton>
-                </div>
-              )}
-            </>
-          )}
         </Box>
-      </Card>
-      {!isLoadingFirstTime && (
+        {apps.map(app => {
+          const { repo, provider } = parseRepo(app.repo);
+          const providerLogo = getLogoForProvider(provider);
+          const environmentsUrl = `/apps/${app.id}/environments`;
+
+          return (
+            <CardRow
+              key={app.id}
+              actions={
+                <IconButton href={environmentsUrl}>
+                  <ArrowForward sx={{ fontSize: 16 }} />
+                </IconButton>
+              }
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Box
+                  component="img"
+                  sx={{
+                    display: "inline-block",
+                    mr: 1,
+                    width: 20,
+                  }}
+                  src={providerLogo}
+                  alt={provider}
+                />
+
+                <Typography>
+                  <Link href={environmentsUrl}>{app.displayName}</Link>
+                </Typography>
+                <Dot />
+                <Typography color={grey[500]}>{repo}</Typography>
+              </Box>
+            </CardRow>
+          );
+        })}
+        {hasNextPage && (
+          <CardFooter
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <LoadingButton
+              variant="text"
+              loading={loading}
+              onClick={() => {
+                setFrom(from + limit);
+              }}
+            >
+              Load more
+            </LoadingButton>
+          </CardFooter>
+        )}
         <WelcomeModal
           isOpen={isWelcomeModalOpen}
           toggleModal={setIsWelcomeModalOpen}
           welcomeModalId={welcomeModalId}
         />
-      )}
+      </Card>
     </Box>
   );
 }
