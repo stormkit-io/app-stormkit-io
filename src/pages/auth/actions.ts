@@ -141,7 +141,7 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
           setUser(data.user!);
 
           // Persist it for this session
-          bitbucketApi.accessToken = data.accessToken;
+          bitbucketApi.accessToken = data.accessToken!;
           githubApi.accessToken = data.accessToken;
           gitlabApi.accessToken = data.accessToken;
 
@@ -199,7 +199,15 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
     api
       .fetch<Team[]>("/teams")
       .then(teams => {
-        setTeams(teams);
+        setTeams(
+          teams.map(t => {
+            if (t.slug === "personal") {
+              t.slug = "";
+            }
+
+            return t;
+          })
+        );
       })
       .catch(() => {
         setError("Something went wrong while fetching teams.");
