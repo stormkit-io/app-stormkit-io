@@ -27,7 +27,11 @@ export function AppLayout() {
         width: "100%",
       }}
     >
-      <TopMenu app={app} submenu={<AppMenu team={selectedTeam} app={app} />} />
+      <TopMenu
+        app={app}
+        team={selectedTeam}
+        submenu={<AppMenu team={selectedTeam} app={app} />}
+      />
       <Box
         sx={{
           display: "flex",
