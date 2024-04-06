@@ -1,9 +1,8 @@
 import { useMemo } from "react";
 import { useLocation } from "react-router";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import ArrowBack from "@mui/icons-material/ArrowBack";
+import { grey } from "@mui/material/colors";
 import AppName from "~/components/AppName";
 import MenuLink from "~/components/MenuLink";
 import { appMenuItems } from "./menu_items";
@@ -42,15 +41,20 @@ export default function AppMenu({ app, team }: Props) {
         }}
       >
         <Box sx={{ mr: 2, display: "flex", alignItems: "center" }}>
-          <Button
-            variant="text"
-            sx={{ color: "white", mr: 2 }}
-            href={`/${team?.slug || ""}`}
-            size="small"
-          >
-            <ArrowBack sx={{ fontSize: 18, mr: 1 }} />
-            <Typography component="span">My Apps</Typography>
-          </Button>
+          <MenuLink
+            sx={{
+              mr: 2,
+              px: { xs: 1, md: 1 },
+              pr: { xs: 1, md: 2 },
+              bgcolor: "rgba(255,255,255,0.05)",
+              color: grey[400],
+            }}
+            item={{
+              text: team?.isDefault ? "My apps" : `${team?.name} Team Apps`,
+              path: `/${team?.slug || ""}`,
+              icon: <ArrowBack sx={{ fontSize: 18, mr: 1 }} />,
+            }}
+          />
           <Box sx={{ pt: 0.25 /* fixes an alignment issue with buttons */ }}>
             <AppName app={app} />
           </Box>
