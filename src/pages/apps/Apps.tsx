@@ -8,23 +8,18 @@ import CardRow from "~/components/CardRow";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ImportExport from "@mui/icons-material/ImportExport";
-import Link from "@mui/material/Link";
 import LinkIcon from "@mui/icons-material/Link";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowForward from "@mui/icons-material/ArrowForwardIos";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import ButtonDropdown from "~/components/ButtonDropdown";
 import AppName from "~/components/AppName";
-import Dot from "~/components/Dot";
-import { parseRepo, getLogoForProvider } from "~/utils/helpers/providers";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { providerToText } from "~/utils/helpers/string";
 import { useFetchAppList } from "./actions";
 import { WelcomeModal, EmptyList } from "./_components";
-import { grey } from "@mui/material/colors";
 
 let timeout: NodeJS.Timeout;
 const limit = 20;
@@ -83,7 +78,11 @@ export default function Apps() {
         }
       >
         <CardHeader
-          title="My apps"
+          title={
+            selectedTeam?.isDefault
+              ? "My apps"
+              : `${selectedTeam?.name} Team Apps`
+          }
           actions={
             <ButtonDropdown
               buttonText="Create new app"
@@ -123,8 +122,6 @@ export default function Apps() {
           />
         </Box>
         {apps.map(app => {
-          const { repo, provider } = parseRepo(app.repo);
-          const providerLogo = getLogoForProvider(provider);
           const environmentsUrl = `/apps/${app.id}/environments`;
 
           return (
