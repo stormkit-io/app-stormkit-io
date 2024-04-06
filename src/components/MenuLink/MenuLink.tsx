@@ -1,3 +1,4 @@
+import type { SxProps } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 
@@ -10,9 +11,10 @@ export interface Path {
 
 interface Props {
   item: Path;
+  sx?: SxProps;
 }
 
-export default function MenuLink({ item }: Props) {
+export default function MenuLink({ item, sx }: Props) {
   return (
     <Typography component="span">
       <Link
@@ -33,8 +35,10 @@ export default function MenuLink({ item }: Props) {
             color: "white",
             bgcolor: "rgba(255,255,255,0.1)",
           },
+          ...sx,
         }}
       >
+        {item.icon}
         {item.text}
       </Link>
     </Typography>
