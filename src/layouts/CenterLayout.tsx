@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import { AuthContext } from "~/pages/auth/Auth.context";
+import { useSelectedTeam } from "./TopMenu/Teams/actions";
 import TopMenu from "./TopMenu";
 
 interface Props {
@@ -8,7 +9,8 @@ interface Props {
 }
 
 export default function CenterLayout({ children }: Props) {
-  const { user } = useContext(AuthContext);
+  const { user, teams } = useContext(AuthContext);
+  const selectedTeam = useSelectedTeam({ teams });
 
   return (
     <Box
@@ -31,7 +33,7 @@ export default function CenterLayout({ children }: Props) {
             boxShadow: 2,
           }}
         >
-          <TopMenu />
+          <TopMenu team={selectedTeam} />
         </Box>
       )}
       <Box
