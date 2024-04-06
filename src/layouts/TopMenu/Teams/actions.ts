@@ -24,7 +24,7 @@ export const useSelectedTeam = ({
 
   const team = useMemo(() => {
     if (params.team) {
-      return teams?.find(t => t.slug === params.team || t.id === params.id);
+      return teams?.find(t => t.slug === params.team || t.id === params.team);
     }
 
     if (app?.teamId) {
