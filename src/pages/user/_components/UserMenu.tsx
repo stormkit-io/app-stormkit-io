@@ -1,4 +1,4 @@
-import React, { ReactElement, FC } from "react";
+import { ReactElement, FC } from "react";
 import cn from "classnames";
 import Link from "~/components/Link";
 import Logo from "~/components/Logo";
