@@ -65,7 +65,7 @@ export default function Deployment() {
 
   if (!deployment && !loading && !error) {
     return (
-      <Card>
+      <Card sx={{ width: "100%", pt: "12rem" }}>
         <Error404>
           <Typography>Deployment is not found.</Typography>
         </Error404>
