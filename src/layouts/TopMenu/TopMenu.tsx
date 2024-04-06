@@ -12,12 +12,14 @@ import { grey } from "@mui/material/colors";
 interface Props {
   children?: React.ReactNode;
   submenu?: React.ReactNode;
+  team?: Team;
   app?: App;
 }
 
 const isLocal = process.env.NODE_ENV === "development";
 
-export default function TopMenu({ children, submenu, app }: Props) {
+export default function TopMenu({ children, submenu, app, team }: Props) {
+  const slug = `/${team?.slug || ""}`;
   const { user } = useContext(AuthContext);
   const [isCanary, setIsCanary] = useState(!!localStorage.getItem("sk_canary"));
   const shouldShowEnvButton = useMemo(() => {
@@ -46,7 +48,7 @@ export default function TopMenu({ children, submenu, app }: Props) {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Link href="/" sx={{ flex: "1", mr: 1 }}>
+          <Link href={slug} sx={{ flex: "1", mr: 1 }}>
             <Logo iconSize={28} iconOnly />
           </Link>
           <TeamsToggle app={app} />
