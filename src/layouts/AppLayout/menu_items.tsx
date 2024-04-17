@@ -1,4 +1,4 @@
-import { isOnPrem } from "~/utils/api/helpers";
+import { isSelfHosted } from "~/utils/helpers/instance";
 
 export const appMenuItems = ({
   app,
@@ -69,15 +69,15 @@ export const envMenuItems = ({
       text: "Triggers",
       path: `${envPath}/function-triggers`,
       isActive: pathname.includes("/function-triggers"),
-    }
+    },
   ];
 
-  if (isOnPrem()){
+  if (isSelfHosted()) {
     items.push({
       text: "Key Value",
       path: `${envPath}/key-value`,
       isActive: pathname.includes("/key-value"),
-    })
+    });
   }
 
   if (app.featureFlags?.SK_DATA_STORE) {

@@ -13,11 +13,6 @@ export function prepareHeaders(token: string) {
   });
 }
 
-export function isOnPrem(url: string = window.location.href): boolean {
-  const regex = /^https?:\/\/(?:.*\.)?(stormkit\.io|stormkit\.dev)(?:\/|$)/i;
-  return !regex.test(url);
-}
-
 /**
  * The error to show when the token expires.
  */
