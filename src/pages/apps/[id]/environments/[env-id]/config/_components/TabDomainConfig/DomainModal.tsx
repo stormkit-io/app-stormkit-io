@@ -44,10 +44,17 @@ const DomainModal: React.FC<Props> = ({ onClose, setRefreshToken }) => {
               setRefreshToken(Date.now());
               onClose?.();
             })
-            .catch(res => {
+            .catch(async res => {
+              let error = "Please provide a valid domain name.";
+
+              try {
+                const data = await res.json();
+                error = data.error;
+              } catch {}
+
               setError(
                 res.status === 400
-                  ? "Please provide a valid domain name."
+                  ? error
                   : res.status === 429
                   ? "You have issued too many requests. Please wait a while before retrying."
                   : "Something went wrong while setting up the domain. Make sure it is a valid domain."

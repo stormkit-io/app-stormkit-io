@@ -31,7 +31,7 @@ interface MockDomainInsertProps {
   envId: string;
   domain: string;
   status?: number;
-  response?: { ok: boolean };
+  response?: { ok?: boolean; error?: string };
 }
 
 export const mockDomainInsert = ({

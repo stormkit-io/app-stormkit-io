@@ -63,4 +63,29 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       expect(setRefreshToken).toHaveBeenCalled();
     });
   });
+
+  test("displays error that comes from the api", async () => {
+    const scope = mockDomainInsert({
+      appId: currentApp.id,
+      envId: currentEnv.id!,
+      domain: "www.stormkit.io",
+      status: 400,
+      response: {
+        error: "Something went wrong",
+      },
+    });
+
+    await userEvent.type(
+      wrapper.getByLabelText("Domain name"),
+      "www.stormkit.io"
+    );
+
+    fireEvent.click(wrapper.getByText("Start verification process"));
+
+    await waitFor(() => {
+      expect(scope.isDone()).toBe(true);
+      expect(setRefreshToken).not.toHaveBeenCalled();
+      expect(wrapper.getByText("Something went wrong")).toBeTruthy();
+    });
+  });
 });
