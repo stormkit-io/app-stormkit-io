@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -10,6 +10,7 @@ import CardRow from "~/components/CardRow";
 import CardFooter from "~/components/CardFooter";
 import EmptyPage from "~/components/EmptyPage";
 import ConfirmModal from "~/components/ConfirmModal";
+import { isSelfHosted } from "~/utils/helpers/instance";
 import DomainModal from "./DomainModal";
 import DomainVerifyModal from "./DomainVerifyModal";
 import { deleteDomain, useFetchDomains } from "./actions";
@@ -21,6 +22,10 @@ interface Props {
 }
 
 const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
+  const selfHosted = useMemo(() => {
+    return isSelfHosted();
+  }, []);
+
   const [refreshToken, setRefreshToken] = useState(0);
   const [isDomainModalOpen, toggleDomainModal] = useState(false);
   const [domainToVerify, setDomainToVerify] = useState<Domain>();
@@ -37,14 +42,16 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
         title="Custom domains"
         subtitle="Set custom domains to serve your application from."
       />
-      <Alert color="info" sx={{ px: 4 }}>
-        Use following A Records to point your domains:
-        <Box sx={{ mt: 1 }}>
-          <ArrowRightIcon /> 54.93.169.167
-          <br />
-          <ArrowRightIcon /> 3.64.188.62
-        </Box>
-      </Alert>
+      {!selfHosted && (
+        <Alert color="info" sx={{ px: 4 }}>
+          Use following A Records to point your domains:
+          <Box sx={{ mt: 1 }}>
+            <ArrowRightIcon /> 54.93.169.167
+            <br />
+            <ArrowRightIcon /> 3.64.188.62
+          </Box>
+        </Alert>
+      )}
       <Box>
         {domains.map(domain => (
           <CardRow
