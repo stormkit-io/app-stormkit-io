@@ -112,7 +112,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     await waitFor(() => {
       expect(wrapper.getByText("Runtime logs")).toBeTruthy();
       expect(
-        wrapper.getByText(`${currentDeploy.id}`).getAttribute("href")
+        wrapper.getByText(`#${currentDeploy.id}`).getAttribute("href")
       ).toBe("/apps/1/environments/1429333243019/deployments/1050101");
     });
   });

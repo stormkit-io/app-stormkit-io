@@ -1,16 +1,21 @@
 import type { Log } from "./actions";
 import React, { useContext, useState } from "react";
 import { useParams, useLocation } from "react-router";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import Button from "@mui/lab/LoadingButton";
-import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
 import EmptyPage from "~/components/EmptyPage";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { useFetchDeploymentRuntimeLogs } from "./actions";
-import Spinner from "~/components/Spinner";
+
+const borderBottom = "1px solid rgba(255,255,255,0.1)";
 
 const renderLog = (log: Log, i: number) => {
   let data = log.data.split(/END\sRequestId:/)[0];
@@ -32,36 +37,42 @@ const renderLog = (log: Log, i: number) => {
     return null;
   }
 
+  let date;
+
+  try {
+    date = new Date(Number(log.timestamp));
+  } catch {
+    date = new Date(Number(log.timestamp) * 1000);
+  }
+
   return (
-    <Box
+    <TableRow
       key={`${log.timestamp}${i}`}
       sx={{
-        whiteSpace: "pre-wrap",
-        display: "flex",
-        opacity: 0.5,
-        mb: 1,
-        px: 2,
+        opacity: 0.75,
         ":hover": {
+          color: "white !important",
           opacity: 1,
-          bgcolor: "rgba(0,0,0,0.1)",
         },
-        ":last-child": { mb: 0 },
       }}
     >
-      <Box
+      <TableCell
         sx={{
-          display: "flex",
-          flexShrink: 0,
-          opacity: 0.5,
+          borderBottom: "none",
         }}
       >
-        {new Date(Number(log.timestamp) * 1000)
-          .toISOString()
-          .split(".")[0]
-          .replace("T", " ")}
-      </Box>
-      <Box sx={{ wordBreak: "break-all", pl: 2 }}>{data}</Box>
-    </Box>
+        {date.toISOString().split(".")[0].replace("T", " ")}
+      </TableCell>
+      <TableCell
+        sx={{
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-all",
+          borderBottom: "none",
+        }}
+      >
+        {data}
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -81,74 +92,49 @@ const RuntimeLogs: React.FC = () => {
   const shouldDisplayLogs = (!loading || afterTs) && logs.length > 0;
 
   return (
-    <Box
-      bgcolor="container.paper"
-      sx={{
-        color: "white",
-        p: 2,
-      }}
+    <Card
+      sx={{ width: "100%", color: "white" }}
+      loading={isLoadingFirstPage}
+      error={error}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ width: "100%" }}>
-          <Typography variant="h6">Runtime logs</Typography>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              opacity: 0.5,
-              mb: 2,
-            }}
-          >
+      <CardHeader
+        title="Runtime logs"
+        subtitle={
+          <>
             Logs produced by server side rendered apps and API functions will be
             displayed here. <br /> These logs belong to deployment{" "}
             <Link href={location.pathname.replace("/runtime-logs", "")}>
-              {deploymentId}
+              #{deploymentId}
             </Link>
             .
-          </Typography>
-        </Box>
-      </Box>
-
-      <Box>
-        {isLoadingFirstPage ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Spinner />
-          </Box>
-        ) : error ? (
-          <Alert color="error">
-            <AlertTitle>Error</AlertTitle>
-            <Typography>{error}</Typography>
-          </Alert>
-        ) : shouldDisplayLogs ? (
-          <>
-            <Box
-              sx={{
-                display: "flex",
-                p: 2,
-                mb: 2,
-                bgcolor: "rgba(0,0,0,0.1)",
-                borderBottom: "1px solid rgba(255,255,255,0.1)",
-              }}
-            >
-              <Box sx={{ width: "176px" }}>Time</Box>
-              <Box>Message</Box>
-            </Box>
-            <Box sx={{ fontFamily: "monospace" }}>{logs.map(renderLog)}</Box>
           </>
-        ) : (
-          <EmptyPage>
-            It's quite empty in here.
-            <br />
-            Logs captured by serverless functions will be displayed here.
-          </EmptyPage>
-        )}
-      </Box>
+        }
+      />
+      {shouldDisplayLogs ? (
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ borderBottom, width: "166px" }}>
+                Timestamp
+              </TableCell>
+              <TableCell sx={{ borderBottom }}>Message</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{logs.map(renderLog)}</TableBody>
+        </Table>
+      ) : (
+        <EmptyPage>
+          It's quite empty in here.
+          <br />
+          Logs captured by serverless functions will be displayed here.
+        </EmptyPage>
+      )}
 
-      {!loading && hasNextPage ? (
-        <Box sx={{ textAlign: "center", pt: 2 }}>
+      {!loading && hasNextPage && (
+        <CardFooter sx={{ textAlign: "center" }}>
           <Button
             type="button"
             variant="text"
-            color="info"
             loading={loading}
             onClick={() => {
               setAfterTs(logs[logs.length - 1]?.timestamp);
@@ -156,9 +142,9 @@ const RuntimeLogs: React.FC = () => {
           >
             Load more
           </Button>
-        </Box>
-      ) : null}
-    </Box>
+        </CardFooter>
+      )}
+    </Card>
   );
 };
 
