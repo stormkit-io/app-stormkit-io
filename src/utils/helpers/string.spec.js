@@ -1,24 +1,24 @@
 import { capitalize, parseBoolean, booleanToString, truncate } from "./string";
 
 describe("utils/helpers/string", () => {
-  test.skip("capitalize", () => {
+  test("capitalize", () => {
     expect(capitalize("my string")).toBe("My string");
     expect(capitalize()).toBe("");
   });
 
-  test.skip("parseBoolean", () => {
+  test("parseBoolean", () => {
     expect(parseBoolean("true")).toBe(true);
     expect(parseBoolean("false")).toBe(false);
     expect(parseBoolean("")).toBeUndefined();
   });
 
-  test.skip("booleanToString", () => {
+  test("booleanToString", () => {
     expect(booleanToString(true)).toBe("true");
     expect(booleanToString(false)).toBe("false");
     expect(booleanToString()).toBe("");
   });
 
-  test.skip("truncate", () => {
+  test("truncate", () => {
     expect(truncate("hello world", 6)).toBe("hello...");
   });
 });
