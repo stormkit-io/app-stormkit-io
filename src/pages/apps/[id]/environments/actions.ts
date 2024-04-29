@@ -44,13 +44,6 @@ export const useFetchEnvironments = ({
             res.envs.map(e => ({
               ...e,
               name: e.env,
-              getDomainName: () => {
-                return e.domain?.name && e.domain?.verified
-                  ? e.domain.name
-                  : e.env === "production"
-                  ? `${app.displayName}.stormkit.dev`
-                  : `${app.displayName}--${e.env}.stormkit.dev`;
-              },
             }))
           );
         }
