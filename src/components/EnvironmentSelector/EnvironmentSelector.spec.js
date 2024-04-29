@@ -15,10 +15,6 @@ describe("EnvironmentsSelector component", () => {
   beforeEach(() => {
     onSelect = jest.fn();
     environments = data.mockEnvironmentsResponse().envs;
-    environments.forEach(e => {
-      e.getDomainName = () =>
-        e.domain.name || "https://mock-domain.stormkit.dev";
-    });
 
     wrapper = render(
       <form>
