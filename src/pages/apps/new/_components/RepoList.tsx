@@ -1,7 +1,6 @@
 import type { Repo } from "../types.d";
 import { useState, useMemo, useContext } from "react";
 import { useNavigate } from "react-router";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
@@ -107,62 +106,52 @@ export default function RepoList({
         </div>
       )}
 
-      {!loading && (
-        <TransitionGroup>
-          {repos.map(r => (
-            <CSSTransition
-              timeout={350}
-              classNames="fade-in"
-              unmountOnExit
-              appear
-              key={r.name}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  px: 2,
-                  pr: 1,
-                  py: 1,
-                  borderBottom: `1px solid ${grey[900]}`,
-                  ":hover": {
-                    bgcolor: "rgba(255,255,255,0.05)",
-                  },
-                  ":last-child": {
-                    borderBottom: "none",
-                  },
-                }}
-                aria-label={r.name}
-                tabIndex={0}
-                role="button"
-                onKeyUp={e => {
-                  if (e.key === "Enter") {
-                    handleRepoInsert(r);
-                  }
-                }}
-                onClick={() => {
-                  handleRepoInsert(r);
-                }}
+      {!loading &&
+        repos.map(r => (
+          <Box
+            key={r.fullName}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              px: 2,
+              pr: 1,
+              py: 1,
+              borderBottom: `1px solid ${grey[900]}`,
+              ":hover": {
+                bgcolor: "rgba(255,255,255,0.05)",
+              },
+              ":last-child": {
+                borderBottom: "none",
+              },
+            }}
+            aria-label={r.name}
+            tabIndex={0}
+            role="button"
+            onKeyUp={e => {
+              if (e.key === "Enter") {
+                handleRepoInsert(r);
+              }
+            }}
+            onClick={() => {
+              handleRepoInsert(r);
+            }}
+          >
+            <div className="inline-block mr-2 w-5">
+              <img src={logo} className="w-full" alt={provider} />
+            </div>
+            <div className="flex-1 leading-4">{r.name}</div>
+            <Box>
+              <Button
+                variant="text"
+                color="info"
+                loading={loadingInsert === r.fullName}
               >
-                <div className="inline-block mr-2 w-5">
-                  <img src={logo} className="w-full" alt={provider} />
-                </div>
-                <div className="flex-1 leading-4">{r.name}</div>
-                <Box>
-                  <Button
-                    variant="text"
-                    color="info"
-                    loading={loadingInsert === r.fullName}
-                  >
-                    <span className="uppercase text-xs font-bold">import</span>
-                    <span className="fas fa-chevron-right text-base ml-2" />
-                  </Button>
-                </Box>
-              </Box>
-            </CSSTransition>
-          ))}
-        </TransitionGroup>
-      )}
+                <span className="uppercase text-xs font-bold">import</span>
+                <span className="fas fa-chevron-right text-base ml-2" />
+              </Button>
+            </Box>
+          </Box>
+        ))}
       {hasNextPage && repos.length > 0 && (
         <Box sx={{ mt: 2, textAlign: "center" }}>
           <Button

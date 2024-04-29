@@ -6,9 +6,7 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     "element": <React.Suspense
       fallback={
         <Spinner
-          height={10}
           pageCenter={true}
-          width={10}
         />
       }
     >
@@ -20,9 +18,7 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     "element": <React.Suspense
       fallback={
         <Spinner
-          height={10}
           pageCenter={true}
-          width={10}
         />
       }
     >
@@ -34,9 +30,7 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     "element": <React.Suspense
       fallback={
         <Spinner
-          height={10}
           pageCenter={true}
-          width={10}
         />
       }
     >
@@ -48,9 +42,7 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     "element": <React.Suspense
       fallback={
         <Spinner
-          height={10}
           pageCenter={true}
-          width={10}
         />
       }
     >
@@ -62,9 +54,7 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     "element": <React.Suspense
       fallback={
         <Spinner
-          height={10}
           pageCenter={true}
-          width={10}
         />
       }
     >
@@ -76,9 +66,7 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     "element": <React.Suspense
       fallback={
         <Spinner
-          height={10}
           pageCenter={true}
-          width={10}
         />
       }
     >
@@ -90,9 +78,7 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     "element": <React.Suspense
       fallback={
         <Spinner
-          height={10}
           pageCenter={true}
-          width={10}
         />
       }
     >

@@ -16,6 +16,11 @@ interface Props {
   env: Environment;
 }
 
+jest.mock("@codemirror/lang-json", () => ({ json: jest.fn() }));
+jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
+  <>{value}</>
+));
+
 describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => {
   let fetchSnippetsScope: Scope;
   let fetchDomainsScope: Scope;

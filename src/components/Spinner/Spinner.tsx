@@ -12,8 +12,8 @@ interface Props {
 }
 
 const Spinner: React.FC<Props> = ({
-  width,
-  height,
+  width = 10,
+  height = 10,
   pageCenter,
   primary,
   secondary,
@@ -39,11 +39,5 @@ const Spinner: React.FC<Props> = ({
     </div>
   </div>
 );
-
-// Width and height are numbers compatible with tailwind sizes.
-Spinner.defaultProps = {
-  width: 10,
-  height: 10,
-} as Partial<Props>;
 
 export default Spinner;

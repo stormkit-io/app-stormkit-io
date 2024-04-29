@@ -117,16 +117,14 @@ export default function NewGithubApp() {
         </CardHeader>
         <Box>
           {!faLoading && accounts?.length > 0 && (
-            <Box sx={{ display: "flex", mb: 2 }}>
-              <Accounts
-                accounts={accounts}
-                selected={installationId}
-                onAccountChange={id => {
-                  setPage(1);
-                  setInstallationId(id);
-                }}
-              />
-            </Box>
+            <Accounts
+              accounts={accounts}
+              selected={installationId}
+              onAccountChange={id => {
+                setPage(1);
+                setInstallationId(id);
+              }}
+            />
           )}
 
           {!faLoading && accounts?.length === 0 && (
@@ -141,8 +139,8 @@ export default function NewGithubApp() {
           <RepoList
             repositories={repos}
             provider="github"
-            error={error}
             loading={loading}
+            error={error}
             isLoadingMore={isLoadingMore}
             hasNextPage={hasNextPage}
             onNextPage={() => setPage(page + 1)}
