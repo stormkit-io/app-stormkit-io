@@ -61,11 +61,11 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
     autoPublish: true,
     autoDeploy: true,
     preview: currentEnv.preview,
-    domain: currentEnv.domain,
     build: {
       cmd: "",
       distFolder: "",
       vars: {},
+      previewLinks: false,
     },
   });
 
