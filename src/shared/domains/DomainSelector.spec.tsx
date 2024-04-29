@@ -23,7 +23,7 @@ describe("~/shared/domains/DomainSelector.tsx", () => {
   const appId = "2541";
   const envId = "58181";
 
-  const findDropdown = () => wrapper.getByLabelText("Domains");
+  const findDropdown = () => wrapper.getByRole("combobox");
   const findOption = (text: string) => getAllByText(document.body, text).at(0);
 
   const domains = [
@@ -98,13 +98,13 @@ describe("~/shared/domains/DomainSelector.tsx", () => {
   describe("single select", () => {
     beforeEach(async () => {
       await createWrapper({ withDevDomains: false, multiple: false });
-      openDropdown();
+      await openDropdown();
     });
 
     test("should display fetched domains", async () => {
       expect(() => findOption("All development endpoints (*.dev)")).toThrow();
 
-      await fireEvent.click(findOption("www.e.org")!);
+      fireEvent.click(findOption("www.e.org")!);
 
       // When single select, we return the domain object instead.
       expect(onDomainSelect).toHaveBeenCalledWith([domains[0]]);

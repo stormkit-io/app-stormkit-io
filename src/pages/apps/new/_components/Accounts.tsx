@@ -23,6 +23,7 @@ const Accounts: React.FC<Props> = ({
       fullWidth
       disabled={loading}
       value={selected || ""}
+      aria-label="Account selector"
       onChange={(e: SelectChangeEvent<unknown>) => {
         onAccountChange(e.target.value as string);
       }}

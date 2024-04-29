@@ -42,6 +42,8 @@ describe("~/pages/apps/new/_components/Accounts.tsx", () => {
     );
   };
 
+  const findSelector = () => wrapper.getByRole("combobox");
+
   describe("loading", () => {
     test("does not display a spinner when loading is false", () => {
       createWrapper({ accounts, loading: false });
@@ -52,9 +54,10 @@ describe("~/pages/apps/new/_components/Accounts.tsx", () => {
   describe("accounts", () => {
     test("displays a list of accounts", async () => {
       createWrapper({ accounts });
-      const input = wrapper.getByRole("button");
+      const input = findSelector();
       expect(input).toBeTruthy();
       fireEvent.mouseDown(input);
+
       await waitFor(() => {
         expect(wrapper.getByText("jdoe")).toBeTruthy();
         expect(wrapper.getByText("jane")).toBeTruthy();

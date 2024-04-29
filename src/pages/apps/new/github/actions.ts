@@ -49,8 +49,6 @@ export const useFetchRepos = ({
       return;
     }
 
-    setHasNextPage(false);
-
     if (page > 1) {
       setIsLoadingMore(true);
     } else {

@@ -13,8 +13,8 @@ interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
 const EnvironmentSelector: React.FC<Props> = ({
   environments,
   defaultValue = "",
+  placeholder = "Select an environment",
   onSelect,
-  placeholder,
   className,
   ...rest
 }): React.ReactElement => {
@@ -45,10 +45,5 @@ const EnvironmentSelector: React.FC<Props> = ({
     </div>
   );
 };
-
-EnvironmentSelector.defaultProps = {
-  placeholder: "Select an environment",
-  defaultValue: "",
-} as Partial<Props>;
 
 export default EnvironmentSelector;

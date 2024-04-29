@@ -1,6 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import githubApi from "~/utils/api/Github";
 import * as nocks from "~/testing/nocks/nock_github";
@@ -13,20 +13,24 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   let wrapper: RenderResult;
   let user: User;
 
+  const findOption = (text: string) => screen.getByText(text);
+
   const createWrapper = () => {
     user = mockUser();
-    const memoryRouter = createMemoryRouter([
-      {
-        path: "*",
-        element: (
-          <AuthContext.Provider value={{ user }}>
-            <NewGithubApp />
-          </AuthContext.Provider>
-        ),
-      },
-    ]);
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = render(
+      <RouterProvider
+        router={createMemoryRouter([
+          {
+            path: "*",
+            element: (
+              <AuthContext.Provider value={{ user }}>
+                <NewGithubApp />
+              </AuthContext.Provider>
+            ),
+          },
+        ])}
+      />
+    );
   };
 
   describe("empty data", () => {
@@ -56,11 +60,11 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
     const installationId2 = "5911";
     const originalBaseUrl = githubApi.baseurl;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       githubApi.accessToken = "123456";
       githubApi.baseurl = "http://localhost";
 
-      mockFetchInstallations({
+      const scope1 = mockFetchInstallations({
         response: {
           total_count: 10,
           installations: [
@@ -82,7 +86,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
         },
       });
 
-      mockFetchRepositories({
+      const scope2 = mockFetchRepositories({
         installationId,
         query: {
           page: 1,
@@ -100,6 +104,11 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
       });
 
       createWrapper();
+
+      await waitFor(() => {
+        expect(scope1.isDone()).toBe(true);
+        expect(scope2.isDone()).toBe(true);
+      });
     });
 
     afterEach(() => {
@@ -145,12 +154,17 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
         expect(wrapper.getByText("simple-project")).toBeTruthy();
       });
 
-      const input = wrapper.getAllByRole("button").at(1);
-      expect(input).toBeTruthy();
-      fireEvent.mouseDown(input!);
+      const input = wrapper.getByRole("combobox");
 
       await waitFor(() => {
-        expect(wrapper.getByText("jane")).toBeTruthy();
+        expect(findOption("jdoe")).toBeTruthy();
+      });
+
+      expect(input).toBeTruthy();
+      fireEvent.mouseDown(input);
+
+      await waitFor(() => {
+        expect(findOption("jane")).toBeTruthy();
       });
 
       fireEvent.click(wrapper.getByText("jane"));

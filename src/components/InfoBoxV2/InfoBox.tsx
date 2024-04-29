@@ -68,7 +68,7 @@ const InfoBox: React.FC<Props> & {
   children,
   className,
   scrollIntoView,
-  showIcon,
+  showIcon = true,
   type = DEFAULT,
   toaster,
   dismissable,
@@ -140,10 +140,5 @@ const InfoBox: React.FC<Props> & {
 InfoBox.ERROR = ERROR;
 InfoBox.SUCCESS = SUCCESS;
 InfoBox.WARNING = WARNING;
-
-InfoBox.defaultProps = {
-  type: DEFAULT,
-  showIcon: true,
-} as Partial<Props>;
 
 export default InfoBox;
