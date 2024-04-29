@@ -1,4 +1,4 @@
-import type { AutoDeployValues, FormValues } from "../actions";
+import type { AutoDeployValues } from "../actions";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Typography } from "@mui/material";
@@ -16,9 +16,8 @@ import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import ConfirmModal from "~/components/ConfirmModal";
 import {
-  updateEnvironment,
+  useSubmitHandler,
   deleteEnvironment,
-  buildFormValues,
   computeAutoDeployValue,
 } from "../actions";
 
@@ -34,13 +33,24 @@ export default function TabConfigGeneral({
   setRefreshToken,
 }: Props) {
   const navigate = useNavigate();
-  const [error, setError] = useState<string>();
-  const [success, setSuccess] = useState<string>();
-  const [isLoading, setLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [autoPublish, setAutoPublish] = useState(env.autoPublish || false);
+  const [previewLinks, setPreviewLinks] = useState(
+    env.build.previewLinks || false
+  );
   const [autoDeploy, setAutoDeploy] = useState<AutoDeployValues>(
     computeAutoDeployValue(env)
   );
+
+  const { submitHandler, error, isLoading, success } = useSubmitHandler({
+    app,
+    env,
+    setRefreshToken,
+    controlled: {
+      autoPublish: autoPublish ? "on" : "off",
+      "build.previewLinks": previewLinks ? "on" : "off",
+    },
+  });
 
   useEffect(() => {
     setAutoDeploy(computeAutoDeployValue(env));
@@ -51,6 +61,7 @@ export default function TabConfigGeneral({
   }
 
   const isProduction = env.name?.toLowerCase() === "production";
+  const isAutoDeployEnabled = autoDeploy !== "disabled";
 
   return (
     <Card
@@ -59,24 +70,7 @@ export default function TabConfigGeneral({
       error={error}
       success={success}
       sx={{ color: "white", mb: 2 }}
-      onSubmit={e => {
-        e.preventDefault();
-
-        const values: FormValues = buildFormValues(
-          env,
-          e.target as HTMLFormElement
-        );
-
-        updateEnvironment({
-          app,
-          envId: env.id!,
-          values,
-          setError,
-          setLoading,
-          setSuccess,
-          setRefreshToken,
-        });
-      }}
+      onSubmit={submitHandler}
     >
       <CardHeader
         title="General settings"
@@ -110,7 +104,11 @@ export default function TabConfigGeneral({
             <Switch
               name="autoPublish"
               color="secondary"
-              defaultChecked={env.autoPublish}
+              checked={autoPublish}
+              onChange={e => {
+                console.log("checked", e.target.checked);
+                setAutoPublish(e.target.checked);
+              }}
             />
           }
           labelPlacement="start"
@@ -191,6 +189,30 @@ export default function TabConfigGeneral({
               </>
             }
           />
+        </Box>
+      )}
+
+      {isAutoDeployEnabled && (
+        <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
+          <FormControlLabel
+            sx={{ pl: 0, ml: 0 }}
+            label="Preview links"
+            control={
+              <Switch
+                name="build.previewLinks"
+                color="secondary"
+                checked={previewLinks}
+                onChange={e => {
+                  setPreviewLinks(e.target.checked);
+                }}
+              />
+            }
+            labelPlacement="start"
+          />
+          <Typography sx={{ opacity: 0.5 }}>
+            Turn this feature on to leave preview links on the pull/merge
+            request pages.
+          </Typography>
         </Box>
       )}
 

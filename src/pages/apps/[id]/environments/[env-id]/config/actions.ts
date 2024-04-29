@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import api from "~/utils/api/Api";
 
 export const computeAutoDeployValue = (env?: Environment): AutoDeployValues => {
@@ -33,6 +33,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     redirectsFile: values["build.redirectsFile"],
     apiFolder: values["build.apiFolder"],
     apiPathPrefix: values["build.apiPathPrefix"],
+    previewLinks: values["build.previewLinks"] === "on",
     vars,
   };
 
@@ -41,12 +42,27 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
 
 export const buildFormValues = (
   env: Environment,
-  form: HTMLFormElement
+  form: HTMLFormElement,
+  controlled?: FormValues
 ): FormValues => {
   const values = Object.fromEntries(new FormData(form).entries());
 
+  // This is for controlled values, such as Switches.
+  if (controlled) {
+    Object.keys(controlled).forEach(key => {
+      if (typeof values[key] === "undefined") {
+        values[key] = controlled[key as keyof FormValues]!;
+      }
+    });
+  }
+
   if (typeof values.autoPublish === "undefined") {
     values.autoPublish = env.autoPublish ? "on" : "off";
+  }
+
+  if (typeof values["build.previewLinks"] === "undefined") {
+    values["build.previewLinks"] =
+      env.build.previewLinks !== false ? "on" : "off";
   }
 
   // Normalize autoDeploy values
@@ -57,8 +73,10 @@ export const buildFormValues = (
   return {
     name: env.name,
     branch: env.branch,
+    autoPublish: env.autoPublish ? "on" : "off",
     autoDeploy: computeAutoDeployValue(env),
     autoDeployBranches: env.autoDeployBranches,
+    "build.previewLinks": env.build.previewLinks ? "on" : "off",
     "build.headersFile": env.build.headersFile,
     "build.redirectsFile": env.build.redirectsFile,
     "build.apiFolder": env.build.apiFolder,
@@ -141,11 +159,12 @@ export const useFetchRepoMeta = ({
 export type AutoDeployValues = "disabled" | "all" | "custom";
 
 export interface FormValues {
-  name: string;
-  branch: string;
+  name?: string;
+  branch?: string;
   autoDeploy?: AutoDeployValues;
   autoPublish?: "on" | "off";
   autoDeployBranches?: string;
+  "build.previewLinks"?: "on" | "off";
   "build.cmd"?: string;
   "build.distFolder"?: string;
   "build.headersFile"?: string;
@@ -342,4 +361,44 @@ export const deleteEnvironment = ({
     appId: app.id,
     env: name,
   });
+};
+
+interface SubmitHandlerProps {
+  app: App;
+  env: Environment;
+  setRefreshToken: (v: number) => void;
+  controlled?: FormValues;
+}
+
+export const useSubmitHandler = ({
+  env,
+  app,
+  setRefreshToken,
+  controlled,
+}: SubmitHandlerProps) => {
+  const [error, setError] = useState<string>();
+  const [success, setSuccess] = useState<string>();
+  const [isLoading, setLoading] = useState(false);
+
+  const handler: FormEventHandler = e => {
+    e.preventDefault();
+
+    const values: FormValues = buildFormValues(
+      env,
+      e.target as HTMLFormElement,
+      controlled
+    );
+
+    updateEnvironment({
+      app,
+      envId: env.id!,
+      values,
+      setError,
+      setLoading,
+      setSuccess,
+      setRefreshToken,
+    });
+  };
+
+  return { submitHandler: handler, error, isLoading, success };
 };

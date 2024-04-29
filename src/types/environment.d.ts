@@ -1,4 +1,5 @@
 declare type BuildConfig = {
+  previewLinks?: boolean;
   apiFolder?: string;
   apiPathPrefix?: string;
   headersFile?: string;

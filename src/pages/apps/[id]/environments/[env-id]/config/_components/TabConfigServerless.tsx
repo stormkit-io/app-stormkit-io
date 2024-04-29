@@ -1,12 +1,10 @@
-import type { FormValues } from "../actions";
-import { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import { updateEnvironment, buildFormValues } from "../actions";
+import { useSubmitHandler } from "../actions";
 
 interface Props {
   app: App;
@@ -19,9 +17,11 @@ export default function TabConfigGeneral({
   app,
   setRefreshToken,
 }: Props) {
-  const [error, setError] = useState<string>();
-  const [success, setSuccess] = useState<string>();
-  const [isLoading, setLoading] = useState(false);
+  const { error, success, isLoading, submitHandler } = useSubmitHandler({
+    env,
+    app,
+    setRefreshToken,
+  });
 
   if (!env) {
     return <></>;
@@ -34,24 +34,7 @@ export default function TabConfigGeneral({
       sx={{ color: "white", mb: 2 }}
       error={error}
       success={success}
-      onSubmit={e => {
-        e.preventDefault();
-
-        const values: FormValues = buildFormValues(
-          env,
-          e.target as HTMLFormElement
-        );
-
-        updateEnvironment({
-          app,
-          envId: env.id!,
-          values,
-          setError,
-          setLoading,
-          setSuccess,
-          setRefreshToken,
-        });
-      }}
+      onSubmit={submitHandler}
     >
       <CardHeader
         title="Serverless"
