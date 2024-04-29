@@ -35,9 +35,7 @@ export default function TabConfigGeneral({
   const navigate = useNavigate();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [autoPublish, setAutoPublish] = useState(env.autoPublish || false);
-  const [previewLinks, setPreviewLinks] = useState(
-    env.build.previewLinks || false
-  );
+  const [previewLinks, setPreviewLinks] = useState(env.build.previewLinks);
   const [autoDeploy, setAutoDeploy] = useState<AutoDeployValues>(
     computeAutoDeployValue(env)
   );
@@ -201,7 +199,9 @@ export default function TabConfigGeneral({
               <Switch
                 name="build.previewLinks"
                 color="secondary"
-                checked={previewLinks}
+                checked={
+                  typeof previewLinks === "boolean" ? previewLinks : true
+                }
                 onChange={e => {
                   setPreviewLinks(e.target.checked);
                 }}
