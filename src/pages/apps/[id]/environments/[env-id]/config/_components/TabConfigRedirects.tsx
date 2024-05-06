@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
@@ -5,6 +6,7 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import { useSubmitHandler } from "../actions";
+import RedirectsPlaygroundModal from "./RedirectsPlaygroundModal";
 
 interface Props {
   app: App;
@@ -17,6 +19,7 @@ export default function TabConfigGeneral({
   app,
   setRefreshToken,
 }: Props) {
+  const [showModal, setShowModal] = useState(false);
   const { submitHandler, error, success, isLoading } = useSubmitHandler({
     app,
     env,
@@ -39,6 +42,15 @@ export default function TabConfigGeneral({
       <CardHeader
         title="Redirects"
         subtitle="Configure redirects and path rewrites for your application."
+        actions={
+          <Button
+            variant="text"
+            sx={{ color: "white" }}
+            onClick={() => setShowModal(true)}
+          >
+            Playground
+          </Button>
+        }
       />
       <Box sx={{ mb: 4 }}>
         <TextField
@@ -68,6 +80,15 @@ export default function TabConfigGeneral({
           Save
         </Button>
       </CardFooter>
+      {showModal && (
+        <RedirectsPlaygroundModal
+          env={env}
+          appId={app.id}
+          onClose={() => {
+            setShowModal(false);
+          }}
+        />
+      )}
     </Card>
   );
 }
