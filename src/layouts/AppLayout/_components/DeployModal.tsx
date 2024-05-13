@@ -181,7 +181,7 @@ const DeployModal: React.FC<Props> = ({
                 Repository is inaccessible. See the{" "}
                 <Link
                   className="font-bold hover:text-white hover:underline"
-                  to="https://www.stormkit.io/docs/troubleshooting#repository-is-innaccessible"
+                  to="https://www.stormkit.io/docs/other/troubleshooting#repository-is-innaccessible"
                 >
                   troubleshooting
                 </Link>{" "}

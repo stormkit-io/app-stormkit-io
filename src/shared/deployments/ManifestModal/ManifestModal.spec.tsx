@@ -74,7 +74,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
         )
       ).toBeTruthy();
       expect(wrapper.getByText("Learn more.").getAttribute("href")).toBe(
-        "https://www.stormkit.io/docs/troubleshooting#index-html-missing"
+        "https://www.stormkit.io/docs/other/troubleshooting#index-html-missing"
       );
     });
   });

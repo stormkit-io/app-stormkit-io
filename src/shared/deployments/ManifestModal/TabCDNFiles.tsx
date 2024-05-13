@@ -134,7 +134,7 @@ const TabCDNFiles: React.FC<Props> = ({ manifest, deployment }) => {
           and server side rendering is not detected.{" "}
           <Link
             className="font-bold"
-            to="https://www.stormkit.io/docs/troubleshooting#index-html-missing"
+            to="https://www.stormkit.io/docs/other/troubleshooting#index-html-missing"
           >
             Learn more.
           </Link>
