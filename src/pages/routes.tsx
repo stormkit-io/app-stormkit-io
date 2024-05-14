@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { RouteProps } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import Async from "~/components/Async";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
 
-const RedirectApps: React.FC = () => {
+function RedirectApps() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -14,9 +14,9 @@ const RedirectApps: React.FC = () => {
   }, [navigate]);
 
   return <></>;
-};
+}
 
-const RedirectNewApp: React.FC = () => {
+function RedirectNewApp() {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,9 +24,9 @@ const RedirectNewApp: React.FC = () => {
   }, [navigate]);
 
   return <></>;
-};
+}
 
-const RedirectToEnvPage: React.FC = () => {
+function RedirectToEnvPage() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -35,7 +35,7 @@ const RedirectToEnvPage: React.FC = () => {
   }, [navigate]);
 
   return <></>;
-};
+}
 
 const centerLayout = () => import("~/layouts/CenterLayout");
 
