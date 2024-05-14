@@ -94,7 +94,8 @@ export default function RedirectsPlaygroundModal({
         onSubmit={submitHandler}
         error={
           error || !env.published
-            ? "Redirects are tested against the published deployments. Please deploy and publish before testing redirects."
+            ? error ||
+              "Redirects are tested against the published deployments. Please deploy and publish before testing redirects."
             : undefined
         }
       >
