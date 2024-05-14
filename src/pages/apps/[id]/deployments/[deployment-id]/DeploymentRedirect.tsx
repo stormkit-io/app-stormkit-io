@@ -10,11 +10,10 @@ const Deployment: React.FC = () => {
   const { deploymentId } = useParams();
   const { app } = useContext(AppContext);
   const { deployment, loading } = useFetchDeployment({
-    app,
     deploymentId,
   });
 
-  const { envId } = deployment?.config || {};
+  const envId = deployment?.envId;
   const { id } = deployment || {};
 
   useEffect(() => {
