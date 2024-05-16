@@ -104,7 +104,6 @@ export default function TabConfigGeneral({
               color="secondary"
               checked={autoPublish}
               onChange={e => {
-                console.log("checked", e.target.checked);
                 setAutoPublish(e.target.checked);
               }}
             />
