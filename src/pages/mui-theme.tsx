@@ -57,6 +57,9 @@ export default createTheme({
     },
     MuiAlert: {
       styleOverrides: {
+        standardInfo: {
+          backgroundColor: "rgba(255,255,255,0.1)",
+        },
         standardWarning: {
           backgroundColor: "#b75c22",
           color: "white",

@@ -118,7 +118,6 @@ function Card({
             sx={{
               mb: footer ? p : 0,
               px: p,
-              bgcolor: "rgba(255,255,255,0.025)",
               borderRadius: 0,
             }}
           >
