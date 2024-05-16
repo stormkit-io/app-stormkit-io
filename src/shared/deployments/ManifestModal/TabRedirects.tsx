@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableRow from "@mui/material/TableRow";
@@ -6,6 +7,8 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import EmptyPage from "~/components/EmptyPage";
 
 interface Props {
@@ -31,7 +34,9 @@ function redirectStatus({ status, isAbsolute }: RedirectStatusProps): string {
 }
 
 export default function TabRedirects({ redirects }: Props) {
-  if (!redirects) {
+  const { environment } = useContext(EnvironmentContext);
+
+  if (!redirects && !environment.build.redirects?.length) {
     return (
       <EmptyPage sx={{ my: 6 }}>
         <>
@@ -58,6 +63,14 @@ export default function TabRedirects({ redirects }: Props) {
 
   return (
     <Box>
+      {environment.build.redirects?.length && (
+        <Alert color="info" sx={{ mb: 4 }}>
+          <Typography>
+            Environment level redirects active. They take precedence over
+            deployment redirects.
+          </Typography>
+        </Alert>
+      )}
       <Table>
         <TableHead>
           <TableRow

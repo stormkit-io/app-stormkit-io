@@ -1,6 +1,4 @@
 import { FormEventHandler, useState } from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
 import Table from "@mui/material/Table";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
@@ -11,13 +9,13 @@ import Button from "@mui/lab/LoadingButton";
 import TextInput from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import Modal from "~/components/Modal";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import api from "~/utils/api/Api";
 import { grey } from "@mui/material/colors";
+import RedirectsEditor from "./RedirectsEditor";
 
 interface Props {
   env: Environment;
@@ -45,10 +43,10 @@ export default function RedirectsPlaygroundModal({
   env,
 }: Props) {
   const [address, setAddress] = useState(env.preview);
-  const [redirects, setRedirects] = useState(exampleRedirects);
   const [result, setResult] = useState<SubmitReturn>();
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [redirects, setRedirects] = useState(exampleRedirects);
 
   const submitHandler: FormEventHandler = e => {
     e.preventDefault();
@@ -126,26 +124,7 @@ export default function RedirectsPlaygroundModal({
           }}
         >
           <Typography sx={{ mb: 2, color: grey[400] }}>Redirects</Typography>
-          <CodeMirror
-            maxHeight="200px"
-            value={redirects}
-            extensions={[json()]}
-            onChange={value => setRedirects(value)}
-            theme="dark"
-          />
-          <Typography sx={{ mt: 2, color: grey[400] }}>
-            Check the{" "}
-            <Link
-              href={
-                "https://stormkit.io/docs/features/redirects-and-path-rewrites"
-              }
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              docs
-            </Link>{" "}
-            for more information.
-          </Typography>
+          <RedirectsEditor value={redirects} onChange={setRedirects} />
         </Box>
         {result &&
           (result.match ? (

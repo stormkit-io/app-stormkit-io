@@ -4,6 +4,7 @@ declare type BuildConfig = {
   apiPathPrefix?: string;
   headersFile?: string;
   redirectsFile?: string;
+  redirects?: Redirect[];
   distFolder: string;
   cmd: string;
   vars: Record<string, string>;
@@ -30,6 +31,14 @@ interface PublishedInfo {
   deploymentId: string;
   branch: string;
   percentage: number;
+}
+
+interface Redirect {
+  from: string;
+  to: string;
+  status?: number;
+  assets?: boolean;
+  hosts?: string[];
 }
 
 declare type Environment = {

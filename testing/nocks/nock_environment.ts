@@ -2,6 +2,31 @@ import nock from "nock";
 
 const endpoint = process.env.API_DOMAIN || "";
 
+const toRequestObject = (environment: Environment) => {
+  return JSON.parse(
+    JSON.stringify({
+      id: environment.id,
+      appId: environment.appId,
+      env: environment.env,
+      branch: environment.branch,
+      autoPublish: environment.autoPublish,
+      autoDeploy: environment.autoDeploy,
+      autoDeployBranches: environment.autoDeployBranches,
+      build: {
+        previewLinks: environment.build.previewLinks,
+        apiFolder: environment.build.apiFolder,
+        apiPathPrefix: environment.build.apiPathPrefix,
+        headersFile: environment.build.headersFile,
+        redirectsFile: environment.build.redirectsFile,
+        redirects: environment.build.redirects,
+        distFolder: environment.build.distFolder,
+        cmd: environment.build.cmd,
+        vars: environment.build.vars,
+      },
+    })
+  );
+};
+
 interface FetchStatusProps {
   url: string;
   appId: string;
@@ -55,20 +80,17 @@ export const mockInsertEnvironment = ({
   environment,
   status = 200,
   response = { envId: environment.id },
-}: InsertEnvironmentProps) =>
-  nock(endpoint)
-    .post(`/app/env`, {
-      appId: environment.appId,
-      env: environment.name,
-      branch: environment.branch,
-      autoPublish: environment.autoPublish,
-      autoDeploy: environment.autoDeploy,
-      autoDeployBranches: environment.autoDeployBranches || null,
-      build: {
-        ...environment.build,
-      },
+}: InsertEnvironmentProps) => {
+  const data = toRequestObject(environment);
+  delete data.id;
+
+  return nock(endpoint)
+    .post(`/app/env`, (body: any) => {
+      expect(body).toEqual(data);
+      return true;
     })
     .reply(status, response);
+};
 
 interface UpdateEnvironmentProps {
   environment: Environment;
@@ -82,17 +104,9 @@ export const mockUpdateEnvironment = ({
   response = { ok: true },
 }: UpdateEnvironmentProps) => {
   return nock(endpoint)
-    .put(`/app/env`, {
-      appId: environment.appId,
-      id: environment.id,
-      env: environment.env,
-      branch: environment.branch,
-      autoPublish: environment.autoPublish,
-      autoDeploy: environment.autoDeploy,
-      autoDeployBranches: environment.autoDeployBranches || null,
-      build: {
-        ...environment.build,
-      },
+    .put(`/app/env`, (body: any) => {
+      expect(body).toEqual(toRequestObject(environment));
+      return true;
     })
     .reply(status, response);
 };

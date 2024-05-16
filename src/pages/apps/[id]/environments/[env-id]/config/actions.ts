@@ -26,6 +26,14 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     }
   });
 
+  let redirects: Redirect[] | undefined;
+
+  if (values["build.redirects"]) {
+    try {
+      redirects = JSON.parse(values["build.redirects"]);
+    } catch {}
+  }
+
   const build: BuildConfig = {
     cmd: values["build.cmd"]?.trim() || "",
     distFolder: (values["build.distFolder"] || "").trim(),
@@ -34,6 +42,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     apiFolder: values["build.apiFolder"],
     apiPathPrefix: values["build.apiPathPrefix"],
     previewLinks: values["build.previewLinks"] === "on",
+    redirects,
     vars,
   };
 
@@ -83,6 +92,7 @@ export const buildFormValues = (
     "build.apiPathPrefix": env.build.apiPathPrefix,
     "build.cmd": env.build.cmd,
     "build.distFolder": env.build.distFolder,
+    "build.redirects": JSON.stringify(env.build.redirects),
     "build.vars": Object.keys(env.build?.vars || {})
       .filter(key => env.build.vars[key])
       .map(key => `${key}=${env.build.vars[key]}`)
@@ -168,6 +178,7 @@ export interface FormValues {
   "build.cmd"?: string;
   "build.distFolder"?: string;
   "build.headersFile"?: string;
+  "build.redirects"?: string;
   "build.redirectsFile"?: string;
   "build.apiFolder"?: string;
   "build.apiPathPrefix"?: string;
@@ -370,6 +381,84 @@ interface SubmitHandlerProps {
   controlled?: FormValues;
 }
 
+export const validateRedirects = (
+  redirects: string,
+  setError: (s: string) => void
+) => {
+  if (!redirects) {
+    return true;
+  }
+
+  try {
+    const parsed = JSON.parse(redirects) as Redirect[];
+
+    if (!Array.isArray(parsed)) {
+      setError("Invalid format for redirects: expected an array of objects.");
+      return false;
+    }
+
+    const availableStatuses = [200, 300, 301, 302, 303, 304, 305, 306, 307];
+
+    for (const redirect of parsed) {
+      if (typeof redirect.from !== "string") {
+        setError(
+          "Invalid format for redirects: `from` needs to be type of string."
+        );
+
+        return false;
+      }
+
+      if (typeof redirect.to !== "string") {
+        setError(
+          "Invalid format for redirects: `to` needs to be type of string."
+        );
+
+        return false;
+      }
+
+      if (redirect.status && !availableStatuses.includes(redirect.status)) {
+        setError(
+          "Invalid format for redirects: `status` needs to be either 200 or 3xx."
+        );
+
+        return false;
+      }
+
+      if (redirect.assets && typeof redirect.assets !== "boolean") {
+        setError(
+          "Invalid format for redirects: `assets` needs to be either true, false or undefined."
+        );
+
+        return false;
+      }
+
+      if (redirect.hosts) {
+        if (!Array.isArray(redirect.hosts)) {
+          setError(
+            "Invalid format for redirects: `hosts` needs an array of strings."
+          );
+
+          return false;
+        }
+
+        for (const host of redirect.hosts) {
+          if (typeof host !== "string") {
+            setError(
+              "Invalid format for redirects: `hosts` needs an array of strings."
+            );
+
+            return false;
+          }
+        }
+      }
+    }
+  } catch {
+    return false;
+  }
+
+  return true;
+};
+
 export const useSubmitHandler = ({
   env,
   app,
@@ -388,6 +477,11 @@ export const useSubmitHandler = ({
       e.target as HTMLFormElement,
       controlled
     );
+
+    if (!validateRedirects(values["build.redirects"] || "", setError)) {
+      setSuccess("");
+      return;
+    }
 
     updateEnvironment({
       app,

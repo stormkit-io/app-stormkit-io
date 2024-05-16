@@ -1,4 +1,4 @@
-import { buildFormValues } from "./actions";
+import { buildFormValues, validateRedirects } from "./actions";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
 
@@ -73,5 +73,73 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/actions.tsx", () => {
         "build.vars": "BABEL_ENV=production\nNODE_ENV=production",
       });
     });
+  });
+
+  describe("validateRedirects", () => {
+    const setError = jest.fn();
+    let redirects = `{}`;
+
+    expect(validateRedirects(redirects, setError)).toBe(false);
+    expect(setError).toHaveBeenCalledWith(
+      "Invalid format for redirects: expected an array of objects."
+    );
+
+    setError.mockClear();
+    redirects = `[ 
+      { "from": 1 } 
+    ]`;
+
+    expect(validateRedirects(redirects, setError)).toBe(false);
+    expect(setError).toHaveBeenCalledWith(
+      "Invalid format for redirects: `from` needs to be type of string."
+    );
+
+    setError.mockClear();
+    redirects = `[ 
+      { "from": "/", "to": 2 } 
+    ]`;
+
+    expect(validateRedirects(redirects, setError)).toBe(false);
+    expect(setError).toHaveBeenCalledWith(
+      "Invalid format for redirects: `to` needs to be type of string."
+    );
+
+    setError.mockClear();
+    redirects = `[ 
+      { "from": "/", "to": "/", "status": 400 } 
+    ]`;
+
+    expect(validateRedirects(redirects, setError)).toBe(false);
+    expect(setError).toHaveBeenCalledWith(
+      "Invalid format for redirects: `status` needs to be either 200 or 3xx."
+    );
+
+    setError.mockClear();
+    redirects = `[ 
+      { "from": "/", "to": "/", "status": 200, "assets": "true" } 
+    ]`;
+
+    expect(validateRedirects(redirects, setError)).toBe(false);
+    expect(setError).toHaveBeenCalledWith(
+      "Invalid format for redirects: `assets` needs to be either true, false or undefined."
+    );
+
+    setError.mockClear();
+    redirects = `[ 
+      { "from": "/", "to": "/", "status": 200, "assets": true, "hosts": "abc.com" } 
+    ]`;
+
+    expect(validateRedirects(redirects, setError)).toBe(false);
+    expect(setError).toHaveBeenCalledWith(
+      "Invalid format for redirects: `hosts` needs an array of strings."
+    );
+
+    setError.mockClear();
+    redirects = `[ 
+      { "from": "/", "to": "/", "status": 200, "assets": true, "hosts": ["abc.com"] } 
+    ]`;
+
+    expect(validateRedirects(redirects, setError)).toBe(true);
+    expect(setError).not.toHaveBeenCalled();
   });
 });
