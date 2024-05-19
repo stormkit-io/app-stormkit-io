@@ -5,7 +5,7 @@ declare interface Snippet {
   prepend: boolean;
   location?: "head" | "body";
   rules?: SnippetRules;
-  id?: number;
+  id?: string;
 }
 
 declare interface SnippetRules {
