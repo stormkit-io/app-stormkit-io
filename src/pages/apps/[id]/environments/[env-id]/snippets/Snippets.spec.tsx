@@ -62,7 +62,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       fetchSnippetsScope = mockFetchSnippets({
         appId: currentApp.id,
         envId: currentEnv.id!,
-        response: { snippets },
+        response: { snippets, pagination: { hasNextPage: false } },
       });
 
       createWrapper({ app: currentApp, env: currentEnv });
@@ -101,6 +101,56 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
     });
   });
 
+  describe("with snippets - pagination", () => {
+    beforeEach(() => {
+      currentApp = mockApp();
+      currentEnv = mockEnvironment({ app: currentApp });
+      snippets = mockSnippets();
+      fetchSnippetsScope = mockFetchSnippets({
+        appId: currentApp.id,
+        envId: currentEnv.id!,
+        response: {
+          snippets,
+          pagination: { hasNextPage: true, afterId: "410" },
+        },
+      });
+
+      createWrapper({ app: currentApp, env: currentEnv });
+    });
+
+    test("should have a load more button", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("Load more")).toBeTruthy();
+      });
+
+      fireEvent.click(wrapper.getByText("Load more"));
+
+      const nextSnippets = mockSnippets();
+      nextSnippets[0].id = "3";
+      nextSnippets[0].title = "Newly loaded snippet - 1";
+      nextSnippets[1].id = "4";
+      nextSnippets[1].title = "Newly loaded snippet - 2";
+
+      fetchSnippetsScope = mockFetchSnippets({
+        appId: currentApp.id,
+        envId: currentEnv.id!,
+        afterId: "410",
+        response: {
+          snippets: nextSnippets,
+          pagination: { hasNextPage: false },
+        },
+      });
+
+      await waitFor(() => {
+        expect(fetchSnippetsScope.isDone()).toBe(true);
+        expect(wrapper.getByText(`${snippets[0].title}`)).toBeTruthy();
+        expect(wrapper.getByText(`${snippets[1].title}`)).toBeTruthy();
+        expect(wrapper.getByText(`${nextSnippets[0].title}`)).toBeTruthy();
+        expect(wrapper.getByText(`${nextSnippets[1].title}`)).toBeTruthy();
+      });
+    });
+  });
+
   describe("with empty snippets list", () => {
     beforeEach(() => {
       currentApp = mockApp();
@@ -108,7 +158,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       fetchSnippetsScope = mockFetchSnippets({
         appId: currentApp.id,
         envId: currentEnv.id!,
-        response: { snippets: [] },
+        response: { snippets: [], pagination: { hasNextPage: false } },
       });
 
       createWrapper({ app: currentApp, env: currentEnv });

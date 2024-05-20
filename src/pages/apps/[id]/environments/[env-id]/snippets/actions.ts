@@ -6,12 +6,14 @@ interface FetchSnippetsProps {
   env: Environment;
   hosts?: string;
   refreshToken?: number;
+  loadMoreToken?: number;
 }
 
 interface FetchSnippetsReturnValue {
   loading: boolean;
   error: string | null;
   snippets?: Snippet[];
+  hasNextPage?: boolean;
 }
 
 export const useFetchSnippets = ({
@@ -19,10 +21,12 @@ export const useFetchSnippets = ({
   env,
   hosts,
   refreshToken,
+  loadMoreToken,
 }: FetchSnippetsProps): FetchSnippetsReturnValue => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
+  const [afterId, setAfterId] = useState<string>();
 
   useEffect(() => {
     let unmounted = false;
@@ -31,14 +35,26 @@ export const useFetchSnippets = ({
     setLoading(true);
 
     const qs = new URLSearchParams(
-      JSON.parse(JSON.stringify({ appId: app.id, envId: env.id, hosts }))
+      JSON.parse(
+        JSON.stringify({
+          appId: app.id,
+          envId: env.id,
+          hosts,
+          afterId,
+        })
+      )
     );
 
     api
-      .fetch<{ snippets: Snippet[] }>(`/snippets?${qs.toString()}`)
-      .then(({ snippets }) => {
+      .fetch<{ snippets: Snippet[]; pagination: Pagination }>(
+        `/snippets?${qs.toString()}`
+      )
+      .then(({ snippets: newSnippets, pagination }) => {
         if (!unmounted) {
-          setSnippets(snippets);
+          setAfterId(pagination?.afterId);
+          setSnippets(
+            loadMoreToken ? [...snippets, ...newSnippets] : newSnippets
+          );
         }
       })
       .catch(e => {
@@ -55,9 +71,9 @@ export const useFetchSnippets = ({
     return () => {
       unmounted = true;
     };
-  }, [app.id, env.id, refreshToken, hosts]);
+  }, [app.id, env.id, refreshToken, loadMoreToken, hosts]);
 
-  return { loading, error, snippets };
+  return { loading, error, snippets, hasNextPage: Boolean(afterId) };
 };
 
 interface UpsertSnippetsProps {

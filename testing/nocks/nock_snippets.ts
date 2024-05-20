@@ -5,18 +5,33 @@ const endpoint = process.env.API_DOMAIN || "";
 interface MockFetchSnippetsProps {
   appId: string;
   envId: string;
+  hosts?: string[];
+  afterId?: string;
   status?: number;
-  response: { snippets: Snippet[] };
+  response: { snippets: Snippet[]; pagination: Pagination };
 }
 
 export const mockFetchSnippets = ({
   appId,
   envId,
+  afterId,
+  hosts,
   status = 200,
   response,
 }: MockFetchSnippetsProps) => {
+  const qs = new URLSearchParams(
+    JSON.parse(
+      JSON.stringify({
+        appId,
+        envId,
+        hosts,
+        afterId,
+      })
+    )
+  );
+
   return nock(endpoint)
-    .get(`/snippets?appId=${appId}&envId=${envId}`)
+    .get(`/snippets?${qs.toString()}`)
     .reply(status, response);
 };
 

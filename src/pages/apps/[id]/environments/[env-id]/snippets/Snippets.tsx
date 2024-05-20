@@ -21,15 +21,17 @@ export default function Snippets() {
   const { app } = useContext(AppContext);
   const { environment: env } = useContext(EnvironmentContext);
   const [refreshToken, setRefreshToken] = useState(0);
+  const [loadMoreToken, setLoadMoreToken] = useState<number>();
   const [isSnippetModalOpen, setIsSnippetModalOpen] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState<Snippet | undefined>();
   const [toBeToggled, setToBeToggled] = useState<Snippet | undefined>();
   const [toBeModified, setToBeModified] = useState<Snippet | undefined>();
   const [hosts, setHosts] = useState<string>();
-  const { loading, error, snippets } = useFetchSnippets({
+  const { loading, error, snippets, hasNextPage } = useFetchSnippets({
     app,
     env,
     refreshToken,
+    loadMoreToken,
     hosts,
   });
 
@@ -63,6 +65,7 @@ export default function Snippets() {
             envId={env.id!}
             fullWidth={false}
             onDomainSelect={d => {
+              setLoadMoreToken(undefined);
               setHosts(d?.join(","));
             }}
             withDevDomains
@@ -143,7 +146,20 @@ export default function Snippets() {
           )}
         </EmptyPage>
       )}
-      <CardFooter>
+      <CardFooter sx={{ display: "flex", justifyContent: "center" }}>
+        {hasNextPage && (
+          <Button
+            variant="text"
+            color="info"
+            type="button"
+            sx={{ mr: 2 }}
+            onClick={() => {
+              setLoadMoreToken(Date.now());
+            }}
+          >
+            Load more
+          </Button>
+        )}
         <Button
           variant="contained"
           color="secondary"
@@ -158,7 +174,10 @@ export default function Snippets() {
       {isSnippetModalOpen && (
         <SnippetModal
           snippet={toBeModified}
-          setRefreshToken={setRefreshToken}
+          setRefreshToken={(d: number) => {
+            setRefreshToken(d);
+            setLoadMoreToken(undefined);
+          }}
           closeModal={() => {
             setToBeModified(undefined);
             setIsSnippetModalOpen(false);
