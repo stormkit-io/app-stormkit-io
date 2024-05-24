@@ -189,6 +189,7 @@ export default function KeyValue({
                       const copy = JSON.parse(JSON.stringify(rows));
                       copy[index] = [copy[index][0], e.target.value];
                       setRows(copy);
+                      setIsChanged(true);
                     }}
                     InputProps={{
                       endAdornment: (
