@@ -1,13 +1,11 @@
 import { useEffect, useState, useContext, useMemo } from "react";
-import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBoxV2";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import WarningIcon from "@mui/icons-material/Warning";
 import Container from "~/components/Container";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import { useFetchSubscription, fetchCheckoutEndpoint } from "../actions";
+import { fetchCheckoutEndpoint } from "../actions";
 import { SubscriptionName } from "../actions/fetch_subscriptions";
 import PricingSlider, { SubscriptionTier, WhatsIncluded } from "./Pricing";
 import { Typography } from "@mui/material";
@@ -44,7 +42,6 @@ const subscriptionToTier: Record<SubscriptionName, SubscriptionTier> = {
 
 const SubscriptionDetails: React.FC = (): React.ReactElement => {
   const { user } = useContext(AuthContext);
-  const { loading, error, subscription } = useFetchSubscription();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [tier, setTier] = useState<SubscriptionTier>("100");
 
@@ -58,11 +55,11 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
     }
   }, [user?.freeTrialEnds]);
 
+  const subscriptionTier = subscriptionToTier[user?.package.id || "free"];
+
   useEffect(() => {
-    if (subscription?.name) {
-      setTier(subscriptionToTier[subscription.name]);
-    }
-  }, [subscription?.name]);
+    setTier(subscriptionTier);
+  }, [subscriptionTier]);
 
   return (
     <Container>
@@ -79,19 +76,17 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
           }}
         >
           Subscription
-          {!loading && (
+          {
             <Chip
               color="warning"
               label={
                 "Current: " +
-                (subscription?.name === "free"
+                (user?.package?.id === "free"
                   ? `Free trial${user?.isPaymentRequired ? " expired" : ""}`
-                  : `up to ${
-                      subscriptionToTier[subscription?.name || "free"]
-                    } deployments`)
+                  : `up to ${subscriptionTier} deployments`)
               }
             />
-          )}
+          }
         </Typography>
         {freeTrialEnds && (
           <Typography
@@ -112,46 +107,42 @@ const SubscriptionDetails: React.FC = (): React.ReactElement => {
             listen and make your experience with Stormkit even better.
           </Typography>
         )}
-        {loading && <Spinner width={6} height={6} primary />}
-        {!loading && error && <InfoBox type="error">{error}</InfoBox>}
-        {!loading && !error && (
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Box sx={{ bgcolor: "rgba(0,0,0,0.1)", p: 4 }}>
-              <PricingSlider
-                tier={subscriptionToTier[subscription?.name || "free"]}
-                onTierChange={t => setTier(t)}
-              />
-            </Box>
-            <Box sx={{ mt: 4, mb: 8 }}>
-              <WhatsIncluded tier={tier} />
-            </Box>
-            <Box sx={{ mt: 2, textAlign: "right" }}>
-              <LoadingButton
-                onClick={e => {
-                  e.preventDefault();
-                  setCheckoutLoading(true);
-                  fetchCheckoutEndpoint(tier).then(url => {
-                    window.location.assign(url);
-                  });
-                }}
-                href={`${paymentLink(tier)}?client_reference_id=${
-                  user?.id
-                }&prefilled_email=${user?.email}`}
-                disabled={tier === "1000+"}
-                loading={checkoutLoading}
-                color="secondary"
-                variant="contained"
-                sx={{
-                  ":hover": {
-                    color: "white !important",
-                  },
-                }}
-              >
-                Go to Stripe Customer Portal
-              </LoadingButton>
-            </Box>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Box sx={{ bgcolor: "rgba(0,0,0,0.1)", p: 4 }}>
+            <PricingSlider
+              tier={subscriptionTier}
+              onTierChange={t => setTier(t)}
+            />
           </Box>
-        )}
+          <Box sx={{ mt: 4, mb: 8 }}>
+            <WhatsIncluded tier={tier} />
+          </Box>
+          <Box sx={{ mt: 2, textAlign: "right" }}>
+            <LoadingButton
+              onClick={e => {
+                e.preventDefault();
+                setCheckoutLoading(true);
+                fetchCheckoutEndpoint(tier).then(url => {
+                  window.location.assign(url);
+                });
+              }}
+              href={`${paymentLink(tier)}?client_reference_id=${
+                user?.id
+              }&prefilled_email=${user?.email}`}
+              disabled={tier === "1000+"}
+              loading={checkoutLoading}
+              color="secondary"
+              variant="contained"
+              sx={{
+                ":hover": {
+                  color: "white !important",
+                },
+              }}
+            >
+              Go to Stripe Customer Portal
+            </LoadingButton>
+          </Box>
+        </Box>
       </Box>
     </Container>
   );
