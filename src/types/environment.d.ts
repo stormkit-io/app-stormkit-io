@@ -1,4 +1,5 @@
 declare type BuildConfig = {
+  prerender?: PrerenderConfig;
   previewLinks?: boolean;
   apiFolder?: string;
   apiPathPrefix?: string;
@@ -39,6 +40,12 @@ interface Redirect {
   status?: number;
   assets?: boolean;
   hosts?: string[];
+}
+
+interface PrerenderConfig {
+  matchUserAgent: string;
+  waitFor: string;
+  cacheDuration: number;
 }
 
 declare type Environment = {

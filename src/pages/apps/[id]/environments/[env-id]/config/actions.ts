@@ -34,6 +34,11 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     } catch {}
   }
 
+  const hasPrerendering =
+    values["build.prerender.matchUserAgent"] ||
+    values["build.prerender.cacheDuration"] ||
+    values["build.prerender.waitFor"];
+
   const build: BuildConfig = {
     cmd: values["build.cmd"]?.trim() || "",
     distFolder: (values["build.distFolder"] || "").trim(),
@@ -42,6 +47,13 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     apiFolder: values["build.apiFolder"],
     apiPathPrefix: values["build.apiPathPrefix"],
     previewLinks: values["build.previewLinks"] === "on",
+    prerender: hasPrerendering
+      ? {
+          waitFor: values["build.prerender.waitFor"]!,
+          matchUserAgent: values["build.prerender.matchUserAgent"]!,
+          cacheDuration: Number(values["build.prerender.cacheDuration"]),
+        }
+      : undefined,
     redirects,
     vars,
   };
@@ -179,6 +191,9 @@ export interface FormValues {
   "build.distFolder"?: string;
   "build.headersFile"?: string;
   "build.redirects"?: string;
+  "build.prerender.matchUserAgent"?: string;
+  "build.prerender.waitFor"?: string;
+  "build.prerender.cacheDuration"?: string;
   "build.redirectsFile"?: string;
   "build.apiFolder"?: string;
   "build.apiPathPrefix"?: string;

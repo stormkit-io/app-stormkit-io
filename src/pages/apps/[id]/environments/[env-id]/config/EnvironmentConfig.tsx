@@ -15,6 +15,7 @@ import TabConfigBuild from "./_components/TabConfigBuild";
 import TabConfigHeaders from "./_components/TabConfigHeaders";
 import TabConfigRedirects from "./_components/TabConfigRedirects";
 import TabConfigServerless from "./_components/TabConfigServerless";
+import TabConfigPrerender from "./_components/TabConfigPrerender";
 import TabAPIKey from "./_components/TabAPIKey";
 import { grey } from "@mui/material/colors";
 
@@ -40,6 +41,12 @@ export default function EnvironmentConfig() {
   const { environment } = useContext(EnvironmentContext);
   const { hash } = useLocation();
   const navigate = useNavigate();
+
+  const prerendering = environment?.build.vars["SK_PRERENDER"] === "true";
+
+  if (prerendering && listItems[6].path !== "#prerender") {
+    listItems.splice(6, 0, { path: "#prerender", text: "Prerender" });
+  }
 
   const Tab = useMemo(() => {
     switch (hash) {
@@ -80,6 +87,13 @@ export default function EnvironmentConfig() {
               environment={environment}
               setRefreshToken={setRefreshToken}
             />
+            {prerendering && (
+              <TabConfigPrerender
+                app={app}
+                environment={environment}
+                setRefreshToken={setRefreshToken}
+              />
+            )}
             <TabAPIKey
               app={app}
               environment={environment}
