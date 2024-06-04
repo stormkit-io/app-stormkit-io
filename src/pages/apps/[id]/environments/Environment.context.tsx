@@ -15,7 +15,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const Provider: React.FC<Props> = ({ children }) => {
+export default function Provider({ children }: Props) {
   const { envId } = useParams();
   const { environments } = useContext(AppContext);
 
@@ -34,6 +34,4 @@ const Provider: React.FC<Props> = ({ children }) => {
       {children}
     </EnvironmentContext.Provider>
   );
-};
-
-export default Provider;
+}

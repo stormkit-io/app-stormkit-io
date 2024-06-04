@@ -102,7 +102,7 @@ export default function EnvironmentConfig() {
           </>
         );
     }
-  }, [hash]);
+  }, [hash, environment?.id]);
 
   useEffect(() => {
     if (selectedItem) {
