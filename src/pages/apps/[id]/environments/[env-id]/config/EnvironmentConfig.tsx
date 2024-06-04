@@ -42,7 +42,7 @@ export default function EnvironmentConfig() {
   const { hash } = useLocation();
   const navigate = useNavigate();
 
-  const prerendering = environment?.build.vars["SK_PRERENDER"] === "true";
+  const prerendering = environment?.build.vars?.["SK_PRERENDER"] === "true";
 
   if (prerendering && listItems[6].path !== "#prerender") {
     listItems.splice(6, 0, { path: "#prerender", text: "Prerender" });
