@@ -1,6 +1,6 @@
 import React from "react";
 import { createTheme } from "@mui/material/styles";
-import { grey } from "@mui/material/colors";
+import { grey, purple } from "@mui/material/colors";
 import { Link as RLink, LinkProps as RLinkProps } from "react-router-dom";
 import { LinkProps } from "@mui/material/Link";
 
@@ -26,6 +26,9 @@ export default createTheme({
         root: {
           color: "white",
           textDecoration: "none",
+          ":hover": {
+            color: purple[300],
+          },
         },
       },
     },
