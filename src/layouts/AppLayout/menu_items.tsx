@@ -15,6 +15,12 @@ export const appMenuItems = ({
   },
   {
     // List settings
+    path: `/apps/${app.id}/feed`,
+    text: "Activity Feed",
+    isActive: pathname.endsWith("/feed"),
+  },
+  {
+    // List settings
     path: `/apps/${app.id}/settings`,
     text: "Settings",
     isActive: pathname.endsWith("/settings"),

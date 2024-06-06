@@ -1,7 +1,6 @@
 import { useMemo, useContext } from "react";
 import { useLocation } from "react-router";
 import Box from "@mui/material/Box";
-import { grey } from "@mui/material/colors";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import MenuLink from "~/components/MenuLink";
 import { useSelectedTeam } from "../TopMenu/Teams/actions";
@@ -9,7 +8,6 @@ import { useSelectedTeam } from "../TopMenu/Teams/actions";
 interface Props {
   team?: Team;
 }
-
 interface Path {
   path: string;
   icon?: React.ReactNode;
@@ -23,18 +21,37 @@ const teamMenuItems = ({
 }: {
   team: Team;
   pathname: string;
-}): Path[] => [
-  {
-    path: `/${team.slug}/settings`,
-    text: "Settings",
-    isActive: pathname.includes("/settings"),
-  },
-  {
-    path: `/${team.slug}/audit`,
-    text: "Audit logs",
-    isActive: pathname.includes("/audit"),
-  },
-];
+}): Path[] => {
+  const items: Path[] = [
+    {
+      path: `/${team.slug}`,
+      text: team.isDefault ? "My apps" : `${team.name} Team Apps`,
+      isActive: pathname === `/${team.slug}`,
+    },
+  ];
+
+  items.push({
+    path: `/${team.slug || "personal"}/deployments`,
+    text: "All Deployments",
+    isActive: pathname.includes("/deployments"),
+  });
+
+  items.push({
+    path: `/${team.slug || "personal"}/feed`,
+    text: "Activity Feed",
+    isActive: pathname.includes("/feed"),
+  });
+
+  if (!team.isDefault) {
+    items.push({
+      path: `/${team.slug || "personal"}/settings`,
+      text: "Settings",
+      isActive: pathname.includes("/settings"),
+    });
+  }
+
+  return items;
+};
 
 export default function TeamMenu({ team }: Props) {
   const { pathname } = useLocation();
@@ -69,26 +86,9 @@ export default function TeamMenu({ team }: Props) {
           alignItems: "center",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <MenuLink
-            sx={{
-              mr: 1,
-              px: { xs: 1, md: 1 },
-              pr: { xs: 1, md: 2 },
-              bgcolor: "rgba(255,255,255,0.05)",
-              color: grey[400],
-            }}
-            item={{
-              text: team?.isDefault ? "My apps" : `${team?.name} Team Apps`,
-              path: `/${team?.slug || ""}`,
-            }}
-          />
-        </Box>
-        <Box>
-          {teamMenu.map(item => (
-            <MenuLink key={item.path} item={item} sx={{ mr: 1 }} />
-          ))}
-        </Box>
+        {teamMenu.map(item => (
+          <MenuLink key={item.path} item={item} sx={{ mr: 1 }} />
+        ))}
       </Box>
     </Box>
   );

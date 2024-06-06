@@ -38,11 +38,12 @@ function RedirectToEnvPage() {
 }
 
 const centerLayout = () => import("~/layouts/CenterLayout");
+const teamLayout = () => import("~/layouts/TeamLayout");
 
 const routes: Array<RouteProps> = [
   {
     path: "/",
-    element: Async(() => import("~/pages/apps"), centerLayout),
+    element: Async(() => import("~/pages/apps"), teamLayout),
   },
   {
     path: "/clone",
@@ -101,16 +102,24 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/team/InvitationAccept"), centerLayout),
   },
   {
-    path: "/team/deployments",
-    element: Async(() => import("~/pages/team/deployments"), centerLayout),
-  },
-  {
     path: "/:team",
-    element: Async(() => import("~/pages/apps"), centerLayout),
+    element: Async(() => import("~/pages/apps"), teamLayout),
   },
   {
     path: "/:team/settings",
-    element: Async(() => import("~/pages/team/Settings"), centerLayout),
+    element: Async(() => import("~/pages/team/Settings"), teamLayout),
+  },
+  {
+    path: "/:team/feed",
+    element: Async(() => import("~/pages/team/feed"), teamLayout),
+  },
+  {
+    path: "/:team/deployments",
+    element: Async(() => import("~/pages/team/deployments"), teamLayout),
+  },
+  {
+    path: "/*",
+    element: Async(() => import("~/components/Errors/Error404"), centerLayout),
   },
 ];
 

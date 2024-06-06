@@ -28,6 +28,10 @@ export const routes = [
     ),
   },
   {
+    path: "/feed",
+    element: Async(() => import("~/pages/apps/[id]/feed")),
+  },
+  {
     path: `/usage`,
     element: Async(() => import("~/pages/apps/[id]/usage")),
   },
