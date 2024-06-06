@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Alert from "@mui/material/Alert";
 import ReportIcon from "@mui/icons-material/Report";
+import { grey } from "@mui/material/colors";
 
 interface MenuItem {
   to: string;
@@ -62,10 +63,10 @@ export default function UserMenu({ user, onClick }: Props) {
     <Box component="section" role="menu" sx={{ p: 2, minWidth: "250px" }}>
       <Box className="flex flex-col flex-1">
         <Box
-          sx={{ pb: 2, mb: 2, borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+          sx={{ pb: 2, mb: 3, borderBottom: "1px solid rgba(255,255,255,0.1)" }}
         >
           <Typography>{user.fullName || user.displayName}</Typography>
-          <Typography>{user.email}</Typography>
+          <Typography sx={{ color: grey[500] }}>{user.email}</Typography>
           {isPaymentRequired && (
             <Alert icon={<ReportIcon />} color="info" sx={{ mt: 1.5 }}>
               <Link href="/user/account">
