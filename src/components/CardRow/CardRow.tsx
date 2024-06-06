@@ -9,7 +9,7 @@ import CardContext from "../Card/Card.context";
 interface Props extends BoxProps {
   menuItems?: Item[];
   menuLabel?: string;
-  chipLabel?: string;
+  chipLabel?: React.ReactNode;
   chipColor?: "success" | "info" | "warning";
   actions?: React.ReactNode;
 }
