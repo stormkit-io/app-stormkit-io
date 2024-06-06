@@ -61,7 +61,7 @@ export default function AppMenu({ app, team }: Props) {
         </Box>
         <Box>
           {appMenu.map(item => (
-            <MenuLink key={item.path} item={item} />
+            <MenuLink key={item.path} item={item} sx={{ mr: 1 }} />
           ))}
         </Box>
       </Box>
