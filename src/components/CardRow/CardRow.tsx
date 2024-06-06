@@ -10,6 +10,7 @@ interface Props extends BoxProps {
   menuItems?: Item[];
   menuLabel?: string;
   chipLabel?: React.ReactNode;
+  icon?: React.ReactNode;
   chipColor?: "success" | "info" | "warning";
   actions?: React.ReactNode;
 }
@@ -22,6 +23,7 @@ export default function CardRow({
   chipLabel,
   chipColor,
   actions,
+  icon,
   ...rest
 }: Props) {
   const { size } = useContext(CardContext);
@@ -45,6 +47,7 @@ export default function CardRow({
       }}
       {...rest}
     >
+      {icon && <Box sx={{ mr: 2 }}>{icon}</Box>}
       <Box sx={{ flex: 1 }}>{children}</Box>
       {chipLabel && (
         <Chip
