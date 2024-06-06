@@ -21,7 +21,7 @@ export const formattedDate = (ts: number): string => {
     date.getFullYear() === now.getFullYear() &&
     date.getMonth() === now.getMonth()
   ) {
-    return `Today at ${date.toLocaleDateString("de-CH", {
+    return `Today at ${date.toLocaleTimeString("de-CH", {
       hour: "2-digit",
       minute: "2-digit",
     })}`;
