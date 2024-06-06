@@ -32,13 +32,27 @@ export const useFetchAppList = ({
   useEffect(() => {
     let unmounted = false;
 
+    if (!teamId) {
+      setApps([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
-    api
-      .fetch<FetchAppListAPIResponse>(
-        `/apps?from=${from}&filter=${filter}&teamId=${teamId}`
+    const params = new URLSearchParams(
+      JSON.parse(
+        JSON.stringify({
+          teamId,
+          filter,
+          from,
+        })
       )
+    );
+
+    api
+      .fetch<FetchAppListAPIResponse>(`/apps?${params.toString()}`)
       .then(res => {
         if (unmounted !== true) {
           if (from > 0) {
