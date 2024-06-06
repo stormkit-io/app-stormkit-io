@@ -86,7 +86,12 @@ export default function MultiSelect({
           }
         }}
         renderValue={selected => {
-          return selected.filter(s => s !== "").join(", ") || placeholder;
+          return (
+            items
+              .filter(s => selected.includes(s.value))
+              .map(i => i.text)
+              .join(", ") || placeholder
+          );
         }}
       >
         {multiple ? (
