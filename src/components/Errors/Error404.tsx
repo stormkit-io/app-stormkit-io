@@ -34,7 +34,7 @@ export default function Error404({ children }: Props) {
           4 oh 4
         </Typography>
         <Box sx={{ fontSize: 28, lineHeight: 1 }}>
-          {children || "There is nothing under this link."}
+          {children || "There is nothing under this link"}
         </Box>
       </Box>
     </Box>
