@@ -96,7 +96,7 @@ export const buildFormValues = (
     branch: env.branch,
     autoPublish: env.autoPublish ? "on" : "off",
     autoDeploy: computeAutoDeployValue(env),
-    autoDeployBranches: env.autoDeployBranches,
+    autoDeployBranches: env.autoDeployBranches || undefined,
     "build.previewLinks": env.build.previewLinks ? "on" : "off",
     "build.headersFile": env.build.headersFile,
     "build.redirectsFile": env.build.redirectsFile,

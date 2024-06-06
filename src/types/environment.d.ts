@@ -57,7 +57,7 @@ declare type Environment = {
   autoPublish: boolean;
   build: BuildConfig;
   autoDeploy: boolean;
-  autoDeployBranches?: string;
+  autoDeployBranches?: string | null;
   lastDeploy?: LastDeploy;
   customStorage?: CustomStorage;
   published?: PublishedInfo[];

@@ -84,6 +84,18 @@ exports[`~/layouts/AppLayout/routes.ts should match routes 1`] = `
     >
       <UNDEFINED />
     </React.Suspense>,
+    "path": "/feed",
+  },
+  {
+    "element": <React.Suspense
+      fallback={
+        <Spinner
+          pageCenter={true}
+        />
+      }
+    >
+      <UNDEFINED />
+    </React.Suspense>,
     "path": "/usage",
   },
 ]

@@ -60,6 +60,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
     branch: branch || currentEnv.branch,
     autoPublish: true,
     autoDeploy: true,
+    autoDeployBranches: null,
     preview: currentEnv.preview,
     build: {
       cmd: "",

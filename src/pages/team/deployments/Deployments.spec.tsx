@@ -47,7 +47,7 @@ describe("~/pages/my/deployments/Deployments.tsx", () => {
     expect(wrapper.getByText("Team Deployments")).toBeTruthy();
     expect(
       wrapper.getByText(
-        "Display all of your team's deployments across Stormkit in a single view."
+        "Display all of your team's deployments in a single view"
       )
     ).toBeTruthy();
   });

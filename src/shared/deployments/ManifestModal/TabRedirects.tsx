@@ -36,7 +36,7 @@ function redirectStatus({ status, isAbsolute }: RedirectStatusProps): string {
 export default function TabRedirects({ redirects }: Props) {
   const { environment } = useContext(EnvironmentContext);
 
-  if (!redirects && !environment.build.redirects?.length) {
+  if (!redirects && !environment.build?.redirects?.length) {
     return (
       <EmptyPage sx={{ my: 6 }}>
         <>

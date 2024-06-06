@@ -75,6 +75,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         `/apps/${defaultApp.id}/environments`, // <- app display name link
         "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/environments`,
+        `/apps/${defaultApp.id}/feed`,
         `/apps/${defaultApp.id}/settings`,
       ]);
     });
@@ -105,6 +106,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         `/apps/${defaultApp.id}/environments`, // <- app display name link
         "https://gitlab.com/stormkit-io/frontend",
         `/apps/${defaultApp.id}/environments`,
+        `/apps/${defaultApp.id}/feed`,
         `/apps/${defaultApp.id}/settings`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
@@ -138,6 +140,7 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
           `/apps/${defaultApp.id}/environments`, // <- app display name link
           "https://gitlab.com/stormkit-io/frontend",
           `/apps/${defaultApp.id}/environments`,
+          `/apps/${defaultApp.id}/feed`,
           `/apps/${defaultApp.id}/settings`,
         ]);
       });
