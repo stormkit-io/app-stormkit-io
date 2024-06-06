@@ -4,8 +4,6 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Alert from "@mui/material/Alert";
 import ReportIcon from "@mui/icons-material/Report";
-import { LS_PROVIDER } from "~/utils/api/Api";
-import { LocalStorage } from "~/utils/storage";
 
 interface MenuItem {
   to: string;
@@ -14,11 +12,6 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[][] = [
-  [
-    { to: `/apps/new/${LocalStorage.get(LS_PROVIDER)}`, text: "New App" },
-    { to: "/", text: "Team Apps" },
-    { to: "/team/deployments", text: "Team Deployments" },
-  ],
   [
     {
       to: "https://www.stormkit.io/docs",

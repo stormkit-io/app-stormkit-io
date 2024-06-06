@@ -19,13 +19,10 @@ describe("~/components/UserMenu.tsx", () => {
     });
 
     test.each`
-      text                  | href
-      ${"New App"}          | ${"/apps/new/github"}
-      ${"Team Apps"}        | ${"/"}
-      ${"Team Deployments"} | ${"/team/deployments"}
-      ${"Stormkit Docs"}    | ${"https://www.stormkit.io/docs"}
-      ${"Account"}          | ${"/user/account"}
-      ${"Log out"}          | ${"/logout"}
+      text               | href
+      ${"Stormkit Docs"} | ${"https://www.stormkit.io/docs"}
+      ${"Account"}       | ${"/user/account"}
+      ${"Log out"}       | ${"/logout"}
     `("should load menu item: $text", ({ text, href }) => {
       expect(wrapper.getByText(text).getAttribute("href")).toBe(href);
     });
