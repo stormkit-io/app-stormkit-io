@@ -33,6 +33,7 @@ export default function MultiSelect({
   placeholder,
   multiple = true,
   fullWidth = true,
+  sx,
   onSelect,
 }: Props) {
   const [selectedItems, setSelectedItems] = useState<string[]>(selected || []);
@@ -57,6 +58,7 @@ export default function MultiSelect({
         size={size}
         value={selectedItems?.length ? selectedItems : [""]}
         input={variant === "filled" ? <FilledInput /> : <OutlinedInput />}
+        sx={{ color: "white", ...sx }}
         onClose={() => {
           // Rely on `onClose` only when `multiple` property is true.
           if (multiple) {
