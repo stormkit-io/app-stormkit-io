@@ -48,7 +48,6 @@ it's possible to create a proxy and point directly the live API which will allow
 that simply create an `.env` file and specify the following environment variables:
 
 ```
-STORMKIT_ENV=local
 PORT=8080
 API_DOMAIN=/api
 API_PROXY_DOMAIN=http://localhost:8080/
