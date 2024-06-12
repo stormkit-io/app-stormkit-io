@@ -41,9 +41,6 @@ export default function CenterLayout({ children }: Props) {
           mt: 2,
           flex: 1,
           px: { xs: 2, md: 0 },
-          display: "flex",
-          alignItems: user ? "flex-start" : "center",
-          justifyContent: "center",
         }}
       >
         {children}
