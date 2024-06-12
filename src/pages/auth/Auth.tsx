@@ -82,7 +82,7 @@ export default function Auth() {
               mr: { lg: 8 },
               mb: { xs: 3, md: 0 },
               mt: { xs: 4, lg: 0 },
-              px: { xs: 1, lg: 3 },
+              px: 3,
               pt: { xs: 0, lg: 6 },
               maxWidth: { sm: "28rem" },
             }}
