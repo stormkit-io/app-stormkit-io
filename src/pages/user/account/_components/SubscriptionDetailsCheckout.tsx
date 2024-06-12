@@ -17,7 +17,6 @@ const paymentLinks: Record<SubscriptionName, string> = {
     medium: "https://buy.stripe.com/test_00g6pW3W06wn6YM8wE",
     enterprise: "https://buy.stripe.com/test_6oE5lS8cg8Evcj6cMT",
     "self-hosted": "https://buy.stripe.com/test_5kAaGc648g6X82QaER",
-    "self-hosted-premium": "",
   },
   prod: {
     free: "",
@@ -25,7 +24,6 @@ const paymentLinks: Record<SubscriptionName, string> = {
     medium: "https://buy.stripe.com/5kA5ns7317FFgqQdQX",
     enterprise: "https://buy.stripe.com/4gw17cbjhe43eiIbIO",
     "self-hosted": "https://buy.stripe.com/6oEg26cnlcZZeiIeUZ",
-    "self-hosted-premium": "",
   },
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
 
@@ -35,7 +33,6 @@ const prices: Record<SubscriptionName, number> = {
   medium: 75,
   enterprise: 150,
   "self-hosted": 39,
-  "self-hosted-premium": 0,
 };
 
 interface Props {
@@ -102,9 +99,7 @@ export default function Checkout({ user }: Props) {
               onSelect={i => setEdition(i[0] as Edition)}
             />
             <Box sx={{ mt: 4 }}>
-              {includedFeatures(
-                edition === "limited" ? "self-hosted" : "self-hosted-premium"
-              ).map(feature => (
+              {includedFeatures("self-hosted", edition).map(feature => (
                 <Box sx={{ mb: 1 }} key={feature.text}>
                   {feature.included ? (
                     <CheckIcon sx={{ fill: "green", mr: 2, ml: 0 }} />
