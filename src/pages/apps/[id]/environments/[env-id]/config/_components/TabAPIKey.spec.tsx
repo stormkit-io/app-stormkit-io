@@ -25,7 +25,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAPIKey.t
 
   const createWrapper = ({ app, environments }: WrapperProps) => {
     currentApp = app || mockApp();
-    currentApp.id = "1644802351"; // Same as api key id
+    currentApp.id = "1"; // Same as api key id
 
     currentEnvs = environments || mockEnvironments({ app: currentApp });
     currentEnv = currentEnvs[0];

@@ -12,7 +12,7 @@ export default () => ({
       experimentId: "",
       targetings: [
         {
-          appVersion: "1644802351",
+          appVersion: "1",
           percentile: "",
           segment: "",
           value: "true",

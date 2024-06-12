@@ -1,6 +1,6 @@
 export default (): FunctionTrigger[] => [
   {
-    id: "3289604702",
+    id: "2",
     cron: "2 0 2 * *",
     status: true,
     options: {

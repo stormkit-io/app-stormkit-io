@@ -54,7 +54,7 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
     ).toBe("/my-test/url");
 
     expect(wrapper.getByText("sample-project").getAttribute("href")).toBe(
-      "/apps/1644802351/environments/1644802351/deployments"
+      "/apps/1/environments/1/deployments"
     );
   });
 
