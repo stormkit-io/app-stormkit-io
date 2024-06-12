@@ -1,5 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "~/utils/api/Api";
+
+export type StatusName = "trialing" | "active";
+
+interface Email {
+  address: string;
+  verified: boolean;
+  primary: boolean;
+}
+
+export const useFetchEmails = () => {
+  const [emails, setEmails] = useState<Email[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    setLoading(true);
+    setError(undefined);
+
+    api
+      .fetch<{ emails: Email[] }>("/user/emails")
+      .then(({ emails }) => {
+        setEmails(emails);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching list of emails.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  return { emails, error, loading };
+};
 
 type LoadingState = "delete" | "submit" | null;
 
@@ -38,6 +71,7 @@ export const usePersonalAccessTokenState = ({
 
   const deleteToken = () => {
     setLoading("delete");
+
     api
       .put("/user/access-token", { token: "" })
       .then(() => {
@@ -60,6 +94,7 @@ export const usePersonalAccessTokenState = ({
 
   const submitToken = () => {
     setLoading("submit");
+
     api
       .put("/user/access-token", { token })
       .then(() => {
@@ -81,4 +116,8 @@ export const usePersonalAccessTokenState = ({
   };
 
   return { msg, token, deleteToken, submitToken, setToken, loading };
+};
+
+export const deleteUser = async () => {
+  return await api.delete(`/user`);
 };

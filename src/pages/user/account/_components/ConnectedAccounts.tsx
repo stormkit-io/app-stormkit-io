@@ -1,11 +1,16 @@
-import React, { useState } from "react";
-import cn from "classnames";
-import Container from "~/components/Container";
+import { useState } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { grey } from "@mui/material/colors";
 import Link from "~/components/Link";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardRow from "~/components/CardRow";
 import PersonalAccessTokenModal from "./PersonalAccessTokenModal";
+import { useFetchEmails } from "../actions";
 
 interface Props {
-  accounts: Array<ConnectedAccount>;
+  accounts: ConnectedAccount[];
 }
 
 const texts: Record<Provider, string> = {
@@ -18,30 +23,29 @@ const showPersonalAccessButton = (provider: Provider): boolean => {
   return provider === "gitlab";
 };
 
-const ConnectedAccounts: React.FC<Props> = ({
-  accounts,
-}): React.ReactElement => {
+export default function ConnectedAccounts({ accounts }: Props) {
   const [isOpen, toggleModal] = useState(false);
+  const { emails, loading, error } = useFetchEmails();
 
   return (
-    <Container
-      title="Connected Accounts"
-      subtitle="This is the list of connected providers. The primary email specified for
-    the provider is used to combine these accounts."
-    >
-      <div className="px-4 mb-4">
+    <Card error={error} loading={loading} sx={{ my: 2 }} contentPadding={false}>
+      <CardHeader
+        title="Connected Accounts"
+        subtitle={
+          <>
+            List of connected emails and providers.
+            <br /> We combine providers using shared email addresses.
+          </>
+        }
+      />
+      <Box>
+        <Typography sx={{ mb: 2, px: 4 }}>Providers</Typography>
         {accounts.map(({ provider, hasPersonalAccessToken }, i) => (
-          <div
-            key={provider}
-            data-testid={provider}
-            className={cn("py-4 flex", {
-              "border-b border-gray-200": i !== accounts.length - 1,
-            })}
-          >
-            <span className="flex-auto flex items-center">
+          <CardRow key={provider} data-testid={provider} sx={{ ml: 2 }}>
+            <Typography sx={{ color: grey[400] }}>
               <span className={`text-ml mr-2 fab fa-${provider}`} />
               {texts[provider]}
-            </span>
+            </Typography>
             {showPersonalAccessButton(provider) ? (
               <span>
                 <Link
@@ -64,11 +68,21 @@ const ConnectedAccounts: React.FC<Props> = ({
                 )}
               </span>
             ) : undefined}
-          </div>
+          </CardRow>
         ))}
-      </div>
-    </Container>
+        <Typography sx={{ my: 2, px: 4 }}>Emails</Typography>
+        {emails?.map(email => (
+          <CardRow
+            key={email.address}
+            data-testid={email}
+            chipLabel={email.primary ? "Primary" : undefined}
+            chipColor={email.primary ? "success" : undefined}
+            sx={{ borderTop: `1px solid rgba(255,255,255,0.04)`, ml: 2 }}
+          >
+            <Typography sx={{ color: grey[400] }}>{email.address}</Typography>
+          </CardRow>
+        ))}
+      </Box>
+    </Card>
   );
-};
-
-export default ConnectedAccounts;
+}

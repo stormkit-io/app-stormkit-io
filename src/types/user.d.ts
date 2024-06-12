@@ -1,4 +1,14 @@
-declare type User = {
+declare type SubscriptionName =
+  | "free"
+  | "starter"
+  | "medium"
+  | "enterprise"
+  | "self-hosted"
+  | "self-hosted-premium";
+
+declare type Edition = "limited" | "premium";
+
+declare interface User {
   id: string;
   avatar: string;
   email: string;
@@ -9,13 +19,16 @@ declare type User = {
   isPaymentRequired?: boolean;
   freeTrialEnds?: number;
   package: {
-    id: "enterprise" | "medium" | "starter" | "free";
+    id: SubscriptionName;
+    name: string;
+    maxDeploymentsPerMonth: number;
+    edition: Edition | "";
   };
-};
+}
 
-declare type ConnectedAccount = {
+declare interface ConnectedAccount {
   provider: Provider;
   hasPersonalAccessToken: boolean;
   displayName: string;
   url?: string;
-};
+}

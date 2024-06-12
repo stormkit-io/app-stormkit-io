@@ -94,8 +94,12 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/layouts/AppLayout")),
   },
   {
-    path: "/user/*",
-    element: Async(() => import("~/pages/user"), centerLayout),
+    path: "/user/account",
+    element: Async(() => import("~/pages/user/account"), centerLayout),
+  },
+  {
+    path: "/user/account/payment",
+    element: Async(() => import("~/pages/user/account/Payment"), centerLayout),
   },
   {
     path: "/invitation/accept",
