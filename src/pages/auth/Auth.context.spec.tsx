@@ -111,7 +111,7 @@ describe("pages/auth/Auth.context", () => {
             avatar: "https://avatars2.githubusercontent.com/u/3321893?v=4",
             email: "foo@bar",
             memberSince: 1551184200,
-            id: "1644802351",
+            id: "1",
             fullName: "Foo Bar",
             package: { id: "free" },
           },

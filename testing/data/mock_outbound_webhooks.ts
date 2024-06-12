@@ -7,7 +7,7 @@ export default (): OutboundWebhook[] => [
     requestPayload: '{"embeds":[]}',
     requestHeaders: { "content-type": "application/json" },
     triggerWhen: "on_publish",
-    id: "3289604702",
+    id: "2",
   },
   {
     requestUrl:

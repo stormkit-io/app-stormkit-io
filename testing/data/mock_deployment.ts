@@ -7,7 +7,7 @@ interface Props {
 
 export default ({ id, appId, envId, isRunning }: Props = {}): Deployment => ({
   id: id || "100332943411",
-  appId: appId || "3289604702",
+  appId: appId || "2",
   exit: 0,
   numberOfFiles: 0,
   isRunning: typeof isRunning !== "undefined" ? isRunning : false,
@@ -31,11 +31,11 @@ export default ({ id, appId, envId, isRunning }: Props = {}): Deployment => ({
       },
     },
     env: "production",
-    envId: envId || "3289604702",
+    envId: envId || "2",
   },
   published: [
     {
-      envId: envId || "3289604702",
+      envId: envId || "2",
       percentage: 100,
     },
   ],
@@ -56,7 +56,7 @@ export default ({ id, appId, envId, isRunning }: Props = {}): Deployment => ({
     {
       title: "environment variables",
       message:
-        "PUBLIC_URL=/\nSK_COMMIT_SHA=c8b80debdde397405b787cc4ddffcb22867586b4\nNODE_ENV=production\nSK_API_KEY=***********************************************\nSK_APP_ID=3289604702\nSK_DATA_STORE_URL=http://localhost:8080\nSK_ENV_ID=3289604702\nSTORMKIT=true\n",
+        "PUBLIC_URL=/\nSK_COMMIT_SHA=c8b80debdde397405b787cc4ddffcb22867586b4\nNODE_ENV=production\nSK_API_KEY=***********************************************\nSK_APP_ID=2\nSK_DATA_STORE_URL=http://localhost:8080\nSK_ENV_ID=2\nSTORMKIT=true\n",
       status: true,
       payload: null,
     },
