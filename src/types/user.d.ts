@@ -3,8 +3,7 @@ declare type SubscriptionName =
   | "starter"
   | "medium"
   | "enterprise"
-  | "self-hosted"
-  | "self-hosted-premium";
+  | "self-hosted";
 
 declare type Edition = "limited" | "premium";
 
