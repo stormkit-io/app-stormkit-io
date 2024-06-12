@@ -1,29 +1,33 @@
-import { withMockContext } from "~/~/testing/helpers";
+import type { RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { fireEvent, waitFor } from "@testing-library/react";
-import * as nocks from "~/testing/nocks";
+import { render, fireEvent, waitFor } from "@testing-library/react";
+import { mockUpdatePersonalAccessToken } from "~/testing/nocks/nock_user";
+import PersonalAccessTokenModal from "./PersonalAccessTokenModal";
 
-const fileName = "pages/user/account/_components/PersonalAccessTokenModal";
+interface Props {
+  hasToken: boolean;
+}
 
-describe(fileName, () => {
-  const path = `~/${fileName}`;
-  let wrapper;
+describe("~/pages/user/account/_components/PersonalAccessTokenModal", () => {
+  let toggleModal: jest.Func;
+  let wrapper: RenderResult;
 
-  const createWrapper = ({ props }) => {
-    wrapper = withMockContext({ path, props });
-    return wrapper;
+  const createWrapper = ({ hasToken }: Props) => {
+    toggleModal = jest.fn();
+
+    wrapper = render(
+      <PersonalAccessTokenModal hasToken={hasToken} toggleModal={toggleModal} />
+    );
   };
 
   describe("when personal access token is not yet set", () => {
     beforeEach(() => {
       createWrapper({
-        props: {
-          hasToken: false,
-        },
+        hasToken: false,
       });
     });
 
-    test.skip("should display an informative message that the token was already set", () => {
+    test("should display an informative message that the token was already set", () => {
       expect(wrapper.getByText("Set personal access token")).toBeTruthy();
 
       expect(() =>
@@ -33,16 +37,15 @@ describe(fileName, () => {
       ).toThrow();
     });
 
-    test.skip("should make an api call when submit is clicked", async () => {
+    test("should make an api call when submit is clicked", async () => {
       const token = "my-personal-access-token";
-      const scope = nocks.mockUpdatePersonalAccessToken({ payload: { token } });
+      const scope = mockUpdatePersonalAccessToken({ payload: { token } });
 
       // Type the token
-      userEvent.type(wrapper.getByLabelText("Personal access token"), token);
+      await userEvent.type(wrapper.getByLabelText("Token"), token);
 
       // Click on the submit button
-      const button = wrapper.getByText("Submit");
-      fireEvent.click(button);
+      fireEvent.click(wrapper.getByText("Submit"));
 
       // Wait that we receive a confirmation message
       await waitFor(() => {
@@ -59,13 +62,11 @@ describe(fileName, () => {
   describe("when has a personal access token already set", () => {
     beforeEach(() => {
       createWrapper({
-        props: {
-          hasToken: true,
-        },
+        hasToken: true,
       });
     });
 
-    test.skip("should display an informative message that the token was already set", () => {
+    test("should display an informative message that the token was already set", () => {
       expect(wrapper.getByText("Reset personal access token")).toBeTruthy();
 
       expect(
@@ -75,14 +76,13 @@ describe(fileName, () => {
       ).toBeTruthy();
     });
 
-    test.skip("should make an api call when delete old one button is clicked", async () => {
-      const scope = nocks.mockUpdatePersonalAccessToken({
+    test("should make an api call when delete old one button is clicked", async () => {
+      const scope = mockUpdatePersonalAccessToken({
         payload: { token: "" },
       });
 
       // Click on the delete button
-      const button = wrapper.getByText("Delete existing token");
-      fireEvent.click(button);
+      fireEvent.click(wrapper.getByText("Delete existing token"));
 
       // Wait that we receive a confirmation message
       await waitFor(() => {

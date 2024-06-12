@@ -98,20 +98,21 @@ export const usePersonalAccessTokenState = ({
     api
       .put("/user/access-token", { token })
       .then(() => {
-        setLoading(null);
         setMsg({
           type: "success",
           content:
             "The access token has been updated successfully. From now on, it'll be used to connect to the provider.",
         });
       })
-      .catch(() => {
-        setLoading(null);
+      .catch(e => {
         setMsg({
           type: "error",
           content:
             "Something went wrong while updating the personal access token. Please try again.",
         });
+      })
+      .finally(() => {
+        setLoading(null);
       });
   };
 

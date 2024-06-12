@@ -1,51 +1,52 @@
-import React from "react";
+import Button from "@mui/lab/LoadingButton";
+import TextField from "@mui/material/TextField";
 import Modal from "~/components/Modal";
-import Form from "~/components/FormV2";
-import Button from "~/components/ButtonV2";
-import InfoBox from "~/components/InfoBoxV2";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import { usePersonalAccessTokenState as usePATState } from "../actions";
+import CardFooter from "~/components/CardFooter";
 
 interface Props {
   hasToken: boolean;
   toggleModal: (val: boolean) => void;
 }
 
-const PersonalAccessTokenModal: React.FC<Props> = ({
+export default function PersonalAccessTokenModal({
   hasToken,
   toggleModal,
-}): React.ReactElement => {
+}: Props) {
   const state = usePATState({ hasToken });
 
   return (
     <Modal open onClose={() => toggleModal(false)}>
-      <Card>
+      <Card
+        success={state.msg?.type === "success" && state.msg.content}
+        error={state.msg?.type === "error" && state.msg.content}
+        info={
+          hasToken
+            ? "There is already a personal access token associated with this account. Submit a new one to overwrite."
+            : ""
+        }
+      >
         <CardHeader
           title={`${hasToken ? "Reset" : "Set"} personal access token`}
         />
-        {state.msg ? (
-          <InfoBox type={state.msg.type} className="mx-4">
-            {state.msg.content}
-          </InfoBox>
-        ) : (
-          ""
-        )}
-        <Form.WithLabel label="Token">
-          <Form.Input
-            fullWidth
-            autoFocus
-            value={state.token}
-            onChange={e => state.setToken(e.target.value)}
-            inputProps={{
-              "aria-label": "Personal access token",
-            }}
-          />
-        </Form.WithLabel>
-        <div className="text-center mb-4">
+        <TextField
+          label="Token"
+          aria-label="Personal access token"
+          type="text"
+          variant="filled"
+          autoComplete="off"
+          placeholder="Your personal access token that will be used for oauth"
+          onChange={e => state.setToken(e.target.value)}
+          fullWidth
+          autoFocus
+          sx={{ mb: 4 }}
+        />
+        <CardFooter sx={{ textAlign: "center" }}>
           {hasToken ? (
             <Button
-              category="button"
+              variant="text"
               type="button"
               onClick={state.deleteToken}
               loading={state.loading === "delete"}
@@ -57,7 +58,8 @@ const PersonalAccessTokenModal: React.FC<Props> = ({
             ""
           )}
           <Button
-            category="action"
+            variant="contained"
+            color="secondary"
             type="submit"
             onClick={state.submitToken}
             loading={state.loading === "submit"}
@@ -65,10 +67,8 @@ const PersonalAccessTokenModal: React.FC<Props> = ({
           >
             Submit
           </Button>
-        </div>
+        </CardFooter>
       </Card>
     </Modal>
   );
-};
-
-export default PersonalAccessTokenModal;
+}

@@ -2,6 +2,7 @@ import { RenderResult, waitFor } from "@testing-library/react";
 import { render, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import ConnectedAccounts from "./ConnectedAccounts";
+import { mockUseFetchEmails } from "~/testing/nocks/nock_user";
 
 interface Props {
   accounts?: Array<ConnectedAccount>;
@@ -10,13 +11,51 @@ interface Props {
 describe("~/pages/user/account/_components/ConnectedAccounts", () => {
   let wrapper: RenderResult;
 
-  const createWrapper = ({ accounts = [] }: Props) => {
+  const createWrapper = async ({ accounts = [] }: Props) => {
+    const scope = mockUseFetchEmails({
+      response: {
+        emails: [
+          { address: "hello@example.org", verified: true, primary: true },
+          { address: "hi@example.org", verified: true, primary: false },
+        ],
+      },
+    });
+
     wrapper = render(
       <MemoryRouter>
         <ConnectedAccounts accounts={accounts} />
       </MemoryRouter>
     );
+
+    await waitFor(() => {
+      expect(scope.isDone()).toBe(true);
+    });
   };
+
+  describe("emails", () => {
+    beforeEach(async () => {
+      await createWrapper({
+        accounts: [
+          { provider: "gitlab", hasPersonalAccessToken: true, displayName: "" },
+        ],
+      });
+    });
+
+    test("should list the email addresses", () => {
+      expect(wrapper.getByText("hello@example.org")).toBeTruthy();
+      expect(wrapper.getByText("hi@example.org")).toBeTruthy();
+    });
+
+    test("should mark the Primary email", () => {
+      expect(wrapper.getByTestId("hello@example.org").innerHTML).toContain(
+        "Primary"
+      );
+
+      expect(wrapper.getByTestId("hi@example.org").innerHTML).not.toContain(
+        "Primary"
+      );
+    });
+  });
 
   describe.each`
     provider       | human          | hasPersonalAccessTokenSupport
@@ -24,8 +63,8 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
     ${"gitlab"}    | ${"GitLab"}    | ${true}
     ${"bitbucket"} | ${"Bitbucket"} | ${false}
   `("For provider", ({ provider, human, hasPersonalAccessTokenSupport }) => {
-    beforeEach(() => {
-      createWrapper({
+    beforeEach(async () => {
+      await createWrapper({
         accounts: [
           {
             provider: "github",
@@ -62,8 +101,8 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
   });
 
   describe("when has personal access token", () => {
-    beforeEach(() => {
-      createWrapper({
+    beforeEach(async () => {
+      await createWrapper({
         accounts: [
           { provider: "gitlab", hasPersonalAccessToken: true, displayName: "" },
         ],
