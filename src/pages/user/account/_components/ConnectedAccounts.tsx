@@ -2,7 +2,7 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { grey } from "@mui/material/colors";
-import Link from "~/components/Link";
+import Button from "@mui/material/Button";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
@@ -41,33 +41,39 @@ export default function ConnectedAccounts({ accounts }: Props) {
       <Box>
         <Typography sx={{ mb: 2, px: 4 }}>Providers</Typography>
         {accounts.map(({ provider, hasPersonalAccessToken }, i) => (
-          <CardRow key={provider} data-testid={provider} sx={{ ml: 2 }}>
+          <CardRow
+            key={provider}
+            data-testid={provider}
+            sx={{ ml: 2 }}
+            actions={
+              showPersonalAccessButton(provider) ? (
+                <>
+                  <Button
+                    variant="text"
+                    color="info"
+                    size="small"
+                    onClick={e => {
+                      e.preventDefault();
+                      toggleModal(true);
+                    }}
+                  >
+                    {hasPersonalAccessToken ? "Reset" : "Set"} personal access
+                    token
+                  </Button>
+                  {isOpen && (
+                    <PersonalAccessTokenModal
+                      hasToken={hasPersonalAccessToken}
+                      toggleModal={toggleModal}
+                    />
+                  )}
+                </>
+              ) : undefined
+            }
+          >
             <Typography sx={{ color: grey[400] }}>
               <span className={`text-ml mr-2 fab fa-${provider}`} />
               {texts[provider]}
             </Typography>
-            {showPersonalAccessButton(provider) ? (
-              <span>
-                <Link
-                  to="#"
-                  secondary
-                  className="font-bold"
-                  onClick={e => {
-                    e.preventDefault();
-                    toggleModal(true);
-                  }}
-                >
-                  {hasPersonalAccessToken ? "Reset" : "Set"} personal access
-                  token
-                </Link>
-                {isOpen && (
-                  <PersonalAccessTokenModal
-                    hasToken={hasPersonalAccessToken}
-                    toggleModal={toggleModal}
-                  />
-                )}
-              </span>
-            ) : undefined}
           </CardRow>
         ))}
         <Typography sx={{ my: 2, px: 4 }}>Emails</Typography>

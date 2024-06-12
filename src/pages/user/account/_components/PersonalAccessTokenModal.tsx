@@ -3,7 +3,8 @@ import Modal from "~/components/Modal";
 import Form from "~/components/FormV2";
 import Button from "~/components/ButtonV2";
 import InfoBox from "~/components/InfoBoxV2";
-import Container from "~/components/Container";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
 import { usePersonalAccessTokenState as usePATState } from "../actions";
 
 interface Props {
@@ -18,8 +19,11 @@ const PersonalAccessTokenModal: React.FC<Props> = ({
   const state = usePATState({ hasToken });
 
   return (
-    <Modal open onClose={() => toggleModal(false)} className="max-w-screen-sm">
-      <Container title={`${hasToken ? "Reset" : "Set"} personal access token`}>
+    <Modal open onClose={() => toggleModal(false)}>
+      <Card>
+        <CardHeader
+          title={`${hasToken ? "Reset" : "Set"} personal access token`}
+        />
         {state.msg ? (
           <InfoBox type={state.msg.type} className="mx-4">
             {state.msg.content}
@@ -62,7 +66,7 @@ const PersonalAccessTokenModal: React.FC<Props> = ({
             Submit
           </Button>
         </div>
-      </Container>
+      </Card>
     </Modal>
   );
 };
