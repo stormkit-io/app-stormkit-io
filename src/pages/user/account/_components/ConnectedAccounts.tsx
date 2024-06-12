@@ -80,7 +80,7 @@ export default function ConnectedAccounts({ accounts }: Props) {
         {emails?.map(email => (
           <CardRow
             key={email.address}
-            data-testid={email}
+            data-testid={email.address}
             chipLabel={email.primary ? "Primary" : undefined}
             chipColor={email.primary ? "success" : undefined}
             sx={{ borderTop: `1px solid rgba(255,255,255,0.04)`, ml: 2 }}

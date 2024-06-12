@@ -17,8 +17,34 @@ export const mockFetchUser = ({
   response?: MockFetchUserResponse;
 }) => nock(endpoint).get("/user").reply(status, response);
 
+interface MockUpdatePersonalAccessTokenProps {
+  status?: number;
+  response?: { ok: boolean };
+  payload: {
+    token: string;
+  };
+}
+
 export const mockUpdatePersonalAccessToken = ({
+  payload,
   status = 200,
-  payload = {},
   response = { ok: true },
-}) => nock(endpoint).put("/user/access-token", payload).reply(status, response);
+}: MockUpdatePersonalAccessTokenProps) =>
+  nock(endpoint).put("/user/access-token", payload).reply(status, response);
+
+interface Email {
+  address: string;
+  verified: boolean;
+  primary: boolean;
+}
+
+interface MockFetchUserEmailsProps {
+  status?: number;
+  response: { emails: Email[] };
+}
+
+export const mockUseFetchEmails = ({
+  status = 200,
+  response,
+}: MockFetchUserEmailsProps) =>
+  nock(endpoint).get("/user/emails").reply(status, response);
