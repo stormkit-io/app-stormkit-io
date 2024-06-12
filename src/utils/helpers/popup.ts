@@ -4,6 +4,7 @@ export interface DataMessage {
   sessionToken?: string;
   user?: User;
   email?: boolean;
+  error?: string;
 }
 
 interface OpenPopupProps {
