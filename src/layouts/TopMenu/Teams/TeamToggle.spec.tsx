@@ -71,7 +71,13 @@ describe("~/layouts/TopMenu/Teams/TeamToggle.tsx", () => {
   test("should display free trial chip", () => {
     const user = mockUser();
     user.isPaymentRequired = true;
-    user.package = { id: "free" };
+    user.package = {
+      id: "free",
+      name: "Free Trial",
+      edition: "",
+      maxDeploymentsPerMonth: 50,
+    };
+
     createWrapper({ user });
     expect(wrapper.getByText("Free trial")).toBeTruthy();
   });
