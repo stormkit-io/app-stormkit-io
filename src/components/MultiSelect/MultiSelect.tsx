@@ -33,6 +33,7 @@ export default function MultiSelect({
   placeholder,
   multiple = true,
   fullWidth = true,
+  disabled = false,
   sx,
   onSelect,
 }: Props) {
@@ -56,6 +57,7 @@ export default function MultiSelect({
         multiple={multiple}
         variant={variant}
         size={size}
+        disabled={disabled}
         value={selectedItems?.length ? selectedItems : [""]}
         input={variant === "filled" ? <FilledInput /> : <OutlinedInput />}
         sx={{ color: "white", ...sx }}
