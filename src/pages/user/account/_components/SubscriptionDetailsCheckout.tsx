@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { grey } from "@mui/material/colors";
 import CheckIcon from "@mui/icons-material/Check";
@@ -61,63 +63,77 @@ export default function Checkout({ user }: Props) {
             height: "100%",
             display: "flex",
             flexDirection: "column",
+            cursor: "not-allowed",
+            position: "relative",
           }}
         >
           <CardHeader
             title="Self-Hosted Edition"
             subtitle={`Host Stormkit on your own servers, ensuring complete control and security of your data. Perfect for teams requiring flexibility, scalability, and compliance with internal policies.`}
+            sx={{
+              opacity: 0.25,
+            }}
           />
-          <Box sx={{ mb: 4, flex: 1 }}>
-            <Box sx={{ display: "flex", mb: 2 }}>
-              {edition === "limited" ? (
-                <>
-                  <Typography fontSize={28} sx={{ mr: 2 }}>
-                    ${prices["self-hosted"]}
+          <Chip
+            label="Soon 🎉"
+            color="success"
+            sx={{ position: "absolute", top: -10, right: -10, zIndex: 5 }}
+          />
+          <Box sx={{ opacity: 0.25 }}>
+            <Box sx={{ mb: 4, flex: 1 }}>
+              <Box sx={{ display: "flex", mb: 2 }}>
+                {edition === "limited" ? (
+                  <>
+                    <Typography fontSize={28} sx={{ mr: 2 }}>
+                      ${prices["self-hosted"]}
+                    </Typography>
+                    <Typography sx={{ mb: 2, color: grey[500] }}>
+                      per user
+                      <br />
+                      month
+                    </Typography>
+                  </>
+                ) : (
+                  <Typography sx={{ pt: 0, pb: 2 }}>
+                    Contact us at sales@stormkit.io to find the most suitable
+                    plan for your organization.
                   </Typography>
-                  <Typography sx={{ mb: 2, color: grey[500] }}>
-                    per user
-                    <br />
-                    month
-                  </Typography>
-                </>
-              ) : (
-                <Typography sx={{ pt: 0, pb: 2 }}>
-                  Contact us at sales@stormkit.io to find the most suitable plan
-                  for your organization.
-                </Typography>
-              )}
-            </Box>
-            <MultiSelect
-              variant="outlined"
-              selected={[edition]}
-              sx={{ color: "white" }}
-              items={[
-                { text: "Limited Edition", value: "limited" },
-                { text: "Premium Edition", value: "premium" },
-              ]}
-              multiple={false}
-              onSelect={i => setEdition(i[0] as Edition)}
-            />
-            <Box sx={{ mt: 4 }}>
-              {includedFeatures("self-hosted", edition).map(feature => (
-                <Box sx={{ mb: 1 }} key={feature.text}>
-                  {feature.included ? (
-                    <CheckIcon sx={{ fill: "green", mr: 2, ml: 0 }} />
-                  ) : (
-                    <XIcon sx={{ fill: "red", mr: 2, ml: 0 }} />
-                  )}{" "}
-                  {feature.text}
-                </Box>
-              ))}
+                )}
+              </Box>
+              <MultiSelect
+                variant="outlined"
+                selected={[edition]}
+                sx={{ color: "white" }}
+                disabled={true}
+                items={[
+                  { text: "Limited Edition", value: "limited" },
+                  { text: "Premium Edition", value: "premium" },
+                ]}
+                multiple={false}
+                onSelect={i => setEdition(i[0] as Edition)}
+              />
+              <Box sx={{ mt: 4 }}>
+                {includedFeatures("self-hosted", edition).map(feature => (
+                  <Box sx={{ mb: 1 }} key={feature.text}>
+                    {feature.included ? (
+                      <CheckIcon sx={{ fill: "green", mr: 2, ml: 0 }} />
+                    ) : (
+                      <XIcon sx={{ fill: "red", mr: 2, ml: 0 }} />
+                    )}{" "}
+                    {feature.text}
+                  </Box>
+                ))}
+              </Box>
             </Box>
           </Box>
-          <CardFooter sx={{ textAlign: "center" }}>
+          <CardFooter sx={{ textAlign: "center", opacity: 0.25 }}>
             {edition === "limited" ? (
               <Button
                 variant="contained"
                 color="secondary"
                 sx={{ px: 6 }}
                 href={`${paymentLinks["self-hosted"]}?prefilled_email=${user?.email}`}
+                disabled
               >
                 Go to portal
               </Button>
