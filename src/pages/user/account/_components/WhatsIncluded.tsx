@@ -23,10 +23,6 @@ const limits: Record<SubscriptionName, { fns: string; bandwidth: string }> = {
     fns: "Unlimited",
     bandwidth: "Unlimited",
   },
-  "self-hosted-premium": {
-    fns: "Unlimited",
-    bandwidth: "Unlimited",
-  },
 };
 
 interface Feature {
@@ -34,7 +30,7 @@ interface Feature {
   included: boolean;
 }
 
-export const includedFeatures = (tier: SubscriptionName) => {
+export const includedFeatures = (tier: SubscriptionName, edition?: Edition) => {
   const shared: Feature[] = [
     { included: true, text: "Unlimited seats" },
     { included: true, text: "Unlimited teams" },
@@ -61,11 +57,11 @@ export const includedFeatures = (tier: SubscriptionName) => {
         text: tier === "self-hosted" ? "Up to 5 seats" : "Unlimited seats",
       },
       {
-        included: tier === "self-hosted-premium",
+        included: edition === "premium",
         text: "Analytics",
       },
       {
-        included: tier === "self-hosted-premium",
+        included: edition === "premium",
         text: "Audit Logs",
       },
       // {
@@ -73,15 +69,15 @@ export const includedFeatures = (tier: SubscriptionName) => {
       //   text: "Prerendering",
       // },
       {
-        included: tier === "self-hosted-premium",
+        included: edition === "premium",
         text: "IP Limiting",
       },
       {
-        included: tier === "self-hosted-premium",
+        included: edition === "premium",
         text: "Premium support",
       },
       {
-        included: tier === "self-hosted-premium",
+        included: edition === "premium",
         text: "Custom features",
       },
     ];
@@ -90,7 +86,12 @@ export const includedFeatures = (tier: SubscriptionName) => {
   return [...shared, { included: true, text: "All features" }];
 };
 
-export default function WhatsIncluded({ tier }: { tier: SubscriptionName }) {
+interface Props {
+  tier: SubscriptionName;
+  edition?: Edition;
+}
+
+export default function WhatsIncluded({ tier, edition }: Props) {
   return (
     <Box sx={{ display: "flex", mt: 2 }}>
       <Grid
@@ -98,7 +99,7 @@ export default function WhatsIncluded({ tier }: { tier: SubscriptionName }) {
         sx={{ width: "100%", textAlign: "left" }}
         rowSpacing={{ xs: 2 }}
       >
-        {includedFeatures(tier).map((feature, index) => (
+        {includedFeatures(tier, edition).map((feature, index) => (
           <Grid
             key={index}
             item
