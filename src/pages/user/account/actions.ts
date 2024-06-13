@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "~/utils/api/Api";
 
-export type StatusName = "trialing" | "active";
-
 interface Email {
   address: string;
   verified: boolean;
