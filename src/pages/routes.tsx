@@ -37,6 +37,16 @@ function RedirectToEnvPage() {
   return <></>;
 }
 
+function RedirectPaymentSuccess() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate(`/user/account?payment=success`, { replace: true });
+  }, [navigate]);
+
+  return <></>;
+}
+
 const centerLayout = () => import("~/layouts/CenterLayout");
 const teamLayout = () => import("~/layouts/TeamLayout");
 
@@ -98,8 +108,8 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/user/account"), centerLayout),
   },
   {
-    path: "/user/account/payment",
-    element: Async(() => import("~/pages/user/account/Payment"), centerLayout),
+    path: "/user/payment/success",
+    element: <RedirectPaymentSuccess />,
   },
   {
     path: "/invitation/accept",

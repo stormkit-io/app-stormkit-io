@@ -1,6 +1,8 @@
+import { useSearchParams } from "react-router-dom";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
@@ -9,6 +11,7 @@ import CopyBox from "~/components/CopyBox";
 import WhatsIncluded from "./WhatsIncluded";
 import Checkout from "./SubscriptionDetailsCheckout";
 import { useFetchLicense } from "../actions";
+import { useEffect } from "react";
 
 interface Props {
   user: User;
@@ -20,8 +23,17 @@ const portalLink = {
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
 
 export default function SubscriptionDetails({ user }: Props) {
+  const [params, _] = useSearchParams();
   const { license, loading, error } = useFetchLicense({ user });
   const isFree = user.package.id === "free";
+
+  useEffect(() => {
+    const paymentSuccess = document.querySelector("#payment-success");
+
+    if (paymentSuccess) {
+      paymentSuccess.scrollIntoView?.({ behavior: "smooth" });
+    }
+  }, []);
 
   return (
     <Card
@@ -32,22 +44,22 @@ export default function SubscriptionDetails({ user }: Props) {
     >
       <CardHeader
         title={isFree ? "Checkout" : "Subscription Details"}
-        actions={
-          <Chip
-            color="warning"
-            label={[
-              user.package.name,
-              user.package.id.startsWith("self-hosted")
-                ? `${capitalize(user.package.edition)} - ${
-                    license?.seats
-                  } Seats`
-                : "",
-            ]
-              .filter(i => i)
-              .join(" ")}
-          />
-        }
+        subtitle={[
+          user.package.name,
+          user.package.id.startsWith("self-hosted")
+            ? `${capitalize(user.package.edition)} - ${license?.seats} Seats`
+            : "",
+        ]
+          .filter(i => i)
+          .join(" ")}
       />
+      {params.get("payment") === "success" && (
+        <Alert id="payment-success" color="info" sx={{ mb: 4 }}>
+          <Typography>
+            Thank you for your order, your tier has been updated.
+          </Typography>
+        </Alert>
+      )}
       <Box sx={{ mb: isFree ? 0 : 4 }}>
         {isFree && <Checkout user={user} />}
         {!isFree && <WhatsIncluded tier={user.package.id} />}

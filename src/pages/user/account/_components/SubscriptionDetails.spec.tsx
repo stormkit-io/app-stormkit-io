@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { MemoryRouter, MemoryRouterProps } from "react-router";
 import { render, waitFor } from "@testing-library/react";
 import { mockFetchLicense } from "~/testing/nocks/nock_user";
 import SubscriptionDetails from "./SubscriptionDetails";
@@ -6,13 +7,18 @@ import mockUser from "~/testing/data/mock_user";
 
 interface Props {
   user: User;
+  routerProps?: MemoryRouterProps;
 }
 
 describe("~/pages/user/account/_components/SubscriptionDetails", () => {
   let wrapper: RenderResult;
 
-  const createWrapper = ({ user }: Props) => {
-    wrapper = render(<SubscriptionDetails user={user} />);
+  const createWrapper = ({ user, routerProps }: Props) => {
+    wrapper = render(
+      <MemoryRouter {...routerProps}>
+        <SubscriptionDetails user={user} />
+      </MemoryRouter>
+    );
   };
 
   describe("when the user is still in free trial", () => {
@@ -91,6 +97,42 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
     test("should display the liceense", () => {
       expect(wrapper.getByText(/STORMKIT_LICENSE/)).toBeTruthy();
       expect(wrapper.getByDisplayValue("abc")).toBeTruthy();
+    });
+  });
+
+  describe("when the user made a payment", () => {
+    const user = mockUser({ packageId: "medium" });
+
+    test("should display a payment success message", () => {
+      createWrapper({
+        user,
+        routerProps: {
+          initialEntries: ["/?payment=success"],
+          initialIndex: 0,
+        },
+      });
+
+      expect(
+        wrapper.getByText(
+          "Thank you for your order, your tier has been updated."
+        )
+      ).toBeTruthy();
+    });
+
+    test("should not display a payment success message when query param is missing", () => {
+      createWrapper({
+        user,
+        routerProps: {
+          initialEntries: ["/"],
+          initialIndex: 0,
+        },
+      });
+
+      expect(() =>
+        wrapper.getByText(
+          "Thank you for your order, your tier has been updated."
+        )
+      ).toThrow();
     });
   });
 });
