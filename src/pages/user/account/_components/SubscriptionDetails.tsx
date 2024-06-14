@@ -4,9 +4,11 @@ import Button from "@mui/material/Button";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import { capitalize } from "@mui/material";
+import { capitalize } from "~/utils/helpers/string";
+import CopyBox from "~/components/CopyBox";
 import WhatsIncluded from "./WhatsIncluded";
 import Checkout from "./SubscriptionDetailsCheckout";
+import { useFetchLicense } from "../actions";
 
 interface Props {
   user: User;
@@ -18,10 +20,16 @@ const portalLink = {
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
 
 export default function SubscriptionDetails({ user }: Props) {
+  const { license, loading, error } = useFetchLicense({ user });
   const isFree = user.package.id === "free";
 
   return (
-    <Card sx={{ mb: 2 }} contentPadding={!isFree}>
+    <Card
+      sx={{ mb: 2 }}
+      contentPadding={!isFree}
+      loading={loading}
+      error={error}
+    >
       <CardHeader
         title={isFree ? "Checkout" : "Subscription Details"}
         actions={
@@ -30,7 +38,9 @@ export default function SubscriptionDetails({ user }: Props) {
             label={[
               user.package.name,
               user.package.id.startsWith("self-hosted")
-                ? capitalize(user.package.edition)
+                ? `${capitalize(user.package.edition)} - ${
+                    license?.seats
+                  } Seats`
                 : "",
             ]
               .filter(i => i)
@@ -42,6 +52,15 @@ export default function SubscriptionDetails({ user }: Props) {
         {isFree && <Checkout user={user} />}
         {!isFree && <WhatsIncluded tier={user.package.id} />}
       </Box>
+      {license && (
+        <Card>
+          <CardHeader
+            title="License"
+            subtitle="Set the `STORMKIT_LICENSE` environment variable in your self-hosted environment to the following value:"
+          />
+          <CopyBox value={license.key} />
+        </Card>
+      )}
 
       {!isFree && (
         <CardFooter>

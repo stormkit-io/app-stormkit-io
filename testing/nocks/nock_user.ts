@@ -17,6 +17,17 @@ export const mockFetchUser = ({
   response?: MockFetchUserResponse;
 }) => nock(endpoint).get("/user").reply(status, response);
 
+interface MockFetchLicenseProps {
+  status: number;
+  response: { license: { key: string; seat: number; premium: boolean } | null };
+}
+
+export const mockFetchLicense = ({
+  response,
+  status = 200,
+}: MockFetchLicenseProps) =>
+  nock(endpoint).get("/user/license").reply(status, response);
+
 interface MockUpdatePersonalAccessTokenProps {
   status?: number;
   response?: { ok: boolean };

@@ -1,6 +1,46 @@
 import { useEffect, useState } from "react";
 import api from "~/utils/api/Api";
 
+interface FetchLicenseProps {
+  user: User;
+}
+
+interface License {
+  premium: boolean;
+  seats: number;
+  key: string;
+}
+
+export const useFetchLicense = ({ user }: FetchLicenseProps) => {
+  const [license, setLicense] = useState<License>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    if (user.package.id !== "self-hosted") {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(undefined);
+
+    api
+      .fetch<{ license: License }>("/user/license")
+      .then(({ license }) => {
+        setLicense(license);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching license.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [user.package.id]);
+
+  return { license, error, loading };
+};
+
 interface Email {
   address: string;
   verified: boolean;
