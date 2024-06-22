@@ -15,7 +15,7 @@ export default function NewBitbucketApp() {
   });
 
   return (
-    <Box maxWidth="md" sx={{ width: "100%" }}>
+    <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
       <Card
         sx={{
           width: "100%",
