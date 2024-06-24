@@ -135,6 +135,22 @@ export default function AuditMessage({ audit }: Props) {
         </AuditRow>
       );
 
+    case "UPDATE:APP":
+      return (
+        <AuditRow audit={audit}>
+          Updated <AppLink audit={audit}>{audit.diff.new.appName}</AppLink>{" "}
+          settings
+        </AuditRow>
+      );
+
+    case "DELETE:APP":
+      return (
+        <AuditRow audit={audit}>
+          Delete the <AppLink audit={audit}>{audit.diff.new.appName}</AppLink>{" "}
+          application
+        </AuditRow>
+      );
+
     case "CREATE:SNIPPET":
       return (
         <AuditRow audit={audit}>
