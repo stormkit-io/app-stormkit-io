@@ -146,7 +146,7 @@ export default function AuditMessage({ audit }: Props) {
     case "DELETE:APP":
       return (
         <AuditRow audit={audit}>
-          Delete the <AppLink audit={audit}>{audit.diff.new.appName}</AppLink>{" "}
+          Deleted the <AppLink audit={audit}>{audit.diff.new.appName}</AppLink>{" "}
           application
         </AuditRow>
       );
