@@ -1,5 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import mockTeams from "~/testing/data/mock_teams";
 import mockUser from "~/testing/data/mock_user";
 import { AuthContext } from "~/pages/auth/Auth.context";
@@ -16,9 +17,11 @@ describe("~/pages/user/account/Account", () => {
 
   const createWrapper = ({ user = mockUser() }: Props) => {
     wrapper = render(
-      <AuthContext.Provider value={{ user, teams, accounts: [] }}>
-        <Account />
-      </AuthContext.Provider>
+      <MemoryRouter>
+        <AuthContext.Provider value={{ user, teams, accounts: [] }}>
+          <Account />
+        </AuthContext.Provider>
+      </MemoryRouter>
     );
   };
 
