@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
@@ -12,6 +14,9 @@ interface Props {
 }
 
 export default function FormDangerZone({ app }: Props) {
+  const { teams } = useContext(AuthContext);
+  const team = useSelectedTeam({ teams, app });
+  const slug = `/${team?.slug || ""}`;
   const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
 
   return (
@@ -48,7 +53,7 @@ export default function FormDangerZone({ app }: Props) {
             deleteApp({ app })
               .then(() => {
                 setLoading(false);
-                window.location.assign("/");
+                window.location.assign(slug);
               })
               .catch(() => {
                 setLoading(false);
