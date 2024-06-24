@@ -40,9 +40,7 @@ function EnvLink({ audit, children }: LinkProps) {
 }
 
 function AppLink({ audit, children }: LinkProps) {
-  return (
-    <Link href={`/apps/${audit.appId}}`}>{children || "application"}</Link>
-  );
+  return <Link href={`/apps/${audit.appId}`}>{children || "application"}</Link>;
 }
 
 function AuditRow({ audit, children }: Props) {
@@ -146,7 +144,7 @@ export default function AuditMessage({ audit }: Props) {
     case "DELETE:APP":
       return (
         <AuditRow audit={audit}>
-          Deleted the {audit.diff.old.appName} application
+          Deleted {audit.diff.old.appName} application
         </AuditRow>
       );
 
