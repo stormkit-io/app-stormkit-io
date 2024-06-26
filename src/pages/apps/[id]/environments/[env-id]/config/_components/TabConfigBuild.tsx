@@ -76,9 +76,9 @@ export default function TabConfigGeneral({
           label="Build command"
           variant="filled"
           autoComplete="off"
-          defaultValue={env?.build.cmd || ""}
+          defaultValue={env?.build.buildCmd || ""}
           fullWidth
-          name="build.cmd"
+          name="build.buildCmd"
           placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
           helperText={
             <>

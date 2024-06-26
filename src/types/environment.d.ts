@@ -7,7 +7,8 @@ declare type BuildConfig = {
   redirectsFile?: string;
   redirects?: Redirect[];
   distFolder: string;
-  cmd: string;
+  buildCmd?: string;
+  serverCmd?: string;
   vars: Record<string, string>;
 };
 
