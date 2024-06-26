@@ -40,7 +40,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     values["build.prerender.waitFor"];
 
   const build: BuildConfig = {
-    cmd: values["build.cmd"]?.trim() || "",
+    buildCmd: values["build.buildCmd"]?.trim() || "",
     distFolder: (values["build.distFolder"] || "").trim(),
     headersFile: values["build.headersFile"],
     redirectsFile: values["build.redirectsFile"],
@@ -102,7 +102,7 @@ export const buildFormValues = (
     "build.redirectsFile": env.build.redirectsFile,
     "build.apiFolder": env.build.apiFolder,
     "build.apiPathPrefix": env.build.apiPathPrefix,
-    "build.cmd": env.build.cmd,
+    "build.buildCmd": env.build.buildCmd,
     "build.distFolder": env.build.distFolder,
     "build.redirects": JSON.stringify(env.build.redirects),
     "build.vars": Object.keys(env.build?.vars || {})
@@ -187,7 +187,8 @@ export interface FormValues {
   autoPublish?: "on" | "off";
   autoDeployBranches?: string;
   "build.previewLinks"?: "on" | "off";
-  "build.cmd"?: string;
+  "build.buildCmd"?: string;
+  "build.serverCmd"?: string;
   "build.distFolder"?: string;
   "build.headersFile"?: string;
   "build.redirects"?: string;

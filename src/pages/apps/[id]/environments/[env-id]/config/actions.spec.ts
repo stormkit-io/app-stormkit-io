@@ -21,7 +21,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/actions.tsx", () => {
         "build.redirectsFile": env.build.redirectsFile,
         "build.apiFolder": env.build.apiFolder,
         "build.apiPathPrefix": env.build.apiPathPrefix,
-        "build.cmd": env.build.cmd,
+        "build.buildCmd": env.build.buildCmd,
         "build.distFolder": env.build.distFolder,
         "build.vars": "BABEL_ENV=production\nNODE_ENV=production",
       });
@@ -68,7 +68,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/actions.tsx", () => {
         "build.redirectsFile": env.build.redirectsFile,
         "build.apiFolder": env.build.apiFolder,
         "build.apiPathPrefix": env.build.apiPathPrefix,
-        "build.cmd": env.build.cmd,
+        "build.buildCmd": env.build.buildCmd,
         "build.distFolder": env.build.distFolder,
         "build.vars": "BABEL_ENV=production\nNODE_ENV=production",
       });

@@ -30,7 +30,7 @@ const DeployModal: React.FC<Props> = ({
     environment
   );
   const fetchResult = useFetchRepoMeta({ app, env: selectedEnv });
-  const [cmd, setCmd] = useState(environment?.build?.cmd || "");
+  const [cmd, setCmd] = useState(environment?.build?.buildCmd || "");
   const [dist, setDist] = useState(environment?.build?.distFolder || "");
   const [branch, setBranch] = useState(environment?.branch || "");
   const [error, setError] = useState<null | string>(null);
@@ -67,7 +67,7 @@ const DeployModal: React.FC<Props> = ({
               setLoading,
               config: {
                 branch,
-                cmd,
+                buildCmd: cmd,
                 distFolder: dist,
                 publish: isAutoPublish || false,
               },
@@ -89,7 +89,7 @@ const DeployModal: React.FC<Props> = ({
               onSelect={(env: Environment): void => {
                 if (env) {
                   setBranch(env.branch);
-                  setCmd(env.build.cmd);
+                  setCmd(env.build.buildCmd || "");
                   setDist(env.build.distFolder);
                   setIsAutoPublish(env.autoPublish);
                   setError(null);
@@ -123,7 +123,7 @@ const DeployModal: React.FC<Props> = ({
               <Form.Input
                 value={cmd}
                 fullWidth
-                name="build.cmd"
+                name="build.buildCmd"
                 onChange={e => setCmd(e.target.value)}
                 placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
                 className="bg-blue-10 no-border h-full"

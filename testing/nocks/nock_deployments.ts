@@ -114,7 +114,7 @@ interface mockDeployNowProps {
   appId: string;
   config: {
     env: string;
-    cmd: string;
+    buildCmd: string;
     branch: string;
     distFolder: string;
     publish: boolean;

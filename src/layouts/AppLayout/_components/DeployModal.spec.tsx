@@ -50,7 +50,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     currentApp = mockApp();
     currentEnv = mockEnv({ app: currentApp });
     currentEnv.branch = "";
-    currentEnv.build.cmd = "";
+    currentEnv.build.buildCmd = "";
     currentEnv.build.distFolder = "";
 
     const fetchMetaScope = mockFetchRepoMeta({
@@ -73,13 +73,13 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     distFolder: "my-dist",
     branch: "master",
     publish: true,
-    cmd: "echo hi",
+    buildCmd: "echo hi",
   };
 
   const executeDeployFlow = async () => {
     await userEvent.type(
       wrapper.getByLabelText("Build command"),
-      deployConfig.cmd
+      deployConfig.buildCmd
     );
 
     await userEvent.type(

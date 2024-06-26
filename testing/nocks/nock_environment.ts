@@ -20,7 +20,7 @@ const toRequestObject = (environment: Environment) => {
         redirectsFile: environment.build.redirectsFile,
         redirects: environment.build.redirects,
         distFolder: environment.build.distFolder,
-        cmd: environment.build.cmd,
+        buildCmd: environment.build.buildCmd || "",
         vars: environment.build.vars,
       },
     })

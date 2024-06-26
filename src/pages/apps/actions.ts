@@ -170,7 +170,7 @@ export const useFetchApp = ({ appId }: FetchAppProps): FetchAppReturnValue => {
 interface DeployProps {
   app: App;
   config?: {
-    cmd: string;
+    buildCmd: string;
     branch: string;
     distFolder?: string;
     publish: boolean;

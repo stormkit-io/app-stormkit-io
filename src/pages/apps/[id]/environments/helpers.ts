@@ -15,7 +15,7 @@ export const prepareBuildObject = (
   });
 
   const build: BuildConfig = {
-    cmd: values["build.cmd"],
+    buildCmd: values["build.buildCmd"],
     distFolder: values["build.distFolder"] || "",
     vars,
   };
