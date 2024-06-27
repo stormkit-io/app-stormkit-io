@@ -83,9 +83,7 @@ export default function TabConfigRedirects({
             shrink: true,
           }}
           placeholder="./_redirects"
-          helperText={
-            "The relative path to the `redirects` file from the build root."
-          }
+          helperText={"The path to the `redirects` file from the build root."}
         />
       </Box>
       <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>

@@ -15,12 +15,13 @@ const toRequestObject = (environment: Environment) => {
       build: {
         previewLinks: environment.build.previewLinks,
         apiFolder: environment.build.apiFolder,
-        apiPathPrefix: environment.build.apiPathPrefix,
         headersFile: environment.build.headersFile,
         redirectsFile: environment.build.redirectsFile,
         redirects: environment.build.redirects,
         distFolder: environment.build.distFolder,
         buildCmd: environment.build.buildCmd || "",
+        serverCmd: environment.build.serverCmd || "",
+        serverFolder: environment.build.serverFolder || "",
         vars: environment.build.vars,
       },
     })

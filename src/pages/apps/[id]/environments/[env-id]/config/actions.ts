@@ -41,11 +41,12 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
 
   const build: BuildConfig = {
     buildCmd: values["build.buildCmd"]?.trim() || "",
+    serverFolder: values["build.serverFolder"]?.trim() || "",
+    serverCmd: values["build.serverCmd"]?.trim() || "",
     distFolder: (values["build.distFolder"] || "").trim(),
     headersFile: values["build.headersFile"],
     redirectsFile: values["build.redirectsFile"],
     apiFolder: values["build.apiFolder"],
-    apiPathPrefix: values["build.apiPathPrefix"],
     previewLinks: values["build.previewLinks"] === "on",
     prerender: hasPrerendering
       ? {
@@ -101,8 +102,9 @@ export const buildFormValues = (
     "build.headersFile": env.build.headersFile,
     "build.redirectsFile": env.build.redirectsFile,
     "build.apiFolder": env.build.apiFolder,
-    "build.apiPathPrefix": env.build.apiPathPrefix,
     "build.buildCmd": env.build.buildCmd,
+    "build.serverCmd": env.build.serverCmd,
+    "build.serverFolder": env.build.serverFolder,
     "build.distFolder": env.build.distFolder,
     "build.redirects": JSON.stringify(env.build.redirects),
     "build.vars": Object.keys(env.build?.vars || {})
@@ -189,6 +191,7 @@ export interface FormValues {
   "build.previewLinks"?: "on" | "off";
   "build.buildCmd"?: string;
   "build.serverCmd"?: string;
+  "build.serverFolder"?: string;
   "build.distFolder"?: string;
   "build.headersFile"?: string;
   "build.redirects"?: string;
@@ -197,7 +200,6 @@ export interface FormValues {
   "build.prerender.cacheDuration"?: string;
   "build.redirectsFile"?: string;
   "build.apiFolder"?: string;
-  "build.apiPathPrefix"?: string;
   "build.vars"?: string; // This is the textarea version
   "build.vars[key]"?: string; // This is the key value version
   "build.vars[value]"?: string; // This is the key value version

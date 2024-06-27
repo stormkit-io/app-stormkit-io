@@ -2,13 +2,13 @@ declare type BuildConfig = {
   prerender?: PrerenderConfig;
   previewLinks?: boolean;
   apiFolder?: string;
-  apiPathPrefix?: string;
   headersFile?: string;
   redirectsFile?: string;
   redirects?: Redirect[];
   distFolder: string;
   buildCmd?: string;
   serverCmd?: string;
+  serverFolder?: string;
   vars: Record<string, string>;
 };
 

@@ -55,7 +55,7 @@ export default function TabConfigGeneral({
           placeholder="./_headers"
           helperText={
             <>
-              The relative path to the `headers` file from the build root.
+              The path to the `headers` file from the build root.
               <Link
                 href="https://stormkit.io/docs/features/custom-headers"
                 target="_blank"
