@@ -78,14 +78,6 @@ export const envMenuItems = ({
     },
   ];
 
-  if (isSelfHosted()) {
-    items.push({
-      text: "Key Value",
-      path: `${envPath}/key-value`,
-      isActive: pathname.includes("/key-value"),
-    });
-  }
-
   if (app.featureFlags?.SK_DATA_STORE) {
     items.push({
       text: "Data Store",
