@@ -3,19 +3,20 @@ import React, { useContext, useState } from "react";
 import { useParams, useLocation } from "react-router";
 import Button from "@mui/lab/LoadingButton";
 import Link from "@mui/material/Link";
+import Box from "@mui/material/Box";
+import Switch from "@mui/material/Switch";
+import Typography from "@mui/material/Typography";
+import AlertTitle from "@mui/material/AlertTitle";
+import Alert from "@mui/material/Alert";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { grey } from "@mui/material/colors";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import EmptyPage from "~/components/EmptyPage";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { useFetchDeploymentRuntimeLogs } from "./actions";
-
-const borderBottom = "1px solid rgba(255,255,255,0.1)";
 
 const renderLog = (log: Log, i: number) => {
   let data = log.data.split(/END\sRequestId:/)[0];
@@ -47,39 +48,32 @@ const renderLog = (log: Log, i: number) => {
     date = new Date();
   }
 
+  const isoDateTime = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  ).toISOString();
+
   return (
-    <TableRow
-      key={`${log.timestamp}${i}`}
+    <Box
+      key={`${log.id}-${i}`}
       sx={{
-        opacity: 0.75,
-        ":hover": {
-          color: "white !important",
-          opacity: 1,
-        },
+        mb: 1,
+        ":last-child": { mb: 0 },
+        ":hover": { backgroundColor: "rgba(0,0,0,0.1)" },
+        display: "flex",
       }}
     >
-      <TableCell
-        sx={{
-          borderBottom: "none",
-        }}
-      >
-        {date.toISOString().split(".")[0].replace("T", " ")}
-      </TableCell>
-      <TableCell
-        sx={{
-          whiteSpace: "pre-wrap",
-          wordBreak: "break-all",
-          borderBottom: "none",
-        }}
-      >
-        {data}
-      </TableCell>
-    </TableRow>
+      <Box sx={{ color: grey[500] }}>{i}.</Box>
+      <Box sx={{ flex: 1, pl: 2 }}>{data}</Box>
+      <Box sx={{ color: grey[500] }}>
+        {isoDateTime.split(".")[0].replace("T", " ")}
+      </Box>
+    </Box>
   );
 };
 
 const RuntimeLogs: React.FC = () => {
   const location = useLocation();
+  const [whitespace, setWhiteSpace] = useState(true);
   const { deploymentId } = useParams();
   const { app } = useContext(AppContext);
   const [afterTs, setAfterTs] = useState<string>();
@@ -113,17 +107,61 @@ const RuntimeLogs: React.FC = () => {
         }
       />
       {shouldDisplayLogs ? (
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ borderBottom, width: "166px" }}>
-                Timestamp
-              </TableCell>
-              <TableCell sx={{ borderBottom }}>Message</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{logs.map(renderLog)}</TableBody>
-        </Table>
+        <>
+          <Alert color="info" sx={{ mb: 4 }}>
+            <AlertTitle>Note</AlertTitle>
+            <Typography>
+              We are currently display last 100 rows. Please contact us if you
+              need to see more.
+            </Typography>
+          </Alert>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <FormControlLabel
+              sx={{ pl: 0, ml: 0 }}
+              label="Preserve whitespace"
+              control={
+                <Switch
+                  color="secondary"
+                  checked={whitespace}
+                  onChange={e => {
+                    setWhiteSpace(e.target.checked);
+                  }}
+                />
+              }
+              labelPlacement="start"
+            />
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<ArrowDownwardIcon />}
+              onClick={() => {
+                window.scrollTo({
+                  top: document.body.scrollHeight,
+                  behavior: "smooth",
+                });
+              }}
+            >
+              Scroll down
+            </Button>
+          </Box>
+          <Box
+            component="code"
+            sx={{
+              mt: 2,
+              p: 2,
+              display: "block",
+              border: `1px solid ${grey[900]}`,
+              color: "white",
+              whiteSpace: whitespace ? "pre-wrap" : undefined,
+              wordBreak: whitespace ? "break-all" : undefined,
+              fontFamily: "monospace",
+              fontSize: 12,
+              background: "transparent",
+            }}
+          >
+            {logs.map(renderLog)}
+          </Box>
+        </>
       ) : (
         <EmptyPage>
           It's quite empty in here.
