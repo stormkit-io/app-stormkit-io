@@ -39,10 +39,12 @@ const renderLog = (log: Log, i: number) => {
 
   let date;
 
-  try {
-    date = new Date(Number(log.timestamp));
-  } catch {
+  if (log.timestamp?.length === 10) {
     date = new Date(Number(log.timestamp) * 1000);
+  } else if (log.timestamp?.length === 13) {
+    date = new Date(Number(log.timestamp));
+  } else {
+    date = new Date();
   }
 
   return (
