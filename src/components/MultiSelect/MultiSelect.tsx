@@ -1,14 +1,18 @@
 import type { SelectProps } from "@mui/material/Select";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FilledInput from "@mui/material/FilledInput";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
+import InputAdornment from "@mui/material/InputAdornment";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import FormHelperText from "@mui/material/FormHelperText";
+import TextField from "@mui/material/TextField";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface MenuItem {
   value: string;
@@ -20,6 +24,7 @@ interface Props extends Omit<SelectProps, "onSelect"> {
   selected?: string[];
   label?: string;
   helperText?: React.ReactNode;
+  onSearch?: (v: string) => void;
   onSelect: (v: string[]) => void;
 }
 
@@ -35,9 +40,18 @@ export default function MultiSelect({
   fullWidth = true,
   disabled = false,
   sx,
+  onSearch,
   onSelect,
 }: Props) {
   const [selectedItems, setSelectedItems] = useState<string[]>(selected || []);
+  const [search, setSearch] = useState("");
+  const filteredItems = useMemo(() => {
+    if (search.length < 3) {
+      return items;
+    }
+
+    return items.filter(i => i.text.toLowerCase().includes(search));
+  }, [search, items]);
 
   useEffect(() => {
     if (selected) {
@@ -60,6 +74,7 @@ export default function MultiSelect({
         disabled={disabled}
         value={selectedItems?.length ? selectedItems : [""]}
         input={variant === "filled" ? <FilledInput /> : <OutlinedInput />}
+        MenuProps={{ autoFocus: false }}
         sx={{ color: "white", ...sx }}
         onClose={() => {
           // Rely on `onClose` only when `multiple` property is true.
@@ -98,16 +113,45 @@ export default function MultiSelect({
           );
         }}
       >
-        {multiple ? (
-          <MenuItem>
-            <Checkbox checked={!selectedItems.filter(i => i).length} />
-            <ListItemText primary={placeholder} />
-          </MenuItem>
-        ) : (
-          // Fixes an issue with MUI Warning
-          <MenuItem value={""} sx={{ display: "none" }} />
-        )}
-        {items.map(item => (
+        <ListSubheader sx={{ bgcolor: "transparent", p: 0 }}>
+          {onSearch && (
+            <TextField
+              variant="filled"
+              placeholder="Search"
+              autoFocus
+              value={search}
+              sx={{ mb: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              onKeyDown={e => {
+                if (e.key !== "Escape") {
+                  // Prevents autoselecting item while typing (default Select behaviour)
+                  e.stopPropagation();
+                }
+              }}
+              onChange={e => {
+                setSearch(e.target.value);
+                onSearch(e.target.value);
+              }}
+            />
+          )}
+
+          {multiple ? (
+            <MenuItem>
+              <Checkbox checked={!selectedItems.filter(i => i).length} />
+              <ListItemText primary={placeholder} />
+            </MenuItem>
+          ) : (
+            // Fixes an issue with MUI Warning
+            <MenuItem value={""} sx={{ display: "none" }} />
+          )}
+        </ListSubheader>
+        {filteredItems.map(item => (
           <MenuItem key={item.value} value={item.value}>
             {multiple && (
               <Checkbox checked={selectedItems.includes(item.value)} />

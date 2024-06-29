@@ -4,6 +4,7 @@ import api from "~/utils/api/Api";
 interface FetchDomainsProps {
   appId: string;
   envId: string;
+  search: string;
   refreshToken?: number;
   verified?: boolean;
 }
@@ -12,6 +13,7 @@ export const useFetchDomains = ({
   appId,
   envId,
   verified,
+  search,
   refreshToken,
 }: FetchDomainsProps) => {
   const [domains, setDomains] = useState<Domain[]>([]);
@@ -25,6 +27,7 @@ export const useFetchDomains = ({
           verified,
           envId,
           appId,
+          search: search || undefined,
         })
       )
     );
@@ -40,7 +43,7 @@ export const useFetchDomains = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, envId, verified, refreshToken]);
+  }, [appId, envId, verified, refreshToken, search]);
 
   return { domains, error, loading };
 };

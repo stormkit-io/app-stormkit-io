@@ -1,5 +1,6 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MultiSelect from "~/components/MultiSelect";
+import { debounce } from "@mui/material/utils";
 import { useFetchDomains } from "./actions";
 
 interface Props {
@@ -31,10 +32,12 @@ export default function DomainSelector({
   onFetch,
   onDomainSelect,
 }: Props) {
+  const [search, setSearch] = useState("");
   const { domains, loading, error } = useFetchDomains({
     appId,
     envId,
     verified: true,
+    search,
   });
 
   useEffect(() => {
@@ -52,6 +55,12 @@ export default function DomainSelector({
     ].filter(i => i.value);
   }, [withDevDomains, domains]);
 
+  const debouncedSearch = debounce((s: string) => {
+    if (s.length > 2) {
+      setSearch(s);
+    }
+  }, 300);
+
   if (loading || error) {
     return <></>;
   }
@@ -66,6 +75,7 @@ export default function DomainSelector({
       multiple={multiple}
       items={items}
       selected={selected}
+      onSearch={debouncedSearch}
       onSelect={values => {
         if (withDevDomains) {
           onDomainSelect(values);
