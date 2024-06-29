@@ -120,6 +120,7 @@ export default function MultiSelect({
               placeholder="Search"
               autoFocus
               value={search}
+              fullWidth
               sx={{ mb: 2 }}
               InputProps={{
                 startAdornment: (
