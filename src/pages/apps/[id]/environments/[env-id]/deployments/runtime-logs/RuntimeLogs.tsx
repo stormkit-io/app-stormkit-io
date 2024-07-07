@@ -111,8 +111,8 @@ const RuntimeLogs: React.FC = () => {
           <Alert color="info" sx={{ mb: 4 }}>
             <AlertTitle>Note</AlertTitle>
             <Typography>
-              We are currently display last 100 rows. Please contact us if you
-              need to see more.
+              We are currently displaying last 100 rows. Please contact us if
+              you need to see more.
             </Typography>
           </Alert>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
