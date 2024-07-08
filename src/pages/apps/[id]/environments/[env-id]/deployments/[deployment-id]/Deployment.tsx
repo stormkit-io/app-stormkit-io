@@ -77,11 +77,6 @@ export default function Deployment() {
     d => d.duration && d.duration > 0
   );
 
-  const wasManuallyStopped =
-    deployment?.stoppedAt &&
-    deployment.status !== "success" &&
-    !deployment.error;
-
   return (
     <Card
       sx={{ width: "100%" }}
@@ -94,8 +89,6 @@ export default function Deployment() {
             Deployment package is empty. Make sure that the build folder is
             specified properly.
           </>
-        ) : wasManuallyStopped ? (
-          <>Deployment was manually stopped.</>
         ) : (
           ""
         )

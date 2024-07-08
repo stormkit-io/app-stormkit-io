@@ -140,7 +140,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
     beforeEach(() => {
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
-      snippets = [{ ...snippet, location: "body", id: 1 }];
+      snippets = [{ ...snippet, location: "body", id: "1" }];
 
       closeModal = jest.fn();
       setRefreshToken = jest.fn();
@@ -162,7 +162,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
           ...snippet,
           location: "body",
           title: "Hotjar",
-          id: 1,
+          id: "1",
           rules: {},
         },
       });

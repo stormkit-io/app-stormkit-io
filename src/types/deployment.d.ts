@@ -58,6 +58,7 @@ declare type DeploymentV2 = {
   snapshot: Config;
   createdAt: string;
   stoppedAt: string;
+  stoppedManually: boolean;
   isAutoDeploy: boolean;
   isAutoPublish: boolean;
   error?: string;

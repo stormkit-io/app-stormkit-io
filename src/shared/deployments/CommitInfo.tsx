@@ -22,11 +22,17 @@ const defaultMessage = (deployment: DeploymentV2): React.ReactNode => {
     return <>Spinning up a worker...</>;
   }
 
-  return deployment.status === "success" ? (
-    `#${deployment.id}`
-  ) : (
+  if (deployment.status === "success") {
+    return `#${deployment.id}`;
+  }
+
+  if (deployment.stoppedManually) {
+    return <>Deployment was stopped manually</>;
+  }
+
+  return (
     <>
-      Deployment failed. <br />
+      Deployment failed <br />
       Stormkit has no access to the repo or the branch does not exist.
     </>
   );
