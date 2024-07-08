@@ -141,17 +141,16 @@ export default function MultiSelect({
               }}
             />
           )}
-
-          {multiple ? (
-            <MenuItem>
-              <Checkbox checked={!selectedItems.filter(i => i).length} />
-              <ListItemText primary={placeholder} />
-            </MenuItem>
-          ) : (
-            // Fixes an issue with MUI Warning
-            <MenuItem value={""} sx={{ display: "none" }} />
-          )}
         </ListSubheader>
+        {multiple ? (
+          <MenuItem>
+            <Checkbox checked={!selectedItems.filter(i => i).length} />
+            <ListItemText primary={placeholder} />
+          </MenuItem>
+        ) : (
+          // Fixes an issue with MUI Warning
+          <MenuItem value={""} sx={{ display: "none" }} />
+        )}
         {filteredItems.map(item => (
           <MenuItem key={item.value} value={item.value}>
             {multiple && (
