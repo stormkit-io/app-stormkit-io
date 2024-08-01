@@ -25,7 +25,7 @@ export default ({ id, appId, envId, isRunning }: Props = {}): Deployment => ({
   config: {
     build: {
       cmd: "pnpm build",
-      entry: "",
+      distFolder: "",
       vars: {
         NODE_ENV: "production",
       },
@@ -77,7 +77,7 @@ export default ({ id, appId, envId, isRunning }: Props = {}): Deployment => ({
     {
       title: "deploy",
       message:
-        "Successfully deployed client side.\nTotal files uploaded: 10\nTotal bytes uploaded: 143.4kB\n\n",
+        "Successfully deployed client side.\nTotal bytes uploaded: 143.4kB\n\n",
       status: true,
       payload: null,
     },
