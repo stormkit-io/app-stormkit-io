@@ -1,5 +1,6 @@
 import { RenderResult, render, waitFor } from "@testing-library/react";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import { MemoryRouter } from "react-router";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
 import { mockFetchDomains } from "~/testing/nocks/nock_domains";
@@ -18,6 +19,7 @@ jest.mock("recharts", () => ({
 
 interface WrapperProps {
   hasDomain?: boolean;
+  selectedDomainName?: string;
 }
 
 describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () => {
@@ -26,7 +28,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
   let currentEnv: Environment;
   let currentEnvs: Environment[];
 
-  const createWrapper = async ({ hasDomain = true }: WrapperProps) => {
+  const createWrapper = async ({
+    hasDomain = true,
+    selectedDomainName = "",
+  }: WrapperProps) => {
     currentApp = mockApp();
     currentEnvs = mockEnvironments({ app: currentApp });
     currentEnv = currentEnvs[0];
@@ -38,14 +43,24 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       verified: true,
       response: {
         domains: hasDomain
-          ? [{ domainName: "www.stormkit.io", verified: true, id: "15" }]
+          ? [
+              { domainName: "www.stormkit.io", verified: true, id: "15" },
+              { domainName: "app.stormkit.io", verified: true, id: "50" },
+            ]
           : [],
       },
     });
 
     wrapper = render(
       <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-        <Analytics />
+        <MemoryRouter
+          initialEntries={[
+            { pathname: "/", search: `domain=${selectedDomainName}` },
+          ]}
+          initialIndex={0}
+        >
+          <Analytics />
+        </MemoryRouter>
       </EnvironmentContext.Provider>
     );
 
@@ -82,6 +97,27 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
 
     test("should contain countries section", () => {
       expect(wrapper.getByText("Countries")).toBeTruthy();
+    });
+
+    test("should have the initial domain selected", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("www.stormkit.io")).toBeTruthy();
+      });
+    });
+  });
+
+  describe("with a pre-selected domain", () => {
+    beforeEach(async () => {
+      await createWrapper({
+        hasDomain: true,
+        selectedDomainName: "app.stormkit.io",
+      });
+    });
+
+    test("should have that domain selected", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
+      });
     });
   });
 

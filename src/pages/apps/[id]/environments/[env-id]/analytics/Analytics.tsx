@@ -1,5 +1,6 @@
 import type { TimeSpan } from "./index.d";
 import { useContext, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
@@ -15,6 +16,7 @@ import ByCountries from "./Countries";
 
 export default function Analytics() {
   const [timeSpan, setTimeSpan] = useState<TimeSpan>("24h");
+  const [params, setParams] = useSearchParams();
   const [domain, setDomain] = useState<Domain>();
   const [noDomainYet, setNoDomainYet] = useState(false);
   const { environment } = useContext(EnvironmentContext);
@@ -60,15 +62,20 @@ export default function Analytics() {
               appId={environment.appId}
               envId={environment.id!}
               fullWidth={false}
-              onFetch={d => {
-                if (d?.[0]) {
-                  setDomain(d[0]);
+              onFetch={domains => {
+                if (domains?.[0]) {
+                  setDomain(
+                    domains.find(d => d.domainName === params.get("domain")) ||
+                      domains[0]
+                  );
                 } else {
                   setNoDomainYet(true);
                 }
               }}
               onDomainSelect={d => {
-                setDomain(d ? (d[0] as Domain) : undefined);
+                const selectedDomain = d ? (d[0] as Domain) : undefined;
+                setDomain(selectedDomain);
+                setParams({ domain: selectedDomain?.domainName || "" });
               }}
             />
           }
