@@ -56,10 +56,10 @@ export const includedFeatures = (tier: SubscriptionName, edition?: Edition) => {
         included: true,
         text: tier === "self-hosted" ? "Up to 5 seats" : "Unlimited seats",
       },
-      {
-        included: edition === "premium",
-        text: "Analytics",
-      },
+      // {
+      //   included: edition === "premium",
+      //   text: "Analytics",
+      // },
       {
         included: edition === "premium",
         text: "Audit Logs",
@@ -68,10 +68,10 @@ export const includedFeatures = (tier: SubscriptionName, edition?: Edition) => {
       //   included: tier === "self-hosted-premium",
       //   text: "Prerendering",
       // },
-      {
-        included: edition === "premium",
-        text: "IP Limiting",
-      },
+      // {
+      //   included: edition === "premium",
+      //   text: "IP Limiting",
+      // },
       {
         included: edition === "premium",
         text: "Premium support",

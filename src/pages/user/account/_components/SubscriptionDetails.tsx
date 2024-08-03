@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
@@ -35,56 +35,71 @@ export default function SubscriptionDetails({ user }: Props) {
     }
   }, []);
 
+  const isSelfHosted = user.package.id.startsWith("self-hosted");
+
   return (
-    <Card
-      sx={{ mb: 2 }}
-      contentPadding={!isFree}
-      loading={loading}
-      error={error}
-    >
-      <CardHeader
-        title={isFree ? "Checkout" : "Subscription Details"}
-        subtitle={[
-          user.package.name,
-          user.package.id.startsWith("self-hosted")
-            ? `${capitalize(user.package.edition)} - ${license?.seats} Seats`
-            : "",
-        ]
-          .filter(i => i)
-          .join(" ")}
-      />
-      {params.get("payment") === "success" && (
-        <Alert id="payment-success" color="info" sx={{ mb: 4 }}>
-          <Typography>
-            Thank you for your order, your tier has been updated.
-          </Typography>
-        </Alert>
-      )}
-      <Box sx={{ mb: isFree ? 0 : 4 }}>
-        {isFree && <Checkout user={user} />}
-        {!isFree && <WhatsIncluded tier={user.package.id} />}
-      </Box>
-      {license && (
-        <Card>
+    <>
+      <Card
+        sx={{ mb: 2 }}
+        contentPadding={!isFree}
+        loading={loading}
+        error={error}
+      >
+        <CardHeader
+          title={isFree ? "Checkout" : "Subscription Details"}
+          subtitle={[
+            user.package.name,
+            isSelfHosted
+              ? `${capitalize(user.package.edition)} - ${
+                  license?.seats || "unlimited"
+                } seats`
+              : "",
+          ]
+            .filter(i => i)
+            .join(" ")}
+        />
+        {params.get("payment") === "success" && (
+          <Alert id="payment-success" color="info" sx={{ mb: 4 }}>
+            <Typography>
+              Thank you for your order, your tier has been updated.
+            </Typography>
+          </Alert>
+        )}
+        <Box sx={{ mb: isFree ? 0 : 4 }}>
+          {isFree && <Checkout user={user} />}
+          {!isFree && <WhatsIncluded tier={user.package.id} />}
+        </Box>
+
+        {!isFree && (
+          <CardFooter>
+            <Button
+              variant="contained"
+              color="secondary"
+              href={`${portalLink}?prefilled_email=${user.email}`}
+            >
+              Manage your subscription
+            </Button>
+          </CardFooter>
+        )}
+      </Card>
+      {isSelfHosted && (
+        <Card sx={{ mb: 4 }}>
           <CardHeader
             title="License"
-            subtitle="Set the `STORMKIT_LICENSE` environment variable in your self-hosted environment to the following value:"
+            subtitle={
+              license &&
+              "Set the `STORMKIT_LICENSE` environment variable in your self-hosted environment to the following value:"
+            }
           />
-          <CopyBox value={license.key} />
+          {license && <CopyBox value={license.key} />}
+          {!license && (
+            <Alert color="warning">
+              You seem to have no license key. Contact us through discord or
+              email to obtain your license key.
+            </Alert>
+          )}
         </Card>
       )}
-
-      {!isFree && (
-        <CardFooter>
-          <Button
-            variant="contained"
-            color="secondary"
-            href={`${portalLink}?prefilled_email=${user.email}`}
-          >
-            Manage your subscription
-          </Button>
-        </CardFooter>
-      )}
-    </Card>
+    </>
   );
 }
