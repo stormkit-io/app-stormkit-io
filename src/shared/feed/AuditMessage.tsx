@@ -125,6 +125,14 @@ export default function AuditMessage({ audit }: Props) {
         </AuditRow>
       );
 
+    case "DELETE:ENV":
+      return (
+        <AuditRow audit={audit}>
+          Removed <EnvLink audit={audit}>{audit.diff.old.envName}</EnvLink>{" "}
+          environment
+        </AuditRow>
+      );
+
     case "CREATE:APP":
       return (
         <AuditRow audit={audit}>
