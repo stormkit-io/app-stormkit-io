@@ -34,6 +34,7 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
     appId: app.id,
     envId: environment.id!,
     refreshToken,
+    search: "",
   });
 
   return (
@@ -56,14 +57,22 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
         {domains.map(domain => (
           <CardRow
             key={domain.id}
-            chipLabel={domain.verified ? "verified" : "not yet verified"}
+            chipLabel={
+              domain.verified ? (
+                "verified"
+              ) : (
+                <Button
+                  variant="text"
+                  color="primary"
+                  size="small"
+                  onClick={() => setDomainToVerify(domain)}
+                >
+                  verify now
+                </Button>
+              )
+            }
             chipColor={domain.verified ? "success" : undefined}
             menuItems={[
-              {
-                text: "Verify",
-                disabled: domain.verified,
-                onClick: () => setDomainToVerify(domain),
-              },
               {
                 text: "Delete",
                 onClick: () => setDomainToDelete(domain),

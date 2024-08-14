@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { parse as parseUrl } from "tldts";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/lab/LoadingButton";
@@ -11,7 +12,6 @@ import Card from "~/components/Card";
 import CardRow from "~/components/CardRow";
 import CopyBox from "~/components/CopyBox";
 import { useDomainLookup } from "./actions";
-import { Tooltip } from "@mui/material";
 
 interface Props {
   domain: Domain;
@@ -48,7 +48,7 @@ const DomainVerificationStatus: React.FC<Props> = ({
       >
         <CardHeader
           title={domain.domainName}
-          subtitle="Follow these steps to verify your domain."
+          subtitle="Follow these steps to verify your domain"
         />
         {info && (
           <Box>
@@ -61,21 +61,6 @@ const DomainVerificationStatus: React.FC<Props> = ({
                 size="small"
               />
             </CardRow>
-            <CardRow>
-              <Box sx={{ display: "flex", gap: "10px" }}>
-                <Typography sx={{ color: grey[500], mb: 2 }}>
-                  TXT Lookup Value
-                </Typography>
-                <Tooltip placement="top" title="You can verify if the TXT value is propagated from https://mxtoolbox.com/txtlookup.aspx">
-                  <span className="fas fa-question-circle" />
-                </Tooltip>
-              </Box>
-              <Chip
-                sx={{ color: "white" }}
-                label={info.dns.txt.lookup}
-                size="small"
-              />
-            </CardRow>
 
             <CardRow sx={{ mb: refreshToken > 0 ? 1 : 0 }}>
               <Typography sx={{ color: grey[500], mb: 2 }}>
@@ -83,7 +68,7 @@ const DomainVerificationStatus: React.FC<Props> = ({
                 record.
               </Typography>
               <CopyBox
-                value={info.dns.txt.name}
+                value={parseUrl(info.dns.txt.lookup).subdomain}
                 InputProps={{
                   readOnly: true,
                 }}

@@ -62,7 +62,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     test("should display header texts", () => {
       expect(wrapper.getByText(domain.domainName)).toBeTruthy();
       expect(
-        wrapper.getByText("Follow these steps to verify your domain.")
+        wrapper.getByText("Follow these steps to verify your domain")
       ).toBeTruthy();
     });
 
@@ -76,7 +76,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
 
       expect(wrapper.getByLabelText("Txt Host").getAttribute("value")).toBe(
-        "txt-host"
+        "txt-value.app"
       );
     });
 

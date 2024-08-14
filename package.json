@@ -50,7 +50,7 @@
     "recharts": "^2.12.7",
     "remove": "^0.1.5",
     "tailwindcss": "2.2.19",
-    "tldts": "5.7.66"
+    "tldts": "^5.7.66"
   },
   "devDependencies": {
     "@babel/core": "7.17.2",
