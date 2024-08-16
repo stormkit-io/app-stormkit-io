@@ -18,6 +18,7 @@ interface Props {
 
 interface LinkProps {
   audit: Audit;
+  hash?: string;
   children?: React.ReactNode;
 }
 
@@ -25,10 +26,10 @@ const plural = (singular: string, plural: string, count?: number) => {
   return count === 1 ? `1 ${singular}` : `${count || 0} ${plural}`;
 };
 
-function EnvLink({ audit, children }: LinkProps) {
+function EnvLink({ audit, children, hash }: LinkProps) {
   return (
     <Link
-      href={`/apps/${audit.appId}/environments/${audit.envId}`}
+      href={`/apps/${audit.appId}/environments/${audit.envId}${hash}`}
       sx={{
         textDecoration: "underline",
         ":hover": { textDecoration: "underline" },
@@ -100,6 +101,29 @@ export default function AuditMessage({ audit }: Props) {
           environment
         </AuditRow>
       );
+
+    case "UPDATE:DOMAIN":
+      if (audit.diff.new.domainCertKey) {
+        return (
+          <AuditRow audit={audit}>
+            Added custom certificate to{" "}
+            <EnvLink audit={audit} hash="#domains">
+              {audit.diff.old.domainName}
+            </EnvLink>
+          </AuditRow>
+        );
+      }
+
+      if (audit.diff.old.domainCertKey) {
+        return (
+          <AuditRow audit={audit}>
+            Removed custom certificate from{" "}
+            <EnvLink audit={audit} hash="#domains">
+              {audit.diff.old.domainName}
+            </EnvLink>
+          </AuditRow>
+        );
+      }
 
     case "DELETE:DOMAIN":
       return (

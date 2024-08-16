@@ -10,6 +10,8 @@ interface DiffFields {
   envAutoDeploy?: boolean;
   envAutoDeployBranches?: string;
   domainName?: string;
+  domainCertValue?: string;
+  domainCertKey?: string;
   snippetTitle?: string;
   snippetContent?: string;
   snippetEnabled?: boolean;
