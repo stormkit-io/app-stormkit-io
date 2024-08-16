@@ -76,3 +76,115 @@ export const useDomainLookup = ({
 
   return { loading, error, info };
 };
+
+interface UpdateCustomCertProps {
+  setLoading: (v: boolean) => void;
+  setError: (e?: string) => void;
+  setSuccess: (e?: string) => void;
+  certKey?: string;
+  certValue?: string;
+  appId: string;
+  envId: string;
+  domainId: string;
+}
+
+export const updateCustomCert = ({
+  setLoading,
+  setError,
+  setSuccess,
+  certKey,
+  certValue,
+  appId,
+  envId,
+  domainId,
+}: UpdateCustomCertProps) => {
+  if (!certValue?.startsWith("-----BEGIN CERTIFICATE-----")) {
+    setError("Certificate must be PEM encoded.");
+    return Promise.resolve(false);
+  }
+
+  if (!certKey?.startsWith("-----BEGIN PRIVATE KEY-----")) {
+    setError("Private key must be PEM encoded.");
+    return Promise.resolve(false);
+  }
+
+  setLoading(true);
+  setError(undefined);
+
+  return api
+    .put("/domains/cert", { appId, envId, domainId, certKey, certValue })
+    .then(() => {
+      setSuccess(
+        "Certificate was saved successfully. It will be automatically applied for new requests."
+      );
+
+      return true;
+    })
+    .catch(async res => {
+      let error = "";
+
+      try {
+        const data = await res.json();
+        error = data.error;
+      } catch {}
+
+      setError(
+        res.status === 400
+          ? error
+          : "Something went wrong while saving the custom certificate for the the domain."
+      );
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+};
+
+interface UpdateCustomCertProps {
+  setLoading: (v: boolean) => void;
+  setError: (e?: string) => void;
+  setSuccess: (e?: string) => void;
+  certKey?: string;
+  certValue?: string;
+  appId: string;
+  envId: string;
+  domainId: string;
+}
+
+export const deleteCustomCert = ({
+  setLoading,
+  setError,
+  setSuccess,
+  appId,
+  envId,
+  domainId,
+}: UpdateCustomCertProps) => {
+  setLoading(true);
+  setError(undefined);
+
+  return api
+    .delete(`/domains/cert?appId=${appId}&envId=${envId}&domainId=${domainId}`)
+    .then(() => {
+      setSuccess(
+        "Custom certificate was removed. A new certificate will be issued automatically."
+      );
+
+      return true;
+    })
+    .catch(async res => {
+      let error = "";
+
+      try {
+        const data = await res.json();
+        error = data.error;
+      } catch {}
+
+      setError(
+        res.status === 400
+          ? error
+          : "Something went wrong while deleting the custom certificate for the the domain."
+      );
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+};

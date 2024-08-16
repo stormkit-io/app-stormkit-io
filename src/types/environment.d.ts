@@ -70,6 +70,10 @@ declare interface Domain {
   domainName: string;
   verified: boolean;
   token?: string;
+  customCert?: {
+    value: string;
+    key: string;
+  };
 }
 
 declare interface DomainLookup {

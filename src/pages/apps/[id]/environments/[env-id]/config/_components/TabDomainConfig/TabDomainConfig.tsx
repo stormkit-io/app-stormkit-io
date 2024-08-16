@@ -4,16 +4,22 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import HttpsIcon from "@mui/icons-material/Https";
+import WarningIcon from "@mui/icons-material/Warning";
+import { grey, yellow } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
 import CardFooter from "~/components/CardFooter";
 import EmptyPage from "~/components/EmptyPage";
 import ConfirmModal from "~/components/ConfirmModal";
+import IconBg from "~/components/IconBg";
 import { isSelfHosted } from "~/utils/helpers/instance";
 import DomainModal from "./DomainModal";
 import DomainVerifyModal from "./DomainVerifyModal";
+import CustomCertModal from "./CustomCertModal";
 import { deleteDomain, useFetchDomains } from "./actions";
+import Dot from "~/components/Dot";
 
 interface Props {
   app: App;
@@ -28,6 +34,8 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
 
   const [refreshToken, setRefreshToken] = useState(0);
   const [isDomainModalOpen, toggleDomainModal] = useState(false);
+  const [domainToModifyCustomCert, toggleCustomCertModal] = useState<Domain>();
+  const [success, setSuccess] = useState<string>();
   const [domainToVerify, setDomainToVerify] = useState<Domain>();
   const [domainToDelete, setDomainToDelete] = useState<Domain>();
   const { domains, error, loading } = useFetchDomains({
@@ -38,7 +46,12 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
   });
 
   return (
-    <Card error={error} loading={loading} sx={{ color: "white" }}>
+    <Card
+      error={error}
+      success={success}
+      loading={loading}
+      sx={{ color: "white" }}
+    >
       <CardHeader
         title="Custom domains"
         subtitle="Set custom domains to serve your application from."
@@ -58,14 +71,13 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
           <CardRow
             key={domain.id}
             chipLabel={
-              domain.verified ? (
-                "verified"
-              ) : (
+              !domain.verified && (
                 <Button
                   variant="text"
                   color="primary"
                   size="small"
                   onClick={() => setDomainToVerify(domain)}
+                  sx={{ lineHeight: 1 }}
                 >
                   verify now
                 </Button>
@@ -74,12 +86,36 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
             chipColor={domain.verified ? "success" : undefined}
             menuItems={[
               {
+                text: "Custom certificate",
+                onClick: () => toggleCustomCertModal(domain),
+              },
+              {
                 text: "Delete",
                 onClick: () => setDomainToDelete(domain),
               },
             ]}
           >
-            <Typography sx={{ flex: 1 }}>{domain.domainName}</Typography>
+            <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ display: "inline-flex", alignItems: "center" }}>
+                <IconBg>
+                  {domain.verified ? (
+                    <HttpsIcon color="success" sx={{ fontSize: 14 }} />
+                  ) : (
+                    <WarningIcon sx={{ color: yellow[500], fontSize: 14 }} />
+                  )}
+                </IconBg>
+                {domain.domainName}
+              </Typography>
+            </Box>
+            <Typography sx={{ fontSize: 12, color: grey[500], ml: 4.2 }}>
+              Status: {!domain.verified ? "needs verification" : "verified"}
+              {domain.customCert && (
+                <>
+                  <Dot sx={{ mx: 1 }} />
+                  Custom certificate
+                </>
+              )}
+            </Typography>
           </CardRow>
         ))}
       </Box>
@@ -139,6 +175,19 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
         <DomainModal
           setRefreshToken={setRefreshToken}
           onClose={() => toggleDomainModal(false)}
+        />
+      )}
+      {domainToModifyCustomCert && (
+        <CustomCertModal
+          appId={app.id}
+          envId={environment.id!}
+          domain={domainToModifyCustomCert}
+          setSuccess={setSuccess}
+          onClose={() => toggleCustomCertModal(undefined)}
+          onUpdate={() => {
+            setRefreshToken(Date.now());
+            toggleCustomCertModal(undefined);
+          }}
         />
       )}
       {domainToVerify && (
