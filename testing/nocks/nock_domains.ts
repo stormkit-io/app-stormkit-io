@@ -83,3 +83,47 @@ export const mockDeleteDomain = ({
     .delete(`/domains?appId=${appId}&domainId=${domainId}&envId=${envId}`)
     .reply(status, response);
 };
+
+interface UpdateCustomCertProps {
+  appId: string;
+  envId: string;
+  domainId: string;
+  status: number;
+  certKey: string;
+  certValue: string;
+  response: { ok: boolean };
+}
+
+export const mockUpdateCustomCert = ({
+  appId,
+  envId,
+  domainId,
+  certKey,
+  certValue,
+  status = 200,
+  response = { ok: true },
+}: UpdateCustomCertProps) => {
+  return nock(endpoint)
+    .put("/domains/cert", { appId, envId, domainId, certKey, certValue })
+    .reply(status, response);
+};
+
+interface DeleteCustomCertProps {
+  appId: string;
+  envId: string;
+  domainId: string;
+  status: number;
+  response: { ok: boolean };
+}
+
+export const mockDeleteCustomCert = ({
+  appId,
+  envId,
+  domainId,
+  status = 200,
+  response = { ok: true },
+}: DeleteCustomCertProps) => {
+  return nock(endpoint)
+    .delete(`/domains/cert?appId=${appId}&envId=${envId}&domainId=${domainId}`)
+    .reply(status, response);
+};

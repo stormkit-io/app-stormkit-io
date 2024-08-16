@@ -45,7 +45,6 @@ export default function CustomCertModal({
       certKey: data["certKey"],
       certValue: data["certValue"],
     }).then(shouldUpdate => {
-      console.log("should update", shouldUpdate);
       shouldUpdate && onUpdate();
     });
   };
