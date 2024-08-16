@@ -152,7 +152,7 @@ export default function AuditMessage({ audit }: Props) {
     case "DELETE:ENV":
       return (
         <AuditRow audit={audit}>
-          Removed <EnvLink audit={audit}>{audit.diff.old.envName}</EnvLink>{" "}
+          Removed the <EnvLink audit={audit}>{audit.diff.old.envName}</EnvLink>{" "}
           environment
         </AuditRow>
       );
@@ -168,15 +168,15 @@ export default function AuditMessage({ audit }: Props) {
     case "UPDATE:APP":
       return (
         <AuditRow audit={audit}>
-          Updated <AppLink audit={audit}>{audit.diff.new.appName}</AppLink>{" "}
-          settings
+          Updated the <AppLink audit={audit}>{audit.diff.new.appName}</AppLink>{" "}
+          application
         </AuditRow>
       );
 
     case "DELETE:APP":
       return (
         <AuditRow audit={audit}>
-          Deleted {audit.diff.old.appName} application
+          Deleted the {audit.diff.old.appName} application
         </AuditRow>
       );
 
@@ -204,8 +204,12 @@ export default function AuditMessage({ audit }: Props) {
       return (
         <AuditRow audit={audit}>
           Deleted{" "}
-          {plural("snippet", "snippets", audit.diff.new.snippets?.length)} in{" "}
-          <EnvLink audit={audit} /> environment
+          {plural(
+            "snippet",
+            "snippets",
+            audit.diff.new?.snippets?.length || audit.diff.old?.snippets?.length // Backwards compatibility. It should be old.snippets.
+          )}{" "}
+          in <EnvLink audit={audit} /> environment
         </AuditRow>
       );
   }
