@@ -33,7 +33,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     );
   };
 
-  describe.skip("with no domain", () => {
+  describe("with no domain", () => {
     beforeEach(async () => {
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
@@ -53,7 +53,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     });
 
     test("should display a configure domain button", async () => {
-      await fireEvent.click(wrapper.getByText("Configure domain"));
+      await fireEvent.click(wrapper.getByText("Add domain"));
       await waitFor(() => {
         expect(wrapper.getByText("Setup a new domain")).toBeTruthy();
       });
@@ -74,12 +74,21 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
       domain = mockDomain();
+      domain.customCert = {
+        key: "my-cert-key",
+        value: "my-cert-value",
+      };
 
       const scope = mockFetchDomains({
         envId: currentEnv.id!,
         appId: currentApp.id,
         status: 200,
-        response: { domains: [domain] },
+        response: {
+          domains: [
+            domain,
+            { id: "2", domainName: "www.stormkit.io", verified: false },
+          ],
+        },
       });
 
       createWrapper({ app: currentApp, environment: currentEnv });
@@ -89,19 +98,34 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("should not display the configure domain buttony anymore", async () => {
+    test("should not display the configure domain button anymore", async () => {
       await waitFor(() => {
         expect(() => wrapper.getByText("Configure domain")).toThrow();
       });
     });
 
-    test("should allow removing a domain", async () => {
+    test("should open the custom certificate modal", async () => {
+      fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
+      fireEvent.click(wrapper.getByText("Custom certificate"));
+
       await waitFor(() => {
-        expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
+        expect(wrapper.getByText("Configure custom certificate")).toBeTruthy();
       });
+    });
 
-      fireEvent.click(wrapper.getByLabelText("expand"));
+    test("should list domains", async () => {
+      expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
+      expect(wrapper.getByText("www.stormkit.io")).toBeTruthy();
+      expect(wrapper.getByTestId("app.stormkit.io-status").textContent).toBe(
+        "Status: verified·Custom certificate"
+      );
+      expect(wrapper.getByTestId("www.stormkit.io-status").textContent).toBe(
+        "Status: needs verification"
+      );
+    });
 
+    test("should allow removing a domain", async () => {
+      fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
       fireEvent.click(wrapper.getByText("Delete"));
 
       const scope = mockDeleteDomain({

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -27,7 +27,7 @@ interface Props {
   setRefreshToken: (val: number) => void;
 }
 
-const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
+export default function TabDomainConfig({ app, environment }: Props) {
   const selfHosted = useMemo(() => {
     return isSelfHosted();
   }, []);
@@ -107,7 +107,10 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
                 {domain.domainName}
               </Typography>
             </Box>
-            <Typography sx={{ fontSize: 12, color: grey[500], ml: 4.2 }}>
+            <Typography
+              sx={{ fontSize: 12, color: grey[500], ml: 4.2 }}
+              data-testid={`${domain.domainName}-status`}
+            >
               Status: {!domain.verified ? "needs verification" : "verified"}
               {domain.customCert && (
                 <>
@@ -202,6 +205,4 @@ const TabDomainConfig: React.FC<Props> = ({ app, environment }) => {
       )}
     </Card>
   );
-};
-
-export default TabDomainConfig;
+}
