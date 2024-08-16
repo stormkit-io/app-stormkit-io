@@ -121,6 +121,7 @@ export const updateCustomCert = ({
       return true;
     })
     .catch(async res => {
+      console.log(res);
       let error = "";
 
       try {
