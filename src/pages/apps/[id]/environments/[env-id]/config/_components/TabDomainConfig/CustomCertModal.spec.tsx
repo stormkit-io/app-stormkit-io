@@ -1,6 +1,8 @@
 import type { RenderResult } from "@testing-library/react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { AuthContext } from "~/pages/auth/Auth.context";
+import mockUser from "~/testing/data/mock_user";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
 import mockDomain from "~/testing/data/mock_domain";
@@ -14,31 +16,76 @@ interface Props {
   app: App;
   environment: Environment;
   domain: Domain;
+  user?: User;
 }
 
 describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainConfig/CustomCertModal.tsx", () => {
   let wrapper: RenderResult;
+  let onClose: jest.Mock;
   let onUpdate: jest.Mock;
   let setSuccess: jest.Mock;
   let currentApp: App;
   let currentEnv: Environment;
   let currentDomain: Domain;
 
-  const createWrapper = ({ app, environment, domain }: Props) => {
+  const createWrapper = ({
+    app,
+    environment,
+    domain,
+    user = mockUser(),
+  }: Props) => {
     onUpdate = jest.fn();
     setSuccess = jest.fn();
+    onClose = jest.fn();
 
     wrapper = render(
-      <CustomCertModal
-        onClose={jest.fn()}
-        onUpdate={onUpdate}
-        setSuccess={setSuccess}
-        appId={app.id}
-        envId={environment.id!}
-        domain={domain}
-      />
+      <AuthContext.Provider value={{ user: user || mockUser(), teams: [] }}>
+        <CustomCertModal
+          onClose={onClose}
+          onUpdate={onUpdate}
+          setSuccess={setSuccess}
+          appId={app.id}
+          envId={environment.id!}
+          domain={domain}
+        />
+      </AuthContext.Provider>
     );
   };
+
+  describe("when user is not premium", () => {
+    beforeEach(() => {
+      currentApp = mockApp();
+      currentEnv = mockEnvironment({ app: currentApp });
+      currentDomain = mockDomain();
+      const user = mockUser();
+      user.package = {
+        edition: "",
+        id: "self-hosted",
+        name: "Self-Hosted",
+        maxDeploymentsPerMonth: -1,
+      };
+
+      createWrapper({
+        app: currentApp,
+        environment: currentEnv,
+        domain: currentDomain,
+        user,
+      });
+    });
+
+    test("should display a message to upgrade", () => {
+      expect(
+        wrapper.getByText(
+          "This is a premium only feature. Upgrade your package to use custom certificates."
+        )
+      ).toBeTruthy();
+    });
+
+    test("clicking close button should close the modal", () => {
+      fireEvent.click(wrapper.getByText("Close"));
+      expect(onClose).toHaveBeenCalled();
+    });
+  });
 
   describe("with no pre-existing custom certificate", () => {
     beforeEach(() => {

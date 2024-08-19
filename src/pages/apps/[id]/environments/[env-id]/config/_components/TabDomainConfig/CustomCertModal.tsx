@@ -1,7 +1,10 @@
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, useState, useContext } from "react";
 import Button from "@mui/lab/LoadingButton";
+import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import Modal from "~/components/Modal";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
@@ -25,8 +28,33 @@ export default function CustomCertModal({
   envId,
   domain,
 }: Props) {
+  const { user } = useContext(AuthContext);
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const isPremium =
+    user?.package.id !== "self-hosted" || user?.package.edition === "premium";
+
+  if (!isPremium) {
+    return (
+      <Modal open onClose={onClose}>
+        <Card>
+          <CardHeader title="Configure custom certificate" />
+          <Alert color="info">
+            <Typography>
+              This is a premium only feature. Upgrade your package to use custom
+              certificates.
+            </Typography>
+          </Alert>
+          <CardFooter>
+            <Button variant="contained" color="secondary" onClick={onClose}>
+              Close
+            </Button>
+          </CardFooter>
+        </Card>
+      </Modal>
+    );
+  }
+
   const handler: FormEventHandler = e => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
