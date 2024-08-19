@@ -29,7 +29,7 @@ const plural = (singular: string, plural: string, count?: number) => {
 function EnvLink({ audit, children, hash }: LinkProps) {
   return (
     <Link
-      href={`/apps/${audit.appId}/environments/${audit.envId}${hash}`}
+      href={`/apps/${audit.appId}/environments/${audit.envId}${hash || ""}`}
       sx={{
         textDecoration: "underline",
         ":hover": { textDecoration: "underline" },
