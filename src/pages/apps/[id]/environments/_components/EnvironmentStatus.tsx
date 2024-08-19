@@ -16,7 +16,7 @@ const isSuccessStatus = (status: number | undefined): boolean => {
 };
 
 export default function EnvironmentStatus({ env, app }: Props) {
-  const endpoint = env.customStorage?.externalUrl || env?.preview || "";
+  const endpoint = env?.preview || "";
 
   const { status } = useFetchStatus({
     environment: env,

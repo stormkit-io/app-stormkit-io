@@ -7,7 +7,6 @@ import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import TabCustomStorage from "./_components/TabCustomStorage";
 import TabDomainConfig from "./_components/TabDomainConfig/TabDomainConfig";
 import TabConfigEnvVars from "./_components/TabConfigEnvVars";
 import TabConfigGeneral from "./_components/TabConfigGeneral";
@@ -52,8 +51,6 @@ export default function EnvironmentConfig() {
     switch (hash) {
       case "#domains":
         return TabDomainConfig;
-      case "#storage":
-        return TabCustomStorage;
       default:
         return ({ app, environment, setRefreshToken }: TabProps) => (
           <>
@@ -175,24 +172,6 @@ export default function EnvironmentConfig() {
               ))}
             </List>
           </ListItem>
-          <Box
-            component="li"
-            sx={{ p: 2, borderBottom: "1px solid rgba(255,255,255,0.05)" }}
-          >
-            <Link
-              href="#storage"
-              onClick={() => {
-                setSelectedItem("");
-              }}
-              sx={{
-                color: "white",
-                opacity: hash === "#storage" ? 1 : 0.5,
-                "&:hover": { opacity: 1 },
-              }}
-            >
-              <Typography component="span">Custom storage</Typography>
-            </Link>
-          </Box>
           <Box component="li" sx={{ p: 2 }}>
             <Link
               href="#domains"

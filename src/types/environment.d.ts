@@ -18,14 +18,6 @@ type LastDeploy = {
   exit: number; // TODO: Typeify this
 };
 
-declare type Integration = "bunny_cdn" | "aws_s3";
-
-declare type CustomStorage = {
-  integration: Integration;
-  externalUrl: string;
-  settings: Record<string, string>;
-};
-
 interface PublishedInfo {
   commitSha?: string;
   commitAuthor?: string;
@@ -60,7 +52,6 @@ declare type Environment = {
   autoDeploy: boolean;
   autoDeployBranches?: string | null;
   lastDeploy?: LastDeploy;
-  customStorage?: CustomStorage;
   published?: PublishedInfo[];
   preview: string;
 };

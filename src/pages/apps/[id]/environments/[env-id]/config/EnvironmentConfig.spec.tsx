@@ -68,7 +68,6 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     expect(wrapper.getByText("Build")).toBeTruthy();
     expect(wrapper.getAllByText("Environment variables").at(0)).toBeTruthy();
     expect(wrapper.getByText("API Keys")).toBeTruthy();
-    expect(wrapper.getByText("Custom storage")).toBeTruthy();
   });
 
   test.each`

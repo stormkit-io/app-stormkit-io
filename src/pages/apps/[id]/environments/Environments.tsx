@@ -19,7 +19,7 @@ import EnvironmentFormModal from "./_components/EnvironmentFormModal";
 import EnvironmentStatus from "./_components/EnvironmentStatus";
 
 const endpoint = (env: Environment): string => {
-  return env.customStorage?.externalUrl || env?.preview || "";
+  return env?.preview || "";
 };
 
 const isDeploying = (env: Environment): boolean => {
