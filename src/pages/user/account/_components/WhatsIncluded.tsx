@@ -64,6 +64,10 @@ export const includedFeatures = (tier: SubscriptionName, edition?: Edition) => {
         included: edition === "premium",
         text: "Audit Logs",
       },
+      {
+        included: edition === "premium",
+        text: "Custom TLS Certificates",
+      },
       // {
       //   included: tier === "self-hosted-premium",
       //   text: "Prerendering",
