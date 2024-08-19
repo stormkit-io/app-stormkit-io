@@ -25,7 +25,7 @@ export default function EnvMenu() {
     [app, env, pathname]
   );
 
-  if (!selectedEnvId) {
+  if (!selectedEnvId || !env) {
     return <></>;
   }
 

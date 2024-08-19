@@ -1,5 +1,6 @@
 import React, { createContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
 import Link from "~/components/Link";
@@ -68,14 +69,13 @@ const AppProvider: React.FC<Props> = ({ children }) => {
   if (!app) {
     return (
       <Error404>
-        <p>
-          O-oh, we couldn't find this app. Would you like to go back to
-          <br />
+        <Typography sx={{ fontSize: "inherit" }}>
+          We couldn't find this app <br />
+          Click to go back to{" "}
           <Link to="/" secondary>
             My Apps
           </Link>
-          ?
-        </p>
+        </Typography>
       </Error404>
     );
   }

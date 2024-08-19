@@ -16,6 +16,7 @@ export default function Error404({ children }: Props) {
         m: "auto",
         alignItems: "center",
         justifyContent: "center",
+        minHeight: "400px",
       }}
       maxWidth="lg"
     >
@@ -23,8 +24,6 @@ export default function Error404({ children }: Props) {
         sx={{
           color: "white",
           textAlign: "center",
-          position: "relative",
-          top: "-6rem",
         }}
       >
         <Typography

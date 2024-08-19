@@ -13,7 +13,11 @@ export default function Settings() {
   const team = useSelectedTeam({ teams });
 
   if (!team || team.isDefault || !teams) {
-    return <Error404 />;
+    return (
+      <Box>
+        <Error404 />
+      </Box>
+    );
   }
 
   return (

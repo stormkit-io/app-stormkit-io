@@ -22,11 +22,7 @@ export default function Provider({ children }: Props) {
   const environment = environments?.filter(e => e.id === envId)?.[0];
 
   if (!environment) {
-    return (
-      <div className="h-full flex-1 flex items-center">
-        <Error404 withLogo={false}>This environment is not found.</Error404>
-      </div>
-    );
+    return <Error404 withLogo={false}>This environment is not found.</Error404>;
   }
 
   return (

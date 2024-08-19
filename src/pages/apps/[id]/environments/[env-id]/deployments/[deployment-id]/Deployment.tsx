@@ -64,13 +64,7 @@ export default function Deployment() {
     !deployment.serverPackageSize;
 
   if (!deployment && !loading && !error) {
-    return (
-      <Card sx={{ width: "100%", pt: "12rem" }}>
-        <Error404>
-          <Typography>Deployment is not found.</Typography>
-        </Error404>
-      </Card>
-    );
+    return <Error404>Deployment is not found.</Error404>;
   }
 
   const hasDurationSupport = deployment?.logs?.some(
