@@ -46,6 +46,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     distFolder: (values["build.distFolder"] || "").trim(),
     headersFile: values["build.headersFile"],
     redirectsFile: values["build.redirectsFile"],
+    errorFile: values["build.errorFile"],
     apiFolder: values["build.apiFolder"],
     previewLinks: values["build.previewLinks"] === "on",
     prerender: hasPrerendering
@@ -195,6 +196,7 @@ export interface FormValues {
   "build.distFolder"?: string;
   "build.headersFile"?: string;
   "build.redirects"?: string;
+  "build.errorFile"?: string;
   "build.prerender.matchUserAgent"?: string;
   "build.prerender.waitFor"?: string;
   "build.prerender.cacheDuration"?: string;

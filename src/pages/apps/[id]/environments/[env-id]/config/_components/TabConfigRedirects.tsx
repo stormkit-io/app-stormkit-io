@@ -86,6 +86,23 @@ export default function TabConfigRedirects({
           helperText={"The path to the `redirects` file from the build root."}
         />
       </Box>
+      <Box sx={{ mb: 4 }}>
+        <TextField
+          label="Custom error file"
+          variant="filled"
+          autoComplete="off"
+          defaultValue={env?.build.errorFile || ""}
+          name="build.errorFile"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+          placeholder="/404.html"
+          helperText={
+            "The error file displayed when Stormkit does not find a page. Default is 404.html."
+          }
+        />
+      </Box>
       <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
         <FormControlLabel
           sx={{ pl: 0, ml: 0 }}
@@ -101,8 +118,8 @@ export default function TabConfigRedirects({
           }
           labelPlacement="start"
         />
-        <Typography sx={{ opacity: 0.5 }}>
-          Turn this switch on to overwrite redirects. These redirects will apply
+        <Typography sx={{ color: grey[500] }}>
+          Turn on to overwrite redirects. These redirects will apply immediately
           to all deployments and will take precedence over redirects file.
         </Typography>
       </Box>

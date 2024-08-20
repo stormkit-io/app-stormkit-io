@@ -16,6 +16,7 @@ const toRequestObject = (environment: Environment) => {
         previewLinks: environment.build.previewLinks,
         apiFolder: environment.build.apiFolder,
         headersFile: environment.build.headersFile,
+        errorFile: environment.build.errorFile,
         redirectsFile: environment.build.redirectsFile,
         redirects: environment.build.redirects,
         distFolder: environment.build.distFolder,

@@ -5,6 +5,7 @@ declare type BuildConfig = {
   headersFile?: string;
   redirectsFile?: string;
   redirects?: Redirect[];
+  errorFile?: string;
   distFolder: string;
   buildCmd?: string;
   serverCmd?: string;

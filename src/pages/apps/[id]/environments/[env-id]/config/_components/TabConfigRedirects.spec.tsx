@@ -51,7 +51,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigRe
       "Redirects file location"
     ) as HTMLInputElement;
 
+    const errorFileInput = wrapper.getByLabelText(
+      "Custom error file"
+    ) as HTMLInputElement;
+
     expect(redirectsFileInput.value).toBe("");
+    expect(errorFileInput.value).toBe("");
 
     // Initially the docs should not be visible
     expect(() => wrapper.getByText("docs")).toThrow();
@@ -71,12 +76,18 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigRe
       "/redirects.json"
     );
 
+    await userEvent.type(
+      wrapper.getByLabelText("Custom error file"),
+      "/index.html"
+    );
+
     const scope = mockUpdateEnvironment({
       environment: {
         ...currentEnv,
         build: {
           ...currentEnv.build,
           previewLinks: true,
+          errorFile: "/index.html",
           redirectsFile: "/redirects.json",
         },
       },
@@ -101,6 +112,11 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigRe
       "/redirects.json"
     );
 
+    await userEvent.type(
+      wrapper.getByLabelText("Custom error file"),
+      "/index.html"
+    );
+
     const scope = mockUpdateEnvironment({
       environment: {
         ...currentEnv,
@@ -109,6 +125,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigRe
           previewLinks: true,
           redirects: [],
           redirectsFile: "/redirects.json",
+          errorFile: "/index.html",
         },
       },
       status: 200,
