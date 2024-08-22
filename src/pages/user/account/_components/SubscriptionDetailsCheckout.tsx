@@ -11,13 +11,16 @@ import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import { includedFeatures } from "./WhatsIncluded";
 
-const paymentLinks: Record<SubscriptionName, string> = {
+type SubName = SubscriptionName | "self-hosted-premium";
+
+const paymentLinks: Record<SubName, string> = {
   dev: {
     free: "",
     starter: "https://buy.stripe.com/test_8wM01ycsw5sj3MA009",
     medium: "https://buy.stripe.com/test_00g6pW3W06wn6YM8wE",
     enterprise: "https://buy.stripe.com/test_6oE5lS8cg8Evcj6cMT",
     "self-hosted": "https://buy.stripe.com/test_5kAaGc648g6X82QaER",
+    "self-hosted-premium": "https://buy.stripe.com/test_7sI01y78c6wn2IwfZ9",
   },
   prod: {
     free: "",
@@ -25,15 +28,17 @@ const paymentLinks: Record<SubscriptionName, string> = {
     medium: "https://buy.stripe.com/5kA5ns7317FFgqQdQX",
     enterprise: "https://buy.stripe.com/4gw17cbjhe43eiIbIO",
     "self-hosted": "https://buy.stripe.com/6oEg26cnlcZZeiIeUZ",
+    "self-hosted-premium": "https://buy.stripe.com/7sI3fk3QP7FFb6w9AJ",
   },
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
 
-const prices: Record<SubscriptionName, number> = {
+const prices: Record<SubName, number> = {
   free: 0,
   starter: 20,
   medium: 75,
   enterprise: 150,
   "self-hosted": 39,
+  "self-hosted-premium": 100,
 };
 
 interface Props {
@@ -62,7 +67,6 @@ export default function Checkout({ user }: Props) {
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            cursor: "not-allowed",
             position: "relative",
           }}
         >
@@ -73,23 +77,19 @@ export default function Checkout({ user }: Props) {
           <Box>
             <Box sx={{ mb: 4, flex: 1 }}>
               <Box sx={{ display: "flex", mb: 2 }}>
-                {edition === "limited" ? (
-                  <>
-                    <Typography fontSize={28} sx={{ mr: 2 }}>
-                      ${prices["self-hosted"]}
-                    </Typography>
-                    <Typography sx={{ mb: 2, color: grey[500] }}>
-                      per user
-                      <br />
-                      month
-                    </Typography>
-                  </>
-                ) : (
-                  <Typography sx={{ pt: 0, pb: 2 }}>
-                    Contact us at sales@stormkit.io to find the most suitable
-                    plan for your organization.
+                <>
+                  <Typography fontSize={28} sx={{ mr: 2 }}>
+                    $
+                    {edition === "limited"
+                      ? prices["self-hosted"]
+                      : prices["self-hosted-premium"]}
                   </Typography>
-                )}
+                  <Typography sx={{ mb: 2, color: grey[500] }}>
+                    per user
+                    <br />
+                    month
+                  </Typography>
+                </>
               </Box>
               <MultiSelect
                 variant="outlined"
@@ -117,25 +117,18 @@ export default function Checkout({ user }: Props) {
             </Box>
           </Box>
           <CardFooter sx={{ textAlign: "center" }}>
-            {edition === "limited" ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                sx={{ px: 6 }}
-                href={`${paymentLinks["self-hosted"]}?prefilled_email=${user?.email}`}
-              >
-                Go to portal
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="secondary"
-                sx={{ px: 6 }}
-                href="mailto:sales@stormkit.io?subject=About%20Self-Hosted%20Premium%20Edition"
-              >
-                Contact us
-              </Button>
-            )}
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ px: 6 }}
+              href={`${
+                paymentLinks[
+                  edition === "limited" ? "self-hosted" : "self-hosted-premium"
+                ]
+              }?prefilled_email=${user?.email}`}
+            >
+              Go to portal
+            </Button>
           </CardFooter>
         </Card>
         <Card sx={{ flex: 1, height: "100%" }}>
