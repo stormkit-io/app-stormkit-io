@@ -65,6 +65,10 @@ const timeSpan: Record<TimeSpan, string> = {
   "30d": "30 days",
 };
 
+const formatter = new Intl.NumberFormat(undefined, {
+  minimumFractionDigits: 0,
+});
+
 interface Props {
   environment: Environment;
   ts: TimeSpan;
@@ -99,7 +103,7 @@ export default function Visitors({
           <>
             {display !== "unique" ? "Total " : ""}
             <Box component="span" sx={{ color: pink[300] }}>
-              {totalVisitors}
+              {formatter.format(totalVisitors)}
             </Box>{" "}
             {display === "unique" ? "unique" : ""} visits in the last{" "}
             {timeSpan[ts]}
