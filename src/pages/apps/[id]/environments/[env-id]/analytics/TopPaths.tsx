@@ -40,7 +40,7 @@ export default function TopPaths({ environment, domain }: Props) {
   return (
     <Card
       sx={{
-        width: "100%",
+        width: "50%",
         margin: "",
         display: "flex",
         flexDirection: "column",

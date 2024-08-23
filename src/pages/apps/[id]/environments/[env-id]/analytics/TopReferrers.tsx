@@ -25,7 +25,7 @@ export default function TopReferrers({ environment, domain }: Props) {
       error={error}
       loading={loading}
       sx={{
-        width: "100%",
+        width: "50%",
         margin: "",
         display: "flex",
         flexDirection: "column",
