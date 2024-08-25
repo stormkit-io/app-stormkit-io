@@ -49,7 +49,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
         </Typography>
         {payload.map((p: any) => (
           <Typography key={p.name}>
-            {p.value} {p.name} visitors
+            {formatter.format(p.value)} {p.name} visitors
           </Typography>
         ))}
       </Box>
@@ -155,7 +155,8 @@ export default function Visitors({
             margin={{
               top: 10,
               right: 5,
-              left: totalVisitors > 100 ? -25 : -28,
+              left:
+                totalVisitors > 1000 ? -15 : totalVisitors > 100 ? -25 : -28,
               bottom: 10,
             }}
           >
