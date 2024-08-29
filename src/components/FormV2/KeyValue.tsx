@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -24,20 +25,26 @@ interface Props {
   tdClasses?: string;
   thClasses?: string;
   resetToken?: number;
+  separator?: string;
   onChange?: (kv: Record<string, string>) => void;
   onModalOpen?: () => void;
 }
 
+type TransformerFn = (kv: string[][], separator: string) => string;
+
 interface TextFieldModalProps {
   rows: string[][];
   placeholder?: string;
-  transformer?: (kv: string[][]) => string;
+  separator: string;
+  transformer?: TransformerFn;
   onSave: (value: string) => void;
   onClose: () => void;
 }
 
-const transformerFn = (kv: string[][]): string => {
-  return kv.map(k => (k[0] && k[1] ? `${k[0]}=${k[1]}` : "")).join("\n");
+const transformerFn: TransformerFn = (kv, separator): string => {
+  return kv
+    .map(k => (k[0] && k[1] ? `${k[0]}${separator}${k[1]}` : ""))
+    .join("\n");
 };
 
 function TextFieldModal({
@@ -45,11 +52,12 @@ function TextFieldModal({
   onClose,
   onSave,
   placeholder,
+  separator,
   transformer = transformerFn,
 }: TextFieldModalProps) {
   const value = useMemo(() => {
-    return transformer(rows);
-  }, [rows]);
+    return transformer(rows, separator);
+  }, [rows, separator]);
 
   return (
     <Modal open onClose={onClose}>
@@ -105,6 +113,7 @@ export default function KeyValue({
   valPlaceholder,
   defaultValue,
   resetToken,
+  separator = "=",
   onChange,
   onModalOpen,
 }: Props) {
@@ -145,8 +154,10 @@ export default function KeyValue({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ borderBottom }}>{keyName}</TableCell>
-            <TableCell sx={{ borderBottom }}>
+            <TableCell sx={{ borderBottom, color: grey[400] }}>
+              {keyName}
+            </TableCell>
+            <TableCell sx={{ borderBottom, color: grey[400] }}>
               <Box sx={{ pl: 1.75 }}>{valName}</Box>
             </TableCell>
           </TableRow>
@@ -265,9 +276,10 @@ export default function KeyValue({
       {isModalOpen && (
         <TextFieldModal
           rows={rowsWithoutDeleted}
+          separator={separator}
           placeholder={
             keyPlaceholder && valPlaceholder
-              ? `${keyPlaceholder}=${valPlaceholder}`
+              ? `${keyPlaceholder}${separator}${valPlaceholder}`
               : ""
           }
           onClose={() => {
@@ -279,7 +291,7 @@ export default function KeyValue({
                 .split("\n")
                 .filter(i => i)
                 .map(row => {
-                  const indexOfEqual = row.indexOf("=");
+                  const indexOfEqual = row.indexOf(separator);
 
                   return [
                     row.slice(0, indexOfEqual),
