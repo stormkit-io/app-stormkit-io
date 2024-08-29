@@ -1,6 +1,5 @@
 import { fireEvent, RenderResult } from "@testing-library/react";
 import type { OutboundWebhook } from "../types";
-import React from "react";
 import { waitFor, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import {
@@ -14,6 +13,11 @@ interface Props {
   app: App;
   webhook?: OutboundWebhook;
 }
+
+jest.mock("@codemirror/lang-json", () => ({ json: jest.fn() }));
+jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
+  <span data-testid="editor">{value}</span>
+));
 
 describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () => {
   let currentApp: App;
@@ -44,7 +48,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
 
     test("displays a simple form initially", () => {
       expect(
-        wrapper.getByRole("heading", { name: "Create outbound webhook" })
+        wrapper.getByRole("heading", { name: "Create an outbound webhook" })
       ).toBeTruthy();
 
       expect(wrapper.getByLabelText("Request URL")).toBeTruthy();
@@ -67,7 +71,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
     test("displays request payload when request method is POST", async () => {
       await fireEvent.mouseDown(wrapper.getByText("Get"));
       await fireEvent.click(wrapper.getByText("Post"));
-      expect(wrapper.getByLabelText(/Request payload/)).toBeTruthy();
+      expect(wrapper.getByText(/Request payload/)).toBeTruthy();
     });
 
     test("submits the form request", async () => {
@@ -115,7 +119,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
       expect(wrapper.getByDisplayValue("application/json")).toBeTruthy();
 
       expect(wrapper.getByText("Post")).toBeTruthy();
-      expect(wrapper.getByDisplayValue(`{"embeds":[]}`)).toBeTruthy();
+      expect(wrapper.getByTestId("editor").innerHTML).toBe('{"embeds":[]}');
       expect(wrapper.getByLabelText(/Trigger when/)).toBeTruthy();
       expect(wrapper.getByText("After deployment is published")).toBeTruthy();
     });

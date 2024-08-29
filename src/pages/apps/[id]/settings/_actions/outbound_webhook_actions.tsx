@@ -59,36 +59,35 @@ export const useFetchOutboundWebhooks = ({
   return { hooks, error, loading };
 };
 
-interface UpsertOutboundWebhookProps {
+interface UpsertOutboundWebhookProps extends OutboundWebhook {
   app: App;
 }
 
-export const upsertOutboundWebhook =
-  ({ app }: UpsertOutboundWebhookProps) =>
-  ({
-    id,
+export const upsertOutboundWebhook = ({
+  app,
+  id,
+  requestUrl,
+  requestHeaders,
+  requestMethod,
+  requestPayload,
+  triggerWhen,
+}: UpsertOutboundWebhookProps): Promise<void> => {
+  const hooks: OutboundWebhook = {
     requestUrl,
-    requestHeaders,
     requestMethod,
     requestPayload,
     triggerWhen,
-  }: OutboundWebhook): Promise<void> => {
-    const hooks: OutboundWebhook = {
-      requestUrl,
-      requestMethod,
-      requestPayload,
-      triggerWhen,
-      requestHeaders,
-    };
-
-    const method = id ? "put" : "post";
-
-    return api[method](`/app/outbound-webhooks`, {
-      ...hooks,
-      whId: id || undefined,
-      appId: app.id,
-    });
+    requestHeaders,
   };
+
+  const method = id ? "put" : "post";
+
+  return api[method](`/app/outbound-webhooks`, {
+    ...hooks,
+    whId: id || undefined,
+    appId: app.id,
+  });
+};
 
 interface SendSampleRequestProps {
   app: App;

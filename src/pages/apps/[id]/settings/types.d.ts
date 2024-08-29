@@ -13,11 +13,15 @@ export interface AppSettings {
   deployTrigger?: boolean;
 }
 
+export type AllowedMethod = "GET" | "POST" | "HEAD";
+
+export type TriggerWhen = "on_deploy" | "on_publish";
+
 export interface OutboundWebhook {
   id?: string;
-  triggerWhen: "on_deploy" | "on_publish";
+  triggerWhen: TriggerWhen;
   requestUrl: string;
-  requestMethod: "GET" | "POST" | "HEAD";
+  requestMethod: AllowedMethod;
   requestPayload?: string;
   requestHeaders?: Record<string, string>;
 }

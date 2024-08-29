@@ -90,7 +90,9 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhooks", () => {
     fireEvent.click(wrapper.getByText("Add new webhook"));
 
     await waitFor(() => {
-      expect(wrapper.getAllByText("Create outbound webhook")).toHaveLength(2);
+      expect(wrapper.getAllByText("Create an outbound webhook")).toHaveLength(
+        1
+      );
     });
   });
 

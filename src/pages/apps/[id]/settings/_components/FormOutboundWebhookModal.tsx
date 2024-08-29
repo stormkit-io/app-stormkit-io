@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { toArray } from "~/utils/helpers/array";
+import { useState, useEffect } from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { json } from "@codemirror/lang-json";
+import { grey } from "@mui/material/colors";
+import Button from "@mui/lab/LoadingButton";
+import Link from "@mui/material/Link";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import Option from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import InputLabel from "@mui/material/InputLabel";
+import Switch from "@mui/material/Switch";
+import Typography from "@mui/material/Typography";
+import KeyValue from "~/components/FormV2/KeyValue";
 import Modal from "~/components/Modal";
-import InfoBox from "~/components/InfoBoxV2";
-import Form from "~/components/FormV2";
-import Link from "~/components/Link";
-import Container from "~/components/Container";
-import Button from "~/components/ButtonV2";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import { upsertOutboundWebhook } from "../_actions/outbound_webhook_actions";
 import type * as types from "../types";
-
-const generateRequestHeadersObject = (
-  hooks: types.OutboundWebhookFormValues
-): Record<string, string> => {
-  const headerKeys = toArray<string>(hooks["headers[key]"]).filter(i => i);
-  const headerValues = toArray<string>(hooks["headers[value]"]).filter(i => i);
-
-  return headerKeys.reduce((prev: Record<string, string>, current, index) => {
-    prev[current?.trim()] = headerValues[index]?.trim();
-    return prev;
-  }, {});
-};
 
 interface Props {
   app: App;
@@ -29,13 +29,17 @@ interface Props {
   webhook?: types.OutboundWebhook;
 }
 
-const FormNewOutboundWebhookModal: React.FC<Props> = ({
+const isValidMethod = (method: string): boolean => {
+  return ["GET", "POST", "HEAD"].indexOf(method) > -1;
+};
+
+export default function FormNewOutboundWebhookModal({
   isOpen,
   toggleModal,
   onUpdate,
   app,
   webhook,
-}): React.ReactElement => {
+}: Props) {
   const [trigger, setTrigger] = useState("on_deploy");
   const [method, setMethod] = useState("GET");
   const [payload, setPayload] = useState("");
@@ -90,152 +94,209 @@ const FormNewOutboundWebhookModal: React.FC<Props> = ({
         toggleModal(false);
       }}
     >
-      <Container
-        title={<span>{webhook ? "Update" : "Create"} outbound webhook</span>}
-        subtitle={
-          <span>
-            Check out the{" "}
-            <Link
-              to="https://www.stormkit.io/docs/deployments/outbound-webhooks"
-              secondary
-            >
-              documentation
-            </Link>{" "}
-            for examples
-          </span>
-        }
-      >
-        <Form
-          handleSubmit={(hooks: types.OutboundWebhookFormValues) => {
-            setLoading(true);
-            setError(null);
+      <Card
+        component="form"
+        error={error}
+        onSubmit={e => {
+          e.preventDefault();
 
-            upsertOutboundWebhook({
-              app,
-            })({
-              ...hooks,
-              requestHeaders: generateRequestHeadersObject(hooks),
+          const form = e.target as HTMLFormElement;
+          const data = Object.fromEntries(
+            new FormData(form).entries()
+          ) as Record<string, string>;
+
+          if (!isValidMethod(data.requestMethod)) {
+            setError(
+              "Invalid method provided. Can be one of: GET | POST | HEAD"
+            );
+
+            return;
+          }
+
+          setLoading(true);
+          setError(null);
+
+          upsertOutboundWebhook({
+            app,
+            id: data.id,
+            requestUrl: data.requestUrl,
+            requestMethod: data.requestMethod as types.AllowedMethod,
+            requestPayload: data.requestMethod !== "POST" ? undefined : payload,
+            requestHeaders: headers,
+            triggerWhen: data.triggerWhen as types.TriggerWhen,
+          })
+            .then(() => {
+              setError(null);
+              toggleModal(false);
+              onUpdate();
             })
-              .then(() => {
-                setError(null);
-                toggleModal(false);
-                onUpdate();
-              })
-              .catch(e => {
-                if (e.status === 400) {
-                  setError("Please make sure to provide a valid URL.");
-                } else {
-                  setError(
-                    "Something went wrong while creating new webhook. Please contact us or try again later."
-                  );
-                }
-              })
-              .finally(() => {
-                setLoading(false);
-              });
-          }}
-        >
-          <div className="hidden">
-            <Form.Input type={"hidden"} defaultValue={webhook?.id} name="id" />
-          </div>
-          <Form.WithLabel className="pt-0 mt-0" label="Request URL">
-            <Form.Input
-              name="requestUrl"
-              placeholder="https://example.org/webhooks"
-              defaultValue={webhook?.requestUrl}
-              fullWidth
-            />
-          </Form.WithLabel>
-          <Form.WithLabel label="Enable headers" className="pt-0">
-            <Form.Switch
-              color="secondary"
-              checked={showHeaders}
-              onChange={e => setShowHeaders(e.target.checked)}
-            />
-          </Form.WithLabel>
-          {showHeaders && (
-            <div className="mx-4" data-testid="request-headers">
-              <Form.KeyValue
-                inputName="headers"
-                keyName="Header name"
-                keyPlaceholder="Content-Type"
-                valName="Header value"
-                valPlaceholder="application/json"
-                defaultValue={headers}
-              />
-            </div>
-          )}
-          <Form.WithLabel label="Request method" className="pt-0">
-            <Form.Select
-              name="requestMethod"
-              value={method}
-              onChange={e => {
-                const value = e.target.value as "GET" | "POST" | "HEAD";
+            .catch(e => {
+              if (e.status === 400) {
+                setError("Please make sure to provide a valid URL.");
+              } else {
+                setError(
+                  "Something went wrong while creating new webhook. Please contact us or try again later."
+                );
+              }
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }}
+      >
+        <CardHeader
+          title={`${webhook ? "Update" : "Create an"} outbound webhook`}
+          subtitle={
+            <>
+              Check out the{" "}
+              <Link
+                href="https://www.stormkit.io/docs/deployments/outbound-webhooks"
+                sx={{ color: "white" }}
+              >
+                documentation
+              </Link>{" "}
+              for examples
+            </>
+          }
+        />
+        <TextField
+          type="hidden"
+          defaultValue={webhook?.id}
+          name="id"
+          sx={{ display: "none" }}
+        />
+        <Box sx={{ mb: 4 }}>
+          <TextField
+            label="Request URL"
+            variant="filled"
+            autoComplete="off"
+            defaultValue={webhook?.requestUrl || ""}
+            fullWidth
+            name="requestUrl"
+            placeholder="https://example.org/webhooks"
+            helperText="The fully qualified URL where the request will be made."
+          />
+        </Box>
 
-                if (["GET", "POST", "HEAD"].indexOf(value) > -1) {
-                  setShowPayload(value === "POST");
-                  setMethod(value);
-                }
-              }}
-              fullWidth
-              required
-            >
-              <Form.Option value={"GET"}>Get</Form.Option>
-              <Form.Option value={"POST"}>Post</Form.Option>
-              <Form.Option value={"HEAD"}>Head</Form.Option>
-            </Form.Select>
-          </Form.WithLabel>
-          {showPayload && (
-            <Form.WithLabel
-              label={<span className="h-full pt-3 mt-px">Request payload</span>}
-              className="pt-0"
-            >
-              <Form.Input
-                name="requestPayload"
-                defaultValue={payload}
-                placeholder={`{ "hello": "world" }`}
-                maxRows={4}
-                minRows={4}
-                multiline
-                fullWidth
+        <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
+          <FormControlLabel
+            sx={{ pl: 0, ml: 0 }}
+            label="Enable headers"
+            control={
+              <Switch
+                name="showHeaders"
+                color="secondary"
+                checked={showHeaders}
+                onChange={e => {
+                  setShowHeaders(e.target.checked);
+                }}
               />
-            </Form.WithLabel>
-          )}
-          <Form.WithLabel label="Trigger when" className="pt-0">
-            <Form.Select
-              name="triggerWhen"
-              value={trigger}
-              onChange={e => {
-                if (typeof e.target.value === "string") {
-                  setTrigger(e.target.value);
-                }
+            }
+            labelPlacement="start"
+          />
+          <Typography sx={{ color: grey[400] }}>
+            Turn on to send request headers.
+          </Typography>
+        </Box>
+        {showHeaders && (
+          <Box data-testid="request-headers" sx={{ mb: 4 }}>
+            <KeyValue
+              inputName="headers"
+              keyName="Header name"
+              valName="Header value"
+              keyPlaceholder="Content-Type"
+              valPlaceholder="application/json"
+              separator=":"
+              onChange={newVars => {
+                setHeaders(newVars);
               }}
-              fullWidth
-              required
-            >
-              <Form.Option value={"on_deploy"}>
-                After each successful deployment
-              </Form.Option>
-              <Form.Option value={"on_publish"}>
-                After deployment is published
-              </Form.Option>
-            </Form.Select>
-          </Form.WithLabel>
+              defaultValue={headers}
+            />
+          </Box>
+        )}
 
-          {error && (
-            <InfoBox type={InfoBox.ERROR} className="mx-4 mb-4">
-              {error}
-            </InfoBox>
-          )}
-          <div className="flex justify-center mb-4 w-full">
-            <Button category="action" type="submit" loading={loading}>
-              {webhook ? "Update" : "Create"} outbound webhook
-            </Button>
-          </div>
-        </Form>
-      </Container>
+        <FormControl variant="standard" fullWidth sx={{ mb: 4 }}>
+          <InputLabel id="request-method-label" sx={{ pl: 2, pt: 1 }}>
+            Request method
+          </InputLabel>
+          <Select
+            labelId="request-method-label"
+            name="requestMethod"
+            variant="filled"
+            value={method}
+            fullWidth
+            defaultValue="GET"
+            onChange={e => {
+              const value = e.target.value as "GET" | "POST" | "HEAD";
+
+              if (isValidMethod(value)) {
+                setShowPayload(value === "POST");
+                setMethod(value);
+              }
+            }}
+          >
+            <Option value={"GET"}>Get</Option>
+            <Option value={"POST"}>Post</Option>
+            <Option value={"HEAD"}>Head</Option>
+          </Select>
+        </FormControl>
+
+        {showPayload && (
+          <Box
+            sx={{
+              mb: 4,
+              p: 2,
+              bgcolor: "rgba(0,0,0,0.2)",
+              borderBottom: `1px solid ${grey[900]}`,
+            }}
+          >
+            <Typography sx={{ mb: 2, color: grey[400] }}>
+              Request payload
+            </Typography>
+            <CodeMirror
+              maxHeight="200px"
+              value={payload}
+              extensions={[json()]}
+              onChange={v => setPayload(v)}
+              theme="dark"
+            />
+          </Box>
+        )}
+
+        <FormControl variant="standard" fullWidth sx={{ mb: 4 }}>
+          <InputLabel id="trigger-when-label" sx={{ pl: 2, pt: 1 }}>
+            Trigger when{" "}
+          </InputLabel>
+          <Select
+            labelId="trigger-when-label"
+            name="triggerWhen"
+            variant="filled"
+            value={trigger}
+            fullWidth
+            onChange={e => {
+              if (typeof e.target.value === "string") {
+                setTrigger(e.target.value);
+              }
+            }}
+          >
+            <Option value={"on_deploy"}>
+              After each successful deployment
+            </Option>
+            <Option value={"on_publish"}>After deployment is published</Option>
+          </Select>
+        </FormControl>
+
+        <CardFooter>
+          <Button
+            variant="contained"
+            color="secondary"
+            type="submit"
+            loading={loading}
+          >
+            {webhook ? "Update" : "Create"} outbound webhook
+          </Button>
+        </CardFooter>
+      </Card>
     </Modal>
   );
-};
-
-export default FormNewOutboundWebhookModal;
+}
