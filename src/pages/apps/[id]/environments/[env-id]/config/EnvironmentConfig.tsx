@@ -16,16 +16,31 @@ import TabConfigRedirects from "./_components/TabConfigRedirects";
 import TabConfigServerless from "./_components/TabConfigServerless";
 import TabConfigPrerender from "./_components/TabConfigPrerender";
 import TabAPIKey from "./_components/TabAPIKey";
-import { grey } from "@mui/material/colors";
 
-const listItems = [
-  { path: "#general", text: "General" },
-  { path: "#build", text: "Build" },
-  { path: "#serverless", text: "Serverless" },
-  { path: "#headers", text: "Headers" },
-  { path: "#redirects", text: "Redirects" },
-  { path: "#env-vars", text: "Environment variables" },
-  { path: "#api-keys", text: "API Keys" },
+interface NavItem {
+  path: string;
+  text: string;
+}
+
+interface NavItemParent {
+  title: string;
+  children: NavItem[];
+}
+
+const listItems: NavItemParent[] = [
+  {
+    title: "Settings",
+    children: [
+      { path: "#general", text: "General" },
+      { path: "#build", text: "Build" },
+      { path: "#serverless", text: "Serverless" },
+      { path: "#headers", text: "Headers" },
+      { path: "#redirects", text: "Redirects" },
+      { path: "#env-vars", text: "Environment variables" },
+      { path: "#api-keys", text: "API Keys" },
+    ],
+  },
+  { title: "", children: [{ path: "#domains", text: "Custom domains" }] },
 ];
 
 interface TabProps {
@@ -43,8 +58,11 @@ export default function EnvironmentConfig() {
 
   const prerendering = environment?.build.vars?.["SK_PRERENDER"] === "true";
 
-  if (prerendering && listItems[6].path !== "#prerender") {
-    listItems.splice(6, 0, { path: "#prerender", text: "Prerender" });
+  if (prerendering && listItems[0]?.children[6]?.path !== "#prerender") {
+    listItems[0].children.splice(6, 0, {
+      path: "#prerender",
+      text: "Prerender",
+    });
   }
 
   const Tab = useMemo(() => {
@@ -113,79 +131,70 @@ export default function EnvironmentConfig() {
     <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}>
       <Box component="nav" sx={{ mr: 2, minWidth: "250px" }}>
         <List
-          sx={{ position: "sticky", top: 0 }}
+          sx={{ position: "sticky", top: 0, py: 0 }}
           data-testid="env-config-nav"
           data-selected={selectedItem}
         >
           <ListItem
             sx={{
-              borderBottom: "1px solid rgba(255,255,255,0.05)",
               flexDirection: "column",
               alignItems: "flex-start",
-              px: 0,
+              py: 0,
             }}
           >
-            <Typography
-              component="span"
-              sx={{
-                display: "inline-block",
-                mx: 2,
-                width: "100%",
-                color: "text.secondary",
-              }}
-            >
-              Settings
-            </Typography>
             <List
               sx={{
-                mt: 1,
-                pb: 0,
+                py: 0,
                 width: "100%",
-                borderTop: "1px solid rgba(255,255,255,0.05)",
               }}
             >
-              {listItems.map(li => (
-                <ListItem sx={{ p: 0 }} key={li.path}>
-                  <Link
-                    href={li.path}
-                    onClick={e => {
-                      e.preventDefault();
-                      navigate({ hash: "" });
-                      setSelectedItem(li.path);
-                    }}
+              {listItems.map(item => (
+                <>
+                  <Typography
                     sx={{
-                      display: "block",
-                      px: 2,
+                      px: 1,
                       py: 1,
-                      width: "100%",
-                      "&:hover": { opacity: 1, bgcolor: "container.paper" },
-                      color:
-                        li.path === selectedItem || // If selected
-                        (li.path === "#general" && !selectedItem && !hash) // or in it's default state
-                          ? "white"
-                          : grey[500],
+                      mb: 2,
+                      display: "block",
+                      borderBottom: "1px solid",
+                      borderColor: "container.transparent",
                     }}
+                    component="span"
                   >
-                    <Typography component="span">{li.text}</Typography>
-                  </Link>
-                </ListItem>
+                    {item.title}
+                  </Typography>
+                  {item.children.map(li => (
+                    <ListItem sx={{ p: 0 }} key={li.path}>
+                      <Link
+                        href={li.path}
+                        onClick={e => {
+                          e.preventDefault();
+                          navigate({ hash: li.path });
+                          setSelectedItem(li.path);
+                        }}
+                        sx={{
+                          display: "block",
+                          px: 2,
+                          py: 1,
+                          width: "100%",
+                          "&:hover": { bgcolor: "container.paper" },
+                          borderRadius: 1,
+                          bgcolor:
+                            li.path === selectedItem || // If selected
+                            li.path === hash ||
+                            (li.path === "#general" && !selectedItem && !hash) // or in it's default state
+                              ? "container.default"
+                              : "",
+                        }}
+                      >
+                        <Typography component="span">{li.text}</Typography>
+                      </Link>
+                    </ListItem>
+                  ))}
+                </>
               ))}
             </List>
           </ListItem>
-          <Box component="li" sx={{ p: 2 }}>
-            <Link
-              href="#domains"
-              onClick={() => {
-                setSelectedItem("");
-              }}
-              sx={{
-                opacity: hash === "#domains" ? 1 : 0.5,
-                "&:hover": { opacity: 1 },
-              }}
-            >
-              <Typography component="span">Custom domains</Typography>
-            </Link>
-          </Box>
         </List>
       </Box>
       <Box sx={{ flex: 1 }}>

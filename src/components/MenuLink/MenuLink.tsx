@@ -28,10 +28,10 @@ export default function MenuLink({ item, sx }: Props) {
           position: "relative",
           alignItems: "center",
           borderRadius: 1,
-          bgcolor: item.isActive ? "rgba(255,255,255,0.05)" : undefined,
+          bgcolor: item.isActive ? "container.transparent" : undefined,
           ":hover": {
             opacity: 1,
-            bgcolor: "rgba(255,255,255,0.1)",
+            bgcolor: "container.transparent",
           },
           ...sx,
         }}

@@ -37,7 +37,7 @@ export default (mode: "dark" | "light") => {
             color: primaryColor,
             textDecoration: "none",
             ":hover": {
-              color: isDark ? purple[100] : grey[600],
+              color: isDark ? purple[100] : purple[600],
             },
           },
         },
@@ -96,7 +96,8 @@ export default (mode: "dark" | "light") => {
       MuiAlert: {
         styleOverrides: {
           standardInfo: {
-            backgroundColor: isDark ? "#0f4c64" : "#92d1e9",
+            backgroundColor: isDark ? "#0f4c64" : "#ffffff",
+            border: isDark ? "" : "1px solid #0f4c64",
             color: isDark ? "#ffffff" : "#0f4c64",
           },
           standardError: {
@@ -108,8 +109,9 @@ export default (mode: "dark" | "light") => {
             color: "#ffffff",
           },
           standardSuccess: {
-            backgroundColor: isDark ? "#003801" : "#94e395",
-            color: isDark ? "#ffffff" : "#003801",
+            backgroundColor: isDark ? "#003801" : "#ffffff",
+            border: isDark ? "" : "1px solid #289c13",
+            color: isDark ? "#ffffff" : "#289c13",
           },
         },
       },
@@ -210,13 +212,14 @@ export default (mode: "dark" | "light") => {
               secondary: grey[500],
             },
             background: {
-              default: "#0F092B",
+              default: "#0f092b",
               paper: "#0b061e",
             },
             container: {
-              default: "#1F1C3B",
+              default: "#0b061e",
               paper: "#090518",
               border: "#111111",
+              transparent: "rgba(255,255,255,0.05)",
             },
             info: {
               main: "#0d84bf",
@@ -244,9 +247,9 @@ export default (mode: "dark" | "light") => {
               contrastText: "#e7e5ee",
             },
             secondary: {
-              main: "#f6005c",
-              light: "#e7e5ee",
-              dark: "#78193b",
+              main: "#ff5aa5",
+              light: "#78193b",
+              dark: "#f6005c",
               contrastText: "#e7e5ee",
             },
             text: {
@@ -258,9 +261,10 @@ export default (mode: "dark" | "light") => {
               paper: "#ffffff",
             },
             container: {
-              default: "#1F1C3B",
-              paper: "rgba(129,114,126,0.05)",
-              border: "#ffffff",
+              default: "#ffffff",
+              paper: "#f9f9f9",
+              border: "#e2e2e2",
+              transparent: "rgba(0,0,0,0.1)",
             },
             info: {
               main: "#0d84bf",

@@ -14,7 +14,6 @@ import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
 import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
 import { insertRepo } from "./actions";
-import { grey } from "@mui/material/colors";
 
 const logos: Record<Provider, string> = {
   github: githubLogo,
@@ -121,7 +120,7 @@ export default function RepoList({
               borderBottom: `1px solid`,
               borderColor: "container.border",
               ":hover": {
-                bgcolor: "rgba(255,255,255,0.05)",
+                bgcolor: "container.transparent",
               },
               ":last-child": {
                 borderBottom: "none",

@@ -25,8 +25,9 @@ function Column({ children }: ColumnProps) {
         pb: { xs: 1, md: 0 },
         mb: { xs: 1, md: 0 },
         width: { xs: "100%", md: "auto" },
-        borderRight: { xs: "none", md: "1px solid rgba(255,255,255,0.1)" },
-        borderBottom: { xs: "1px solid rgba(255,255,255,0.05)", md: "none" },
+        borderColor: "container.transparent",
+        borderRight: { xs: "none", md: "1px solid" },
+        borderBottom: { xs: "1px solid", md: "none" },
       }}
     >
       {children}

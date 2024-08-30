@@ -44,7 +44,7 @@ export default function AppMenu({ app, team }: Props) {
               mr: 2,
               px: { xs: 1, md: 1 },
               pr: { xs: 1, md: 2 },
-              bgcolor: "rgba(255,255,255,0.05)",
+              bgcolor: "container.transparent",
               color: "text.secondary",
             }}
             item={{

@@ -4,6 +4,7 @@ interface CustomTypeBackground {
   default: string;
   paper: string;
   border: string;
+  transparent: string;
 }
 
 declare module "@mui/material/styles" {
