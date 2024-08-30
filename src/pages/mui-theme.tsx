@@ -21,6 +21,12 @@ export default (mode: "dark" | "light") => {
   const primaryColor = isDark ? "white" : "black";
 
   return createTheme({
+    typography: {
+      fontWeightBold: 800,
+      fontWeightMedium: 600,
+      fontWeightRegular: 500,
+      fontWeightLight: 400,
+    },
     components: {
       MuiLink: {
         defaultProps: {
@@ -31,7 +37,7 @@ export default (mode: "dark" | "light") => {
             color: primaryColor,
             textDecoration: "none",
             ":hover": {
-              color: purple[100],
+              color: isDark ? purple[100] : grey[600],
             },
           },
         },
@@ -76,7 +82,7 @@ export default (mode: "dark" | "light") => {
         variants: [
           {
             props: { variant: "text", color: "info" },
-            style: { color: "#ffffff" },
+            style: { color: primaryColor },
           },
         ],
       },
@@ -237,7 +243,7 @@ export default (mode: "dark" | "light") => {
               contrastText: "#e7e5ee",
             },
             secondary: {
-              main: "#78193B",
+              main: "#78193b",
               light: "#e7e5ee",
               dark: "#f6005c",
               contrastText: "#e7e5ee",
@@ -247,8 +253,8 @@ export default (mode: "dark" | "light") => {
               secondary: grey[800],
             },
             background: {
-              default: "#ffffff",
-              paper: "#f9f9f9",
+              default: "#eeeeee",
+              paper: "#ffffff",
             },
             container: {
               default: "#1F1C3B",
