@@ -93,7 +93,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
       tfid: currentTriggers[0].id!,
     });
 
-    fireEvent.click(wrapper.getByLabelText("expand"));
+    fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
 
     await waitFor(() => {
       expect(wrapper.getByText("Delete")).toBeTruthy();
@@ -123,7 +123,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
     createWrapper({ triggers: [] });
 
     await waitFor(() => {
-      expect(wrapper.getByText("It is quite empty here.")).toBeTruthy();
+      expect(wrapper.getByText(/It\'s quite empty in here\./)).toBeTruthy();
     });
   });
 });

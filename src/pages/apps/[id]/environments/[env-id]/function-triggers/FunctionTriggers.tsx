@@ -1,15 +1,14 @@
 import React, { useContext, useState } from "react";
-import cn from "classnames";
-import Tooltip from "@mui/material/Tooltip";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import emptyListSvg from "~/assets/images/empty-list.svg";
-import DotDotDot from "~/components/DotDotDotV2";
-import Spinner from "~/components/Spinner";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import ConfirmModal from "~/components/ConfirmModal";
-import Button from "~/components/ButtonV2";
-import InfoBox from "~/components/InfoBoxV2";
-import Container from "~/components/Container";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
+import CardRow from "~/components/CardRow";
+import EmptyList from "~/components/EmptyPage";
 import FunctionTriggerModal from "./_components/FunctionTriggerModal";
 import * as actions from "./actions";
 
@@ -63,89 +62,64 @@ const FunctionTriggers: React.FC = () => {
   };
 
   return (
-    <Container
-      maxWidth="max-w-none"
-      className="pb-0"
-      title={
-        <>
-          <span>Function Triggers</span>
-          <Tooltip
-            arrow
-            className="flex items-center"
-            title={<p>Trigger periodic functions with given configuration.</p>}
-          >
-            <span className="fas fa-question-circle text-lg ml-2" />
-          </Tooltip>
-        </>
-      }
-      actions={
+    <Card
+      sx={{ width: "100%" }}
+      loading={loading}
+      error={error}
+      contentPadding={false}
+    >
+      <CardHeader
+        title="Function Triggers"
+        subtitle="Trigger periodic functions with given configuration."
+      />
+      {functionTriggers?.map((f, i) => (
+        <CardRow
+          key={f.id}
+          menuItems={[
+            {
+              icon: "fa fa-pencil",
+              text: "Modify",
+              onClick: () => {
+                setToBeModified(f);
+                setFunctionTriggerModal(true);
+              },
+            },
+            {
+              icon: "fa fa-times",
+              text: "Delete",
+              onClick: () => {
+                setToBeModified(undefined);
+                setToBeDeleted(f);
+              },
+            },
+          ]}
+        >
+          <Typography>{f.options.url}</Typography>
+          <Typography>{f.cron}</Typography>
+          <Typography>{f.status ? "Enabled" : "Disabled"}</Typography>
+        </CardRow>
+      ))}
+      {!loading && !error && !functionTriggers?.length && (
+        <EmptyList>
+          <>
+            It's quite empty in here.
+            <br />
+            Create a new trigger to call your functions periodically.
+          </>
+        </EmptyList>
+      )}
+      <CardFooter sx={{ textAlign: "center" }}>
         <Button
           type="button"
-          category="button"
+          variant="contained"
+          color="secondary"
           onClick={() => {
             setFunctionTriggerModal(true);
           }}
         >
           New function trigger
         </Button>
-      }
-    >
-      <div className="w-full px-4 pb-4">
-        {loading && (
-          <div className="justify-center flex items-center w-full">
-            <Spinner primary />
-          </div>
-        )}
-        {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
-        {!loading &&
-          functionTriggers?.map((f, i) => (
-            <div
-              key={f.id}
-              className={cn(
-                "bg-blue-10 p-4 flex items-center justify-between",
-                {
-                  "mb-4": i !== functionTriggers.length - 1,
-                }
-              )}
-            >
-              <div>
-                <div className="font-bold">{f.options.url}</div>
-                <div className="text-xs leading-6">{f.cron}</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <p>{f.status ? "Enabled" : "Disabled"}</p>
-                <DotDotDot
-                  items={[
-                    {
-                      icon: "fa fa-pencil",
-                      text: "Modify",
-                      onClick: () => {
-                        setToBeModified(f);
-                        setFunctionTriggerModal(true);
-                      },
-                    },
-                    {
-                      icon: "fa fa-times",
-                      text: "Delete",
-                      onClick: () => {
-                        setToBeModified(undefined);
-                        setToBeDeleted(f);
-                      },
-                    },
-                  ]}
-                />
-              </div>
-            </div>
-          ))}
-        {!loading && !error && !functionTriggers?.length && (
-          <div className="p-4 flex items-center justify-center flex-col">
-            <p className="mt-8">
-              <img src={emptyListSvg} alt="No function trigger" />
-            </p>
-            <p className="mt-12">It is quite empty here.</p>
-          </div>
-        )}
-      </div>
+      </CardFooter>
       {isFunctionTriggerModalOpen && (
         <FunctionTriggerModal
           app={app}
@@ -160,7 +134,7 @@ const FunctionTriggers: React.FC = () => {
           <p>This will delete the trigger function immediately.</p>
         </ConfirmModal>
       )}
-    </Container>
+    </Card>
   );
 };
 

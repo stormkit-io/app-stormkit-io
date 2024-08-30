@@ -82,11 +82,7 @@ export default function ConnectedAccounts({ accounts }: Props) {
             data-testid={email.address}
             chipLabel={email.primary ? "Primary" : undefined}
             chipColor={email.primary ? "success" : undefined}
-            sx={{
-              borderTop: "1px solid",
-              borderColor: "container.border",
-              ml: 2,
-            }}
+            sx={{ ml: 2 }}
           >
             <Typography sx={{ color: "text.secondary" }}>
               {email.address}

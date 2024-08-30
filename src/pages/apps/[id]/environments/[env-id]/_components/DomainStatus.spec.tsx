@@ -1,5 +1,4 @@
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
 import { render } from "@testing-library/react";
 import DomainStatus from "./DomainStatus";
 
@@ -16,7 +15,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/DomainStatus.tsx",
 
   test("should always display the icon", () => {
     createWrapper({});
-    expect(wrapper.container.innerHTML).toContain("fa-globe");
+    expect(wrapper.container.innerHTML).toContain("PublicOffIcon");
   });
 
   test("should display only the icon when status is undefined", () => {

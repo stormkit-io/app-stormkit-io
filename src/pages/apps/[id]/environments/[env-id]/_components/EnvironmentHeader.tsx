@@ -25,9 +25,12 @@ function Column({ children }: ColumnProps) {
         pb: { xs: 1, md: 0 },
         mb: { xs: 1, md: 0 },
         width: { xs: "100%", md: "auto" },
-        borderColor: "container.transparent",
         borderRight: { xs: "none", md: "1px solid" },
         borderBottom: { xs: "1px solid", md: "none" },
+        borderColor: {
+          xs: "container.transparent",
+          md: "container.transparent",
+        },
       }}
     >
       {children}

@@ -1,9 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useContext } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Alert from "@mui/material/Alert";
 import ReportIcon from "@mui/icons-material/Report";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { RootContext } from "~/pages/Root.context";
 
 interface MenuItem {
   to: string;
@@ -47,6 +52,7 @@ interface Props {
 export default function UserMenu({ user, onClick }: Props) {
   const userPackage = user?.package?.id || "free";
   const isPaymentRequired = userPackage === "free" && user?.isPaymentRequired;
+  const { mode, setMode } = useContext(RootContext);
 
   const freeTrialEnds = useMemo(() => {
     if (user?.freeTrialEnds) {
@@ -62,12 +68,17 @@ export default function UserMenu({ user, onClick }: Props) {
     <Box component="section" role="menu" sx={{ p: 2, minWidth: "250px" }}>
       <Box className="flex flex-col flex-1">
         <Box
-          sx={{ pb: 2, mb: 3, borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+          sx={{
+            pb: 2,
+            mb: 2,
+            borderBottom: "1px solid",
+            borderColor: "container.transparent",
+          }}
         >
           <Typography>{user.fullName || user.displayName}</Typography>
           <Typography sx={{ color: "text.secondary" }}>{user.email}</Typography>
           {isPaymentRequired && (
-            <Alert icon={<ReportIcon />} color="info" sx={{ mt: 1.5 }}>
+            <Alert icon={<ReportIcon />} color="info" sx={{ mt: 2 }}>
               <Link href="/user/account">
                 Free trial ends on {freeTrialEnds}
               </Link>
@@ -77,10 +88,14 @@ export default function UserMenu({ user, onClick }: Props) {
         {menuItems.map((section, index) => (
           <Box
             key={index}
-            sx={{ borderBottom: "1px solid rgba(255,255,255,0.1)", mb: 3 }}
+            sx={{
+              borderBottom: "1px solid",
+              borderColor: "container.transparent",
+              mb: 2,
+            }}
           >
             {section.map(item => (
-              <Box key={item.text} sx={{ pb: 3 }}>
+              <Box key={item.text} sx={{ pb: 2 }}>
                 <Link
                   href={item.to}
                   sx={{ display: "block" }}
@@ -92,6 +107,53 @@ export default function UserMenu({ user, onClick }: Props) {
             ))}
           </Box>
         ))}
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottom: "1px solid",
+          borderColor: "container.transparent",
+          mb: 2,
+          pb: 2,
+        }}
+      >
+        <Typography>Theme</Typography>
+        <Box>
+          <ToggleButtonGroup
+            value={mode}
+            exclusive
+            sx={{ bgcolor: "container.paper" }}
+            onChange={(_, val) => {
+              if (val !== null) {
+                setMode(val);
+              }
+            }}
+            aria-label="display mode"
+          >
+            <ToggleButton
+              value="dark"
+              aria-label="24 hours"
+              size="small"
+              sx={{
+                color: "text.primary",
+              }}
+            >
+              <DarkModeIcon sx={{ fontSize: 14 }} />
+            </ToggleButton>
+            <ToggleButton
+              value="light"
+              aria-label="Light"
+              size="small"
+              sx={{
+                color: "text.primary",
+              }}
+            >
+              <LightModeIcon sx={{ fontSize: 14 }} />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
       </Box>
       <Box sx={{ textAlign: "center" }}>
         {footerItems.map(item => (

@@ -49,7 +49,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
     });
 
     test("should display the header properly", () => {
-      expect(wrapper.container.innerHTML).toContain("fa-globe");
+      expect(wrapper.container.innerHTML).toContain("PublicOffIcon");
       expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
       expect(wrapper.getByText("master")).toBeTruthy();
       expect(wrapper.getByText("Not yet published")).toBeTruthy();
@@ -64,7 +64,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
     });
 
     test("should display the header properly", () => {
-      expect(wrapper.container.innerHTML).toContain("fa-globe");
+      expect(wrapper.container.innerHTML).toContain("PublicOffIcon");
       expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
       expect(wrapper.getByText("master")).toBeTruthy();
       expect(wrapper.getByText("Not yet deployed")).toBeTruthy();
@@ -100,7 +100,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
         expect(wrapper.getByText("200")).toBeTruthy();
         expect(wrapper.getByText("Published"));
         expect(wrapper.getByText("682381"));
-        expect(wrapper.container.innerHTML).toContain("fa-globe");
+        expect(wrapper.container.innerHTML).toContain("PublicIcon");
       });
     });
   });
@@ -135,7 +135,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
         expect(wrapper.getByText("Published"));
         expect(wrapper.getByText("682381"));
         expect(wrapper.getByLabelText("Deployment not found"));
-        expect(wrapper.container.innerHTML).toContain("fa-globe");
+        expect(wrapper.container.innerHTML).toContain("PublicOffIcon");
       });
     });
   });

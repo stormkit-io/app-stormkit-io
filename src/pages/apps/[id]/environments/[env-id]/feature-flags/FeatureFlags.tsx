@@ -1,17 +1,17 @@
 import { useContext, useState } from "react";
-import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import emptyListSvg from "~/assets/images/empty-list.svg";
-import DotDotDot from "~/components/DotDotDotV2";
-import Spinner from "~/components/Spinner";
+import EmptyList from "~/components/EmptyPage";
 import ConfirmModal from "~/components/ConfirmModal";
-import Button from "~/components/ButtonV2";
-import InfoBox from "~/components/InfoBoxV2";
-import Container from "~/components/Container";
-import Form from "~/components/FormV2";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
+import CardRow from "~/components/CardRow";
 import FeatureFlagModal from "./_components/FeatureFlagModal";
 import * as actions from "./actions";
 
@@ -35,145 +35,87 @@ export default function FeatureFlags() {
   });
 
   return (
-    <Container
-      maxWidth="max-w-none"
-      className="pb-0"
-      title={
-        <>
-          <span>Feature flags</span>
-          <Tooltip
-            arrow
-            className="flex items-center"
-            title={
-              <p>
-                Feature flags that are enabled will be accessible through the
-                window.sk.features object.
-              </p>
-            }
-          >
-            <span className="fas fa-question-circle text-lg ml-2" />
-          </Tooltip>
-        </>
-      }
-      actions={
-        <Button
-          type="button"
-          category="button"
-          onClick={() => {
-            setFeatureFlagModal(true);
-          }}
-        >
-          New feature flag
-        </Button>
-      }
+    <Card
+      error={error}
+      loading={loading}
+      sx={{ width: "100%" }}
+      contentPadding={false}
     >
-      <div className="w-full px-4 pb-4">
-        {loading && (
-          <div className="justify-center flex items-center w-full">
-            <Spinner primary />
-          </div>
-        )}
-        {!loading && error && (
-          <InfoBox type={InfoBox.ERROR} className="mx-4">
-            {error}
-          </InfoBox>
-        )}
-        {!loading &&
-          flags &&
-          flags.map((f, i) => (
-            <Box
-              key={f.flagName}
-              sx={{
-                p: 2,
-                mb: 2,
-                display: "flex",
-                flexDirection: { xs: "column", md: "row" },
-                alignItems: "center",
-                justifyContent: "space-between",
-                ":last-child": {
-                  mb: 0,
-                },
-              }}
-              className="bg-blue-10"
-            >
-              <Box sx={{ maxWidth: "100%", overflowX: "auto" }}>
-                <Typography
-                  variant="h5"
-                  sx={{ fontWeight: "bold", fontSize: 14 }}
-                >
-                  {f.flagName}
-                </Typography>
-                <Box sx={{ opacity: 0.7 }}>
-                  When enabled access through
-                  <Box
-                    component="span"
-                    sx={{
-                      display: { xs: "block", md: "inline-block" },
-                      borderRadius: 1,
-                      fontFamily: "monospace",
-                      mt: { xs: 0.5, md: 0 },
-                      p: 0.5,
-                      ml: { xs: 0, md: 0.5 },
-                    }}
-                    className="bg-blue-20"
-                    data-testid="ff-code"
-                  >
-                    window.sk.features["{f.flagName}"]
-                  </Box>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  width: { xs: "100%", md: "auto" },
-                  justifyContent: { xs: "space-between", md: "initial" },
-                }}
-              >
-                <Form.Switch
+      <CardHeader
+        title="Feature flags"
+        subtitle="Feature flags that are enabled will be accessible through the window.sk.features object."
+      />
+
+      {flags?.map((f, i) => (
+        <CardRow
+          key={f.flagName}
+          menuItems={[
+            {
+              icon: "fa fa-pencil",
+              text: "Modify",
+              onClick: () => {
+                setToBeToggled(undefined);
+                setToBeModified(f);
+                setFeatureFlagModal(true);
+              },
+            },
+            {
+              icon: "fa fa-times",
+              text: "Delete",
+              onClick: () => {
+                setToBeModified(undefined);
+                setToBeDeleted(f);
+              },
+            },
+          ]}
+        >
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ flex: 1 }}>
+              <Typography>{f.flagName}</Typography>
+            </Box>
+            <FormControlLabel
+              sx={{ pl: 0, ml: 0 }}
+              label="Enabled"
+              control={
+                <Switch
+                  sx={{ mr: 2 }}
+                  name="ffEnabled"
                   color="secondary"
-                  checked={f.flagValue}
-                  className="mr-4"
                   inputProps={{ "aria-label": `Toggle ${f.flagName} state` }}
+                  checked={f.flagValue}
                   onChange={() => {
                     setToBeToggled(f);
                     setToBeModified(undefined);
                     setToBeDeleted(undefined);
                   }}
                 />
-                <DotDotDot
-                  items={[
-                    {
-                      icon: "fa fa-pencil",
-                      text: "Modify",
-                      onClick: () => {
-                        setToBeToggled(undefined);
-                        setToBeModified(f);
-                        setFeatureFlagModal(true);
-                      },
-                    },
-                    {
-                      icon: "fa fa-times",
-                      text: "Delete",
-                      onClick: () => {
-                        setToBeModified(undefined);
-                        setToBeDeleted(f);
-                      },
-                    },
-                  ]}
-                />
-              </Box>
-            </Box>
-          ))}
-        {!loading && !error && !flags?.length && (
-          <div className="p-4 flex items-center justify-center flex-col">
-            <p className="mt-8">
-              <img src={emptyListSvg} alt="No feature flags" />
-            </p>
-            <p className="mt-12">It is quite empty here.</p>
-          </div>
-        )}
-      </div>
+              }
+              labelPlacement="start"
+            />
+          </Box>
+        </CardRow>
+      ))}
+      {!loading && !error && !flags?.length && (
+        <EmptyList>
+          <>
+            It's quite empty in here.
+            <br />
+            Create a new feature flag to manage them.
+          </>
+        </EmptyList>
+      )}
+      <CardFooter sx={{ textAlign: "center" }}>
+        <Button
+          type="button"
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setFeatureFlagModal(true);
+          }}
+        >
+          New feature flag
+        </Button>
+      </CardFooter>
       {isFeatureFlagModalOpen && (
         <FeatureFlagModal
           app={app}
@@ -261,6 +203,6 @@ export default function FeatureFlags() {
           </p>
         </ConfirmModal>
       )}
-    </Container>
+    </Card>
   );
 }

@@ -33,13 +33,14 @@ export default function TeamMenu({
         <Box
           sx={{
             height: "50px",
-            borderBottom: "1px solid rgba(255,255,255,0.2)",
+            borderBottom: "1px solid",
+            borderColor: "container.transparent",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Typography variant="h2" sx={{ opacity: 0.5, flex: 1, pl: 1 }}>
+          <Typography variant="h2" sx={{ flex: 1, pl: 1 }} color="text.primary">
             Teams
           </Typography>
           {selectedTeam &&
@@ -88,7 +89,7 @@ export default function TeamMenu({
                   display: "flex",
                   alignItems: "center",
                   ":hover": {
-                    bgcolor: "rgba(255,255,255,0.2)",
+                    bgcolor: "container.transparent",
                     cursor: "pointer",
                     color: "inherit",
                   },

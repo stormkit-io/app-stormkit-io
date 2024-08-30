@@ -149,7 +149,7 @@ export default function EnvironmentConfig() {
               }}
             >
               {listItems.map(item => (
-                <>
+                <Box key={item.title}>
                   <Typography
                     sx={{
                       px: 1,
@@ -191,7 +191,7 @@ export default function EnvironmentConfig() {
                       </Link>
                     </ListItem>
                   ))}
-                </>
+                </Box>
               ))}
             </List>
           </ListItem>

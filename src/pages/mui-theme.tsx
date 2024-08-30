@@ -45,15 +45,16 @@ export default (mode: "dark" | "light") => {
       MuiTooltip: {
         styleOverrides: {
           arrow: {
-            color: grey[900],
+            color: isDark ? grey[900] : grey[600],
           },
           popper: {
             padding: 0,
           },
           tooltip: {
-            color: "white",
-            backgroundColor: "#1F1C3B",
-            border: `1px solid ${grey[900]}`,
+            border: "1px solid",
+            color: primaryColor,
+            backgroundColor: isDark ? "#1f1c3b" : "#e9e9e9",
+            borderColor: isDark ? grey[900] : grey[600],
             fontSize: 14,
           },
         },
@@ -247,9 +248,9 @@ export default (mode: "dark" | "light") => {
               contrastText: "#e7e5ee",
             },
             secondary: {
-              main: "#ff5aa5",
+              main: "#ff4389",
               light: "#78193b",
-              dark: "#f6005c",
+              dark: "#",
               contrastText: "#e7e5ee",
             },
             text: {

@@ -19,7 +19,7 @@ export default function CardRow({
   sx,
   children,
   menuItems,
-  menuLabel,
+  menuLabel = "expand",
   chipLabel,
   chipColor,
   actions,

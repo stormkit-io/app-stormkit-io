@@ -1,6 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
-import React from "react";
 import { MemoryRouter } from "react-router";
 import { waitFor, render } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
@@ -53,7 +52,7 @@ describe("~/pages/apps/[id]/usage/Usage", () => {
     });
 
     test("should display a spinner", () => {
-      expect(wrapper.container.innerHTML).toContain("spinner");
+      expect(wrapper.container.innerHTML).toContain("MuiLinearProgress");
     });
 
     test("should list number of deployments", async () => {
