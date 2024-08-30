@@ -46,7 +46,7 @@ export default function Apps() {
 
   if (!provider) {
     return (
-      <Box maxWidth="md" sx={{ width: "100%", color: "white" }}>
+      <Box maxWidth="md" sx={{ width: "100%" }}>
         <Card error="We cannot detect the connected provider. Please login again.">
           <CardHeader title="Invalid provider" />
         </Card>
@@ -58,7 +58,7 @@ export default function Apps() {
 
   if (apps.length === 0 && !loading && !filter) {
     return (
-      <Box sx={{ width: "100%", color: "white" }} maxWidth="md">
+      <Box sx={{ width: "100%" }} maxWidth="md">
         <Card sx={{ p: 4 }}>
           <EmptyList actionLink={newAppHref} actionText={importFromProvider} />
         </Card>
@@ -67,7 +67,7 @@ export default function Apps() {
   }
 
   return (
-    <Box maxWidth="md" sx={{ width: "100%", color: "white" }}>
+    <Box maxWidth="md" sx={{ width: "100%" }}>
       <Card
         contentPadding={false}
         errorTitle={false}

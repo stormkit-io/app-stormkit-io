@@ -1,49 +1,50 @@
 import React from "react";
-import cn from "classnames";
-import Form from "~/components/FormV2";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import Option from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 
 interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
   environments: Array<Environment>;
   placeholder: string;
   onSelect: (arg0: Environment) => void;
   defaultValue?: string;
-  className?: string;
 }
 
-const EnvironmentSelector: React.FC<Props> = ({
+export default function EnvironmentSelector({
   environments,
   defaultValue = "",
   placeholder = "Select an environment",
   onSelect,
-  className,
-  ...rest
-}): React.ReactElement => {
+}: Props) {
   return (
-    <div {...rest} className={cn("bg-blue-10 w-full h-full", className)}>
-      <Form.Select
+    <FormControl variant="standard" fullWidth>
+      <InputLabel id="request-method-label" sx={{ pl: 2, pt: 1 }}>
+        {placeholder}
+      </InputLabel>
+      <Select
         name="envId"
+        variant="filled"
         displayEmpty
         defaultValue={defaultValue}
+        fullWidth
         onChange={e => {
           const id = e.target.value as string;
           onSelect(environments.filter(e => e.id === id)[0]);
         }}
       >
-        <Form.Option disabled value="">
-          <span className="fas fa-th-large mr-2 text-gray-60" />
-          {placeholder}
-        </Form.Option>
         {environments.map(env => (
-          <Form.Option value={env.id!} key={env.id}>
-            <span>
-              <span>{env.name || env.env}</span>{" "}
-              <span className="text-xs opacity-75">{env.preview}</span>
-            </span>
-          </Form.Option>
+          <Option value={env.id!} key={env.id}>
+            <Typography component="span">
+              {env.name || env.env}{" "}
+              <Typography component="span" color="text.secondary">
+                {env.preview}
+              </Typography>
+            </Typography>
+          </Option>
         ))}
-      </Form.Select>
-    </div>
+      </Select>
+    </FormControl>
   );
-};
-
-export default EnvironmentSelector;
+}

@@ -37,7 +37,7 @@ export default function TabConfigGeneral({
     <Card
       id="serverless"
       component="form"
-      sx={{ color: "white", mb: 2 }}
+      sx={{ mb: 2 }}
       error={error}
       success={success}
       onSubmit={submitHandler}

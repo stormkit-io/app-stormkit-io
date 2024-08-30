@@ -3,7 +3,6 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
-import { grey } from "@mui/material/colors";
 import LensIcon from "@mui/icons-material/Lens";
 import CardRow from "~/components/CardRow";
 import ConfirmModal from "~/components/ConfirmModal";
@@ -62,7 +61,7 @@ export default function DeploymentRow({
         <Typography
           sx={{
             fontSize: 11,
-            color: grey[500],
+            color: "text.secondary",
           }}
         >
           {exactTime

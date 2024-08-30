@@ -123,7 +123,9 @@ export default function RedirectsPlaygroundModal({
             borderBottom: `1px solid ${grey[900]}`,
           }}
         >
-          <Typography sx={{ mb: 2, color: grey[400] }}>Redirects</Typography>
+          <Typography sx={{ mb: 2, color: "text.secondary" }}>
+            Redirects
+          </Typography>
           <RedirectsEditor value={redirects} onChange={setRedirects} />
         </Box>
         {result &&

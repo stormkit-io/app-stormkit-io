@@ -1,7 +1,6 @@
 import WorldMap from "react-svg-worldmap";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { grey } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
@@ -53,7 +52,7 @@ export default function TopReferrers({ environment, domain }: Props) {
           data={countries}
         />
       </Box>
-      <CardFooter sx={{ color: grey[500], textAlign: "left" }}>
+      <CardFooter sx={{ textAlign: "left" }}>
         <Typography sx={{ fontSize: 12 }}>
           Double click to zoom in and out.
         </Typography>

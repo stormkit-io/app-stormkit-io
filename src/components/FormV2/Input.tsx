@@ -22,7 +22,7 @@ const Input: React.FC<Props> = ({
       variant={variant}
       autoComplete={autoComplete}
       inputProps={{
-        sx: { p: 2, color: "white" },
+        sx: { p: 2 },
         ...inputProps,
       }}
       InputProps={{

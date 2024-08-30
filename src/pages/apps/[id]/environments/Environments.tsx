@@ -7,7 +7,6 @@ import ArrowForward from "@mui/icons-material/ArrowForward";
 import Button from "@mui/material/Button";
 import AltRoute from "@mui/icons-material/AltRoute";
 import CircularProgress from "@mui/material/CircularProgress";
-import { grey } from "@mui/material/colors";
 import Dot from "~/components/Dot";
 import Card from "~/components/Card";
 import CardRow from "~/components/CardRow";
@@ -37,7 +36,6 @@ export default function Environments() {
         <CardHeader
           title="Environments"
           subtitle=""
-          sx={{ color: "white" }}
           actions={
             <Box sx={{ textAlign: "right" }}>
               <Button
@@ -69,7 +67,6 @@ export default function Environments() {
               sx={{
                 position: "relative",
                 ml: -0.75,
-                color: "white",
                 textTransform: "capitalize",
               }}
             >
@@ -81,19 +78,19 @@ export default function Environments() {
                 display: "flex",
                 alignItems: "center",
                 mt: 0.25,
-                color: grey[500],
+                color: "text.secondary",
               }}
             >
               <AltRoute sx={{ fontSize: 11, mr: 0.5 }} />
               {env.branch}
               <Dot />
-              <Link href={endpoint(env)} sx={{ color: grey[500] }}>
+              <Link href={endpoint(env)} sx={{ color: "text.secondary" }}>
                 {endpoint(env).replace(/https?:\/\//, "")}
               </Link>
               <Dot />
               <EnvironmentStatus env={env} app={app} />
             </Typography>
-            <Box sx={{ mt: 1, color: grey[500] }}>
+            <Box sx={{ mt: 1, color: "text.secondary" }}>
               <Typography
                 sx={{
                   display: "inline-flex",

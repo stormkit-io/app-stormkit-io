@@ -62,9 +62,9 @@ const renderLog = (log: Log, i: number) => {
         display: "flex",
       }}
     >
-      <Box sx={{ color: grey[500] }}>{i}.</Box>
+      <Box sx={{ color: "text.secondary" }}>{i}.</Box>
       <Box sx={{ flex: 1, pl: 2 }}>{data}</Box>
-      <Box sx={{ color: grey[500] }}>
+      <Box sx={{ color: "text.secondary" }}>
         {isoDateTime.split(".")[0].replace("T", " ")}
       </Box>
     </Box>
@@ -88,11 +88,7 @@ const RuntimeLogs: React.FC = () => {
   const shouldDisplayLogs = (!loading || afterTs) && logs.length > 0;
 
   return (
-    <Card
-      sx={{ width: "100%", color: "white" }}
-      loading={isLoadingFirstPage}
-      error={error}
-    >
+    <Card sx={{ width: "100%" }} loading={isLoadingFirstPage} error={error}>
       <CardHeader
         title="Runtime logs"
         subtitle={
@@ -151,7 +147,6 @@ const RuntimeLogs: React.FC = () => {
               p: 2,
               display: "block",
               border: `1px solid ${grey[900]}`,
-              color: "white",
               whiteSpace: whitespace ? "pre-wrap" : undefined,
               wordBreak: whitespace ? "break-all" : undefined,
               fontFamily: "monospace",

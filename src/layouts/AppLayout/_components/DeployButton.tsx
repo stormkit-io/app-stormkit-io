@@ -28,10 +28,7 @@ export default function DeployButton({
         color="secondary"
         variant="contained"
         size="medium"
-        sx={{
-          borderRadius: 1,
-          color: "white",
-        }}
+        sx={{ borderRadius: 1 }}
       >
         <RocketLaunch sx={{ fontSize: 16 }} />
         <Typography component="span" sx={{ display: "inline-block", ml: 1 }}>

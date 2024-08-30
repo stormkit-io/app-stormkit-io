@@ -24,7 +24,7 @@ const EmptyList: React.FC<Props> = ({
         variant="contained"
         color="secondary"
         href={actionLink}
-        sx={{ ":hover": { color: "white" }, mr: 2 }}
+        sx={{ mr: 2 }}
       >
         {actionText}
       </Button>
@@ -33,7 +33,7 @@ const EmptyList: React.FC<Props> = ({
         variant="contained"
         color="secondary"
         href={`/apps/new/url`}
-        sx={{ ":hover": { color: "white" }, ml: 2 }}
+        sx={{ ml: 2 }}
       >
         Import from URL
       </Button>

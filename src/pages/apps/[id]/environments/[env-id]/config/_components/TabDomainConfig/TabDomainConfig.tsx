@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import HttpsIcon from "@mui/icons-material/Https";
 import WarningIcon from "@mui/icons-material/Warning";
-import { grey, yellow } from "@mui/material/colors";
+import { yellow } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
@@ -46,12 +46,7 @@ export default function TabDomainConfig({ app, environment }: Props) {
   });
 
   return (
-    <Card
-      error={error}
-      success={success}
-      loading={loading}
-      sx={{ color: "white" }}
-    >
+    <Card error={error} success={success} loading={loading}>
       <CardHeader
         title="Custom domains"
         subtitle="Set custom domains to serve your application from."
@@ -108,7 +103,7 @@ export default function TabDomainConfig({ app, environment }: Props) {
               </Typography>
             </Box>
             <Typography
-              sx={{ fontSize: 12, color: grey[500], ml: 4.2 }}
+              sx={{ fontSize: 12, color: "text.secondary", ml: 4.2 }}
               data-testid={`${domain.domainName}-status`}
             >
               Status: {!domain.verified ? "needs verification" : "verified"}

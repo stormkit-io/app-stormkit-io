@@ -56,7 +56,6 @@ export default function TeamsToggle({ app }: Props) {
           <Button
             variant="text"
             type="button"
-            sx={{ color: "white" }}
             onClick={e => {
               e.preventDefault();
               setIsMenuOpen(!isMenuOpen);

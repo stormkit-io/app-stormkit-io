@@ -53,7 +53,7 @@ export default function TabConfigRedirects({
     <Card
       id="redirects"
       component="form"
-      sx={{ color: "white", mb: 2 }}
+      sx={{ mb: 2 }}
       error={error}
       success={success}
       onSubmit={submitHandler}
@@ -62,11 +62,7 @@ export default function TabConfigRedirects({
         title="Redirects"
         subtitle="Configure redirects and path rewrites for your application."
         actions={
-          <Button
-            variant="text"
-            sx={{ color: "white" }}
-            onClick={() => setShowModal(true)}
-          >
+          <Button variant="text" onClick={() => setShowModal(true)}>
             Playground
           </Button>
         }
@@ -118,7 +114,7 @@ export default function TabConfigRedirects({
           }
           labelPlacement="start"
         />
-        <Typography sx={{ color: grey[500] }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Turn on to overwrite redirects. These redirects will apply immediately
           to all deployments and will take precedence over redirects file.
         </Typography>
@@ -132,7 +128,9 @@ export default function TabConfigRedirects({
             borderBottom: `1px solid ${grey[900]}`,
           }}
         >
-          <Typography sx={{ mb: 2, color: grey[400] }}>Redirects</Typography>
+          <Typography sx={{ mb: 2, color: "text.secondary" }}>
+            Redirects
+          </Typography>
           <RedirectsEditor value={redirects} onChange={setRedirects} />
         </Box>
       )}

@@ -5,8 +5,10 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import SearchIcon from "@mui/icons-material/Search";
+import ArrowRightIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { AuthContext } from "~/pages/auth/Auth.context";
+import Typography from "@mui/material/Typography";
 import Spinner from "~/components/Spinner";
 import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
@@ -136,18 +138,27 @@ export default function RepoList({
               handleRepoInsert(r);
             }}
           >
-            <div className="inline-block mr-2 w-5">
-              <img src={logo} className="w-full" alt={provider} />
-            </div>
-            <div className="flex-1 leading-4">{r.name}</div>
+            <Box
+              component="img"
+              src={logo}
+              alt={provider}
+              sx={{ width: 24, mr: 1.5 }}
+            />
+            <Typography component="span" sx={{ flex: 1 }}>
+              {r.name}
+            </Typography>
             <Box>
               <Button
                 variant="text"
                 color="info"
+                sx={{
+                  textTransform: "uppercase",
+                  fontSize: 12,
+                }}
+                endIcon={<ArrowRightIcon sx={{ scale: "0.75" }} />}
                 loading={loadingInsert === r.fullName}
               >
-                <span className="uppercase text-xs font-bold">import</span>
-                <span className="fas fa-chevron-right text-base ml-2" />
+                import
               </Button>
             </Box>
           </Box>

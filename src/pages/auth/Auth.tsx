@@ -70,7 +70,6 @@ export default function Auth() {
         <Box
           sx={{
             display: "flex",
-            color: "white",
             flexDirection: { xs: "column-reverse", lg: "row" },
             px: { xs: 1, lg: 3 },
           }}

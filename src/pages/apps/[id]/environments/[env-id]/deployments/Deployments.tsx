@@ -22,7 +22,7 @@ export default function Deployments() {
   return (
     <Card
       maxWidth="lg"
-      sx={{ width: "100%", color: "white" }}
+      sx={{ width: "100%" }}
       loading={loading}
       error={error}
       contentPadding={false}

@@ -50,8 +50,6 @@ export default function ButtonDropdown({ buttonText, children, items }: Props) {
                       href={item.href || "#"}
                       onClick={item.onClick}
                       sx={{
-                        color: "white",
-                        ":hover": { color: "white" },
                         display: "flex",
                         alignItems: "center",
                         width: "100%",

@@ -5,7 +5,6 @@ import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import ArrowForward from "@mui/icons-material/ArrowForward";
 import AssignmentTurnedIn from "@mui/icons-material/AssignmentTurnedIn";
-import { grey } from "@mui/material/colors";
 import { formattedDate } from "~/utils/helpers/deployments";
 import Dot from "~/components/Dot";
 import CardRow from "~/components/CardRow";
@@ -55,7 +54,9 @@ function AuditRow({ audit, children }: Props) {
   return (
     <CardRow
       key={audit.id}
-      icon={<AssignmentTurnedIn sx={{ fontSize: 18, color: grey[500] }} />}
+      icon={
+        <AssignmentTurnedIn sx={{ fontSize: 18, color: "text.secondary" }} />
+      }
       actions={
         hasDiff ? (
           <Button
@@ -74,7 +75,7 @@ function AuditRow({ audit, children }: Props) {
     >
       <Typography component="div" sx={{ display: "block" }}>
         {children}
-        <Box sx={{ fontSize: 11.5, color: grey[500], mt: 0.5 }}>
+        <Box sx={{ fontSize: 11.5, color: "text.secondary", mt: 0.5 }}>
           by {audit.userDisplay || `${audit.tokenName} api key`}
           <Dot />
           {formattedDate(audit.timestamp).toLocaleLowerCase()}

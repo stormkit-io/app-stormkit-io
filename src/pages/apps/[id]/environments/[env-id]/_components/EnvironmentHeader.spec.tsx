@@ -98,7 +98,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(wrapper.getByText("200")).toBeTruthy();
-        expect(wrapper.getByText("Published:"));
+        expect(wrapper.getByText("Published"));
         expect(wrapper.getByText("682381"));
         expect(wrapper.container.innerHTML).toContain("fa-globe");
       });
@@ -132,7 +132,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/_components/EnvironmentHeader.
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(wrapper.getByText("404")).toBeTruthy();
-        expect(wrapper.getByText("Published:"));
+        expect(wrapper.getByText("Published"));
         expect(wrapper.getByText("682381"));
         expect(wrapper.getByLabelText("Deployment not found"));
         expect(wrapper.container.innerHTML).toContain("fa-globe");

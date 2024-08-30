@@ -20,12 +20,7 @@ export default function Error404({ children }: Props) {
       }}
       maxWidth="lg"
     >
-      <Box
-        sx={{
-          color: "white",
-          textAlign: "center",
-        }}
-      >
+      <Box sx={{ textAlign: "center" }}>
         <Typography
           color="secondary"
           sx={{ fontSize: 120, fontWeight: "bold" }}

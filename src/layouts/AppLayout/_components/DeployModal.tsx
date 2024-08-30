@@ -3,13 +3,18 @@ import { useNavigate } from "react-router";
 import { deploy } from "~/pages/apps/actions";
 import { useFetchRepoMeta } from "~/pages/apps/[id]/environments/[env-id]/config/actions";
 import { isFrameworkRecognized } from "~/pages/apps/[id]/environments/[env-id]/config/helpers";
+import Box from "@mui/material/Box";
+import Button from "@mui/lab/LoadingButton";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
-import InfoBox from "~/components/InfoBoxV2";
-import Form from "~/components/FormV2";
-import Button from "~/components/ButtonV2";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import Link from "~/components/Link";
-import Container from "~/components/Container";
 import Spinner from "~/components/Spinner";
 
 interface Props {
@@ -56,159 +61,157 @@ const DeployModal: React.FC<Props> = ({
         toggleModal(false);
       }}
     >
-      <Container title="Start a deployment">
-        <Form
-          style={{ minHeight: "20rem" }}
-          handleSubmit={() =>
-            deploy({
-              app,
-              environment: selectedEnv,
-              setError,
-              setLoading,
-              config: {
-                branch,
-                buildCmd: cmd,
-                distFolder: dist,
-                publish: isAutoPublish || false,
-              },
-            }).then(deploy => {
-              if (deploy) {
-                toggleModal(false);
-                navigate(
-                  `/apps/${app.id}/environments/${selectedEnv?.id}/deployments/${deploy.id}`
-                );
+      <Card
+        component="form"
+        error={
+          error === "repo-not-found" ? (
+            <Typography component="div">
+              Repository is inaccessible. See the{" "}
+              <Link
+                className="font-bold hover:text-white hover:underline"
+                to="https://www.stormkit.io/docs/other/troubleshooting#repository-is-innaccessible"
+              >
+                troubleshooting
+              </Link>{" "}
+              for help.
+            </Typography>
+          ) : (
+            error && <Typography component="div">{error}</Typography>
+          )
+        }
+        onSubmit={e => {
+          e.preventDefault();
+
+          deploy({
+            app,
+            environment: selectedEnv,
+            setError,
+            setLoading,
+            config: {
+              branch,
+              buildCmd: cmd,
+              distFolder: dist,
+              publish: isAutoPublish || false,
+            },
+          }).then(deploy => {
+            if (deploy) {
+              toggleModal(false);
+              navigate(
+                `/apps/${app.id}/environments/${selectedEnv?.id}/deployments/${deploy.id}`
+              );
+            }
+          });
+        }}
+      >
+        <CardHeader title="Start a deployment" />
+        <Box sx={{ mb: 4 }}>
+          <EnvironmentSelector
+            placeholder="Select an environment to deploy"
+            environments={environments}
+            defaultValue={environment?.id || ""}
+            onSelect={(env: Environment): void => {
+              if (env) {
+                setBranch(env.branch);
+                setCmd(env.build.buildCmd || "");
+                setDist(env.build.distFolder);
+                setIsAutoPublish(env.autoPublish);
+                setError(null);
+                setSelectedEnv(env);
+              } else {
+                clearForm();
               }
-            })
-          }
-        >
-          <div className="px-4">
-            <EnvironmentSelector
-              placeholder="Select an environment to deploy"
-              environments={environments}
-              defaultValue={environment?.id || ""}
-              onSelect={(env: Environment): void => {
-                if (env) {
-                  setBranch(env.branch);
-                  setCmd(env.build.buildCmd || "");
-                  setDist(env.build.distFolder);
-                  setIsAutoPublish(env.autoPublish);
-                  setError(null);
-                  setSelectedEnv(env);
-                } else {
-                  clearForm();
-                }
+            }}
+          />
+        </Box>
+        <Box sx={{ mb: 4 }}>
+          <TextField
+            name="branch"
+            variant="filled"
+            label="Checkout branch"
+            value={branch}
+            onChange={e => {
+              setBranch(e.target.value);
+            }}
+            inputProps={{
+              "aria-label": "Branch to deploy",
+            }}
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mb: 4 }}>
+          <TextField
+            value={cmd}
+            variant="filled"
+            label="Build command"
+            fullWidth
+            name="build.buildCmd"
+            onChange={e => setCmd(e.target.value)}
+            placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
+            helperText="Concatenate multiple commands with the logical `&&` operator (e.g. npm run test && npm run build)"
+          />
+        </Box>
+        <Box sx={{ mb: 4 }}>
+          {!metaLoading && isFrameworkRecognized(meta?.framework) ? (
+            <Box sx={{ cursor: "not-allowed" }}>
+              <span className="fa fa-info-circle mr-2 ml-1" />
+              Output folder read from framework configuration file.
+            </Box>
+          ) : (
+            <TextField
+              value={dist}
+              variant="filled"
+              label="Output folder"
+              fullWidth
+              name="build.distFolder"
+              onChange={e => setDist(e.target.value)}
+              placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
+              helperText="The folder where the build artifacts are located"
+              InputProps={{
+                endAdornment: metaLoading && <Spinner width={4} height={4} />,
               }}
             />
-          </div>
-          <div>
-            <Form.WithLabel label="Checkout branch" className="pb-0">
-              <Form.Input
-                name="branch"
-                className={"no-border bg-blue-10"}
-                value={branch}
+          )}
+        </Box>
+        <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
+          <FormControlLabel
+            sx={{ pl: 0, ml: 0 }}
+            label="Auto publish"
+            control={
+              <Switch
+                name="autoPublish"
+                color="secondary"
+                checked={isAutoPublish}
                 onChange={e => {
-                  setBranch(e.target.value);
+                  setIsAutoPublish(e.target.checked);
                 }}
-                inputProps={{
-                  "aria-label": "Branch to deploy",
-                }}
-                fullWidth
               />
-            </Form.WithLabel>
-            <Form.WithLabel
-              label="Build command"
-              className="pb-0"
-              tooltip="Concatenate multiple commands with the logical `&&` operator (e.g. npm run test && npm run build)"
-            >
-              <Form.Input
-                value={cmd}
-                fullWidth
-                name="build.buildCmd"
-                onChange={e => setCmd(e.target.value)}
-                placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
-                className="bg-blue-10 no-border h-full"
-              />
-            </Form.WithLabel>
-            <Form.WithLabel
-              label="Output folder"
-              className="pb-0"
-              tooltip={
-                !metaLoading &&
-                !isFrameworkRecognized(meta?.framework) &&
-                "The folder where the build artifacts are located."
-              }
-            >
-              {!metaLoading && isFrameworkRecognized(meta?.framework) ? (
-                <div className="opacity-50 cursor-not-allowed p-2">
-                  <span className="fa fa-info-circle mr-2 ml-1" />
-                  Output folder read from framework configuration file.
-                </div>
-              ) : (
-                <Form.Input
-                  value={dist}
-                  fullWidth
-                  name="build.distFolder"
-                  onChange={e => setDist(e.target.value)}
-                  placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
-                  className="bg-blue-10 no-border h-full"
-                  InputProps={{
-                    endAdornment: metaLoading && (
-                      <Spinner width={4} height={4} />
-                    ),
-                  }}
-                />
-              )}
-            </Form.WithLabel>
-            <Form.WithLabel
-              label="Auto publish"
-              tooltip="When enabled, successful deployments will be published automatically."
-            >
-              <div className="bg-blue-10 w-full flex justify-between pr-4 items-center">
-                <Form.Switch
-                  color="secondary"
-                  onChange={e => {
-                    setIsAutoPublish(e.target.checked);
-                  }}
-                  checked={isAutoPublish}
-                  name="autoPublish"
-                />
-              </div>
-            </Form.WithLabel>
-          </div>
-          {error &&
-            (error === "repo-not-found" ? (
-              <InfoBox type={InfoBox.ERROR} className="mx-4 mb-4">
-                Repository is inaccessible. See the{" "}
-                <Link
-                  className="font-bold hover:text-white hover:underline"
-                  to="https://www.stormkit.io/docs/other/troubleshooting#repository-is-innaccessible"
-                >
-                  troubleshooting
-                </Link>{" "}
-                for help.
-              </InfoBox>
-            ) : (
-              <InfoBox type={InfoBox.ERROR} className="mx-4 mb-4">
-                {error}
-              </InfoBox>
-            ))}
-          <div className="flex justify-between mb-4 w-full px-4 items-center">
-            <Link
-              to={`/apps/${app.id}/environments/${selectedEnv?.id}`}
-              onClick={() => {
-                toggleModal(false);
-              }}
-              className="underline"
-            >
-              <span className="fas fa-wrench mr-3" />
-              Update default settings
-            </Link>
-            <Button category="action" type="submit" loading={loading}>
-              Deploy now
-            </Button>
-          </div>
-        </Form>
-      </Container>
+            }
+            labelPlacement="start"
+          />
+          <Typography sx={{ color: "text.secondary" }}>
+            When enabled successful deployments will be published automatically
+          </Typography>
+        </Box>
+        <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Button
+            href={`/apps/${app.id}/environments/${selectedEnv?.id}`}
+            onClick={() => {
+              toggleModal(false);
+            }}
+          >
+            <span className="fas fa-wrench mr-3" />
+            Update default settings
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            type="submit"
+            loading={loading}
+          >
+            Deploy now
+          </Button>
+        </CardFooter>
+      </Card>
     </Modal>
   );
 };

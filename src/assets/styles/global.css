@@ -1,7 +1,5 @@
 html {
-  @apply text-base;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
 }
 
 *,
@@ -11,12 +9,8 @@ html {
 }
 
 body {
-  @apply bg-blue-10;
-  @apply text-primary;
-  @apply min-h-screen;
   line-height: 1.3;
   font-weight: 200;
-  font-family: "Inter", sans-serif;
   font-size: 14px;
 }
 
@@ -61,6 +55,10 @@ code {
   @apply bg-opacity-10;
   @apply p-1;
   @apply rounded-sm;
+}
+
+.cm-line, .cm-gutterElement {
+  font-size: 0.75rem;
 }
 
 .cm-theme-dark .cm-editor {

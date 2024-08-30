@@ -20,7 +20,7 @@ export default function Deployments() {
   });
 
   return (
-    <Box maxWidth="lg" sx={{ width: "100%", color: "white" }}>
+    <Box maxWidth="lg" sx={{ width: "100%" }}>
       <Card loading={loading} error={error} contentPadding={false}>
         <CardHeader
           title="Team Deployments"

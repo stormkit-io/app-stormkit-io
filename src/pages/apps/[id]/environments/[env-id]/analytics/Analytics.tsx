@@ -23,7 +23,7 @@ export default function Analytics() {
 
   if (noDomainYet) {
     return (
-      <Card sx={{ color: "white", width: "100%" }}>
+      <Card sx={{ width: "100%" }}>
         <CardHeader title="Analytics" />
         <EmptyPage>
           Analytics are collected only for custom domains. <br />
@@ -37,10 +37,7 @@ export default function Analytics() {
           >
             <Link
               href={`/apps/${environment.appId}/environments/${environment.id}#domains`}
-              sx={{
-                color: "white",
-                ":hover": { color: "inherit", textDecoration: "none" },
-              }}
+              sx={{ ":hover": { color: "inherit", textDecoration: "none" } }}
             >
               Setup a custom domain
             </Link>
@@ -51,7 +48,7 @@ export default function Analytics() {
   }
 
   return (
-    <Box sx={{ color: "white" }}>
+    <Box>
       <Card sx={{ mb: 2 }}>
         <CardHeader
           title="Analytics"

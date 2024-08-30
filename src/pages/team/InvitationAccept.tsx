@@ -28,7 +28,7 @@ export default function InvitationAccept() {
   }
 
   return (
-    <Card error={error} sx={{ color: "white" }}>
+    <Card error={error}>
       <CardHeader title="Enrollment failed" />
     </Card>
   );

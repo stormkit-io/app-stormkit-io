@@ -125,7 +125,11 @@ export default function Visitors({
               value="24h"
               aria-label="24 hours"
               size="small"
-              sx={{ fontSize: 12, textTransform: "capitalize" }}
+              sx={{
+                fontSize: 12,
+                textTransform: "capitalize",
+                color: "text.primary",
+              }}
             >
               24 hours
             </ToggleButton>
@@ -133,7 +137,11 @@ export default function Visitors({
               value="7d"
               aria-label="7 days"
               size="small"
-              sx={{ fontSize: 12, textTransform: "capitalize" }}
+              sx={{
+                fontSize: 12,
+                textTransform: "capitalize",
+                color: "text.primary",
+              }}
             >
               7 Days
             </ToggleButton>
@@ -141,7 +149,11 @@ export default function Visitors({
               value="30d"
               aria-label="30 days"
               size="small"
-              sx={{ fontSize: 12, textTransform: "capitalize" }}
+              sx={{
+                fontSize: 12,
+                textTransform: "capitalize",
+                color: "text.primary",
+              }}
             >
               30 Days
             </ToggleButton>
@@ -165,7 +177,7 @@ export default function Visitors({
             <YAxis
               tick={{
                 fill: "white",
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "Roboto, Helvetica, Arial, sans-serif",
                 fontSize: 12,
               }}
             />
@@ -210,7 +222,7 @@ export default function Visitors({
           </Typography>
         </Box>
       </Box>
-      <CardFooter sx={{ textAlign: "left", color: grey[500] }}>
+      <CardFooter sx={{ textAlign: "left" }}>
         <Typography sx={{ fontSize: 12 }}>
           Bots are excluded from these statistics
         </Typography>

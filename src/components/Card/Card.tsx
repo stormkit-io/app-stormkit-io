@@ -71,7 +71,7 @@ function Card({
       <Box
         sx={{
           m: "auto",
-          bgcolor: "rgba(0,0,0,0.3)",
+          bgcolor: "background.paper",
           border: `1px solid rgba(255,255,255,0.04)`,
           borderRadius: 1,
           position: "relative",
@@ -100,13 +100,13 @@ function Card({
           </Box>
         )}
         {error && (
-          <Alert color="error" sx={{ mb: footer ? p : 0, px: p }}>
+          <Alert color="error" sx={{ mb: footer ? p : 0, px: p, mx: p }}>
             {errorTitle && <AlertTitle>Error</AlertTitle>}
             <Box>{error}</Box>
           </Alert>
         )}
         {success && (
-          <Alert color="success" sx={{ mb: footer ? p : 0, px: p }}>
+          <Alert color="success" sx={{ mb: footer ? p : 0, px: p, mx: p }}>
             <AlertTitle>Success</AlertTitle>
             <Box>{success}</Box>
           </Alert>
@@ -118,7 +118,7 @@ function Card({
             sx={{
               mb: footer ? p : 0,
               px: p,
-              borderRadius: 0,
+              mx: p,
             }}
           >
             <Box>{info}</Box>

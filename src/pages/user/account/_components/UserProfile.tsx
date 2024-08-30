@@ -1,7 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { grey } from "@mui/material/colors";
 import Button from "@mui/material/Button";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import ConfirmModal from "~/components/ConfirmModal";
@@ -56,7 +55,7 @@ export default function UserProfile({ user }: Props) {
               <br />
               {user.email}
               <br />
-              <Typography component="span" sx={{ color: grey[500] }}>
+              <Typography component="span" sx={{ color: "text.secondary" }}>
                 Member since {memberSince}
               </Typography>
             </Typography>

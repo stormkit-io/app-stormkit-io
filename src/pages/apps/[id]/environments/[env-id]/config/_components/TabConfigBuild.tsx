@@ -39,7 +39,7 @@ export default function TabConfigGeneral({
     <Card
       id="build"
       component="form"
-      sx={{ color: "white", mb: 2 }}
+      sx={{ mb: 2 }}
       error={error}
       success={success}
       onSubmit={e => {
@@ -83,10 +83,7 @@ export default function TabConfigGeneral({
           helperText={
             <>
               Concatenate multiple commands:{" "}
-              <Box
-                component="code"
-                sx={{ color: "white", fontSize: 11, px: 0.5, py: 0.25 }}
-              >
+              <Box component="code" sx={{ fontSize: 11, px: 0.5, py: 0.25 }}>
                 npm run test && npm run build
               </Box>
             </>

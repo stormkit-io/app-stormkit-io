@@ -71,7 +71,6 @@ export default function TeamMenu({ team }: Props) {
       component="header"
       bgcolor="background.paper"
       sx={{
-        color: "white",
         display: "flex",
         flexDirection: "column",
         maxWidth: "100%",

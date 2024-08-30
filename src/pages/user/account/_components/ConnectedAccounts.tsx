@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { grey } from "@mui/material/colors";
 import Button from "@mui/material/Button";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
@@ -70,7 +69,7 @@ export default function ConnectedAccounts({ accounts }: Props) {
               ) : undefined
             }
           >
-            <Typography sx={{ color: grey[400] }}>
+            <Typography sx={{ color: "text.secondary" }}>
               <span className={`text-ml mr-2 fab fa-${provider}`} />
               {texts[provider]}
             </Typography>
@@ -85,7 +84,9 @@ export default function ConnectedAccounts({ accounts }: Props) {
             chipColor={email.primary ? "success" : undefined}
             sx={{ borderTop: `1px solid rgba(255,255,255,0.04)`, ml: 2 }}
           >
-            <Typography sx={{ color: grey[400] }}>{email.address}</Typography>
+            <Typography sx={{ color: "text.secondary" }}>
+              {email.address}
+            </Typography>
           </CardRow>
         ))}
       </Box>

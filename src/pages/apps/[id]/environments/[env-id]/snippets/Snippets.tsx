@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { grey } from "@mui/material/colors";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import Card from "~/components/Card";
@@ -38,14 +37,7 @@ export default function Snippets() {
   const hasFilters = Boolean(hosts);
 
   return (
-    <Card
-      error={error}
-      loading={loading}
-      sx={{
-        width: "100%",
-        color: "white",
-      }}
-    >
+    <Card error={error} loading={loading} sx={{ width: "100%" }}>
       <CardHeader
         title="Snippets"
         subtitle={
@@ -102,7 +94,7 @@ export default function Snippets() {
             <Box sx={{ display: "flex" }}>
               <Box sx={{ flex: 1 }}>
                 <Typography>{snippet.title}</Typography>
-                <Typography sx={{ color: grey[500] }}>
+                <Typography sx={{ color: "text.secondary" }}>
                   Inserted {snippet.prepend ? "before" : "after"}{" "}
                   <Typography
                     component="span"
@@ -111,7 +103,7 @@ export default function Snippets() {
                     {`<${snippet.prepend ? "/" : ""}${snippet.location}>`}
                   </Typography>
                 </Typography>
-                <Typography sx={{ color: grey[500] }}>
+                <Typography sx={{ color: "text.secondary" }}>
                   {snippet.rules?.hosts?.join(", ") || "All hosts"}
                 </Typography>
               </Box>

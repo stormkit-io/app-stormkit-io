@@ -53,13 +53,13 @@ export default function DotDotDot({ label, items }: Props) {
               >
                 <Button
                   variant="text"
+                  color="info"
                   href={item.href}
                   disabled={item.disabled}
                   fullWidth
                   size="large"
                   sx={{
                     justifyContent: "flex-start",
-                    color: "white",
                   }}
                   startIcon={
                     typeof item.icon === "string" ? (

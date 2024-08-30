@@ -75,7 +75,7 @@ export default function MultiSelect({
         value={selectedItems?.length ? selectedItems : [""]}
         input={variant === "filled" ? <FilledInput /> : <OutlinedInput />}
         MenuProps={{ autoFocus: false }}
-        sx={{ color: "white", ...sx }}
+        sx={sx}
         onClose={() => {
           // Rely on `onClose` only when `multiple` property is true.
           if (multiple) {

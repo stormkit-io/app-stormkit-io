@@ -45,7 +45,7 @@ export default function AppChip({
           {repo} <Dot /> {envName}
         </>
       }
-      sx={color ? sx : { bgcolor: "#1F1C3B", color: "white", ...sx }}
+      sx={color ? sx : { bgcolor: "#1F1C3B", ...sx }}
       avatar={<Avatar src={logos[provider!]} />}
     />
   );

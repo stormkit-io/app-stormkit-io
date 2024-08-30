@@ -4,6 +4,7 @@ import Link from "@mui/material/Link";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import InfoIcon from "@mui/icons-material/Info";
 import Card from "~/components/Card";
 import DeployButton from "~/layouts/AppLayout/_components/DeployButton";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -46,14 +47,9 @@ export default function EnvironmentHeader() {
   });
 
   return (
-    <Card
-      sx={{
-        width: "100%",
-        mb: 2,
-        color: "white",
-      }}
-    >
+    <Card sx={{ width: "100%", mb: 2 }}>
       <Box
+        fontSize="small"
         sx={{
           width: "100%",
           display: "flex",
@@ -65,13 +61,13 @@ export default function EnvironmentHeader() {
           <DomainStatus loading={loading} status={status} />
         </Column>
         <Column>
-          <Link href={domainName} sx={{ color: "white" }}>
+          <Link href={domainName}>
             {domainName.replace(/^https?:\/\//, "")}
           </Link>
         </Column>
         <Column>
           <span className="fa fa-code-branch mr-2" />
-          {environment.branch}
+          <Typography component="span">{environment.branch}</Typography>
         </Column>
         <Box sx={{ flex: 1 }}>
           {!environment.lastDeploy?.id ? (
@@ -81,9 +77,11 @@ export default function EnvironmentHeader() {
                 placement="bottom"
                 arrow
               >
-                <span className="fas fa-info-circle mr-2 text-xl" />
+                <Typography component="span">
+                  <InfoIcon sx={{ mr: 1 }} />
+                  Not yet deployed
+                </Typography>
               </Tooltip>
-              Not yet deployed
             </>
           ) : !environment.published ? (
             <>
@@ -105,7 +103,7 @@ export default function EnvironmentHeader() {
                 flex: 1,
               }}
             >
-              Published
+              <Typography component="span">Published</Typography>
               {!isEmpty(environment.published) &&
                 Array.isArray(environment.published) && (
                   <>
@@ -115,7 +113,6 @@ export default function EnvironmentHeader() {
                     ) : (
                       <Link
                         key={environment.published[0].deploymentId}
-                        sx={{ color: "white" }}
                         href={`/apps/${environment.appId}/environments/${environment.id}/deployments/${environment.published[0].deploymentId}`}
                       >
                         {environment.published[0].deploymentId}

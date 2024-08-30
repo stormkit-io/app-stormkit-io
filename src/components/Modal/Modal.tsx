@@ -36,7 +36,6 @@ const Modal: React.FC<Props> = ({
         bgcolor="background.default"
         sx={{
           borderRadius: 1,
-          color: "white",
           height,
           maxHeight: "90vh",
           overflow: "auto",

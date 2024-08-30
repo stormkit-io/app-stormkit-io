@@ -2,7 +2,6 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { grey } from "@mui/material/colors";
 import CheckIcon from "@mui/icons-material/Check";
 import XIcon from "@mui/icons-material/Close";
 import MultiSelect from "~/components/MultiSelect";
@@ -52,7 +51,7 @@ export default function Checkout({ user }: Props) {
   const [edition, setEdition] = useState<Edition>("limited");
 
   return (
-    <Box sx={{ color: "white", margin: "0 auto" }} maxWidth="768px">
+    <Box sx={{ margin: "0 auto" }} maxWidth="768px">
       <Box
         sx={{
           display: "grid",
@@ -84,7 +83,7 @@ export default function Checkout({ user }: Props) {
                       ? prices["self-hosted"]
                       : prices["self-hosted-premium"]}
                   </Typography>
-                  <Typography sx={{ mb: 2, color: grey[500] }}>
+                  <Typography sx={{ mb: 2, color: "text.secondary" }}>
                     per user
                     <br />
                     month
@@ -94,7 +93,6 @@ export default function Checkout({ user }: Props) {
               <MultiSelect
                 variant="outlined"
                 selected={[edition]}
-                sx={{ color: "white" }}
                 items={[
                   { text: "Limited Edition", value: "limited" },
                   { text: "Premium Edition", value: "premium" },
@@ -141,7 +139,7 @@ export default function Checkout({ user }: Props) {
               <Typography fontSize={28} sx={{ mr: 2 }}>
                 ${prices[packageName]}
               </Typography>
-              <Typography sx={{ mb: 2, color: grey[500] }}>
+              <Typography sx={{ mb: 2, color: "text.secondary" }}>
                 per
                 <br />
                 month
@@ -150,7 +148,6 @@ export default function Checkout({ user }: Props) {
             <MultiSelect
               variant="outlined"
               selected={[packageName]}
-              sx={{ color: "white" }}
               items={[
                 { text: "Up to 100 deployments per month", value: "starter" },
                 { text: "Up to 500 deployments per month", value: "medium" },

@@ -131,7 +131,7 @@ export default function EnvironmentConfig() {
                 display: "inline-block",
                 mx: 2,
                 width: "100%",
-                color: grey[500],
+                color: "text.secondary",
               }}
             >
               Settings

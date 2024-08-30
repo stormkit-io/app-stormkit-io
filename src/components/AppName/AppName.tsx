@@ -1,7 +1,6 @@
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { grey } from "@mui/material/colors";
 import Dot from "~/components/Dot";
 import { getLogoForProvider, parseRepo } from "~/utils/helpers/providers";
 
@@ -48,7 +47,7 @@ export default function AppName({ app, imageSize = 18 }: Props) {
           href={linkToRepo}
           target="_blank"
           rel="noreferrer noopener"
-          sx={{ color: grey[500] }}
+          sx={{ color: "text.secondary" }}
         >
           {repo}
         </Link>

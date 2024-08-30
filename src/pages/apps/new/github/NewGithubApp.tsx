@@ -62,13 +62,7 @@ export default function NewGithubApp() {
 
   return (
     <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
-      <Card
-        sx={{
-          width: "100%",
-          color: "white",
-          mb: 4,
-        }}
-      >
+      <Card sx={{ width: "100%", mb: 4 }}>
         <CardHeader
           actions={
             <Button
@@ -103,11 +97,7 @@ export default function NewGithubApp() {
         >
           <Typography>
             <Link
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                color: "white",
-              }}
+              sx={{ display: "inline-flex", alignItems: "center" }}
               href="/"
             >
               <ArrowBack sx={{ mr: 1 }} />

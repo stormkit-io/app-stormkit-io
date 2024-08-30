@@ -51,7 +51,7 @@ const Settings: React.FC = () => {
   }
 
   return (
-    <Box sx={{ color: "white", m: "auto" }} maxWidth="md">
+    <Box sx={{ m: "auto" }} maxWidth="md">
       <FormAppSettings app={app} additionalSettings={settings} />
 
       <FormTriggerDeploys

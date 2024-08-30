@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { useLocation } from "react-router";
 import Box from "@mui/material/Box";
 import ArrowBack from "@mui/icons-material/ArrowBack";
-import { grey } from "@mui/material/colors";
 import AppName from "~/components/AppName";
 import MenuLink from "~/components/MenuLink";
 import { appMenuItems } from "./menu_items";
@@ -25,7 +24,6 @@ export default function AppMenu({ app, team }: Props) {
       component="header"
       bgcolor="background.paper"
       sx={{
-        color: "white",
         display: "flex",
         flexDirection: "column",
         maxWidth: "100%",
@@ -47,7 +45,7 @@ export default function AppMenu({ app, team }: Props) {
               px: { xs: 1, md: 1 },
               pr: { xs: 1, md: 2 },
               bgcolor: "rgba(255,255,255,0.05)",
-              color: grey[400],
+              color: "text.secondary",
             }}
             item={{
               text: team?.isDefault ? "My apps" : `${team?.name} Team Apps`,

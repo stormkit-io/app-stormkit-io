@@ -16,20 +16,13 @@ export default function NewBitbucketApp() {
 
   return (
     <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
-      <Card
-        sx={{
-          width: "100%",
-          color: "white",
-          mb: 4,
-        }}
-      >
+      <Card sx={{ width: "100%", mb: 4 }}>
         <CardHeader>
           <Typography>
             <Link
               sx={{
                 display: "inline-flex",
                 alignItems: "center",
-                color: "white",
               }}
               href="/"
             >

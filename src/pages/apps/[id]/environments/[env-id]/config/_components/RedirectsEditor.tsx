@@ -2,7 +2,6 @@ import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import { grey } from "@mui/material/colors";
 
 interface Props {
   value?: string;
@@ -19,7 +18,7 @@ export default function RedirectsEditor({ value, onChange }: Props) {
         onChange={onChange}
         theme="dark"
       />
-      <Typography sx={{ mt: 2, color: grey[400] }}>
+      <Typography sx={{ mt: 2, color: "text.secondary" }}>
         Check the{" "}
         <Link
           href={"https://stormkit.io/docs/features/redirects-and-path-rewrites"}

@@ -22,7 +22,6 @@ export default function MenuLink({ item, sx }: Props) {
         href={item.path}
         sx={{
           cursor: "pointer",
-          color: "white",
           px: { xs: 1, md: 2 },
           py: 0.5,
           display: "inline-flex",
@@ -32,7 +31,6 @@ export default function MenuLink({ item, sx }: Props) {
           bgcolor: item.isActive ? "rgba(255,255,255,0.05)" : undefined,
           ":hover": {
             opacity: 1,
-            color: "white",
             bgcolor: "rgba(255,255,255,0.1)",
           },
           ...sx,

@@ -149,10 +149,7 @@ export default function FormNewOutboundWebhookModal({
           subtitle={
             <>
               Check out the{" "}
-              <Link
-                href="https://www.stormkit.io/docs/deployments/outbound-webhooks"
-                sx={{ color: "white" }}
-              >
+              <Link href="https://www.stormkit.io/docs/deployments/outbound-webhooks">
                 documentation
               </Link>{" "}
               for examples
@@ -194,7 +191,7 @@ export default function FormNewOutboundWebhookModal({
             }
             labelPlacement="start"
           />
-          <Typography sx={{ color: grey[400] }}>
+          <Typography sx={{ color: "text.secondary" }}>
             Turn on to send request headers.
           </Typography>
         </Box>
@@ -250,7 +247,7 @@ export default function FormNewOutboundWebhookModal({
               borderBottom: `1px solid ${grey[900]}`,
             }}
           >
-            <Typography sx={{ mb: 2, color: grey[400] }}>
+            <Typography sx={{ mb: 2, color: "text.secondary" }}>
               Request payload
             </Typography>
             <CodeMirror

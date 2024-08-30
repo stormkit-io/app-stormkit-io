@@ -66,7 +66,7 @@ export default function TopMenu({ children, submenu, app, team }: Props) {
               }
             }}
             size="small"
-            sx={{ color: grey[500], fontSize: 12 }}
+            sx={{ color: "text.secondary", fontSize: 12 }}
           >
             {isCanary ? "Canary" : isLocal ? "Local" : "Prod"}
           </Button>
@@ -85,7 +85,6 @@ export default function TopMenu({ children, submenu, app, team }: Props) {
             <Link
               href={`/apps/${app?.id}/usage`}
               sx={{
-                color: "white",
                 display: "inline-flex",
                 alignItems: "center",
               }}

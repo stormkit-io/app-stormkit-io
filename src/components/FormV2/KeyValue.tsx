@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -154,10 +153,10 @@ export default function KeyValue({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ borderBottom, color: grey[400] }}>
+            <TableCell sx={{ borderBottom, color: "text.secondary" }}>
               {keyName}
             </TableCell>
-            <TableCell sx={{ borderBottom, color: grey[400] }}>
+            <TableCell sx={{ borderBottom, color: "text.secondary" }}>
               <Box sx={{ pl: 1.75 }}>{valName}</Box>
             </TableCell>
           </TableRow>
@@ -239,7 +238,6 @@ export default function KeyValue({
                 type="button"
                 sx={{
                   display: "inline-flex",
-                  color: "white",
                   textTransform: "none",
                   mr: 2,
                 }}
@@ -256,11 +254,7 @@ export default function KeyValue({
                 color="primary"
                 type="button"
                 variant="outlined"
-                sx={{
-                  display: "inline-flex",
-                  color: "white",
-                  textTransform: "none",
-                }}
+                sx={{ display: "inline-flex", textTransform: "none" }}
                 onClick={() => {
                   setIsModalOpen(true);
                   onModalOpen?.();

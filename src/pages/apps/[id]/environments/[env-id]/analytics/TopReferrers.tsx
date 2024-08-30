@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { grey } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
@@ -48,7 +47,7 @@ export default function TopReferrers({ environment, domain }: Props) {
           </CardRow>
         ))}
       </Box>
-      <CardFooter sx={{ color: grey[500], textAlign: "left" }}>
+      <CardFooter sx={{ textAlign: "left" }}>
         <Typography sx={{ fontSize: 12 }}>
           Same domain referrers are excluded.
         </Typography>

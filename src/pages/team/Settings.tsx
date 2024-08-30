@@ -21,7 +21,7 @@ export default function Settings() {
   }
 
   return (
-    <Box sx={{ color: "white", width: "100%" }} maxWidth="md">
+    <Box sx={{ width: "100%" }} maxWidth="md">
       <TeamSettings team={team} reloadTeams={reloadTeams} />
       <TeamMembers user={user!} reloadTeams={reloadTeams} team={team} />
       <TeamAPIKeys team={team} />

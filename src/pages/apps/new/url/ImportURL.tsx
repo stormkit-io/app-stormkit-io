@@ -69,14 +69,7 @@ export default function ImportURL() {
     <Card maxWidth="md" error={error}>
       <CardHeader>
         <Typography variant="h2">
-          <Link
-            href="/"
-            sx={{
-              color: "white",
-              display: "inline-flex",
-              alignItems: "center",
-            }}
-          >
+          <Link href="/" sx={{ display: "inline-flex", alignItems: "center" }}>
             <ArrowBack sx={{ mr: 1 }} />
             Import from URL
           </Link>

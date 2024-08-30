@@ -45,11 +45,7 @@ const Select: React.FC<SelectProps & Props> = ({
         displayEmpty={displayEmpty}
         defaultValue={defaultValue}
         inputProps={{
-          sx: {
-            color: "white",
-            lineHeight: 1.5,
-            p: 2,
-          },
+          sx: { lineHeight: 1.5, p: 2 },
         }}
         {...rest}
       />

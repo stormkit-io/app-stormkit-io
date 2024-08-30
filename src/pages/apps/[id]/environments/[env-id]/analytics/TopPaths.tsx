@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import ArrowForward from "@mui/icons-material/ArrowForwardIos";
-import { grey } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
@@ -120,7 +119,7 @@ export default function TopPaths({ environment, domain }: Props) {
           </Box>
         )}
       </Box>
-      <CardFooter sx={{ color: grey[500], textAlign: "left" }}>
+      <CardFooter sx={{ textAlign: "left" }}>
         <Typography sx={{ fontSize: 12 }}>
           Client-side routing is not calculated.
         </Typography>

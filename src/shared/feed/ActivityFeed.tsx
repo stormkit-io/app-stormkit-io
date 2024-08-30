@@ -24,7 +24,7 @@ export default function Audit() {
   });
 
   return (
-    <Box maxWidth="lg" sx={{ color: "white", width: "100%" }}>
+    <Box maxWidth="lg" sx={{ width: "100%" }}>
       <Card loading={loading} error={error} contentPadding={false}>
         <CardHeader
           title="Activity Feed"

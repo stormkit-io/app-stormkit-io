@@ -117,7 +117,6 @@ export default function Deployment() {
               display: "flex",
               alignItems: "center",
               borderBottom: `1px solid ${grey[900]}`,
-              color: "white",
               p: 1,
               pb: 2,
             }}
@@ -133,6 +132,7 @@ export default function Deployment() {
               <LensIcon color={status ? "success" : "error"} sx={iconProps} />
             )}
             <Box
+              fontSize="small"
               sx={{
                 flex: 1,
                 fontFamily: "monospace",
@@ -145,7 +145,7 @@ export default function Deployment() {
             {shouldShowDuration(hasDurationSupport, deployment, i) ? (
               <Typography
                 component="span"
-                sx={{ color: grey[500], fontSize: 11 }}
+                sx={{ color: "text.secondary", fontSize: 11 }}
               >
                 {duration}s
               </Typography>
@@ -164,7 +164,6 @@ export default function Deployment() {
                 py: 2,
                 lineHeight: 1.5,
                 overflow: "auto",
-                color: "white",
               }}
               style={{ maxHeight: "400px" }}
             >
@@ -173,8 +172,8 @@ export default function Deployment() {
                   key={i}
                   sx={{
                     display: "flex",
-                    color: grey[500],
-                    "&:hover": { color: "white", bgcolor: "rgba(0,0,0,0.1)" },
+                    color: "text.secondary",
+                    "&:hover": { bgcolor: "rgba(0,0,0,0.1)" },
                   }}
                 >
                   <Box

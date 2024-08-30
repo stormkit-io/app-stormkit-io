@@ -5,7 +5,6 @@ import Link from "@mui/material/Link";
 import AltRoute from "@mui/icons-material/AltRoute";
 import Tooltip from "@mui/material/Tooltip";
 import Chip from "@mui/material/Chip";
-import { grey } from "@mui/material/colors";
 import Dot from "~/components/Dot";
 import Sha from "./Sha";
 import AppChip from "./AppChip";
@@ -88,7 +87,7 @@ export default function CommitInfo({
           sx={{
             display: "flex",
             alignItems: "baseline",
-            color: grey[500],
+            color: "text.secondary",
             fontSize: 12,
             my: 0.5,
           }}
@@ -143,7 +142,7 @@ export default function CommitInfo({
               >
                 <Link
                   href={`/apps/${deployment.appId}/environments/${deployment.envId}/deployments`}
-                  sx={{ color: grey[500] }}
+                  sx={{ color: "text.secondary" }}
                 >
                   {deployment.displayName}
                 </Link>

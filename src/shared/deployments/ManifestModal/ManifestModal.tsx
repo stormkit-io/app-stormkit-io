@@ -91,14 +91,15 @@ export default function ManifestModal({ deployment, onClose }: Props) {
                 aria-label="active tab"
               >
                 <ToggleButton value="cdn" aria-label="cdn files">
-                  <Typography>CDN Files</Typography>
+                  <Typography color="text.primary">CDN Files</Typography>
                 </ToggleButton>
                 <ToggleButton value="redirect" aria-label="redirects">
-                  <Typography>Redirects</Typography>
+                  <Typography color="text.primary">Redirects</Typography>
                 </ToggleButton>
                 <ToggleButton value="ssr" aria-label="server side rendering">
                   <Typography
                     sx={{ display: "inline-flex", alignItems: "center" }}
+                    color="text.primary"
                   >
                     Server side rendering{" "}
                     <span
@@ -115,6 +116,7 @@ export default function ManifestModal({ deployment, onClose }: Props) {
                 <ToggleButton value="api" aria-label="rest api">
                   <Typography
                     sx={{ display: "inline-flex", alignItems: "center" }}
+                    color="text.primary"
                   >
                     REST API{" "}
                     <span
@@ -134,7 +136,7 @@ export default function ManifestModal({ deployment, onClose }: Props) {
               <TabRedirects redirects={manifest.redirects} />
             )}
             {tab === "ssr" && (
-              <Alert sx={{ mb: 4 }}>
+              <Alert color="info" sx={{ mb: 4 }}>
                 <Box>
                   <AlertTitle>
                     {ssrEnabled ? "SSR Detected" : "SSR Not detected"}
@@ -148,7 +150,7 @@ export default function ManifestModal({ deployment, onClose }: Props) {
                 <Box sx={{ mt: 2 }}>
                   <Button
                     variant="contained"
-                    color="secondary"
+                    color="primary"
                     href="https://www.stormkit.io/docs/deployments/how-do-we-deploy"
                     target="_blank"
                     rel="noopener noreferrer"

@@ -37,7 +37,7 @@ const Accounts: React.FC<Props> = ({
             sx={{
               m: 0,
               width: 24,
-              mr: 2,
+              mr: 1.5,
               borderRadius: "50%",
               display: "inline-block",
             }}

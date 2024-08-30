@@ -9,7 +9,7 @@ exports[`~/components/EmptyPage.tsx should render the component as expected 1`] 
     />
     <div>
       <div
-        class="MuiBox-root css-plnpb"
+        class="MuiBox-root css-1lo9ce4"
       >
         <img
           alt="Empty app list"
@@ -28,7 +28,7 @@ exports[`~/components/EmptyPage.tsx should render the component as expected 1`] 
   </body>,
   "container": <div>
     <div
-      class="MuiBox-root css-plnpb"
+      class="MuiBox-root css-1lo9ce4"
     >
       <img
         alt="Empty app list"

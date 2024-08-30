@@ -67,7 +67,7 @@ export default function TabConfigGeneral({
       component="form"
       error={error}
       success={success}
-      sx={{ color: "white", mb: 2 }}
+      sx={{ mb: 2 }}
       onSubmit={submitHandler}
     >
       <CardHeader
@@ -161,9 +161,7 @@ export default function TabConfigGeneral({
                 </Typography>
                 <Box component="span" sx={{ display: "block" }}>
                   <Box component="span" sx={{ mb: 2, display: "block" }}>
-                    <Box component="code" sx={{ color: "white" }}>
-                      ^(?!dependabot).+
-                    </Box>{" "}
+                    <Box component="code">^(?!dependabot).+</Box>{" "}
                     <Typography
                       component="span"
                       sx={{ mt: 0.5, display: "block" }}
@@ -172,9 +170,7 @@ export default function TabConfigGeneral({
                     </Typography>
                   </Box>
                   <Box component="span" sx={{ display: "block" }}>
-                    <Box component="code" sx={{ color: "white" }}>
-                      ^release-.+
-                    </Box>
+                    <Box component="code">^release-.+</Box>
                     <Typography
                       component="span"
                       sx={{ mt: 0.5, display: "block" }}

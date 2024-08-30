@@ -29,7 +29,7 @@ export default function Account() {
   }
 
   return (
-    <Box sx={{ color: "white", margin: "0 auto" }} maxWidth="768px">
+    <Box sx={{ margin: "0 auto" }} maxWidth="768px">
       {trialEnds && (
         <Alert color="info" sx={{ mb: 2 }}>
           <AlertTitle sx={{ fontSize: 20 }}>Free trial</AlertTitle>
