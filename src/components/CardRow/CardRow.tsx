@@ -32,13 +32,15 @@ export default function CardRow({
   return (
     <Box
       sx={{
-        borderBottom: `1px solid rgba(255,255,255,0.04)`,
+        borderBottom: "1px solid",
+        borderColor: "container.border",
         display: "flex",
         alignItems: "center",
         px: space,
         py: 2,
         ":first-of-type": {
-          borderTop: `1px solid rgba(255,255,255,0.04)`,
+          borderTop: `1px solid`,
+          borderColor: "container.border",
         },
         ":last-child": {
           borderBottom: "none",

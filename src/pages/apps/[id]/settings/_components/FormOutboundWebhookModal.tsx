@@ -175,7 +175,7 @@ export default function FormNewOutboundWebhookModal({
           />
         </Box>
 
-        <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
+        <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 4 }}>
           <FormControlLabel
             sx={{ pl: 0, ml: 0 }}
             label="Enable headers"
@@ -243,7 +243,7 @@ export default function FormNewOutboundWebhookModal({
             sx={{
               mb: 4,
               p: 2,
-              bgcolor: "rgba(0,0,0,0.2)",
+              bgcolor: "container.paper",
               borderBottom: `1px solid ${grey[900]}`,
             }}
           >

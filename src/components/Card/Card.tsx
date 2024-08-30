@@ -72,7 +72,8 @@ function Card({
         sx={{
           m: "auto",
           bgcolor: "background.paper",
-          border: `1px solid rgba(255,255,255,0.04)`,
+          border: `1px solid`,
+          borderColor: "container.border",
           borderRadius: 1,
           position: "relative",
           pt: !header && content.length ? p : 0,
@@ -130,7 +131,8 @@ function Card({
               px: p,
               py: 2,
               pt: isLoadingFirstTime ? p : 2,
-              borderTop: `1px solid rgba(255,255,255,0.04)`,
+              borderTop: "1px solid",
+              borderColor: "container.border",
             }}
           >
             {footer}

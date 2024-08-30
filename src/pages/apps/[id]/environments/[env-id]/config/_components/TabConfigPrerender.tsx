@@ -49,7 +49,7 @@ export default function TabConfigRedirects({
         subtitle="Built-in prerendering functionality for crawlers."
       />
 
-      <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
+      <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 4 }}>
         <FormControlLabel
           sx={{ pl: 0, ml: 0 }}
           label="Enable prerendering"
@@ -71,7 +71,7 @@ export default function TabConfigRedirects({
       </Box>
       {showPrerender && (
         <>
-          <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
+          <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 4 }}>
             <TextField
               label="Wait for selector"
               variant="filled"
@@ -85,7 +85,7 @@ export default function TabConfigRedirects({
               }
             />
           </Box>
-          <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
+          <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 4 }}>
             <TextField
               label="Cache duration"
               variant="filled"
@@ -109,7 +109,7 @@ export default function TabConfigRedirects({
               }
             />
           </Box>
-          <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 4 }}>
+          <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 4 }}>
             <TextField
               label="User Agent"
               variant="filled"

@@ -96,8 +96,8 @@ export default (mode: "dark" | "light") => {
       MuiAlert: {
         styleOverrides: {
           standardInfo: {
-            backgroundColor: "#0f4c64",
-            color: "#ffffff",
+            backgroundColor: isDark ? "#0f4c64" : "#92d1e9",
+            color: isDark ? "#ffffff" : "#0f4c64",
           },
           standardError: {
             backgroundColor: "#460e0e",
@@ -108,8 +108,8 @@ export default (mode: "dark" | "light") => {
             color: "#ffffff",
           },
           standardSuccess: {
-            backgroundColor: "#003801",
-            color: "#ffffff",
+            backgroundColor: isDark ? "#003801" : "#94e395",
+            color: isDark ? "#ffffff" : "#003801",
           },
         },
       },
@@ -124,13 +124,13 @@ export default (mode: "dark" | "light") => {
       MuiFilledInput: {
         styleOverrides: {
           root: {
-            color: "white",
-            backgroundColor: "rgba(0,0,0,0.2)",
+            color: primaryColor,
+            backgroundColor: isDark ? "#090518" : "#ffffff",
             "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.25)",
+              backgroundColor: isDark ? "#090614" : grey[300],
             },
             "&.Mui-focused": {
-              backgroundColor: "rgba(0,0,0,0.25)",
+              backgroundColor: isDark ? "#000000" : grey[200],
             },
             "&:before": {
               borderColor: grey[900],
@@ -154,10 +154,10 @@ export default (mode: "dark" | "light") => {
           root: {
             fontFamily,
             fontSize: 14,
-            color: "white",
+            color: primaryColor,
             opacity: 0.7,
             "&.Mui-focused": {
-              color: "white",
+              color: primaryColor,
             },
           },
         },
@@ -215,7 +215,8 @@ export default (mode: "dark" | "light") => {
             },
             container: {
               default: "#1F1C3B",
-              paper: "rgba(129,114,126,0.05)",
+              paper: "#090518",
+              border: "#111111",
             },
             info: {
               main: "#0d84bf",
@@ -243,9 +244,9 @@ export default (mode: "dark" | "light") => {
               contrastText: "#e7e5ee",
             },
             secondary: {
-              main: "#78193b",
+              main: "#f6005c",
               light: "#e7e5ee",
-              dark: "#f6005c",
+              dark: "#78193b",
               contrastText: "#e7e5ee",
             },
             text: {
@@ -253,12 +254,13 @@ export default (mode: "dark" | "light") => {
               secondary: grey[800],
             },
             background: {
-              default: "#eeeeee",
+              default: "#f1f3f4",
               paper: "#ffffff",
             },
             container: {
               default: "#1F1C3B",
               paper: "rgba(129,114,126,0.05)",
+              border: "#ffffff",
             },
             info: {
               main: "#0d84bf",

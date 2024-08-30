@@ -158,7 +158,7 @@ export default function EnvironmentConfig() {
                       px: 2,
                       py: 1,
                       width: "100%",
-                      "&:hover": { opacity: 1, bgcolor: "rgba(0,0,0,0.2)" },
+                      "&:hover": { opacity: 1, bgcolor: "container.paper" },
                       color:
                         li.path === selectedItem || // If selected
                         (li.path === "#general" && !selectedItem && !hash) // or in it's default state

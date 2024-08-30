@@ -22,7 +22,12 @@ export default function CardHeader({
 
   return (
     <Box
-      sx={{ p: space, display: "flex", alignItems: "center", ...sx }}
+      sx={{
+        p: space,
+        display: "flex",
+        alignItems: "center",
+        ...sx,
+      }}
       {...rest}
     >
       <Box sx={{ flex: 1 }}>

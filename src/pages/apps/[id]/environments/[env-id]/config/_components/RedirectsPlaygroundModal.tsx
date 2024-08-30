@@ -119,7 +119,7 @@ export default function RedirectsPlaygroundModal({
           sx={{
             mb: 4,
             p: 2,
-            bgcolor: "rgba(0,0,0,0.2)",
+            bgcolor: "container.paper",
             borderBottom: `1px solid ${grey[900]}`,
           }}
         >

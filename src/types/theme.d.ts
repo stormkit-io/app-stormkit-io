@@ -1,12 +1,17 @@
 import "@mui/material/styles";
-import { TypeBackground } from "@mui/material/styles";
+
+interface CustomTypeBackground {
+  default: string;
+  paper: string;
+  border: string;
+}
 
 declare module "@mui/material/styles" {
   interface Palette {
-    container: TypeBackground;
+    container: CustomTypeBackground;
   }
 
   interface PaletteOptions {
-    container: TypeBackground;
+    container: CustomTypeBackground;
   }
 }

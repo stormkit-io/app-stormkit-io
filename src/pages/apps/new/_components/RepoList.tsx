@@ -118,7 +118,8 @@ export default function RepoList({
               px: 2,
               pr: 1,
               py: 1,
-              borderBottom: `1px solid ${grey[900]}`,
+              borderBottom: `1px solid`,
+              borderColor: "container.border",
               ":hover": {
                 bgcolor: "rgba(255,255,255,0.05)",
               },

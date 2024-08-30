@@ -113,7 +113,7 @@ export default function Visitors({
           <ToggleButtonGroup
             value={ts}
             exclusive
-            sx={{ bgcolor: "rgba(0,0,0,0.3)" }}
+            sx={{ bgcolor: "container.paper" }}
             onChange={(_, val) => {
               if (val !== null) {
                 onTimeSpanChange(val);

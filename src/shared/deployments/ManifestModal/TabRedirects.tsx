@@ -75,7 +75,7 @@ export default function TabRedirects({ redirects }: Props) {
         <TableHead>
           <TableRow
             sx={{
-              bgcolor: "rgba(0,0,0,0.3)",
+              bgcolor: "container.paper",
               fontWeight: "bold",
             }}
           >

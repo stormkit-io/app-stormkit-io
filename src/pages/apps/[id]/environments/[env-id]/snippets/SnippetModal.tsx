@@ -199,7 +199,7 @@ export default function SnippetModal({
             }}
           />
         </Box>
-        <Box sx={{ bgcolor: "rgba(0,0,0,0.2)", p: 1.75, pt: 1, mb: 2 }}>
+        <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 2 }}>
           <FormControlLabel
             sx={{ pl: 0, ml: 0 }}
             label="Enabled"

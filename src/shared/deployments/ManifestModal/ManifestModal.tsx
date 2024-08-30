@@ -47,7 +47,7 @@ export default function ManifestModal({ deployment, onClose }: Props) {
             <ToggleButtonGroup
               value={mode}
               exclusive
-              sx={{ bgcolor: "rgba(0,0,0,0.3)" }}
+              sx={{ bgcolor: "container.paper" }}
               onChange={(_, val) => {
                 if (val !== null) {
                   setMode(val as Mode);
@@ -84,7 +84,7 @@ export default function ManifestModal({ deployment, onClose }: Props) {
               <ToggleButtonGroup
                 value={tab}
                 exclusive
-                sx={{ bgcolor: "rgba(0,0,0,0.3)" }}
+                sx={{ bgcolor: "container.paper" }}
                 onChange={(_, val) => {
                   setTab(val as Tab);
                 }}
