@@ -124,6 +124,13 @@ export default (mode: "dark" | "light") => {
           },
         },
       },
+      MuiSvgIcon: {
+        styleOverrides: {
+          root: {
+            color: primaryColor,
+          },
+        },
+      },
       MuiFilledInput: {
         styleOverrides: {
           root: {
@@ -149,6 +156,9 @@ export default (mode: "dark" | "light") => {
           root: {
             fontFamily,
             fontSize,
+          },
+          icon: {
+            color: primaryColor,
           },
         },
       },
