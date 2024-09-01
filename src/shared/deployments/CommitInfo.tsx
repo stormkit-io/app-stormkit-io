@@ -78,7 +78,12 @@ export default function CommitInfo({
                   : "not published"
               }
               size="small"
-              sx={{ ml: 1, fontSize: 11, height: 20 }}
+              sx={{
+                ml: 1,
+                fontSize: 11,
+                height: 20,
+                lineHeight: 1,
+              }}
             />
           )}
         </Box>

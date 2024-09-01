@@ -1,6 +1,6 @@
 import React from "react";
 import { createTheme } from "@mui/material/styles";
-import { grey, purple } from "@mui/material/colors";
+import { green, grey, purple, red } from "@mui/material/colors";
 import { Link as RLink, LinkProps as RLinkProps } from "react-router-dom";
 import { LinkProps } from "@mui/material/Link";
 
@@ -118,6 +118,10 @@ export default (mode: "dark" | "light") => {
       },
       MuiChip: {
         styleOverrides: {
+          colorSuccess: {
+            color: "white",
+            backgroundColor: green[600],
+          },
           colorWarning: {
             backgroundColor: "#b75c22",
             color: "white",
@@ -130,6 +134,10 @@ export default (mode: "dark" | "light") => {
             color: primaryColor,
           },
         },
+        variants: [
+          { props: { color: "success" }, style: { color: green[600] } },
+          { props: { color: "error" }, style: { color: red[600] } },
+        ],
       },
       MuiFilledInput: {
         styleOverrides: {
