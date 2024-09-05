@@ -98,12 +98,12 @@ export const updateCustomCert = ({
   envId,
   domainId,
 }: UpdateCustomCertProps) => {
-  if (!certValue?.startsWith("-----BEGIN CERTIFICATE-----")) {
+  if (!certValue?.includes("-----BEGIN CERTIFICATE-----")) {
     setError("Certificate must be PEM encoded.");
     return Promise.resolve(false);
   }
 
-  if (!certKey?.startsWith("-----BEGIN PRIVATE KEY-----")) {
+  if (!certKey?.includes("-----BEGIN PRIVATE KEY-----")) {
     setError("Private key must be PEM encoded.");
     return Promise.resolve(false);
   }
