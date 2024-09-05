@@ -65,9 +65,9 @@ export default function EnvironmentHeader() {
           <DomainStatus loading={loading} status={status} />
         </Column>
         <Column>
-          <Link href={domainName}>
+          <Typography component="a" href={domainName}>
             {domainName.replace(/^https?:\/\//, "")}
-          </Link>
+          </Typography>
         </Column>
         <Column>
           <span className="fa fa-code-branch mr-2" />
