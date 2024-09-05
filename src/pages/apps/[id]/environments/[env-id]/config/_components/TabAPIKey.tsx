@@ -79,7 +79,7 @@ export default function TabAPIKey({ app, environment: env }: Props) {
       success={success ? "Your API key has been successfully updated." : ""}
     >
       <CardHeader
-        title="API Key"
+        title="API Keys"
         subtitle="This key will allow you to interact with our API and modify this environment."
       />
 

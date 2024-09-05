@@ -29,18 +29,29 @@ interface NavItemParent {
 
 const listItems: NavItemParent[] = [
   {
-    title: "Settings",
+    title: "Deployment settings",
     children: [
       { path: "#general", text: "General" },
       { path: "#build", text: "Build" },
+      { path: "#env-vars", text: "Environment variables" },
+      // { path: "#status-checks", text: "Status checks" },
+    ],
+  },
+  {
+    title: "Runtime Settings",
+    children: [
       { path: "#serverless", text: "Serverless" },
       { path: "#headers", text: "Headers" },
       { path: "#redirects", text: "Redirects" },
-      { path: "#env-vars", text: "Environment variables" },
+    ],
+  },
+  {
+    title: "Other",
+    children: [
+      { path: "#domains", text: "Custom domains" },
       { path: "#api-keys", text: "API Keys" },
     ],
   },
-  { title: "", children: [{ path: "#domains", text: "Custom domains" }] },
 ];
 
 interface TabProps {
@@ -69,7 +80,19 @@ export default function EnvironmentConfig() {
     switch (hash) {
       case "#domains":
         return TabDomainConfig;
-      default:
+      case "#api-keys":
+        return ({ app, environment, setRefreshToken }: TabProps) => (
+          <TabAPIKey
+            app={app}
+            environment={environment}
+            setRefreshToken={setRefreshToken}
+          />
+        );
+      case "":
+      case "#general":
+      case "#build":
+      case "#env-vars":
+      case "#status-checks":
         return ({ app, environment, setRefreshToken }: TabProps) => (
           <>
             <TabConfigGeneral
@@ -82,6 +105,16 @@ export default function EnvironmentConfig() {
               environment={environment}
               setRefreshToken={setRefreshToken}
             />
+            <TabConfigEnvVars
+              app={app}
+              environment={environment}
+              setRefreshToken={setRefreshToken}
+            />
+          </>
+        );
+      default:
+        return ({ app, environment, setRefreshToken }: TabProps) => (
+          <>
             <TabConfigServerless
               app={app}
               environment={environment}
@@ -97,11 +130,6 @@ export default function EnvironmentConfig() {
               environment={environment}
               setRefreshToken={setRefreshToken}
             />
-            <TabConfigEnvVars
-              app={app}
-              environment={environment}
-              setRefreshToken={setRefreshToken}
-            />
             {prerendering && (
               <TabConfigPrerender
                 app={app}
@@ -109,11 +137,6 @@ export default function EnvironmentConfig() {
                 setRefreshToken={setRefreshToken}
               />
             )}
-            <TabAPIKey
-              app={app}
-              environment={environment}
-              setRefreshToken={setRefreshToken}
-            />
           </>
         );
     }
@@ -148,16 +171,18 @@ export default function EnvironmentConfig() {
                 width: "100%",
               }}
             >
-              {listItems.map(item => (
+              {listItems.map((item, index) => (
                 <Box key={item.title}>
                   <Typography
                     sx={{
                       px: 1,
                       py: 1,
                       mb: 2,
+                      mt: index === 0 ? 0 : 2,
                       display: "block",
                       borderBottom: "1px solid",
                       borderColor: "container.transparent",
+                      color: "text.secondary",
                     }}
                     component="span"
                   >

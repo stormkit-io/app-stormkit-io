@@ -49,7 +49,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAPIKey.t
       "This key will allow you to interact with our API and modify this environment.";
 
     // Header
-    expect(wrapper.getByText("API Key")).toBeTruthy();
+    expect(wrapper.getByText("API Keys")).toBeTruthy();
     expect(wrapper.getByText(subheader)).toBeTruthy();
 
     // API Keys
