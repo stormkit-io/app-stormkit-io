@@ -19,6 +19,7 @@ const fontSize = 13;
 export default (mode: "dark" | "light") => {
   const isDark = mode === "dark";
   const primaryColor = isDark ? "white" : "black";
+  const secondaryColor = isDark ? grey[500] : grey[800];
 
   return createTheme({
     typography: {
@@ -175,8 +176,8 @@ export default (mode: "dark" | "light") => {
           root: {
             fontFamily,
             fontSize: 14,
-            color: primaryColor,
-            opacity: 0.7,
+            zIndex: 1,
+            color: secondaryColor,
             "&.Mui-focused": {
               color: primaryColor,
             },

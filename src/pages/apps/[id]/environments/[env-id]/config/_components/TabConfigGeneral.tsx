@@ -118,7 +118,7 @@ export default function TabConfigGeneral({
 
       <Box sx={{ mb: 4 }}>
         <FormControl variant="standard" fullWidth>
-          <InputLabel id="auto-deploy-label" sx={{ pl: 2, pt: 1 }}>
+          <InputLabel id="auto-deploy-label" sx={{ pl: 2, pt: 1.25 }}>
             Auto deploy
           </InputLabel>
           <Select
