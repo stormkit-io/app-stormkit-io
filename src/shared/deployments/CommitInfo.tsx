@@ -11,7 +11,6 @@ import AppChip from "./AppChip";
 
 interface Props {
   deployment: DeploymentV2;
-  showNotPublishedInfo?: boolean;
   showProject?: boolean;
   clickable?: boolean;
 }
@@ -47,7 +46,6 @@ const author = (author?: string) => {
 
 export default function CommitInfo({
   deployment,
-  showNotPublishedInfo,
   showProject,
   clickable = true,
 }: Props) {
@@ -69,7 +67,7 @@ export default function CommitInfo({
           ) : (
             <Typography>{message}</Typography>
           )}
-          {(deployment.published?.length > 0 || showNotPublishedInfo) && (
+          {deployment.published?.length > 0 && (
             <Chip
               color={deployment.published.length ? "success" : "info"}
               label={

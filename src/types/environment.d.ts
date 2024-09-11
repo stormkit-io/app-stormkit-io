@@ -1,3 +1,9 @@
+declare type StatusCheck = {
+  cmd: string;
+  name?: string;
+  description?: string;
+};
+
 declare type BuildConfig = {
   prerender?: PrerenderConfig;
   previewLinks?: boolean;
@@ -10,6 +16,7 @@ declare type BuildConfig = {
   buildCmd?: string;
   serverCmd?: string;
   serverFolder?: string;
+  statusChecks?: StatusCheck[];
   vars: Record<string, string>;
 };
 
