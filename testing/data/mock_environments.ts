@@ -6,7 +6,8 @@ export default ({ app }: { app: App }): Environment[] => [
     branch: "master",
     build: {
       distFolder: "packages/console/dist",
-      cmd: "yarn test \u0026\u0026 yarn run build:console",
+      buildCmd: "yarn test \u0026\u0026 yarn run build:console",
+      previewLinks: true,
       vars: {
         BABEL_ENV: "production",
         NODE_ENV: "production",
@@ -25,7 +26,8 @@ export default ({ app }: { app: App }): Environment[] => [
     branch: "env/dev",
     build: {
       distFolder: "packages/console/dist",
-      cmd: "yarn run build:console",
+      buildCmd: "yarn run build:console",
+      previewLinks: true,
       vars: {
         API_DOMAIN: "https://api.stormkit.io",
         BABEL_ENV: "production",
