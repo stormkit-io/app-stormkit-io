@@ -27,6 +27,8 @@ export default function Deployment() {
 
   const snapshot = deployment?.snapshot;
   const hasStatusChecks = Boolean(snapshot?.build?.statusChecks?.length);
+  const showPreviewButton =
+    deployment?.status === "success" || (hasStatusChecks && !isRunningLogs);
 
   const showEmptyPackageWarning =
     deployment &&
@@ -81,9 +83,9 @@ export default function Deployment() {
         />
         <CardFooter sx={{ display: "flex", justifyContent: "center" }}>
           {isRunningLogs && <Spinner primary />}
-          {deployment?.status === "success" && (
+          {showPreviewButton && (
             <Button
-              href={deployment.previewUrl}
+              href={deployment!.previewUrl}
               variant="contained"
               color="secondary"
             >

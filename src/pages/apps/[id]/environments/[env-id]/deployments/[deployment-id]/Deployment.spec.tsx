@@ -70,7 +70,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
     createWrapper({ deployment });
 
     await waitFor(() => {
-      expect(wrapper.getByText("Nuxt CLI v3.0.0-rc.8")).toBeTruthy();
+      expect(wrapper.getByText("npm run build")).toBeTruthy();
     });
   });
 
