@@ -7,7 +7,6 @@ interface Props {
   deployment: DeploymentV2;
   showStatus?: boolean;
   showProject?: boolean;
-  showNotPublishedInfo?: boolean;
   clickable?: boolean;
 }
 
@@ -16,7 +15,6 @@ describe("~/shared/deployments/CommitInfo.tsx", () => {
 
   const createWrapper = ({
     deployment,
-    showNotPublishedInfo,
     showProject,
     clickable = true,
   }: Props) => {
@@ -25,7 +23,6 @@ describe("~/shared/deployments/CommitInfo.tsx", () => {
         <CommitInfo
           deployment={deployment}
           showProject={showProject}
-          showNotPublishedInfo={showNotPublishedInfo}
           clickable={clickable}
         />
       </MemoryRouter>
@@ -47,15 +44,6 @@ describe("~/shared/deployments/CommitInfo.tsx", () => {
     expect(wrapper.getByText("sample-project").getAttribute("href")).toBe(
       "/apps/1/environments/1/deployments"
     );
-  });
-
-  test("should display the status properly", () => {
-    createWrapper({
-      deployment: mockDeployments()[1],
-      showNotPublishedInfo: true,
-    });
-
-    expect(wrapper.getByText("not published")).toBeTruthy();
   });
 
   test("should not contain a link to deployments page when it's not clickable", () => {

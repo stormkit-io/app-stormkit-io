@@ -22,6 +22,7 @@ type Config = {
     cmd: string;
     distFolder: string;
     vars: Record<string, string>;
+    statusChecks?: StatusCheck[];
   };
   env: string;
   envId: string;
@@ -66,6 +67,8 @@ declare type DeploymentV2 = {
   logs?: Log[];
   previewUrl?: string;
   detailsUrl: string;
+  statusChecksPassed: boolean | null;
+  statusChecks: Log[] | null;
   clientPackageSize?: number;
   serverPackageSize?: number;
   apiPackageSize?: number;
