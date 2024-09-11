@@ -13,6 +13,7 @@ const toRequestObject = (environment: Environment) => {
       autoDeploy: environment.autoDeploy,
       autoDeployBranches: environment.autoDeployBranches,
       build: {
+        statusChecks: environment.build.statusChecks,
         previewLinks: environment.build.previewLinks,
         apiFolder: environment.build.apiFolder,
         headersFile: environment.build.headersFile,

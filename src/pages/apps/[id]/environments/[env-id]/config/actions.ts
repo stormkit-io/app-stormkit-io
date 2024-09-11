@@ -34,6 +34,14 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     } catch {}
   }
 
+  let statusChecks: StatusCheck[] | undefined;
+
+  if (values["build.statusChecks"]) {
+    try {
+      statusChecks = JSON.parse(values["build.statusChecks"]);
+    } catch {}
+  }
+
   const hasPrerendering =
     values["build.prerender.matchUserAgent"] ||
     values["build.prerender.cacheDuration"] ||
@@ -56,6 +64,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
           cacheDuration: Number(values["build.prerender.cacheDuration"]),
         }
       : undefined,
+    statusChecks,
     redirects,
     vars,
   };
@@ -66,17 +75,13 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
 export const buildFormValues = (
   env: Environment,
   form: HTMLFormElement,
-  controlled?: FormValues
+  controlled?: ControlledFormValues
 ): FormValues => {
-  const values = Object.fromEntries(new FormData(form).entries());
+  let values = Object.fromEntries(new FormData(form).entries());
 
   // This is for controlled values, such as Switches.
   if (controlled) {
-    Object.keys(controlled).forEach(key => {
-      if (typeof values[key] === "undefined") {
-        values[key] = controlled[key as keyof FormValues]!;
-      }
-    });
+    values = { ...values, ...controlled };
   }
 
   if (typeof values.autoPublish === "undefined") {
@@ -99,6 +104,7 @@ export const buildFormValues = (
     autoPublish: env.autoPublish ? "on" : "off",
     autoDeploy: computeAutoDeployValue(env),
     autoDeployBranches: env.autoDeployBranches || undefined,
+    "build.statusChecks": JSON.stringify(env.build.statusChecks),
     "build.previewLinks": env.build.previewLinks ? "on" : "off",
     "build.headersFile": env.build.headersFile,
     "build.redirectsFile": env.build.redirectsFile,
@@ -183,12 +189,20 @@ export const useFetchRepoMeta = ({
 
 export type AutoDeployValues = "disabled" | "all" | "custom";
 
+interface ControlledFormValues {
+  autoPublish?: "on" | "off";
+  "build.previewLinks"?: "on" | "off";
+  "build.redirects"?: string;
+  "build.statusChecks"?: string;
+}
+
 export interface FormValues {
   name?: string;
   branch?: string;
   autoDeploy?: AutoDeployValues;
   autoPublish?: "on" | "off";
   autoDeployBranches?: string;
+  "build.statusChecks"?: string;
   "build.previewLinks"?: "on" | "off";
   "build.buildCmd"?: string;
   "build.serverCmd"?: string;
@@ -211,6 +225,7 @@ interface UpdateEnvironmentProps {
   app: App;
   envId: string;
   values: FormValues;
+  successMsg?: string;
   setLoading: (b: boolean) => void;
   setError: (s: string) => void;
   setSuccess: (s: string) => void;
@@ -225,6 +240,7 @@ export const updateEnvironment = ({
   setLoading,
   setSuccess,
   setRefreshToken,
+  successMsg = "The environment has been successfully updated.",
 }: UpdateEnvironmentProps): Promise<void> => {
   const { name, branch, autoDeployBranches, autoDeploy } = values;
   const build = prepareBuildObject(values);
@@ -250,7 +266,7 @@ export const updateEnvironment = ({
       autoDeployBranches: autoDeployBranches,
     })
     .then(() => {
-      setSuccess("The environment has been successfully updated.");
+      setSuccess(successMsg);
       setRefreshToken(Date.now());
     })
     .catch(async res => {
@@ -323,13 +339,6 @@ export const deleteEnvironment = ({
     env: name,
   });
 };
-
-interface SubmitHandlerProps {
-  app: App;
-  env: Environment;
-  setRefreshToken: (v: number) => void;
-  controlled?: FormValues;
-}
 
 export const validateRedirects = (
   redirects: string,
@@ -409,6 +418,13 @@ export const validateRedirects = (
   return true;
 };
 
+interface SubmitHandlerProps {
+  app: App;
+  env: Environment;
+  setRefreshToken: (v: number) => void;
+  controlled?: ControlledFormValues;
+}
+
 export const useSubmitHandler = ({
   env,
   app,
@@ -430,10 +446,10 @@ export const useSubmitHandler = ({
 
     if (!validateRedirects(values["build.redirects"] || "", setError)) {
       setSuccess("");
-      return;
+      return Promise.resolve();
     }
 
-    updateEnvironment({
+    return updateEnvironment({
       app,
       envId: env.id!,
       values,

@@ -15,6 +15,7 @@ import TabConfigHeaders from "./_components/TabConfigHeaders";
 import TabConfigRedirects from "./_components/TabConfigRedirects";
 import TabConfigServerless from "./_components/TabConfigServerless";
 import TabConfigPrerender from "./_components/TabConfigPrerender";
+import TabStatusChecks from "./_components/TabStatusChecks";
 import TabAPIKey from "./_components/TabAPIKey";
 
 interface NavItem {
@@ -34,7 +35,7 @@ const listItems: NavItemParent[] = [
       { path: "#general", text: "General" },
       { path: "#build", text: "Build" },
       { path: "#env-vars", text: "Environment variables" },
-      // { path: "#status-checks", text: "Status checks" },
+      { path: "#status-checks", text: "Status checks" },
     ],
   },
   {
@@ -106,6 +107,11 @@ export default function EnvironmentConfig() {
               setRefreshToken={setRefreshToken}
             />
             <TabConfigEnvVars
+              app={app}
+              environment={environment}
+              setRefreshToken={setRefreshToken}
+            />
+            <TabStatusChecks
               app={app}
               environment={environment}
               setRefreshToken={setRefreshToken}
