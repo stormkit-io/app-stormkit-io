@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import Box from "@mui/material/Box";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -13,13 +13,17 @@ import * as actions from "./actions";
 
 const { useFetchAdditionalSettings } = actions;
 
-const Settings: React.FC = () => {
+export default function Settings() {
   const { app, environments } = useContext(AppContext);
   const { teams } = useContext(AuthContext);
   const team = useSelectedTeam({ teams, app });
   const { settings, loading, setSettings } = useFetchAdditionalSettings({
     app,
   });
+
+  const isStormkitApp = useMemo(() => {
+    return app.id === "1" && app.repo.includes("app-stormkit-io");
+  }, [app]);
 
   const hasWriteAccess =
     team?.currentUserRole === "owner" || team?.currentUserRole === "admin";
@@ -65,9 +69,7 @@ const Settings: React.FC = () => {
 
       {hasWriteAccess && <FormMigrateApp teams={teams!} app={app} />}
 
-      {hasWriteAccess && <FormDangerZone app={app} />}
+      {hasWriteAccess && !isStormkitApp && <FormDangerZone app={app} />}
     </Box>
   );
-};
-
-export default Settings;
+}
