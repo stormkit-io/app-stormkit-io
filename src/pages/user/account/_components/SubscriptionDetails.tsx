@@ -11,7 +11,7 @@ import CopyBox from "~/components/CopyBox";
 import WhatsIncluded from "./WhatsIncluded";
 import Checkout from "./SubscriptionDetailsCheckout";
 import { useFetchLicense } from "../actions";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 interface Props {
   user: User;
@@ -37,6 +37,22 @@ export default function SubscriptionDetails({ user }: Props) {
 
   const isSelfHosted = user.package.id.startsWith("self-hosted");
 
+  const seats = useMemo(() => {
+    if (!isSelfHosted) {
+      return "";
+    }
+
+    if (user.package?.edition === "premium") {
+      return `${String(license?.seats) || "unlimited"} seats`;
+    }
+
+    if (license && license.seats > 1) {
+      return `${license.seats} seats`;
+    }
+
+    return "1 seat";
+  }, [user, license, isSelfHosted]);
+
   return (
     <>
       <Card
@@ -50,9 +66,7 @@ export default function SubscriptionDetails({ user }: Props) {
           subtitle={[
             user.package.name,
             isSelfHosted
-              ? `${capitalize(user.package.edition)} - ${
-                  license?.seats || "unlimited"
-                } seats`
+              ? `${capitalize(user.package.edition)} - ${seats}`
               : "",
           ]
             .filter(i => i)
