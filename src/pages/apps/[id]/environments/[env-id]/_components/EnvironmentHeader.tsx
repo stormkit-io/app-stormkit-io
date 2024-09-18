@@ -65,7 +65,12 @@ export default function EnvironmentHeader() {
           <DomainStatus loading={loading} status={status} />
         </Column>
         <Column>
-          <Typography component="a" href={domainName}>
+          <Typography
+            component="a"
+            href={domainName}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
             {domainName.replace(/^https?:\/\//, "")}
           </Typography>
         </Column>
