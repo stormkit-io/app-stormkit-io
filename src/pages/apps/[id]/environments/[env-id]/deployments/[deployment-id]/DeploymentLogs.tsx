@@ -121,6 +121,7 @@ export default function DeploymentLogs({ logs, isRunning }: Props) {
               lineHeight: 1.5,
               overflow: "auto",
               display: "block",
+              whiteSpace: "pre",
             }}
             style={{ maxHeight: "400px" }}
           >
