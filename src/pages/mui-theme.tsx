@@ -121,7 +121,7 @@ export default (mode: "dark" | "light") => {
         styleOverrides: {
           colorSuccess: {
             color: "white",
-            backgroundColor: green[600],
+            backgroundColor: green[900],
           },
           colorWarning: {
             backgroundColor: "#b75c22",

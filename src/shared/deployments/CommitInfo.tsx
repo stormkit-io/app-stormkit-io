@@ -71,9 +71,7 @@ export default function CommitInfo({
             <Chip
               color={deployment.published.length ? "success" : "info"}
               label={
-                deployment.published.length
-                  ? `published: ${deployment.published[0].percentage}%`
-                  : "not published"
+                deployment.published.length ? `published` : "not published"
               }
               size="small"
               sx={{
