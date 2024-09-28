@@ -155,7 +155,7 @@ export default (mode: "dark" | "light") => {
               borderColor: grey[900],
             },
             "&:after": {
-              borderColor: "rgba(255,255,255,0.5)",
+              borderColor: grey[300],
             },
           },
         },

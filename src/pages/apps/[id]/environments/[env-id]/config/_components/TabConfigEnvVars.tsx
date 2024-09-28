@@ -14,21 +14,19 @@ interface Props {
   setRefreshToken: (v: number) => void;
 }
 
-export default function TabConfigGeneral({
+export default function TabConfigEnvVars({
   environment: env,
   app,
   setRefreshToken,
 }: Props) {
+  const [reset, setReset] = useState<number>();
   const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const [isLoading, setLoading] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
   const [vars, setVars] = useState<Record<string, string>>(
     env.build.vars || {}
   );
-
-  if (!env) {
-    return <></>;
-  }
 
   const defaultValue = useMemo(() => {
     return JSON.parse(
@@ -70,22 +68,27 @@ export default function TabConfigGeneral({
           setLoading,
           setSuccess,
           setRefreshToken,
+        }).then(() => {
+          setIsChanged(false);
         });
       }}
     >
       <CardHeader
         title="Environment variables"
-        subtitle="These variables will be available to build time and Functions runtime."
+        subtitle="These variables will be available to build time, status checks and serverless runtime."
       />
       <Box sx={{ mb: 2 }}>
         <KeyValue
+          resetToken={reset}
           inputName="build.vars"
           keyName="Name"
           valName="Value"
           keyPlaceholder="NODE_ENV"
           valPlaceholder="production"
+          isSensitive
           onChange={newVars => {
             setVars(newVars);
+            setIsChanged(true);
           }}
           onModalOpen={() => {
             setSuccess("");
@@ -94,8 +97,25 @@ export default function TabConfigGeneral({
           defaultValue={defaultValue}
         />
       </Box>
-
       <CardFooter>
+        <Button
+          type="reset"
+          variant="text"
+          color="info"
+          sx={{
+            mr: 2,
+            opacity: isChanged ? 1 : 0,
+            visibility: isChanged ? "visible" : "hidden",
+            transition: "all 0.35s ease-in",
+          }}
+          onClick={() => {
+            setVars(env.build.vars || {});
+            setReset(Date.now());
+            setIsChanged(false);
+          }}
+        >
+          Cancel
+        </Button>
         <Button
           type="submit"
           variant="contained"

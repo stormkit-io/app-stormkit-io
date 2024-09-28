@@ -6,13 +6,12 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableFooter from "@mui/material/TableFooter";
 import TableRow from "@mui/material/TableRow";
-import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Modal from "~/components/Modal";
-import Input from "./Input";
+import TextFieldModal from "./KeyValueTextFieldModal";
+import KeyValueRow from "./KeyValueRow";
+import { grey } from "@mui/material/colors";
 
 interface Props {
   inputName: string;
@@ -25,74 +24,9 @@ interface Props {
   thClasses?: string;
   resetToken?: number;
   separator?: string;
+  isSensitive?: boolean;
   onChange?: (kv: Record<string, string>) => void;
   onModalOpen?: () => void;
-}
-
-type TransformerFn = (kv: string[][], separator: string) => string;
-
-interface TextFieldModalProps {
-  rows: string[][];
-  placeholder?: string;
-  separator: string;
-  transformer?: TransformerFn;
-  onSave: (value: string) => void;
-  onClose: () => void;
-}
-
-const transformerFn: TransformerFn = (kv, separator): string => {
-  return kv
-    .map(k => (k[0] && k[1] ? `${k[0]}${separator}${k[1]}` : ""))
-    .join("\n");
-};
-
-function TextFieldModal({
-  rows,
-  onClose,
-  onSave,
-  placeholder,
-  separator,
-  transformer = transformerFn,
-}: TextFieldModalProps) {
-  const value = useMemo(() => {
-    return transformer(rows, separator);
-  }, [rows, separator]);
-
-  return (
-    <Modal open onClose={onClose}>
-      <Box>
-        <Box sx={{ p: 2 }}>
-          <TextField
-            id="key-value-text-area"
-            variant="filled"
-            multiline
-            maxRows={20}
-            defaultValue={value}
-            placeholder={placeholder}
-            fullWidth
-            minRows={20}
-          />
-        </Box>
-        <Box sx={{ textAlign: "center", mb: 2 }}>
-          <Button
-            type="button"
-            color="secondary"
-            variant="contained"
-            onClick={() => {
-              const input = document.querySelector(
-                "#key-value-text-area"
-              ) as HTMLTextAreaElement;
-
-              onSave(input?.value);
-              onClose();
-            }}
-          >
-            Set rows
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
-  );
 }
 
 const rowsToMap = (rows: string[][]): Record<string, string> => {
@@ -113,6 +47,7 @@ export default function KeyValue({
   defaultValue,
   resetToken,
   separator = "=",
+  isSensitive = false,
   onChange,
   onModalOpen,
 }: Props) {
@@ -146,17 +81,22 @@ export default function KeyValue({
     }
   }, [rowsWithoutDeleted, isChanged]);
 
-  const borderBottom = "1px solid rgba(255,255,255,0.1)";
+  const borderBottom = "1px solid";
+  const borderColor = grey[300];
 
   return (
     <>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ borderBottom, color: "text.secondary" }}>
+            <TableCell
+              sx={{ borderBottom, borderColor, color: "text.secondary" }}
+            >
               {keyName}
             </TableCell>
-            <TableCell sx={{ borderBottom, color: "text.secondary" }}>
+            <TableCell
+              sx={{ borderBottom, borderColor, color: "text.secondary" }}
+            >
               <Box sx={{ pl: 1.75 }}>{valName}</Box>
             </TableCell>
           </TableRow>
@@ -164,65 +104,20 @@ export default function KeyValue({
         <TableBody>
           {rows.map(([key, value, isDeleted], index) =>
             isDeleted ? undefined : (
-              <TableRow key={index}>
-                <TableCell sx={{ borderBottom: "none", pl: 0, pb: 0 }}>
-                  <Input
-                    fullWidth
-                    placeholder={
-                      index === 0 ? keyPlaceholder : `KEY_${index + 1}`
-                    }
-                    inputProps={{
-                      "aria-label": `${inputName} key number ${index + 1}`,
-                    }}
-                    name={`${inputName}[key]`}
-                    onChange={e => {
-                      const copy = JSON.parse(JSON.stringify(rows));
-                      copy[index] = [e.target.value, copy[index][1]];
-                      setRows(copy);
-                      setIsChanged(true);
-                    }}
-                    value={key}
-                  />
-                </TableCell>
-                <TableCell sx={{ borderBottom: "none", pr: 0, pb: 0 }}>
-                  <Input
-                    fullWidth
-                    value={value}
-                    placeholder={
-                      index === 0 ? valPlaceholder : `VALUE_${index + 1}`
-                    }
-                    name={`${inputName}[value]`}
-                    inputProps={{
-                      "aria-label": `${inputName} value number ${index + 1}`,
-                    }}
-                    onChange={e => {
-                      const copy = JSON.parse(JSON.stringify(rows));
-                      copy[index] = [copy[index][0], e.target.value];
-                      setRows(copy);
-                      setIsChanged(true);
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton
-                          sx={{ width: 24, height: 24 }}
-                          type="button"
-                          aria-label={`Remove ${inputName} row number ${
-                            index + 1
-                          }`}
-                          onClick={() => {
-                            const copy = JSON.parse(JSON.stringify(rows));
-                            copy[index].push("deleted");
-                            setRows(copy);
-                            setIsChanged(true);
-                          }}
-                        >
-                          <span className="fas fa-times text-xs text-gray-80"></span>
-                        </IconButton>
-                      ),
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
+              <KeyValueRow
+                key={index}
+                rows={rows}
+                inputKey={key}
+                inputValue={value}
+                inputName={inputName}
+                index={index}
+                isSensitive={isSensitive}
+                hideByDefault={Boolean(value && isSensitive)}
+                keyPlaceholder={keyPlaceholder}
+                valPlaceholder={valPlaceholder}
+                setIsChanged={setIsChanged}
+                setRows={setRows}
+              />
             )
           )}
         </TableBody>
@@ -271,6 +166,7 @@ export default function KeyValue({
         <TextFieldModal
           rows={rowsWithoutDeleted}
           separator={separator}
+          isSensitive={isSensitive}
           placeholder={
             keyPlaceholder && valPlaceholder
               ? `${keyPlaceholder}${separator}${valPlaceholder}`
