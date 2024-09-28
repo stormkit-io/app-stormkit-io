@@ -73,7 +73,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
   test.each`
     hash           | expectedString
     ${""}          | ${"Use these settings to configure your environment details."}
-    ${""}          | ${"These variables will be available to build time and Functions runtime."}
+    ${""}          | ${"These variables will be available to build time, status checks and serverless runtime."}
     ${""}          | ${"Use these settings to configure your build options."}
     ${"#api-keys"} | ${"This key will allow you to interact with our API and modify this environment."}
   `(
