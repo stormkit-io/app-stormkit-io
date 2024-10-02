@@ -52,7 +52,7 @@ class Github {
   previewHeader = "application/vnd.github.machine-man-preview+json";
 
   // This is the access token required to fetch repositories.
-  accessToken = LocalStorage.get(LS_ACCESS_TOKEN);
+  accessToken = LocalStorage.get(LS_ACCESS_TOKEN) as string;
 
   /**
    * User returns the currently logged in user.
