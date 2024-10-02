@@ -31,3 +31,23 @@ declare interface ConnectedAccount {
   displayName: string;
   url?: string;
 }
+
+declare;
+interface InstanceDetails {
+  latest?: {
+    apiVersion: string;
+    uiCommit: string;
+  };
+  license?: {
+    seats: number;
+  };
+  stormkit?: {
+    apiCommit: string;
+    apiVersion: string;
+    selfHosted: boolean;
+  };
+  update: {
+    ui: boolean;
+    api: boolean;
+  };
+}
