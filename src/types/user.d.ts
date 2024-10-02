@@ -32,8 +32,7 @@ declare interface ConnectedAccount {
   url?: string;
 }
 
-declare;
-interface InstanceDetails {
+declare interface InstanceDetails {
   latest?: {
     apiVersion: string;
     uiCommit: string;
