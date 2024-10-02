@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import RocketLaunch from "@mui/icons-material/RocketLaunch";
@@ -15,7 +16,10 @@ export default function DeployButton({
   environments,
   selectedEnvId,
 }: Props) {
-  const [isDeployModalOpen, toggleDeployModal] = useState(false);
+  const [params, _] = useSearchParams();
+  const [isDeployModalOpen, toggleDeployModal] = useState(
+    params.get("deploy") === ""
+  );
 
   return (
     <>
