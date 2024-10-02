@@ -226,7 +226,7 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
 
 export const useFetchInstanceDetails = () => {
   const [details, setDetails] = useState<InstanceDetails>();
-  const currentCommit = (process.env.GIT_HASH || "").substring(0, 8);
+  const currentCommit = (process.env.GIT_HASH || "").substring(0, 7);
 
   useEffect(() => {
     api

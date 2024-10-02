@@ -11,7 +11,7 @@ export default function Sha({ repo, provider, sha, sx, ...rest }: Props) {
     return <></>;
   }
 
-  const shaShort = sha.substring(0, 8);
+  const shaShort = sha.substring(0, 7);
   let link = "";
 
   if (provider == "github") {
