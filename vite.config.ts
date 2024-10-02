@@ -7,7 +7,8 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 
 const commitHash = require("child_process")
   .execSync("git rev-parse --short HEAD")
-  .toString();
+  .toString()
+  .replace(/\s+/, "");
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
