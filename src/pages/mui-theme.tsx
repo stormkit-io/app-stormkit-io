@@ -184,6 +184,14 @@ export default (mode: "dark" | "light") => {
           },
         },
       },
+      MuiSnackbarContent: {
+        styleOverrides: {
+          root: {
+            background: isDark ? "black" : "white",
+            color: primaryColor,
+          },
+        },
+      },
       MuiInputBase: {
         styleOverrides: {
           root: {

@@ -59,3 +59,14 @@ export const mockUseFetchEmails = ({
   response,
 }: MockFetchUserEmailsProps) =>
   nock(endpoint).get("/user/emails").reply(status, response);
+
+interface MockFetchInstanceDetailsProps {
+  status?: number;
+  response?: InstanceDetails;
+}
+
+export const mockFetchInstanceDetails = ({
+  status = 200,
+  response,
+}: MockFetchInstanceDetailsProps) =>
+  nock(endpoint).get("/instance").reply(status, response);

@@ -5,6 +5,10 @@ import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 
+const commitHash = require("child_process")
+  .execSync("git rev-parse --short HEAD")
+  .toString();
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = { ...process.env, ...loadEnv(mode, __dirname, "") };
@@ -18,6 +22,7 @@ export default defineConfig(({ mode }) => {
       "process.env.API_PROXY_DOMAIN": JSON.stringify(env.API_PROXY_DOMAIN),
       "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
       "process.env.GITHUB_ACCOUNT": JSON.stringify(env.GITHUB_ACCOUNT),
+      "process.env.GIT_HASH": JSON.stringify(commitHash),
     },
 
     server: {

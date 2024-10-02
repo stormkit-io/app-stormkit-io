@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Spinner from "~/components/Spinner";
 import * as actions from "./actions";
+import UpdateSnackbar from "./UpdateSnackbar";
 
 const { loginOauth, useFetchUser, useFetchTeams, logout } = actions;
 
@@ -24,13 +25,10 @@ interface Props {
 
 export default function ContextProvider({ children }: Props) {
   const navigate = useNavigate();
-  const [teamsRefreshToken, setTeamsRefreshToken] = useState(0);
+  const [refreshToken, setTeamsRefreshToken] = useState(0);
   const { pathname, search } = useLocation();
   const { error, loading, user, accounts, ...fns } = useFetchUser();
-  const { teams, loading: teamsLoading } = useFetchTeams({
-    refreshToken: teamsRefreshToken,
-    user,
-  });
+  const { teams, loading: tLoading } = useFetchTeams({ refreshToken, user });
 
   const shouldRedirect = !loading && !user && !pathname.includes("/auth");
 
@@ -51,7 +49,7 @@ export default function ContextProvider({ children }: Props) {
     }
   }, [user?.isPaymentRequired, pathname]);
 
-  if (loading || teamsLoading) {
+  if (loading || tLoading) {
     return <Spinner primary pageCenter />;
   }
 
@@ -74,6 +72,7 @@ export default function ContextProvider({ children }: Props) {
       }}
     >
       {children}
+      <UpdateSnackbar />
     </AuthContext.Provider>
   );
 }

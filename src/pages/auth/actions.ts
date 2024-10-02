@@ -141,9 +141,11 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
           setUser(data.user!);
 
           // Persist it for this session
-          bitbucketApi.accessToken = data.accessToken!;
-          githubApi.accessToken = data.accessToken;
-          gitlabApi.accessToken = data.accessToken;
+          if (data.accessToken) {
+            bitbucketApi.accessToken = data.accessToken!;
+            githubApi.accessToken = data.accessToken;
+            gitlabApi.accessToken = data.accessToken;
+          }
 
           LocalStorage.set(LS_ACCESS_TOKEN, data.accessToken);
           LocalStorage.set(LS_PROVIDER, provider);
@@ -220,4 +222,28 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
   }, [refreshToken, user]);
 
   return { teams, error, loading };
+};
+
+export const useFetchInstanceDetails = () => {
+  const [details, setDetails] = useState<InstanceDetails>();
+  const currentCommit = (process.env.GIT_HASH || "").substring(0, 8);
+
+  useEffect(() => {
+    api
+      .fetch<InstanceDetails>("/instance")
+      .then(d => {
+        setDetails({
+          ...d,
+          update: {
+            ui: d.latest?.uiCommit !== currentCommit,
+            api: d.latest?.apiVersion !== d.stormkit?.apiVersion,
+          },
+        });
+      })
+      .catch(() => {
+        setDetails({ update: { ui: false, api: true } });
+      });
+  }, []);
+
+  return { details };
 };
