@@ -241,7 +241,10 @@ export const useFetchInstanceDetails = () => {
         });
       })
       .catch(() => {
-        setDetails({ update: { ui: false, api: true } });
+        setDetails({
+          update: { ui: false, api: true },
+          stormkit: { selfHosted: true, apiCommit: "", apiVersion: "" },
+        });
       });
   }, []);
 
