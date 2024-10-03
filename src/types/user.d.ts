@@ -49,4 +49,7 @@ declare interface InstanceDetails {
     ui: boolean;
     api: boolean;
   };
+  auth?: {
+    github?: string; // The github account name
+  };
 }

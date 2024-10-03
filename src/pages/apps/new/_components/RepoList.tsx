@@ -9,7 +9,6 @@ import ArrowRightIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Typography from "@mui/material/Typography";
-import Spinner from "~/components/Spinner";
 import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
 import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
@@ -98,71 +97,61 @@ export default function RepoList({
         />
       )}
 
-      {loading && (
-        <div
-          className="flex w-full justify-center mt-4"
-          data-testid="repo-list-spinner"
-        >
-          <Spinner primary />
-        </div>
-      )}
-
-      {!loading &&
-        repos.map(r => (
-          <Box
-            key={r.fullName}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              px: 2,
-              pr: 1,
-              py: 1,
-              borderBottom: `1px solid`,
-              borderColor: "container.border",
-              ":hover": {
-                bgcolor: "container.transparent",
-              },
-              ":last-child": {
-                borderBottom: "none",
-              },
-            }}
-            aria-label={r.name}
-            tabIndex={0}
-            role="button"
-            onKeyUp={e => {
-              if (e.key === "Enter") {
-                handleRepoInsert(r);
-              }
-            }}
-            onClick={() => {
+      {repos.map(r => (
+        <Box
+          key={r.fullName}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            px: 2,
+            pr: 1,
+            py: 1,
+            borderBottom: `1px solid`,
+            borderColor: "container.border",
+            ":hover": {
+              bgcolor: "container.transparent",
+            },
+            ":last-child": {
+              borderBottom: "none",
+            },
+          }}
+          aria-label={r.name}
+          tabIndex={0}
+          role="button"
+          onKeyUp={e => {
+            if (e.key === "Enter") {
               handleRepoInsert(r);
-            }}
-          >
-            <Box
-              component="img"
-              src={logo}
-              alt={provider}
-              sx={{ width: 24, mr: 1.5 }}
-            />
-            <Typography component="span" sx={{ flex: 1 }}>
-              {r.name}
-            </Typography>
-            <Box>
-              <Button
-                variant="text"
-                color="info"
-                sx={{
-                  textTransform: "uppercase",
-                  fontSize: 12,
-                }}
-                endIcon={<ArrowRightIcon sx={{ scale: "0.75" }} />}
-                loading={loadingInsert === r.fullName}
-              >
-                import
-              </Button>
-            </Box>
+            }
+          }}
+          onClick={() => {
+            handleRepoInsert(r);
+          }}
+        >
+          <Box
+            component="img"
+            src={logo}
+            alt={provider}
+            sx={{ width: 24, mr: 1.5 }}
+          />
+          <Typography component="span" sx={{ flex: 1 }}>
+            {r.name}
+          </Typography>
+          <Box>
+            <Button
+              variant="text"
+              color="info"
+              sx={{
+                textTransform: "uppercase",
+                fontSize: 12,
+              }}
+              endIcon={<ArrowRightIcon sx={{ scale: "0.75" }} />}
+              loading={loadingInsert === r.fullName}
+            >
+              import
+            </Button>
           </Box>
-        ))}
+        </Box>
+      ))}
       {hasNextPage && repos.length > 0 && (
         <Box sx={{ mt: 2, textAlign: "center" }}>
           <Button

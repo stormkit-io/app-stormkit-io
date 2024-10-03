@@ -1,10 +1,9 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
+import { useFetchInstanceDetails } from "~/pages/auth/actions";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import Card from "~/components/Card";
@@ -14,11 +13,14 @@ import RepoList from "../_components/RepoList";
 import Accounts from "../_components/Accounts";
 import { useFetchAccounts, useFetchRepos } from "./actions";
 
-const githubAccount = process.env.GITHUB_ACCOUNT || "stormkit-io";
-const openPopupURL = `https://github.com/apps/${githubAccount}/installations/new`;
-
 export default function NewGithubApp() {
   const { user } = useContext(AuthContext);
+  const { details } = useFetchInstanceDetails();
+  const { githubAccount, openPopupURL } = useMemo(() => {
+    const githubAccount = details?.auth?.github || process.env.GITHUB_ACCOUNT;
+    const openPopupURL = `https://github.com/apps/${githubAccount}/installations/new`;
+    return { githubAccount, openPopupURL };
+  }, [details?.auth]);
   const [page, setPage] = useState(1);
   const [refreshToken, setRefreshToken] = useState<number>();
   const [installationId, setInstallationId] = useState<string>();
@@ -62,7 +64,27 @@ export default function NewGithubApp() {
 
   return (
     <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
-      <Card sx={{ width: "100%", mb: 4 }}>
+      <Card
+        sx={{ width: "100%", mb: 4 }}
+        loading={loading}
+        info={
+          accounts?.length === 0 ? (
+            <>
+              <Typography>No connected accounts found</Typography>
+              <Typography>
+                Click on "Connect More Repositories" to import from GitHub.
+              </Typography>
+            </>
+          ) : (
+            ""
+          )
+        }
+        error={
+          !githubAccount
+            ? "You don't seem to have a GITHUB_ACCOUNT configured."
+            : ""
+        }
+      >
         <CardHeader
           actions={
             <Button
@@ -106,7 +128,7 @@ export default function NewGithubApp() {
           </Typography>
         </CardHeader>
         <Box>
-          {!faLoading && accounts?.length > 0 && (
+          {accounts?.length > 0 && (
             <Accounts
               accounts={accounts}
               selected={installationId}
@@ -117,24 +139,17 @@ export default function NewGithubApp() {
             />
           )}
 
-          {!faLoading && accounts?.length === 0 && (
-            <Alert color="info" sx={{ mb: repos?.length > 0 ? 2 : 0 }}>
-              <AlertTitle>No connected accounts found</AlertTitle>
-              <Typography>
-                Click on "Connect More Repositories" to import from GitHub.
-              </Typography>
-            </Alert>
-          )}
-
-          <RepoList
-            repositories={repos}
-            provider="github"
-            loading={loading}
-            error={error}
-            isLoadingMore={isLoadingMore}
-            hasNextPage={hasNextPage}
-            onNextPage={() => setPage(page + 1)}
-          />
+          <Box sx={{ mb: !githubAccount ? 4 : 0 }}>
+            <RepoList
+              repositories={repos}
+              provider="github"
+              loading={loading}
+              error={error}
+              isLoadingMore={isLoadingMore}
+              hasNextPage={hasNextPage}
+              onNextPage={() => setPage(page + 1)}
+            />
+          </Box>
         </Box>
       </Card>
     </Box>

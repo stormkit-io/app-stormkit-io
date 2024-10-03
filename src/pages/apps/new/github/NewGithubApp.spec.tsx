@@ -4,10 +4,15 @@ import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import githubApi from "~/utils/api/Github";
 import * as nocks from "~/testing/nocks/nock_github";
+import { mockFetchInstanceDetails } from "~/testing/nocks/nock_user";
 import { mockUser } from "~/testing/data";
 import NewGithubApp from "./NewGithubApp";
 
 const { mockFetchInstallations, mockFetchRepositories } = nocks;
+
+interface Props {
+  github?: string;
+}
 
 describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   let wrapper: RenderResult;
@@ -15,7 +20,14 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
 
   const findOption = (text: string) => screen.getByText(text);
 
-  const createWrapper = () => {
+  const createWrapper = (props?: Props) => {
+    mockFetchInstanceDetails({
+      response: {
+        update: { ui: false, api: false },
+        auth: { github: props?.github || "stormkit-dev" },
+      },
+    });
+
     user = mockUser();
     wrapper = render(
       <RouterProvider
@@ -32,6 +44,40 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
       />
     );
   };
+
+  describe("github account with environment variable", () => {
+    const account = "my-stormkit-app";
+
+    beforeEach(() => {
+      githubApi.accessToken = "123456";
+      githubApi.baseurl = "http://localhost";
+
+      mockFetchInstallations({
+        response: {
+          total_count: 0,
+          installations: [],
+        },
+      });
+
+      process.env.GITHUB_ACCOUNT = account;
+      createWrapper({ github: "" });
+    });
+
+    afterEach(() => {
+      delete process.env.GITHUB_ACCOUNT;
+    });
+
+    test("clicking connect more should open a popup so that the user can configure permissions", () => {
+      window.open = jest.fn();
+      const button = wrapper.getByText("Connect more repositories");
+      fireEvent.click(button);
+      expect(window.open).toHaveBeenCalledWith(
+        `https://github.com/apps/${account}/installations/new`,
+        "Add repository",
+        "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=1000,height=600,left=100,top=100"
+      );
+    });
+  });
 
   describe("empty data", () => {
     beforeEach(() => {
@@ -176,7 +222,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
     });
 
     test("clicking connect more should open a popup so that the user can configure permissions", () => {
-      const account = "stormkit-io";
+      const account = "stormkit-dev";
 
       window.open = jest.fn();
       const button = wrapper.getByText("Connect more repositories");
