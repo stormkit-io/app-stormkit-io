@@ -47,6 +47,10 @@ export default function UpdateSnackbar() {
     ? "Stormkit API has a newer version"
     : "";
 
+  if (updateMessage === "") {
+    return <></>;
+  }
+
   return (
     <Snackbar
       open={isToasterOpen}
