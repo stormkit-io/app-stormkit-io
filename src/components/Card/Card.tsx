@@ -100,19 +100,19 @@ function Card({
             <LinearProgress color="secondary" />
           </Box>
         )}
-        {error && (
+        {!loading && error && (
           <Alert color="error" sx={{ mb: footer ? p : 0, px: p, mx: p }}>
             {errorTitle && <AlertTitle>Error</AlertTitle>}
             <Box>{error}</Box>
           </Alert>
         )}
-        {success && (
+        {!loading && success && (
           <Alert color="success" sx={{ mb: footer ? p : 0, px: p, mx: p }}>
             <AlertTitle>Success</AlertTitle>
             <Box>{success}</Box>
           </Alert>
         )}
-        {info && (
+        {!loading && info && (
           <Alert
             color="info"
             icon={<ReportIcon />}
