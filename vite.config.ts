@@ -10,6 +10,8 @@ const commitHash = require("child_process")
   .toString()
   .replace(/\s+/, "");
 
+console.log(`building ${commitHash}`);
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = { ...process.env, ...loadEnv(mode, __dirname, "") };
