@@ -72,7 +72,7 @@ export default function ContextProvider({ children }: Props) {
       }}
     >
       {children}
-      <UpdateSnackbar />
+      {user && <UpdateSnackbar />}
     </AuthContext.Provider>
   );
 }
