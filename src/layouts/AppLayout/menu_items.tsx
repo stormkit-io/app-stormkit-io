@@ -1,5 +1,3 @@
-import { isSelfHosted } from "~/utils/helpers/instance";
-
 export const appMenuItems = ({
   app,
   pathname,
@@ -77,14 +75,6 @@ export const envMenuItems = ({
       isActive: pathname.includes("/function-triggers"),
     },
   ];
-
-  if (app.featureFlags?.SK_DATA_STORE) {
-    items.push({
-      text: "Data Store",
-      path: `${envPath}/data-store`,
-      isActive: pathname.includes("/data-store"),
-    });
-  }
 
   if (env.published?.length) {
     items.push({

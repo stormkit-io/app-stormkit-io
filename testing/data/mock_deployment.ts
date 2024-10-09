@@ -56,7 +56,7 @@ export default ({ id, appId, envId, isRunning }: Props = {}): Deployment => ({
     {
       title: "environment variables",
       message:
-        "PUBLIC_URL=/\nSK_COMMIT_SHA=c8b80debdde397405b787cc4ddffcb22867586b4\nNODE_ENV=production\nSK_API_KEY=***********************************************\nSK_APP_ID=2\nSK_DATA_STORE_URL=http://localhost:8080\nSK_ENV_ID=2\nSTORMKIT=true\n",
+        "PUBLIC_URL=/\nSK_COMMIT_SHA=c8b80debdde397405b787cc4ddffcb22867586b4\nNODE_ENV=production\nSK_API_KEY=***********************************************\nSK_APP_ID=2\nSK_ENV_ID=2\nSTORMKIT=true\n",
       status: true,
       payload: null,
     },

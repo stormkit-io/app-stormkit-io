@@ -39,19 +39,6 @@ const routes: Array<RouteProps> = [
     ),
   },
   {
-    path: "/data-store",
-    element: Async(
-      () =>
-        import("~/pages/apps/[id]/environments/[env-id]/datastore/Collections")
-    ),
-  },
-  {
-    path: "/data-store/:collection",
-    element: Async(
-      () => import("~/pages/apps/[id]/environments/[env-id]/datastore/Records")
-    ),
-  },
-  {
     path: "/deployments/:deploymentId",
     element: Async(
       () =>
