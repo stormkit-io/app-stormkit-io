@@ -36,8 +36,8 @@ export default function UpdateSnackbar() {
   };
 
   const updateBoth = details?.update?.ui && details?.update?.api;
-  const uiOnly = !updateBoth && details?.update?.ui;
-  const apiOnly = !updateBoth && details?.update?.api;
+  const uiOnly = !details?.update?.api && details?.update?.ui;
+  const apiOnly = !details?.update?.ui && details?.update?.api;
 
   const updateMessage = updateBoth
     ? "Stormkit UI and API has newer versions"
