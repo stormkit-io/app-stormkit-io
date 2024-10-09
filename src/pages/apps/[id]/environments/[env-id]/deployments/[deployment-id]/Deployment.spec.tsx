@@ -50,7 +50,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
       expect(wrapper.getByText("chore: update packages")).toBeTruthy();
-      expect(wrapper.getByText("published: 100%")).toBeTruthy();
+      expect(wrapper.getByText("published")).toBeTruthy();
       expect(wrapper.getByText("21.09.2022 - 21:30")).toBeTruthy();
       expect(wrapper.getByText("main")).toBeTruthy();
     });

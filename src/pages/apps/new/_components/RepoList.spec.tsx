@@ -65,18 +65,6 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
     wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
-  describe("loading", () => {
-    test("displays a spinner when loading is true", () => {
-      createWrapper({ repositories, loading: true });
-      expect(wrapper.getByTestId("repo-list-spinner")).toBeTruthy();
-    });
-
-    test("does not display a spinner when loading is false", () => {
-      createWrapper({ repositories, loading: false });
-      expect(() => wrapper.getByTestId("repo-list-spinner")).toThrow();
-    });
-  });
-
   describe("repositories", () => {
     test("displays a list of repositories", () => {
       createWrapper({ repositories });

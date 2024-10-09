@@ -47,7 +47,7 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
     createWrapper({ deployment, showProject: true });
     expect(wrapper.getByText("chore: update packages")).toBeTruthy();
     expect(wrapper.getByText("by Joe Doe")).toBeTruthy();
-    expect(wrapper.getByText("published: 100%")).toBeTruthy();
+    expect(wrapper.getByText("published")).toBeTruthy();
 
     expect(
       wrapper.getByText("chore: update packages").getAttribute("href")

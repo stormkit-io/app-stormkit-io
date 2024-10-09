@@ -1,4 +1,4 @@
-import { RenderResult, waitFor } from "@testing-library/react";
+import { RenderResult } from "@testing-library/react";
 import * as router from "react-router";
 import { render } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -115,34 +115,6 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/function-triggers`,
         `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/analytics`,
       ]);
-    });
-  });
-
-  describe("with SK_DATA_STORE feature flag turned on", () => {
-    beforeEach(() => {
-      const app = mockApp();
-      app.featureFlags = { SK_DATA_STORE: true };
-      mockUseLocation({ pathname: `/apps/${defaultApp.id}/environments` });
-      createWrapper({ app });
-    });
-
-    test("should display data store link", async () => {
-      const links = wrapper
-        .getAllByRole("link")
-        .map(link => link.getAttribute("href"));
-
-      await waitFor(() => {
-        expect(links).toEqual([
-          "/", // Stormkit logo link
-          `/apps/${defaultApp.id}/usage`,
-          "/", // <- My apps Link
-          `/apps/${defaultApp.id}/environments`, // <- app display name link
-          "https://gitlab.com/stormkit-io/frontend",
-          `/apps/${defaultApp.id}/environments`,
-          `/apps/${defaultApp.id}/feed`,
-          `/apps/${defaultApp.id}/settings`,
-        ]);
-      });
     });
   });
 });

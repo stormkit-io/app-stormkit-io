@@ -18,8 +18,8 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
   let navigate: jest.Func;
 
   const apiVersion = "v1.7.30";
-  const apiCommit = "a4ee0525";
-  const uiCommit = "f89ad8f7";
+  const apiCommit = "a4ee052";
+  const uiCommit = "f89ad8f";
 
   const createWrapper = ({ status, response }: WrapperProps) => {
     navigate = jest.fn();
@@ -54,7 +54,6 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
           status: 200,
           response: {
             stormkit: { selfHosted: true, apiCommit, apiVersion },
-            update: { ui: false, api: false },
           },
         });
 
@@ -80,7 +79,6 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
           response: {
             latest: { apiVersion: "v1.8.35", uiCommit },
             stormkit: { selfHosted: true, apiCommit, apiVersion },
-            update: { ui: false, api: false },
           },
         });
 
@@ -106,7 +104,6 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
           response: {
             latest: { apiVersion, uiCommit: "different" },
             stormkit: { selfHosted: true, apiCommit, apiVersion },
-            update: { ui: false, api: false },
           },
         });
 
@@ -131,7 +128,6 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
           response: {
             latest: { apiVersion, uiCommit },
             stormkit: { selfHosted: true, apiCommit, apiVersion },
-            update: { ui: false, api: false },
           },
         });
 
@@ -158,7 +154,6 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
           status: 200,
           response: {
             stormkit: { selfHosted: false, apiCommit, apiVersion },
-            update: { ui: false, api: false },
           },
         });
 
