@@ -45,7 +45,7 @@ declare interface InstanceDetails {
     apiVersion: string;
     selfHosted: boolean;
   };
-  update: {
+  update?: {
     ui: boolean;
     api: boolean;
   };
