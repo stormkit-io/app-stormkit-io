@@ -60,9 +60,7 @@ export default defineConfig(({ mode }) => {
         minify: true,
         inject: {
           data: {
-            title: `Stormkit - ${
-              env.STORMKIT_STAGING === "true" ? "Staging " : " "
-            }Console`,
+            title: `Stormkit - ${env.STORMKIT_PAGE_TITLE || "Console"}`,
           },
         },
       }),
