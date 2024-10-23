@@ -33,6 +33,12 @@ const routes: Array<RouteProps> = [
     ),
   },
   {
+    path: "/volumes",
+    element: Async(
+      () => import("~/pages/apps/[id]/environments/[env-id]/volumes")
+    ),
+  },
+  {
     path: "/deployments",
     element: Async(
       () => import("~/pages/apps/[id]/environments/[env-id]/deployments")
