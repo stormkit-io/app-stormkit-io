@@ -24,10 +24,6 @@ export const useSelectedTeam = ({
 
   const team = useMemo(() => {
     if (params.team) {
-      if (params.team === "personal") {
-        return findDefaultTeam();
-      }
-
       return teams?.find(t => t.slug === params.team || t.id === params.team);
     }
 
