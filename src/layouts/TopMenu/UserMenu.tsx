@@ -18,13 +18,11 @@ interface MenuItem {
 
 const menuItems: MenuItem[][] = [
   [
+    { to: "/user/account", text: "Account" },
     {
       to: "https://www.stormkit.io/docs",
-      text: "Stormkit Docs",
+      text: "Documentation",
     },
-  ],
-  [
-    { to: "/user/account", text: "Account" },
     { to: "/logout", text: "Log out" },
   ],
 ];
@@ -85,6 +83,53 @@ export default function UserMenu({ user, onClick }: Props) {
             </Alert>
           )}
         </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderBottom: "1px solid",
+            borderColor: "container.transparent",
+            mb: 2,
+            pb: 2,
+          }}
+        >
+          <Typography>Theme</Typography>
+          <Box>
+            <ToggleButtonGroup
+              value={mode}
+              exclusive
+              sx={{ bgcolor: "container.paper" }}
+              onChange={(_, val) => {
+                if (val !== null) {
+                  setMode(val);
+                }
+              }}
+              aria-label="display mode"
+            >
+              <ToggleButton
+                value="dark"
+                aria-label="24 hours"
+                size="small"
+                sx={{
+                  color: "text.primary",
+                }}
+              >
+                <DarkModeIcon sx={{ fontSize: 14 }} />
+              </ToggleButton>
+              <ToggleButton
+                value="light"
+                aria-label="Light"
+                size="small"
+                sx={{
+                  color: "text.primary",
+                }}
+              >
+                <LightModeIcon sx={{ fontSize: 14 }} />
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+        </Box>
         {menuItems.map((section, index) => (
           <Box
             key={index}
@@ -107,53 +152,6 @@ export default function UserMenu({ user, onClick }: Props) {
             ))}
           </Box>
         ))}
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderBottom: "1px solid",
-          borderColor: "container.transparent",
-          mb: 2,
-          pb: 2,
-        }}
-      >
-        <Typography>Theme</Typography>
-        <Box>
-          <ToggleButtonGroup
-            value={mode}
-            exclusive
-            sx={{ bgcolor: "container.paper" }}
-            onChange={(_, val) => {
-              if (val !== null) {
-                setMode(val);
-              }
-            }}
-            aria-label="display mode"
-          >
-            <ToggleButton
-              value="dark"
-              aria-label="24 hours"
-              size="small"
-              sx={{
-                color: "text.primary",
-              }}
-            >
-              <DarkModeIcon sx={{ fontSize: 14 }} />
-            </ToggleButton>
-            <ToggleButton
-              value="light"
-              aria-label="Light"
-              size="small"
-              sx={{
-                color: "text.primary",
-              }}
-            >
-              <LightModeIcon sx={{ fontSize: 14 }} />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Box>
       </Box>
       <Box sx={{ textAlign: "center" }}>
         {footerItems.map(item => (

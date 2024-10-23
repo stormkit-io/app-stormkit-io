@@ -20,7 +20,7 @@ describe("~/components/UserMenu.tsx", () => {
 
     test.each`
       text               | href
-      ${"Stormkit Docs"} | ${"https://www.stormkit.io/docs"}
+      ${"Documentation"} | ${"https://www.stormkit.io/docs"}
       ${"Account"}       | ${"/user/account"}
       ${"Log out"}       | ${"/logout"}
     `("should load menu item: $text", ({ text, href }) => {
@@ -46,7 +46,12 @@ describe("~/components/UserMenu.tsx", () => {
     beforeEach(() => {
       const user = mockUser();
       user.isPaymentRequired = true;
-      user.package = { id: "free" };
+      user.package = {
+        id: "free",
+        name: "Free Trial",
+        maxDeploymentsPerMonth: 100,
+        edition: "",
+      };
       user.freeTrialEnds = new Date(2024, 0, 5).getTime();
       createWrapper({ user });
     });
