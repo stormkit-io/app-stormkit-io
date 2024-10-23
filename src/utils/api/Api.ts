@@ -109,19 +109,13 @@ class Api {
       url = this.baseurl.replace(/\/+$/, "") + "/" + url.replace(/^\//, "");
     }
 
-    if (
-      localStorage.getItem("sk_canary") == "true" ||
-      document?.cookie.indexOf("sk_canary=true") > -1 ||
-      window.location.search?.indexOf("sk_canary=true") > -1
-    ) {
-      if (url.indexOf("?") > -1) {
-        url = url.replace("?", "?sk_canary=true&");
-      } else {
-        url += "?sk_canary=true";
-      }
+    const headers = this.getHeaders(opts.headers);
+
+    // https://stackoverflow.com/a/49510941/1075534
+    if (opts.body instanceof FormData) {
+      headers.delete("Content-Type");
     }
 
-    const headers = this.getHeaders(opts.headers);
     const request = new Request(url, { ...opts, headers });
     const resp = await fetch(request);
 
@@ -177,6 +171,16 @@ class Api {
 
     if (opts.body || opts.params) {
       opts.body = JSON.stringify(opts.body || opts.params);
+    }
+
+    return this.fetch(url, opts);
+  }
+
+  async upload<T>(url: string, opts: FetchOptions = {}): Promise<T> {
+    opts.method = "POST";
+
+    if (!opts.body) {
+      return Promise.reject("body is a required parameter");
     }
 
     return this.fetch(url, opts);

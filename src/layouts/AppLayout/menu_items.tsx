@@ -74,6 +74,11 @@ export const envMenuItems = ({
       path: `${envPath}/function-triggers`,
       isActive: pathname.includes("/function-triggers"),
     },
+    {
+      text: "Volumes",
+      path: `${envPath}/volumes`,
+      isActive: pathname.includes("/volumes"),
+    },
   ];
 
   if (env.published?.length) {
