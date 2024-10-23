@@ -61,7 +61,9 @@ export default function TeamsToggle({ app }: Props) {
               setIsMenuOpen(!isMenuOpen);
             }}
           >
-            {selectedTeam?.isDefault ? PERSONAL_TEAM : selectedTeam?.name}
+            {selectedTeam?.isDefault
+              ? PERSONAL_TEAM
+              : selectedTeam?.name || "Select a team"}
             {userPackage === "free" && user?.isPaymentRequired && (
               <Chip
                 component="span"

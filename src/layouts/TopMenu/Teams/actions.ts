@@ -24,6 +24,10 @@ export const useSelectedTeam = ({
 
   const team = useMemo(() => {
     if (params.team) {
+      if (params.team === "personal" || params.team === "default") {
+        return findDefaultTeam();
+      }
+
       return teams?.find(t => t.slug === params.team || t.id === params.team);
     }
 
@@ -31,20 +35,18 @@ export const useSelectedTeam = ({
       return teams?.find(t => t.id === app.teamId);
     }
 
-    if (location.pathname == "/") {
-      return findDefaultTeam();
-    }
-
     const teamId = localStorage.getItem("teamId");
 
     if (teamId) {
       return teams?.find(t => t.id === teamId);
     }
+
+    return findDefaultTeam();
   }, [teams, params, app]);
 
   if (team) {
     localStorage.setItem("teamId", team.id);
   }
 
-  return team || findDefaultTeam();
+  return team;
 };

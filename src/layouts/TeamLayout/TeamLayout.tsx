@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { useSelectedTeam } from "../TopMenu/Teams/actions";
-import TeamMenu from "./TeamMenu";
+import TeamMenu from "./TeamNav";
 import TopMenu from "../TopMenu";
+import Error404 from "~/components/Errors/Error404";
 
 interface Props {
   children: React.ReactNode;
@@ -34,10 +35,7 @@ export default function TeamLayout({ children }: Props) {
             boxShadow: 2,
           }}
         >
-          <TopMenu
-            team={selectedTeam}
-            submenu={<TeamMenu team={selectedTeam} />}
-          />
+          <TopMenu team={selectedTeam} submenu={<TeamMenu />} />
         </Box>
       )}
       <Box
@@ -50,7 +48,7 @@ export default function TeamLayout({ children }: Props) {
           justifyContent: "center",
         }}
       >
-        {children}
+        {selectedTeam ? children : <Error404 />}
       </Box>
     </Box>
   );

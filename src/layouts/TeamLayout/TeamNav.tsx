@@ -5,9 +5,6 @@ import { AuthContext } from "~/pages/auth/Auth.context";
 import MenuLink from "~/components/MenuLink";
 import { useSelectedTeam } from "../TopMenu/Teams/actions";
 
-interface Props {
-  team?: Team;
-}
 interface Path {
   path: string;
   icon?: React.ReactNode;
@@ -53,7 +50,7 @@ const teamMenuItems = ({
   return items;
 };
 
-export default function TeamMenu({ team }: Props) {
+export default function TeamMenu() {
   const { pathname } = useLocation();
   const { teams } = useContext(AuthContext);
   const selectedTeam = useSelectedTeam({ teams });
