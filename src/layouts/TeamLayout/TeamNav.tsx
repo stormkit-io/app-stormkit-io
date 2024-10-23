@@ -19,30 +19,31 @@ const teamMenuItems = ({
   team: Team;
   pathname: string;
 }): Path[] => {
+  const { slug } = team;
+
   const items: Path[] = [
     {
       path: `/${team.slug}`,
       text: team.isDefault ? "My apps" : `${team.name} Team Apps`,
-      isActive:
-        ["/", `/${team.slug}`, "/default", "/personal"].indexOf(pathname) > -1,
+      isActive: ["/", `/${slug}`].indexOf(pathname) > -1,
     },
   ];
 
   items.push({
-    path: `/${team.slug || "personal"}/deployments`,
+    path: `/${slug}/deployments`,
     text: "All Deployments",
     isActive: pathname.includes("/deployments"),
   });
 
   items.push({
-    path: `/${team.slug || "personal"}/feed`,
+    path: `/${slug}/feed`,
     text: "Activity Feed",
     isActive: pathname.includes("/feed"),
   });
 
   if (!team.isDefault) {
     items.push({
-      path: `/${team.slug || "personal"}/settings`,
+      path: `/${slug}/settings`,
       text: "Settings",
       isActive: pathname.includes("/settings"),
     });

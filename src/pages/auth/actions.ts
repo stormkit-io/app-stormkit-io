@@ -202,15 +202,7 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
     api
       .fetch<Team[]>("/teams")
       .then(teams => {
-        setTeams(
-          teams.map(t => {
-            if (t.slug === "personal") {
-              t.slug = "";
-            }
-
-            return t;
-          })
-        );
+        setTeams(teams);
       })
       .catch(() => {
         setError("Something went wrong while fetching teams.");

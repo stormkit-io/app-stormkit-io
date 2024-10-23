@@ -49,7 +49,7 @@ export default function AppMenu({ app, team }: Props) {
             }}
             item={{
               text: team?.isDefault ? "My apps" : `${team?.name} Team Apps`,
-              path: `/${team?.slug || "default"}`,
+              path: `/${team?.slug || "personal"}`,
               icon: <ArrowBack sx={{ fontSize: 18, mr: 1 }} />,
             }}
           />

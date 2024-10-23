@@ -24,7 +24,7 @@ export const useSelectedTeam = ({
 
   const team = useMemo(() => {
     if (params.team) {
-      if (params.team === "personal" || params.team === "default") {
+      if (params.team === "personal") {
         return findDefaultTeam();
       }
 
