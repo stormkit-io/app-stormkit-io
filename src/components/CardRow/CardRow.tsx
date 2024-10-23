@@ -68,7 +68,13 @@ export default function CardRow({
             flexDirection: "column",
           }}
         >
-          {menuItems && <DotDotDot label={menuLabel} items={menuItems} />}
+          {menuItems && (
+            <Box
+              sx={{ visibility: menuItems.length === 0 ? "hidden" : "visible" }}
+            >
+              <DotDotDot label={menuLabel} items={menuItems} />
+            </Box>
+          )}
           {actions}
         </Box>
       )}
