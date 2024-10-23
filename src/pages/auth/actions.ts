@@ -97,7 +97,6 @@ export const useFetchActiveProviders = () => {
 
 export const logout = () => (): void => {
   api.removeAuthToken();
-  localStorage.clear();
   window.location.href = "/";
 };
 
