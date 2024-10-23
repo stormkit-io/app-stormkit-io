@@ -16,8 +16,6 @@ describe("~/pages/team/TeamDelete.tsx", () => {
     team: Team;
   }
 
-  const teams = mockTeams();
-
   const mockUseNavigate = () => {
     navigateSpy = jest.fn();
     jest.spyOn(router, "useNavigate").mockReturnValue(navigateSpy);
@@ -42,36 +40,55 @@ describe("~/pages/team/TeamDelete.tsx", () => {
     wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
-  beforeEach(() => {
-    mockUseNavigate();
-    createWrapper({ team: teams[1] });
-  });
+  describe("when has admin access", () => {
+    const teams = mockTeams();
+    teams[1].currentUserRole = "owner";
 
-  test("should display title and subtitle", () => {
-    expect(wrapper.getByText("Danger zone")).toBeTruthy();
-    expect(
-      wrapper.getByText(
-        "Permanently delete your Team and all of its contents from the Stormkit platform. This action cannot be undone — proceed with caution."
-      )
-    ).toBeTruthy();
-  });
-
-  test("should remove the team", async () => {
-    const scope = mockRemoveTeam({
-      teamId: teams[1].id,
+    beforeEach(() => {
+      mockUseNavigate();
+      createWrapper({ team: teams[1] });
     });
 
-    fireEvent.click(wrapper.getByText("Delete"));
-
-    fireEvent.change(wrapper.getByLabelText("Confirmation"), {
-      target: { value: "Permanently delete my team" },
+    test("should display title and subtitle", () => {
+      expect(wrapper.getByText("Danger zone")).toBeTruthy();
+      expect(
+        wrapper.getByText(
+          "Permanently delete your Team and all of its contents from the Stormkit platform. This action cannot be undone — proceed with caution."
+        )
+      ).toBeTruthy();
     });
 
-    fireEvent.click(wrapper.getByText("Yes, continue"));
+    test("should remove the team", async () => {
+      const scope = mockRemoveTeam({
+        teamId: teams[1].id,
+      });
 
-    await waitFor(() => {
-      expect(scope.isDone()).toBe(true);
-      expect(reloadTeams).toHaveBeenCalled();
+      fireEvent.click(wrapper.getByText("Delete"));
+
+      fireEvent.change(wrapper.getByLabelText("Confirmation"), {
+        target: { value: "Permanently delete my team" },
+      });
+
+      fireEvent.click(wrapper.getByText("Yes, continue"));
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(reloadTeams).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe("when has developer access", () => {
+    const teams = mockTeams();
+    teams[1].currentUserRole = "developer";
+
+    beforeEach(() => {
+      mockUseNavigate();
+      createWrapper({ team: teams[1] });
+    });
+
+    test("should not render anyting", () => {
+      expect(wrapper.container.innerHTML).toBe("");
     });
   });
 });

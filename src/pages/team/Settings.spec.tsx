@@ -13,12 +13,11 @@ describe("~/pages/team/Settings.tsx", () => {
   let reloadTeams: jest.Func;
 
   interface Props {
-    team?: Team;
+    selectedTeam: Team;
+    teams?: Team[];
   }
 
-  const teams = mockTeams();
-
-  const createWrapper = ({ team }: Props) => {
+  const createWrapper = ({ teams, selectedTeam: team }: Props) => {
     reloadTeams = jest.fn();
 
     const memoryRouter = createMemoryRouter(
@@ -43,13 +42,33 @@ describe("~/pages/team/Settings.tsx", () => {
     wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
-  beforeEach(() => {
-    createWrapper({ team: teams[1] });
+  describe("when has admin access", () => {
+    const teams = mockTeams();
+    teams[1].currentUserRole = "admin";
+
+    beforeEach(() => {
+      createWrapper({ selectedTeam: teams[1], teams });
+    });
+
+    test("should load all sections", () => {
+      expect(wrapper.getByText("Team settings")).toBeTruthy();
+      expect(wrapper.getByText("Team members")).toBeTruthy();
+      expect(wrapper.getByText("Danger zone")).toBeTruthy();
+    });
   });
 
-  test("should load all sections", () => {
-    expect(wrapper.getByText("Team settings")).toBeTruthy();
-    expect(wrapper.getByText("Team members")).toBeTruthy();
-    expect(wrapper.getByText("Danger zone")).toBeTruthy();
+  describe("when has developer access", () => {
+    const teams = mockTeams();
+    teams[1].currentUserRole = "developer";
+
+    beforeEach(() => {
+      createWrapper({ selectedTeam: teams[1], teams });
+    });
+
+    test("should load all sections", () => {
+      expect(wrapper.getByText("Team settings")).toBeTruthy();
+      expect(wrapper.getByText("Team members")).toBeTruthy();
+      expect(() => wrapper.getByText("Danger zone")).toThrow();
+    });
   });
 });

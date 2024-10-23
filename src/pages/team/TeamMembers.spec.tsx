@@ -21,8 +21,6 @@ describe("~/pages/team/TeamMembers.tsx", () => {
     team: Team;
   }
 
-  const teams = mockTeams();
-
   const createWrapper = ({ team }: Props) => {
     reloadTeams = jest.fn();
 
@@ -48,54 +46,96 @@ describe("~/pages/team/TeamMembers.tsx", () => {
     wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
-  beforeEach(() => {
-    members = mockTeamMembers({ teamId: teams[1].id });
-    mockFetchTeamMembers({ teamId: teams[1].id, response: members });
-    createWrapper({ team: teams[1] });
-  });
+  describe("when has admin access", () => {
+    const teams = mockTeams();
+    teams[1].currentUserRole = "admin";
 
-  test("should display title and subtitle", () => {
-    expect(wrapper.getByText("Team members")).toBeTruthy();
-    expect(
-      wrapper.getByText("Invite team members to collaborate on your projects.")
-    ).toBeTruthy();
-  });
+    beforeEach(() => {
+      members = mockTeamMembers({ teamId: teams[1].id });
+      mockFetchTeamMembers({ teamId: teams[1].id, response: members });
+      createWrapper({ team: teams[1] });
+    });
 
-  test("should list team members", async () => {
-    await waitFor(() => {
-      expect(wrapper.getByText(members[0].displayName)).toBeTruthy();
-      expect(wrapper.getByText(members[1].displayName)).toBeTruthy();
-      expect(wrapper.getByText(members[2].displayName)).toBeTruthy();
-      expect(wrapper.getByText(members[0].email)).toBeTruthy();
-      expect(wrapper.getByText(members[1].email)).toBeTruthy();
-      expect(wrapper.getByText(members[2].email)).toBeTruthy();
+    test("should display title and subtitle", () => {
+      expect(wrapper.getByText("Team members")).toBeTruthy();
+      expect(
+        wrapper.getByText(
+          "Invite team members to collaborate on your projects."
+        )
+      ).toBeTruthy();
+    });
+
+    test("should list team members", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText(members[0].displayName)).toBeTruthy();
+        expect(wrapper.getByText(members[1].displayName)).toBeTruthy();
+        expect(wrapper.getByText(members[2].displayName)).toBeTruthy();
+        expect(wrapper.getByText(members[0].email)).toBeTruthy();
+        expect(wrapper.getByText(members[1].email)).toBeTruthy();
+        expect(wrapper.getByText(members[2].email)).toBeTruthy();
+      });
+    });
+
+    test("invite member button should open the modal", () => {
+      fireEvent.click(wrapper.getByText("Invite member"));
+      expect(wrapper.getByText("Invite team member")).toBeTruthy();
+    });
+
+    test("should remove team member", async () => {
+      let menu;
+
+      const scope = mockRemoveTeamMember({
+        teamId: members[1].teamId,
+        memberId: members[1].id,
+      });
+
+      await waitFor(() => {
+        menu = wrapper.getByLabelText(`Member ${members[1].id} menu`);
+      });
+
+      fireEvent.click(menu!);
+      fireEvent.click(wrapper.getByText("Remove"));
+      fireEvent.click(wrapper.getByText("Yes, continue"));
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(reloadTeams).toHaveBeenCalled();
+      });
     });
   });
 
-  test("invite member button should open the modal", () => {
-    fireEvent.click(wrapper.getByText("Invite member"));
-    expect(wrapper.getByText("Invite team member")).toBeTruthy();
-  });
+  describe("when has developer access", () => {
+    const teams = mockTeams();
+    teams[1].currentUserRole = "developer";
 
-  test("should remove team member", async () => {
-    let menu;
-
-    const scope = mockRemoveTeamMember({
-      teamId: members[1].teamId,
-      memberId: members[1].id,
+    beforeEach(() => {
+      members = mockTeamMembers({ teamId: teams[1].id });
+      mockFetchTeamMembers({ teamId: teams[1].id, response: members });
+      createWrapper({ team: teams[1] });
     });
 
-    await waitFor(() => {
-      menu = wrapper.getByLabelText(`Member ${members[1].id} menu`);
+    test("should display title and subtitle", () => {
+      expect(wrapper.getByText("Team members")).toBeTruthy();
+      expect(
+        wrapper.getByText(
+          "Invite team members to collaborate on your projects."
+        )
+      ).toBeTruthy();
     });
 
-    fireEvent.click(menu!);
-    fireEvent.click(wrapper.getByText("Remove"));
-    fireEvent.click(wrapper.getByText("Yes, continue"));
+    test("should list team members", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText(members[0].displayName)).toBeTruthy();
+        expect(wrapper.getByText(members[1].displayName)).toBeTruthy();
+        expect(wrapper.getByText(members[2].displayName)).toBeTruthy();
+        expect(wrapper.getByText(members[0].email)).toBeTruthy();
+        expect(wrapper.getByText(members[1].email)).toBeTruthy();
+        expect(wrapper.getByText(members[2].email)).toBeTruthy();
+      });
+    });
 
-    await waitFor(() => {
-      expect(scope.isDone()).toBe(true);
-      expect(reloadTeams).toHaveBeenCalled();
+    test("should not display the invite member button", () => {
+      expect(() => wrapper.getByText("Invite member")).toThrow();
     });
   });
 });

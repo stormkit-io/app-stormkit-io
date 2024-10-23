@@ -16,8 +16,6 @@ describe("~/pages/team/TeamSettings.tsx", () => {
     team: Team;
   }
 
-  const teams = mockTeams();
-
   const mockUseNavigate = () => {
     navigateSpy = jest.fn();
     jest.spyOn(router, "useNavigate").mockReturnValue(navigateSpy);
@@ -30,9 +28,7 @@ describe("~/pages/team/TeamSettings.tsx", () => {
       [
         {
           path: "/:team/settings",
-          element: (
-            <TeamSettings team={team} reloadTeams={reloadTeams} teams={teams} />
-          ),
+          element: <TeamSettings team={team} reloadTeams={reloadTeams} />,
         },
       ],
       {
@@ -44,38 +40,64 @@ describe("~/pages/team/TeamSettings.tsx", () => {
     wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
-  beforeEach(() => {
-    mockUseNavigate();
-    createWrapper({ team: teams[1] });
-  });
+  describe("when has admin rights", () => {
+    const teams = mockTeams();
+    teams[1].currentUserRole = "owner";
 
-  test("should display title and subtitle", () => {
-    expect(wrapper.getByText("Team settings")).toBeTruthy();
-    expect(
-      wrapper.getByText("Only Owners and Admins can update team settings.")
-    ).toBeTruthy();
-  });
-
-  test("should update a team", async () => {
-    const team = { ...teams[1], name: "My new name", slug: "my-new-name" };
-    const scope = mockUpdateTeam({
-      name: team.name,
-      teamId: team.id,
-      response: team,
+    beforeEach(() => {
+      mockUseNavigate();
+      createWrapper({ team: teams[1] });
     });
 
-    fireEvent.change(wrapper.getByLabelText("Team name"), {
-      target: { value: team.name },
+    test("should display title and subtitle", () => {
+      expect(wrapper.getByText("Team settings")).toBeTruthy();
+      expect(
+        wrapper.getByText("Only Owners and Admins can update team settings.")
+      ).toBeTruthy();
     });
 
-    fireEvent.click(wrapper.getByText("Update"));
-
-    await waitFor(() => {
-      scope.isDone();
-      expect(reloadTeams).toHaveBeenCalled();
-      expect(navigateSpy).toHaveBeenCalledWith(`/${team.id}/settings`, {
-        replace: true,
+    test("should update a team", async () => {
+      const team = { ...teams[1], name: "My new name", slug: "my-new-name" };
+      const scope = mockUpdateTeam({
+        name: team.name,
+        teamId: team.id,
+        response: team,
       });
+
+      fireEvent.change(wrapper.getByLabelText("Team name"), {
+        target: { value: team.name },
+      });
+
+      fireEvent.click(wrapper.getByText("Update"));
+
+      await waitFor(() => {
+        scope.isDone();
+        expect(reloadTeams).toHaveBeenCalled();
+        expect(navigateSpy).toHaveBeenCalledWith(`/${team.id}/settings`, {
+          replace: true,
+        });
+      });
+    });
+  });
+
+  describe("when has developer rights", () => {
+    const teams = mockTeams();
+    teams[1].currentUserRole = "developer";
+
+    beforeEach(() => {
+      mockUseNavigate();
+      createWrapper({ team: teams[1] });
+    });
+
+    test("should display title and subtitle", () => {
+      expect(wrapper.getByText("Team settings")).toBeTruthy();
+      expect(
+        wrapper.getByText("Only Owners and Admins can update team settings.")
+      ).toBeTruthy();
+    });
+
+    test("should not have an update button", () => {
+      expect(() => wrapper.getByText("Update")).toThrow();
     });
   });
 });
