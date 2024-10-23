@@ -23,7 +23,8 @@ const teamMenuItems = ({
     {
       path: `/${team.slug}`,
       text: team.isDefault ? "My apps" : `${team.name} Team Apps`,
-      isActive: pathname === `/${team.slug}`,
+      isActive:
+        ["/", `/${team.slug}`, "/default", "/personal"].indexOf(pathname) > -1,
     },
   ];
 

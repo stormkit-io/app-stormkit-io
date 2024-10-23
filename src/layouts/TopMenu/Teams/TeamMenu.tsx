@@ -80,7 +80,7 @@ export default function TeamMenu({
                 }}
               />
               <Link
-                href={team.isDefault ? "/" : `/${team.slug}`}
+                href={team.isDefault ? "/default" : `/${team.slug}`}
                 onClick={onClickAway}
                 sx={{
                   p: 1,
