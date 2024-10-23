@@ -43,8 +43,12 @@ export default function InviteMemberModal({ teamId, onClose }: Props) {
         setToken(token);
       })
       .catch(async res => {
-        const { error } = await res.json();
-        setError(error || "Something went wrong while inviting user.");
+        if (res.status === 401) {
+          setError("You are not authorized to invite team members.");
+        } else {
+          const { error } = await res.json();
+          setError(error || "Something went wrong while inviting user.");
+        }
       })
       .finally(() => {
         setIsLoading(false);

@@ -39,8 +39,12 @@ export default function TeamSettings({ team, reloadTeams }: Props) {
 
         reloadTeams?.();
       })
-      .catch(e => {
-        setError("Something went wrong while updating the team.");
+      .catch(res => {
+        if (res.status) {
+          setError("You are not authorized to update team settings.");
+        } else {
+          setError("Something went wrong while updating the team.");
+        }
       })
       .finally(() => {
         setIsLoading(false);
