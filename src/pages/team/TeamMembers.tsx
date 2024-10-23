@@ -27,7 +27,12 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
 
   return (
     <>
-      <Card error={tmError} sx={{ mb: 2 }} loading={loading}>
+      <Card
+        error={tmError}
+        sx={{ mb: 2 }}
+        loading={loading}
+        contentPadding={false}
+      >
         <CardHeader
           title="Team members"
           subtitle="Invite team members to collaborate on your projects."
