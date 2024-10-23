@@ -20,6 +20,8 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
   const [isNewMemberModalOpen, setIsNewMemberModalOpen] = useState(false);
   const tmFetchResult = useFetchTeamMembers({ team });
   const [memberToBeRemoved, setMemberToBeRemoved] = useState<TeamMember>();
+  const hasWriteAccess =
+    team.currentUserRole === "owner" || team.currentUserRole === "admin";
 
   const { teamMembers, error: tmError, loading } = tmFetchResult;
 
@@ -36,14 +38,18 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
               key={member.userId}
               chipLabel={member.role}
               menuLabel={`Member ${member.id} menu`}
-              menuItems={[
-                {
-                  text: member.userId === user?.id ? "Leave" : "Remove",
-                  onClick: () => {
-                    setMemberToBeRemoved(member);
-                  },
-                },
-              ]}
+              menuItems={
+                hasWriteAccess || user.id === member.userId
+                  ? [
+                      {
+                        text: member.userId === user?.id ? "Leave" : "Remove",
+                        onClick: () => {
+                          setMemberToBeRemoved(member);
+                        },
+                      },
+                    ]
+                  : []
+              }
             >
               <Typography>
                 {member.fullName?.trim() || member.displayName}
@@ -54,18 +60,20 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
             </CardRow>
           ))}
         </Box>
-        <CardFooter>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={e => {
-              e.preventDefault();
-              setIsNewMemberModalOpen(true);
-            }}
-          >
-            Invite member
-          </Button>
-        </CardFooter>
+        {hasWriteAccess && (
+          <CardFooter>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={e => {
+                e.preventDefault();
+                setIsNewMemberModalOpen(true);
+              }}
+            >
+              Invite member
+            </Button>
+          </CardFooter>
+        )}
       </Card>
       {isNewMemberModalOpen && (
         <InviteMemberModal

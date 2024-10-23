@@ -14,6 +14,12 @@ interface Props {
 
 export default function TeamDelete({ team, reloadTeams }: Props) {
   const [confirmModal, setConfirmModal] = useState(false);
+  const hasWriteAccess =
+    team.currentUserRole === "owner" || team.currentUserRole === "admin";
+
+  if (!hasWriteAccess) {
+    return <></>;
+  }
 
   return (
     <>

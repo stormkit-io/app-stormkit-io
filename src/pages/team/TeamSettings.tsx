@@ -16,6 +16,8 @@ export default function TeamSettings({ team, reloadTeams }: Props) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const hasWriteAccess =
+    team.currentUserRole === "owner" || team.currentUserRole === "admin";
 
   const handleTeamUpdate: FormEventHandler<HTMLElement> = e => {
     e.preventDefault();
@@ -71,18 +73,23 @@ export default function TeamSettings({ team, reloadTeams }: Props) {
         name="name"
         autoFocus
         placeholder="My Awesome Team"
+        inputProps={{
+          readOnly: true,
+        }}
         sx={{ mb: 4 }}
       />
-      <CardFooter>
-        <Button
-          type="submit"
-          variant="contained"
-          color="secondary"
-          loading={isLoading}
-        >
-          Update
-        </Button>
-      </CardFooter>
+      {hasWriteAccess && (
+        <CardFooter>
+          <Button
+            type="submit"
+            variant="contained"
+            color="secondary"
+            loading={isLoading}
+          >
+            Update
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }
