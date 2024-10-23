@@ -29,7 +29,6 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
-      https: true,
       host: true,
       proxy: {
         // with options
@@ -55,7 +54,21 @@ export default defineConfig(({ mode }) => {
       extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
     },
     publicDir: "./public",
-    plugins: [basicSsl(), createHtmlPlugin({}), svgr(), react()],
+    plugins: [
+      basicSsl(),
+      createHtmlPlugin({
+        minify: true,
+        inject: {
+          data: {
+            title: `Stormkit - ${
+              env.STORMKIT_STAGING === "true" ? "Staging " : " "
+            }Console`,
+          },
+        },
+      }),
+      svgr(),
+      react(),
+    ],
     build: {
       outDir: "../dist",
       rollupOptions: {
