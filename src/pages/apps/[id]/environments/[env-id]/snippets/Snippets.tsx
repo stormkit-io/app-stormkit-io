@@ -244,9 +244,11 @@ export default function Snippets() {
               });
           }}
         >
-          <Typography>
-            This will delete the snippet and it won't be injected anymore.
-          </Typography>
+          This will delete{" "}
+          <Typography component="span" color="text.secondary" fontSize="medium">
+            {toBeDeleted.title}
+          </Typography>{" "}
+          snippet and it won't be injected anymore.
         </ConfirmModal>
       )}
     </Card>

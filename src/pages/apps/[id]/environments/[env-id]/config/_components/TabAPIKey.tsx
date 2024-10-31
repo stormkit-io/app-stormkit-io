@@ -191,11 +191,8 @@ export default function TabAPIKey({ app, environment: env }: Props) {
             return "";
           }}
         >
-          <Typography>
-            This will delete the API key.
-            <br /> If you have any integration that uses this API key, it will
-            stop working.
-          </Typography>
+          This will delete the API key. If you have any integration that uses
+          this key, it will stop working.
         </ConfirmModal>
       )}
     </Card>

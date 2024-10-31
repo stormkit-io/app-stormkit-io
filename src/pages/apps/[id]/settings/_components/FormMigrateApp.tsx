@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Card from "~/components/Card";
@@ -70,7 +71,7 @@ export default function FormMigrateApp({ app, teams }: Props) {
       </CardFooter>
       {isConfirmModalOpen && selectedTeam ? (
         <ConfirmModal
-          typeConfirmationText={`migrate app to ${selectedTeam.name}`}
+          typeConfirmationText={"migrate"}
           onCancel={() => {
             toggleConfirmModal(false);
           }}
@@ -94,8 +95,15 @@ export default function FormMigrateApp({ app, teams }: Props) {
               });
           }}
         >
-          This will migrate the app to "{selectedTeam.name}". <br />
-          Some users may no longer access this application.
+          This will migrate the{" "}
+          <Typography component="span" color="text.secondary" fontSize="medium">
+            {app.displayName}
+          </Typography>{" "}
+          application to{" "}
+          <Typography component="span" color="text.secondary" fontSize="medium">
+            {selectedTeam.name}
+          </Typography>{" "}
+          team. Some users may no longer access this application.
         </ConfirmModal>
       ) : (
         ""

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Modal from "~/components/Modal";
@@ -49,48 +49,44 @@ const ConfirmModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal open onClose={onCancel}>
-      <Box sx={{ p: 4 }}>
-        <Typography
-          variant="h2"
-          sx={{ textAlign: "center", fontSize: 24, mb: 4, fontWeight: "bold" }}
-        >
-          Confirm action
+    <Modal open onClose={onCancel} maxWidth="md">
+      <Card error={error}>
+        <CardHeader title="Confirm action" />
+        <Typography component="div" fontSize="medium" sx={{ mb: 0 }}>
+          {children}
         </Typography>
-        <Box sx={{ textAlign: "center" }}>
-          <Box sx={{ mb: 2 }}>
-            <Typography component="div">{children}</Typography>
-            {!typeConfirmationText && (
-              <Typography>Are you sure you want to continue?</Typography>
-            )}
-          </Box>
-
-          {typeConfirmationText && (
-            <>
-              <Typography>
-                Type <b>{typeConfirmationText}</b> in order to proceed.
-              </Typography>
-              <TextField
-                label="Confirmation"
-                type="text"
-                variant="filled"
-                autoComplete="off"
-                placeholder={typeConfirmationText}
-                onChange={verifyConfirmationInput}
-                fullWidth
-                autoFocus
-                sx={{ mt: 4 }}
-              />
-            </>
-          )}
-        </Box>
-        {error && (
-          <Alert color="error" sx={{ mt: 4 }}>
-            <AlertTitle>Error</AlertTitle>
-            <Typography>{error}</Typography>
-          </Alert>
+        {!typeConfirmationText && (
+          <Typography sx={{ mt: 2, mb: 4 }} fontSize="medium">
+            Are you sure you want to continue?
+          </Typography>
         )}
-        <Box sx={{ textAlign: "center", mt: 4 }}>
+        {typeConfirmationText && (
+          <>
+            <Typography fontSize="medium" sx={{ mt: 2 }}>
+              Type{" "}
+              <Typography
+                component="b"
+                color="text.secondary"
+                fontSize="medium"
+              >
+                {typeConfirmationText}
+              </Typography>{" "}
+              in order to proceed.
+            </Typography>
+            <TextField
+              label="Confirmation"
+              type="text"
+              variant="filled"
+              autoComplete="off"
+              placeholder={typeConfirmationText}
+              onChange={verifyConfirmationInput}
+              fullWidth
+              autoFocus
+              sx={{ my: 4 }}
+            />
+          </>
+        )}
+        <CardFooter>
           <Button
             color="info"
             variant="text"
@@ -110,8 +106,8 @@ const ConfirmModal: React.FC<Props> = ({
           >
             {confirmText || "Yes, continue"}
           </Button>
-        </Box>
-      </Box>
+        </CardFooter>
+      </Card>
     </Modal>
   );
 };

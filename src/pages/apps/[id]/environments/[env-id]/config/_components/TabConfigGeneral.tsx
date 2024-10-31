@@ -152,10 +152,7 @@ export default function TabConfigGeneral({
             fullWidth
             helperText={
               <>
-                <Typography
-                  component="span"
-                  sx={{ mb: 2, mt: 1, display: "block" }}
-                >
+                <Typography component="span" sx={{ mb: 2, display: "block" }}>
                   Specify which branches should be automatically deployed to
                   this environment. Below are some examples:
                 </Typography>

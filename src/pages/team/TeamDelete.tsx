@@ -76,10 +76,8 @@ export default function TeamDelete({ team, reloadTeams }: Props) {
               });
           }}
         >
-          <Typography>
-            This will delete your team and all of its contents. This action
-            cannot be undone.
-          </Typography>
+          This will delete your team and all of its contents. This action cannot
+          be undone.
         </ConfirmModal>
       )}
     </>
