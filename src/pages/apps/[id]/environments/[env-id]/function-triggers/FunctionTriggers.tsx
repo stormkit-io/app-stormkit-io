@@ -131,7 +131,7 @@ const FunctionTriggers: React.FC = () => {
       )}
       {toBeDeleted && functionTriggers && (
         <ConfirmModal onConfirm={handleDelete} onCancel={handleDeleteCancel}>
-          <p>This will delete the trigger function immediately.</p>
+          This will delete the trigger function immediately.
         </ConfirmModal>
       )}
     </Card>

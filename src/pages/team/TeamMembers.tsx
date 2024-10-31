@@ -116,7 +116,7 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
               });
           }}
         >
-          <Typography sx={{ mb: 4 }}>
+          <>
             {memberToBeRemoved.userId === user.id ? (
               <Box component="span">
                 You are about to leave the team. You will need another
@@ -132,7 +132,7 @@ export default function TeamMembers({ user, team, reloadTeams }: Props) {
                 <br /> They will lose access to all apps under this team.
               </Box>
             )}
-          </Typography>
+          </>
         </ConfirmModal>
       )}
     </>

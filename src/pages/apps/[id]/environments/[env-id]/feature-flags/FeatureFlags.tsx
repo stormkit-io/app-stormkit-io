@@ -160,13 +160,11 @@ export default function FeatureFlags() {
               });
           }}
         >
-          <p>
-            This will{" "}
-            <span className="font-bold">
-              {toBeToggled.flagValue ? "disable" : "enable"}
-            </span>{" "}
-            the feature flag. Changes will be effective immediately.
-          </p>
+          This will{" "}
+          <Box component="b">
+            {toBeToggled.flagValue ? "disable" : "enable"}
+          </Box>
+          the feature flag. Changes will be effective immediately.
         </ConfirmModal>
       )}
       {toBeDeleted && flags && (
@@ -197,10 +195,8 @@ export default function FeatureFlags() {
               });
           }}
         >
-          <p>
-            This will delete the feature flag immediately and it won't be
-            accessible anymore to the client.
-          </p>
+          This will delete the feature flag immediately and it won't be
+          accessible anymore to the clients.
         </ConfirmModal>
       )}
     </Card>

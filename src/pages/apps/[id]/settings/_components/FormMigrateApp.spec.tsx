@@ -48,7 +48,7 @@ describe("~/pages/apps/[id]/settings/_components/FormMigrateApp", () => {
     expect(modal).toBeTruthy();
 
     fireEvent.change(wrapper.getByLabelText("Confirmation"), {
-      target: { value: `migrate app to ${teams[2].name}` },
+      target: { value: "migrate" },
     });
 
     const scope = mockMigrateApp({
