@@ -29,6 +29,14 @@ export default (mode: "dark" | "light") => {
       fontWeightLight: 400,
     },
     components: {
+      MuiFormHelperText: {
+        styleOverrides: {
+          root: {
+            marginLeft: "0.75rem",
+            marginTop: "0.25rem",
+          },
+        },
+      },
       MuiLink: {
         defaultProps: {
           component: LinkBehavior,
