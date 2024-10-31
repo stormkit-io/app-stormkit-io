@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import MenuLink from "~/components/MenuLink";
 import { envMenuItems } from "./menu_items";
+import DotDotDot from "~/components/DotDotDotV2";
 
 export default function EnvMenu() {
   const { app, environments } = useContext(AppContext);
@@ -81,13 +82,16 @@ export default function EnvMenu() {
       </Box>
       <Box
         sx={{
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           flexDirection: "row",
         }}
       >
         {envMenu.map(item => (
           <MenuLink key={item.path} item={item} />
         ))}
+      </Box>
+      <Box sx={{ display: { xs: "block", md: "none" }, mr: 2 }}>
+        <DotDotDot items={envMenu} />
       </Box>
     </Box>
   );
