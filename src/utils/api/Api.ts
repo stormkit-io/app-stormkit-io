@@ -131,6 +131,10 @@ class Api {
       throw resp;
     }
 
+    if (resp.headers.get("content-type") != "application/json") {
+      return resp as T;
+    }
+
     try {
       const json = await resp.json();
 
