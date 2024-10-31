@@ -13,7 +13,7 @@ export default function EmptyList({ sx, children }: Props) {
   return (
     <Box sx={{ textAlign: "center", my: 12, ...sx }}>
       <img src={emptyListSvg} alt="Empty app list" className="m-auto" />
-      <Typography sx={{ mt: 6 }}>
+      <Typography fontSize="medium" sx={{ mt: 6 }}>
         {children || <>It's quite empty in here.</>}
       </Typography>
     </Box>

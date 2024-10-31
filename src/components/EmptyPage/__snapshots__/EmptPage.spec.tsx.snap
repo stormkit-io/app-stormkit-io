@@ -17,7 +17,7 @@ exports[`~/components/EmptyPage.tsx should render the component as expected 1`] 
           src="test-file-stub"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1n30uq9-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-hldc38-MuiTypography-root"
         >
           <span>
             Hello world
@@ -36,7 +36,7 @@ exports[`~/components/EmptyPage.tsx should render the component as expected 1`] 
         src="test-file-stub"
       />
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1n30uq9-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 css-hldc38-MuiTypography-root"
       >
         <span>
           Hello world
