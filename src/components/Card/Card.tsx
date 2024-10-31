@@ -11,18 +11,22 @@ import CardRow from "../CardRow";
 import CardContext, { Size } from "./Card.context";
 
 interface Props extends BoxProps {
-  errorTitle?: boolean;
+  successTitle?: string | false;
+  errorTitle?: string | false;
   error?: React.ReactNode;
   info?: React.ReactNode;
   success?: React.ReactNode;
   contentPadding?: boolean; // When false, the content will not have padding x.
   loading?: boolean;
   size?: Size;
+  onSuccessClose?: () => void;
+  onErrorClose?: () => void;
 }
 
 function Card({
   sx,
-  errorTitle = true,
+  errorTitle = "Error",
+  successTitle = "Success",
   error,
   success,
   info,
@@ -30,6 +34,8 @@ function Card({
   loading,
   contentPadding = true,
   size = "medium",
+  onSuccessClose,
+  onErrorClose,
   ...rest
 }: Props) {
   let header;
@@ -101,15 +107,23 @@ function Card({
           </Box>
         )}
         {!loading && error && (
-          <Alert color="error" sx={{ mb: footer ? p : 0, px: p, mx: p }}>
-            {errorTitle && <AlertTitle>Error</AlertTitle>}
+          <Alert
+            color="error"
+            sx={{ mb: footer ? p : 0, px: p, mx: p }}
+            onClose={onErrorClose}
+          >
+            {errorTitle && <AlertTitle>{errorTitle}</AlertTitle>}
             <Box>{error}</Box>
           </Alert>
         )}
         {!loading && success && (
-          <Alert color="success" sx={{ mb: footer ? p : 0, px: p, mx: p }}>
-            <AlertTitle>Success</AlertTitle>
-            <Box>{success}</Box>
+          <Alert
+            color="success"
+            sx={{ mb: footer ? p : 0, px: p, mx: p }}
+            onClose={onSuccessClose}
+          >
+            {successTitle && <AlertTitle>{successTitle}</AlertTitle>}
+            <Box sx={{ flex: 1 }}>{success}</Box>
           </Alert>
         )}
         {!loading && info && (
