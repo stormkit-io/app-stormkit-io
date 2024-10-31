@@ -22,15 +22,8 @@ function Column({ children }: ColumnProps) {
       sx={{
         pr: 2,
         mr: 2,
-        pb: { xs: 1, md: 0 },
-        mb: { xs: 1, md: 0 },
-        width: { xs: "100%", md: "auto" },
-        borderRight: { xs: "none", md: "1px solid" },
-        borderBottom: { xs: "1px solid", md: "none" },
-        borderColor: {
-          xs: "container.transparent",
-          md: "container.transparent",
-        },
+        borderRight: "1px solid",
+        borderColor: "container.transparent",
       }}
     >
       {children}
@@ -57,8 +50,7 @@ export default function EnvironmentHeader() {
         sx={{
           width: "100%",
           display: "flex",
-          alignItems: { xs: "flex-start", md: "center" },
-          flexDirection: { xs: "column", md: "row" },
+          alignItems: "center",
         }}
       >
         <Column>
@@ -78,7 +70,7 @@ export default function EnvironmentHeader() {
           <span className="fa fa-code-branch mr-2" />
           <Typography component="span">{environment.branch}</Typography>
         </Column>
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, display: { xs: "none", md: "inherit" } }}>
           {!environment.lastDeploy?.id ? (
             <>
               <Tooltip
@@ -108,7 +100,6 @@ export default function EnvironmentHeader() {
               sx={{
                 mr: 2,
                 mb: { xs: 2, md: 0 },
-                width: { xs: "100%", md: "auto" },
                 flex: 1,
               }}
             >
@@ -169,12 +160,12 @@ export default function EnvironmentHeader() {
             </Box>
           )}
         </Box>
-        <Box sx={{ width: { xs: "100%", md: "auto" } }}>
+        <Box>
           <Box
             sx={{
               display: "flex",
               alignItems: "flex-start",
-              justifyContent: { xs: "center", md: "flex-end" },
+              justifyContent: "flex-end",
             }}
           >
             <DeployButton
