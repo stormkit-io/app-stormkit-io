@@ -1,3 +1,5 @@
+import type { SendSampleRequestResponse } from "../_actions/outbound_webhook_actions";
+import type { OutboundWebhook, TriggerWhen } from "../types";
 import React, { useState } from "react";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -17,13 +19,17 @@ import {
   sendSampleRequest,
   deleteOutboundWebhook,
 } from "../_actions/outbound_webhook_actions";
-import type { SendSampleRequestResponse } from "../_actions/outbound_webhook_actions";
-import { OutboundWebhook } from "../types";
 import { grey } from "@mui/material/colors";
 
 interface Props {
   app: App;
 }
+
+const messages: Record<TriggerWhen, string> = {
+  on_deploy_success: "Triggered after each successful deployment",
+  on_deploy_failed: "Triggered after each failed deployment",
+  on_publish: "Triggered after a deployment is published",
+};
 
 const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
   const [loadingSample, setLoadingSample] = useState(false);
@@ -61,11 +67,7 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
                   {hook.requestMethod?.toUpperCase()}
                 </Typography>
                 <Typography>{truncate(hook.requestUrl, 50)}</Typography>
-                <Typography>
-                  {hook.triggerWhen === "on_deploy"
-                    ? "Triggered after each successful deployment"
-                    : "Triggered after a deployment is published"}
-                </Typography>
+                <Typography>{messages[hook.triggerWhen]}</Typography>
               </Box>
               <div className="self-baseline">
                 <DotDotDot

@@ -81,7 +81,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
           requestUrl: "",
           requestMethod: "GET",
           requestHeaders: {},
-          triggerWhen: "on_deploy",
+          triggerWhen: "on_deploy_success",
         },
       });
 

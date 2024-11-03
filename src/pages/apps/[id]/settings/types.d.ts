@@ -15,7 +15,10 @@ export interface AppSettings {
 
 export type AllowedMethod = "GET" | "POST" | "HEAD";
 
-export type TriggerWhen = "on_deploy" | "on_publish";
+export type TriggerWhen =
+  | "on_deploy_success"
+  | "on_deploy_failed"
+  | "on_publish";
 
 export interface OutboundWebhook {
   id?: string;

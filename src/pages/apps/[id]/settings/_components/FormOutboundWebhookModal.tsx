@@ -1,3 +1,4 @@
+import type { TriggerWhen, OutboundWebhook, AllowedMethod } from "../types";
 import { useState, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
@@ -19,14 +20,13 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import { upsertOutboundWebhook } from "../_actions/outbound_webhook_actions";
-import type * as types from "../types";
 
 interface Props {
   app: App;
   isOpen: boolean;
   toggleModal: (val: boolean) => void;
   onUpdate: () => void;
-  webhook?: types.OutboundWebhook;
+  webhook?: OutboundWebhook;
 }
 
 const isValidMethod = (method: string): boolean => {
@@ -40,7 +40,7 @@ export default function FormNewOutboundWebhookModal({
   app,
   webhook,
 }: Props) {
-  const [trigger, setTrigger] = useState("on_deploy");
+  const [trigger, setTrigger] = useState<TriggerWhen>("on_deploy_success");
   const [method, setMethod] = useState("GET");
   const [payload, setPayload] = useState("");
   const [headers, setHeaders] = useState<Record<string, string>>({});
@@ -60,7 +60,7 @@ export default function FormNewOutboundWebhookModal({
           setShowHeaders(false);
           setHeaders({});
           setMethod("GET");
-          setTrigger("on_deploy");
+          setTrigger("on_deploy_success");
         }
       }, 250);
     }
@@ -120,10 +120,10 @@ export default function FormNewOutboundWebhookModal({
             app,
             id: data.id,
             requestUrl: data.requestUrl,
-            requestMethod: data.requestMethod as types.AllowedMethod,
+            requestMethod: data.requestMethod as AllowedMethod,
             requestPayload: data.requestMethod !== "POST" ? undefined : payload,
             requestHeaders: headers,
-            triggerWhen: data.triggerWhen as types.TriggerWhen,
+            triggerWhen: data.triggerWhen as TriggerWhen,
           })
             .then(() => {
               setError(null);
@@ -272,12 +272,15 @@ export default function FormNewOutboundWebhookModal({
             fullWidth
             onChange={e => {
               if (typeof e.target.value === "string") {
-                setTrigger(e.target.value);
+                setTrigger(e.target.value as TriggerWhen);
               }
             }}
           >
-            <Option value={"on_deploy"}>
+            <Option value={"on_deploy_success"}>
               After each successful deployment
+            </Option>
+            <Option value={"on_deploy_failed"}>
+              After each failed deployment
             </Option>
             <Option value={"on_publish"}>After deployment is published</Option>
           </Select>
