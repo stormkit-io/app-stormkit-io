@@ -1,6 +1,6 @@
 import type { SendSampleRequestResponse } from "../_actions/outbound_webhook_actions";
 import type { OutboundWebhook, TriggerWhen } from "../types";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -9,7 +9,6 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import Modal from "~/components/Modal";
-import Container from "~/components/Container";
 import Spinner from "~/components/Spinner";
 import DotDotDot from "~/components/DotDotDotV2";
 import { truncate } from "~/utils/helpers/string";
@@ -41,6 +40,14 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
     app,
     refreshToken,
   });
+
+  const sampleResponse = useMemo(() => {
+    try {
+      return JSON.stringify(JSON.parse(sampleData?.result.body || ""), null, 4);
+    } catch {
+      return "Empty response";
+    }
+  }, [sampleData?.result.body]);
 
   return (
     <Card error={error} sx={{ mb: 4 }}>
@@ -81,7 +88,7 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
                     },
                     {
                       text: (
-                        <div className="flex">
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
                           Trigger sample
                           {loadingSample && (
                             <Spinner
@@ -91,7 +98,7 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
                               height={4}
                             />
                           )}
-                        </div>
+                        </Box>
                       ),
                       onClick: close => {
                         setLoadingSample(true);
@@ -146,22 +153,39 @@ const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
       </CardFooter>
       <Modal
         open={Boolean(sampleData)}
-        className="max-w-screen-sm"
         onClose={() => {
           setSampleData(undefined);
         }}
       >
-        <Container
-          title={
-            <p className="font-bold">
-              Sample result: {sampleData?.result.status}
-            </p>
-          }
-        >
-          <div className="font-mono text-xs bg-blue-20 p-4 mx-4 mb-4 whitespace-pre overflow-x-auto">
-            {sampleData?.result.body || "Empty response"}
-          </div>
-        </Container>
+        <Card>
+          <CardHeader title={`Sample result: ${sampleData?.result.status}`} />
+          <Box sx={{ mb: 4 }}>
+            <Box
+              component="pre"
+              sx={{
+                color: "text.primary",
+                bgcolor: "container.transparent",
+                fontFamily: "monospace",
+                fontSize: 12,
+                p: 2,
+              }}
+            >
+              {sampleResponse}
+            </Box>
+          </Box>
+          <CardFooter>
+            <Button
+              type="button"
+              onClick={() => {
+                setSampleData(undefined);
+              }}
+              variant="contained"
+              color="secondary"
+            >
+              Close
+            </Button>
+          </CardFooter>
+        </Card>
       </Modal>
 
       {isModalOpen && (
