@@ -17,6 +17,7 @@ import TabConfigServerless from "./_components/TabConfigServerless";
 import TabConfigPrerender from "./_components/TabConfigPrerender";
 import TabStatusChecks from "./_components/TabStatusChecks";
 import TabAPIKey from "./_components/TabAPIKey";
+import TabMailer from "./_components/TabMailer";
 
 interface NavItem {
   path: string;
@@ -49,7 +50,8 @@ const listItems: NavItemParent[] = [
   {
     title: "Other",
     children: [
-      { path: "#domains", text: "Custom domains" },
+      { path: "#domains", text: "Domains" },
+      { path: "#mailer", text: "Mailer" },
       { path: "#api-keys", text: "API Keys" },
     ],
   },
@@ -84,6 +86,14 @@ export default function EnvironmentConfig() {
       case "#api-keys":
         return ({ app, environment, setRefreshToken }: TabProps) => (
           <TabAPIKey
+            app={app}
+            environment={environment}
+            setRefreshToken={setRefreshToken}
+          />
+        );
+      case "#mailer":
+        return ({ app, environment, setRefreshToken }: TabProps) => (
+          <TabMailer
             app={app}
             environment={environment}
             setRefreshToken={setRefreshToken}
