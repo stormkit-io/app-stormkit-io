@@ -173,8 +173,12 @@ class Api {
 
     opts.method = "POST";
 
-    if (opts.body || opts.params) {
-      opts.body = JSON.stringify(opts.body || opts.params);
+    if (typeof opts.params !== "string" && opts.params) {
+      opts.body = JSON.stringify(opts.params);
+    }
+
+    if (typeof opts.body !== "string") {
+      opts.body = JSON.stringify(opts.body);
     }
 
     return this.fetch(url, opts);
