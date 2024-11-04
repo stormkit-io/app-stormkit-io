@@ -47,7 +47,7 @@ export default function TabConfigGeneral({
     >
       <CardHeader
         title="Status Checks"
-        subtitle="Configure post deployment commands to run to validate your deployment."
+        subtitle="Set up post-deployment commands to validate your deployment."
       />
       {statusChecks.map((check, index) => (
         <CardRow
