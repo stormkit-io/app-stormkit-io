@@ -5,6 +5,7 @@ const endpoint = process.env.API_DOMAIN || "localhost";
 interface MockDomainsFetchProps {
   appId: string;
   envId: string;
+  afterId?: string;
   verified?: boolean;
   status?: number;
   response: { domains: Domain[] };
@@ -14,11 +15,14 @@ export const mockFetchDomains = ({
   appId,
   envId,
   status,
+  afterId,
   verified,
   response,
 }: MockDomainsFetchProps) => {
   const qs = new URLSearchParams(
-    JSON.parse(JSON.stringify({ appId, envId, verified }))
+    JSON.parse(
+      JSON.stringify({ appId, envId, verified, afterId, pageSize: 100 })
+    )
   );
 
   return nock(endpoint)

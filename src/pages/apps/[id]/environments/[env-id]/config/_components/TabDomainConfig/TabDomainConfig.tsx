@@ -32,15 +32,17 @@ export default function TabDomainConfig({ app, environment }: Props) {
     return isSelfHosted();
   }, []);
 
+  const [afterId, setAfterId] = useState<string>();
   const [refreshToken, setRefreshToken] = useState(0);
   const [isDomainModalOpen, toggleDomainModal] = useState(false);
   const [domainToModifyCustomCert, toggleCustomCertModal] = useState<Domain>();
   const [success, setSuccess] = useState<string>();
   const [domainToVerify, setDomainToVerify] = useState<Domain>();
   const [domainToDelete, setDomainToDelete] = useState<Domain>();
-  const { domains, error, loading } = useFetchDomains({
+  const { domains, error, loading, pagination } = useFetchDomains({
     appId: app.id,
     envId: environment.id!,
+    afterId,
     refreshToken,
     search: "",
   });
@@ -128,6 +130,19 @@ export default function TabDomainConfig({ app, environment }: Props) {
         </EmptyPage>
       )}
       <CardFooter>
+        {pagination?.hasNextPage && (
+          <Button
+            type="button"
+            variant="text"
+            color="info"
+            sx={{ mr: 2 }}
+            onClick={() => {
+              setAfterId(pagination?.afterId);
+            }}
+          >
+            Load more
+          </Button>
+        )}
         <Button
           color="secondary"
           variant="contained"
