@@ -61,8 +61,13 @@ export default function VolumesDropzone({
     openDialog && open();
   }, [otherProps]);
 
+  const isEmpty = !loading && files.length === 0;
+
   return (
-    <Box {...getRootProps()} sx={{ position: "relative" }}>
+    <Box
+      {...getRootProps()}
+      sx={{ position: "relative", py: isEmpty ? 12 : 0 }}
+    >
       {isDragActive && (
         <Box
           sx={{
@@ -71,6 +76,8 @@ export default function VolumesDropzone({
             top: 0,
             right: 0,
             bottom: 0,
+            border: `5px dashed`,
+            borderColor: "container.border",
             bgcolor: "container.transparent",
             display: "flex",
             alignItems: "center",
@@ -87,9 +94,7 @@ export default function VolumesDropzone({
         type="file"
         data-testid="volumes-dropzone"
       />
-      {!loading && files.length === 0 && (
-        <EmptyList>No files uploaded yet</EmptyList>
-      )}
+      {isEmpty && <EmptyList sx={{ my: 0 }}>No files uploaded yet</EmptyList>}
       {files.map(file => (
         <CardRow
           key={file.id}
