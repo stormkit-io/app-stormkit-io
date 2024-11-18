@@ -26,7 +26,7 @@ jobs:
         run: npm run build
 
       - name: Zip build folder
-        run: zip -r build.zip dist/
+        run: cd dist && zip -r build.zip . && mv build.zip ../
 
       - name: Create release in target repository
         id: create_release
