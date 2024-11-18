@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -20,10 +20,6 @@ export default function Settings() {
   const { settings, loading, setSettings } = useFetchAdditionalSettings({
     app,
   });
-
-  const isStormkitApp = useMemo(() => {
-    return app.id === "1" && app.repo.includes("app-stormkit-io");
-  }, [app]);
 
   const hasWriteAccess =
     team?.currentUserRole === "owner" || team?.currentUserRole === "admin";
@@ -69,7 +65,7 @@ export default function Settings() {
 
       {hasWriteAccess && <FormMigrateApp teams={teams!} app={app} />}
 
-      {hasWriteAccess && !isStormkitApp && <FormDangerZone app={app} />}
+      {hasWriteAccess && <FormDangerZone app={app} />}
     </Box>
   );
 }
