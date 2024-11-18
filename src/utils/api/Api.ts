@@ -105,6 +105,15 @@ class Api {
    * @return {Promise<any>}
    */
   async fetch<T>(url: string, opts: FetchOptions = {}): Promise<T> {
+    // Get the baseurl from the headers if the baseurl is not set
+    if (this.baseurl === "") {
+      const resp = await fetch(
+        new Request(window.location.href, { method: "HEAD" })
+      );
+
+      this.baseurl = resp.headers.get("x-sk-api") || "";
+    }
+
     if (Api.isAbsolute(url) === false) {
       url = this.baseurl.replace(/\/+$/, "") + "/" + url.replace(/^\//, "");
     }
@@ -247,10 +256,6 @@ class Api {
   }
 }
 
-// This is injected by Stormkit API
-// @ts-ignore
-const API_DOMAIN = window?.API_DOMAIN;
-
 export default new Api({
-  baseurl: API_DOMAIN || process.env.API_DOMAIN || "",
+  baseurl: process.env.API_DOMAIN || "",
 });
