@@ -247,4 +247,10 @@ class Api {
   }
 }
 
-export default new Api({ baseurl: process.env.API_DOMAIN || "" });
+// This is injected by Stormkit API
+// @ts-ignore
+const API_DOMAIN = window?.API_DOMAIN;
+
+export default new Api({
+  baseurl: API_DOMAIN || process.env.API_DOMAIN || "",
+});
