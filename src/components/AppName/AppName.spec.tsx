@@ -23,13 +23,6 @@ describe("~/components/AppName/AppName.tsx", () => {
     app = mockApp();
   });
 
-  test("should have stormkit logo when app is the stormkit ui", () => {
-    app.repo = "github/stormkit-io/app-stormkit-io";
-    app.id = "1";
-    createWrapper({ app });
-    expect(wrapper.getByTestId("app-logo")).toBeTruthy();
-  });
-
   test("should not have stormkit logo when app is the stormkit ui", () => {
     createWrapper({ app });
     expect(() => wrapper.getByTestId("app-logo")).toThrow();

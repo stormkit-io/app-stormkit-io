@@ -35,7 +35,6 @@ declare interface ConnectedAccount {
 declare interface InstanceDetails {
   latest?: {
     apiVersion: string;
-    uiCommit: string;
   };
   license?: {
     seats: number;
@@ -46,7 +45,6 @@ declare interface InstanceDetails {
     selfHosted: boolean;
   };
   update?: {
-    ui: boolean;
     api: boolean;
   };
   auth?: {

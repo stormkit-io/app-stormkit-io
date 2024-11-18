@@ -19,7 +19,6 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
 
   const apiVersion = "v1.7.30";
   const apiCommit = "a4ee052";
-  const uiCommit = "f89ad8f";
 
   const createWrapper = ({ status, response }: WrapperProps) => {
     navigate = jest.fn();
@@ -45,39 +44,14 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
       delete process.env.GIT_HASH;
     });
 
-    describe("when both api and ui needs an update", () => {
+    describe("when api needs an update", () => {
       beforeEach(async () => {
         LocalStorage.set("STORMKIT_UPDATE", "my-version");
-        process.env.GIT_HASH = uiCommit;
 
         await createWrapper({
           status: 200,
           response: {
-            stormkit: { selfHosted: true, apiCommit, apiVersion },
-          },
-        });
-
-        await waitFor(() => {
-          expect(scope.isDone()).toBe(true);
-        });
-      });
-
-      test("displays the snackbar", () => {
-        expect(wrapper.container.textContent).toBe(
-          "Stormkit UI and API has newer versions"
-        );
-      });
-    });
-
-    describe("when only api needs an update", () => {
-      beforeEach(async () => {
-        LocalStorage.set("STORMKIT_UPDATE", "my-version");
-        process.env.GIT_HASH = uiCommit;
-
-        await createWrapper({
-          status: 200,
-          response: {
-            latest: { apiVersion: "v1.8.35", uiCommit },
+            latest: { apiVersion: "v1.8.35" },
             stormkit: { selfHosted: true, apiCommit, apiVersion },
           },
         });
@@ -94,39 +68,14 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
       });
     });
 
-    describe("when only ui needs an update", () => {
-      beforeEach(async () => {
-        LocalStorage.set("STORMKIT_UPDATE", "my-version");
-        process.env.GIT_HASH = uiCommit;
-
-        await createWrapper({
-          status: 200,
-          response: {
-            latest: { apiVersion, uiCommit: "different" },
-            stormkit: { selfHosted: true, apiCommit, apiVersion },
-          },
-        });
-
-        await waitFor(() => {
-          expect(scope.isDone()).toBe(true);
-        });
-      });
-
-      test("displays the snackbar", () => {
-        expect(wrapper.container.textContent).toContain(
-          "Stormkit UI has a newer version"
-        );
-      });
-    });
-
     describe("when previously dismissed", () => {
       beforeEach(async () => {
-        LocalStorage.set("STORMKIT_UPDATE", `${apiVersion}${uiCommit}`);
+        LocalStorage.set("STORMKIT_UPDATE", apiVersion);
 
         await createWrapper({
           status: 200,
           response: {
-            latest: { apiVersion, uiCommit },
+            latest: { apiVersion },
             stormkit: { selfHosted: true, apiCommit, apiVersion },
           },
         });

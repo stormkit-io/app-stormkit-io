@@ -217,7 +217,6 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
 
 export const useFetchInstanceDetails = () => {
   const [details, setDetails] = useState<InstanceDetails>();
-  const currentCommit = (process.env.GIT_HASH || "").substring(0, 7);
 
   useEffect(() => {
     api
@@ -226,7 +225,6 @@ export const useFetchInstanceDetails = () => {
         setDetails({
           ...d,
           update: {
-            ui: d.latest?.uiCommit !== currentCommit,
             api: d.latest?.apiVersion !== d.stormkit?.apiVersion,
           },
         });
