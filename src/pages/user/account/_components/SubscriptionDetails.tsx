@@ -19,7 +19,7 @@ interface Props {
 
 const portalLink = {
   dev: "https://billing.stripe.com/p/login/test_4gw9CvdOF3eabhSeUU",
-  prod: "https://billing.stripe.com/p/login/test_4gw9CvdOF3eabhSeUU",
+  prod: "https://billing.stripe.com/p/login/aEU5kX4AmaTq3u0dQQ",
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
 
 export default function SubscriptionDetails({ user }: Props) {
