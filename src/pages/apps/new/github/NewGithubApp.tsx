@@ -15,12 +15,12 @@ import { useFetchAccounts, useFetchRepos } from "./actions";
 
 export default function NewGithubApp() {
   const { user } = useContext(AuthContext);
-  const { details } = useFetchInstanceDetails();
+  const { details, loading: detailsLoading } = useFetchInstanceDetails();
   const { githubAccount, openPopupURL } = useMemo(() => {
     const githubAccount = details?.auth?.github || process.env.GITHUB_ACCOUNT;
     const openPopupURL = `https://github.com/apps/${githubAccount}/installations/new`;
     return { githubAccount, openPopupURL };
-  }, [details?.auth]);
+  }, [details?.auth, detailsLoading]);
   const [page, setPage] = useState(1);
   const [refreshToken, setRefreshToken] = useState<number>();
   const [installationId, setInstallationId] = useState<string>();
@@ -80,7 +80,7 @@ export default function NewGithubApp() {
           )
         }
         error={
-          !githubAccount
+          !githubAccount && !detailsLoading
             ? "You don't seem to have a GITHUB_ACCOUNT configured."
             : ""
         }

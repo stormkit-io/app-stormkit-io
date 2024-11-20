@@ -217,6 +217,7 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
 
 export const useFetchInstanceDetails = () => {
   const [details, setDetails] = useState<InstanceDetails>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api
@@ -231,11 +232,14 @@ export const useFetchInstanceDetails = () => {
       })
       .catch(() => {
         setDetails({
-          update: { ui: false, api: true },
+          update: { api: true },
           stormkit: { selfHosted: true, apiCommit: "", apiVersion: "" },
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
-  return { details };
+  return { details, loading };
 };
