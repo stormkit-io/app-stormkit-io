@@ -17,7 +17,7 @@ export default function NewGithubApp() {
   const { user } = useContext(AuthContext);
   const { details, loading: detailsLoading } = useFetchInstanceDetails();
   const { githubAccount, openPopupURL } = useMemo(() => {
-    const githubAccount = details?.auth?.github || process.env.GITHUB_ACCOUNT;
+    const githubAccount = details?.auth?.github;
     const openPopupURL = `https://github.com/apps/${githubAccount}/installations/new`;
     return { githubAccount, openPopupURL };
   }, [details?.auth, detailsLoading]);

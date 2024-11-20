@@ -59,12 +59,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
         },
       });
 
-      process.env.GITHUB_ACCOUNT = account;
       createWrapper({ github: "" });
-    });
-
-    afterEach(() => {
-      delete process.env.GITHUB_ACCOUNT;
     });
 
     test("clicking connect more should open a popup so that the user can configure permissions", () => {
