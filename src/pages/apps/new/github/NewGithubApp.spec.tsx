@@ -23,7 +23,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   const createWrapper = (props?: Props) => {
     mockFetchInstanceDetails({
       response: {
-        update: { ui: false, api: false },
+        update: { api: false },
         auth: { github: props?.github || "stormkit-dev" },
       },
     });

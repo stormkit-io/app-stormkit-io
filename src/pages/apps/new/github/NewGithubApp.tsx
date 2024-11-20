@@ -80,9 +80,22 @@ export default function NewGithubApp() {
           )
         }
         error={
-          !githubAccount && !detailsLoading
-            ? "You don't seem to have a GITHUB_ACCOUNT configured."
-            : ""
+          !githubAccount && !detailsLoading ? (
+            <>
+              You don't seem to have a{" "}
+              <Box component="code">GITHUB_APP_NAME</Box> configured.{" "}
+              <Link
+                href="https://www.stormkit.io/docs/welcome/self-hosting#authentication"
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                Learn more
+              </Link>
+              .
+            </>
+          ) : (
+            ""
+          )
         }
       >
         <CardHeader
