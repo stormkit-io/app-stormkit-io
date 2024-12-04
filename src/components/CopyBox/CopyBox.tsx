@@ -1,8 +1,9 @@
 import type { TextFieldProps } from "@mui/material/TextField";
 import { useState } from "react";
-import { Tooltip } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
-import Button from "~/components/Button";
+import IconButton from "@mui/material/IconButton";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 let id = 0;
 
@@ -25,26 +26,24 @@ export default function CopyBox({
         ...InputProps,
         endAdornment: (
           <Tooltip open={clicked} title="Copied to clipboard">
-            <span>
-              <Button
-                type="button"
-                onClick={() => {
-                  (
-                    document.querySelector(`#${inputId}`) as HTMLInputElement
-                  ).focus();
-                  (
-                    document.querySelector(`#${inputId}`) as HTMLInputElement
-                  ).select();
-                  document.execCommand("copy");
-                  setClicked(true);
-                  setTimeout(() => {
-                    setClicked(false);
-                  }, 2000);
-                }}
-              >
-                <span className="far fa-copy text-white" />
-              </Button>
-            </span>
+            <IconButton
+              type="button"
+              onClick={() => {
+                (
+                  document.querySelector(`#${inputId}`) as HTMLInputElement
+                ).focus();
+                (
+                  document.querySelector(`#${inputId}`) as HTMLInputElement
+                ).select();
+                document.execCommand("copy");
+                setClicked(true);
+                setTimeout(() => {
+                  setClicked(false);
+                }, 2000);
+              }}
+            >
+              <ContentCopyIcon sx={{ fontSize: 18 }} />
+            </IconButton>
           </Tooltip>
         ),
       }}
