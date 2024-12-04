@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Button from "@mui/lab/LoadingButton";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Snackbar from "@mui/material/Snackbar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
@@ -23,6 +25,7 @@ interface Props {
 }
 
 export default function TabAPIKey({ app, environment: env }: Props) {
+  const [clicked, setClicked] = useState<string>();
   const [isVisible, setIsVisible] = useState<string>("");
   const [refreshToken, setRefreshToken] = useState<number>();
   const [success, setSuccess] = useState(false);
@@ -85,7 +88,39 @@ export default function TabAPIKey({ app, environment: env }: Props) {
 
       <Box>
         {keys.map(apiKey => (
-          <CardRow key={apiKey.token}>
+          <CardRow
+            key={apiKey.token}
+            menuLabel={`expand-${apiKey.id}`}
+            menuItems={[
+              {
+                text: "Copy to Clipboard",
+                icon: <ContentCopyIcon />,
+                onClick: () => {
+                  setClicked(apiKey.id);
+                  navigator.clipboard.writeText(apiKey.token);
+                },
+              },
+              {
+                text: "Toggle visibility",
+                icon:
+                  isVisible === apiKey.id ? (
+                    <VisibilityIcon />
+                  ) : (
+                    <VisibilityOffIcon />
+                  ),
+                onClick: () => {
+                  setIsVisible(isVisible === apiKey.id ? "" : apiKey.id);
+                },
+              },
+              {
+                text: "Delete",
+                icon: <DeleteIcon />,
+                onClick: () => {
+                  setApiKeyToDelete(apiKey);
+                },
+              },
+            ]}
+          >
             <Box
               sx={{
                 display: "flex",
@@ -104,41 +139,6 @@ export default function TabAPIKey({ app, environment: env }: Props) {
                 >
                   {isVisible === apiKey.id ? apiKey.token : "*".repeat(32)}
                 </Box>
-              </Box>
-              <Box>
-                <IconButton
-                  title="Toggle visibility"
-                  size="small"
-                  sx={{
-                    scale: "0.9",
-                    opacity: 0.5,
-                    ":hover": { opacity: 1 },
-                  }}
-                  onClick={() => {
-                    setIsVisible(isVisible === apiKey.id ? "" : apiKey.id);
-                  }}
-                >
-                  {isVisible === apiKey.id ? (
-                    <VisibilityIcon />
-                  ) : (
-                    <VisibilityOffIcon />
-                  )}
-                </IconButton>
-                <IconButton
-                  title="Remove API Key"
-                  aria-label="Remove API Key"
-                  size="small"
-                  sx={{
-                    scale: "0.9",
-                    opacity: 0.5,
-                    ":hover": { opacity: 1 },
-                  }}
-                  onClick={() => {
-                    setApiKeyToDelete(apiKey);
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
               </Box>
             </Box>
           </CardRow>
@@ -180,7 +180,8 @@ export default function TabAPIKey({ app, environment: env }: Props) {
               .then(() => {
                 setRefreshToken(Date.now());
               })
-              .catch(() => {
+              .catch(e => {
+                console.log(e);
                 setError("Something went wrong while deleting the API key.");
               })
               .finally(() => {
@@ -194,6 +195,22 @@ export default function TabAPIKey({ app, environment: env }: Props) {
           This will delete the API key. If you have any integration that uses
           this key, it will stop working.
         </ConfirmModal>
+      )}
+      {clicked && (
+        <Snackbar
+          color="success"
+          open
+          autoHideDuration={5000}
+          onClose={() => {
+            setClicked(undefined);
+          }}
+          message={
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <CheckCircleIcon color="success" sx={{ mr: 1 }} />
+              API Key copied to clipboard successfully
+            </Box>
+          }
+        />
       )}
     </Card>
   );
