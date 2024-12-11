@@ -3,6 +3,7 @@ import api from "~/utils/api/Api";
 
 interface FetchLicenseProps {
   user: User;
+  isSelfHostedInstance: boolean;
 }
 
 interface License {
@@ -11,13 +12,16 @@ interface License {
   raw: string;
 }
 
-export const useFetchLicense = ({ user }: FetchLicenseProps) => {
+export const useFetchLicense = ({
+  user,
+  isSelfHostedInstance,
+}: FetchLicenseProps) => {
   const [license, setLicense] = useState<License>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
 
   useEffect(() => {
-    if (user.package.id !== "self-hosted") {
+    if (user.package.id !== "self-hosted" || isSelfHostedInstance) {
       setLoading(false);
       return;
     }
@@ -36,7 +40,7 @@ export const useFetchLicense = ({ user }: FetchLicenseProps) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [user.package.id]);
+  }, [user.package.id, isSelfHostedInstance]);
 
   return { license, error, loading };
 };

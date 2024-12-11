@@ -3,6 +3,7 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/lab/LoadingButton";
+import Link from "@mui/material/Link";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
@@ -15,6 +16,7 @@ import { useEffect, useMemo } from "react";
 
 interface Props {
   user: User;
+  isSelfHostedInstance: boolean;
 }
 
 const portalLink = {
@@ -22,9 +24,16 @@ const portalLink = {
   prod: "https://billing.stripe.com/p/login/aEU5kX4AmaTq3u0dQQ",
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
 
-export default function SubscriptionDetails({ user }: Props) {
+export default function SubscriptionDetails({
+  user,
+  isSelfHostedInstance,
+}: Props) {
   const [params, _] = useSearchParams();
-  const { license, loading, error } = useFetchLicense({ user });
+  const { license, loading, error } = useFetchLicense({
+    user,
+    isSelfHostedInstance,
+  });
+
   const isFree = user.package.id === "free";
 
   useEffect(() => {
@@ -35,10 +44,10 @@ export default function SubscriptionDetails({ user }: Props) {
     }
   }, []);
 
-  const isSelfHosted = user.package.id.startsWith("self-hosted");
+  const isSelfHostedMembership = user.package.id.startsWith("self-hosted");
 
   const seats = useMemo(() => {
-    if (!isSelfHosted) {
+    if (!isSelfHostedMembership) {
       return "";
     }
 
@@ -51,7 +60,27 @@ export default function SubscriptionDetails({ user }: Props) {
     }
 
     return "1 seat";
-  }, [user, license, isSelfHosted]);
+  }, [user, license, isSelfHostedMembership]);
+
+  if (isSelfHostedInstance) {
+    return (
+      <Card
+        sx={{ mb: 2 }}
+        info={
+          <>
+            Visit your Cloud Account on{" "}
+            <Link href="https://app.stormkit.io" target="_blank">
+              app.stormkit.io
+            </Link>{" "}
+            to manage your subscription.
+          </>
+        }
+      >
+        <CardHeader title="Subscription Details" />
+        <CardFooter />
+      </Card>
+    );
+  }
 
   return (
     <>
@@ -65,7 +94,7 @@ export default function SubscriptionDetails({ user }: Props) {
           title={isFree ? "Checkout" : "Subscription Details"}
           subtitle={[
             user.package.name,
-            isSelfHosted
+            isSelfHostedMembership
               ? `${capitalize(user.package.edition)} - ${seats}`
               : "",
           ]
@@ -96,7 +125,7 @@ export default function SubscriptionDetails({ user }: Props) {
           </CardFooter>
         )}
       </Card>
-      {isSelfHosted && (
+      {isSelfHostedMembership && (
         <Card sx={{ mb: 4 }}>
           <CardHeader
             title="License"

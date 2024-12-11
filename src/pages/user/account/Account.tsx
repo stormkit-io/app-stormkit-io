@@ -4,10 +4,13 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import { AuthContext } from "~/pages/auth/Auth.context";
+import { isSelfHosted } from "~/utils/helpers/instance";
 import SubscriptionDetails from "./_components/SubscriptionDetails";
 import UserProfile from "./_components/UserProfile";
 import ConnectedAccounts from "./_components/ConnectedAccounts";
 import Error404 from "~/components/Errors/Error404";
+
+const isSelfHostedInstance = isSelfHosted();
 
 export default function Account() {
   const { user, accounts } = useContext(AuthContext);
@@ -43,7 +46,10 @@ export default function Account() {
       )}
       <UserProfile user={user} />
       <ConnectedAccounts accounts={accounts!} />
-      <SubscriptionDetails user={user} />
+      <SubscriptionDetails
+        user={user}
+        isSelfHostedInstance={isSelfHostedInstance}
+      />
     </Box>
   );
 }
