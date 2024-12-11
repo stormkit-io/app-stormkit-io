@@ -105,7 +105,7 @@ export default function SubscriptionDetails({ user }: Props) {
               "Set the `STORMKIT_LICENSE` environment variable in your self-hosted environment to the following value:"
             }
           />
-          {license && <CopyBox value={license.key} />}
+          {license && <CopyBox value={license.raw} />}
           {!license && (
             <Alert color="warning">
               You seem to have no license key. Contact us through discord or

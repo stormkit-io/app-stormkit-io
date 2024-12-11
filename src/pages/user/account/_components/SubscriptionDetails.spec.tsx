@@ -69,7 +69,7 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
       const user = mockUser({ packageId: "self-hosted" });
       const scope = mockFetchLicense({
         status: 200,
-        response: { license: { key: "abc", premium: true, seat: 6 } },
+        response: { license: { raw: "abc", premium: true, seat: 6 } },
       });
 
       createWrapper({

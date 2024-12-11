@@ -19,7 +19,7 @@ export const mockFetchUser = ({
 
 interface MockFetchLicenseProps {
   status: number;
-  response: { license: { key: string; seat: number; premium: boolean } | null };
+  response: { license: { raw: string; seat: number; premium: boolean } | null };
 }
 
 export const mockFetchLicense = ({

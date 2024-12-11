@@ -8,7 +8,7 @@ interface FetchLicenseProps {
 interface License {
   premium: boolean;
   seats: number;
-  key: string;
+  raw: string;
 }
 
 export const useFetchLicense = ({ user }: FetchLicenseProps) => {
