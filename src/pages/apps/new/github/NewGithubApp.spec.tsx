@@ -20,8 +20,8 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
 
   const findOption = (text: string) => screen.getByText(text);
 
-  const createWrapper = (props?: Props) => {
-    mockFetchInstanceDetails({
+  const createWrapper = async (props?: Props) => {
+    const scope = mockFetchInstanceDetails({
       response: {
         update: { api: false },
         auth: { github: props?.github || "stormkit-dev" },
@@ -43,12 +43,16 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
         ])}
       />
     );
+
+    await waitFor(() => {
+      expect(scope.isDone()).toBe(true);
+    });
   };
 
   describe("github account with environment variable", () => {
     const account = "my-stormkit-app";
 
-    beforeEach(() => {
+    beforeEach(async () => {
       githubApi.accessToken = "123456";
       githubApi.baseurl = "http://localhost";
 
@@ -59,7 +63,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
         },
       });
 
-      createWrapper({ github: "" });
+      await createWrapper({ github: account });
     });
 
     test("clicking connect more should open a popup so that the user can configure permissions", () => {
