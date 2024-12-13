@@ -16,7 +16,7 @@ export default function NewGitLabApp() {
 
   return (
     <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
-      <Card sx={{ width: "100%", mb: 4 }}>
+      <Card sx={{ width: "100%", mb: 4 }} loading={loading}>
         <CardHeader>
           <Typography>
             <Link
