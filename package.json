@@ -9,7 +9,6 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite serve",
-    "dev:live": "API_PROXY_DOMAIN=https://api.stormkit.io NODE_ENV=development vite serve",
     "test": "NODE_ENV=test jest --detectOpenHandles --runInBand",
     "lint": "eslint .",
     "prettier": "prettier \"**/*.{ts,js,tsx,md}\" --write"
