@@ -135,6 +135,7 @@ export default function TabConfigGeneral({
             <Option value="disabled">Disabled</Option>
             <Option value="all">All branches</Option>
             <Option value="custom">Custom branches</Option>
+            <Option value="custom_commit">Custom commits</Option>
           </Select>
         </FormControl>
       </Box>
@@ -144,10 +145,14 @@ export default function TabConfigGeneral({
           <TextField
             variant="filled"
             name="autoDeployBranches"
-            label="Auto deploy branches"
+            label="Auto deploy branches regexp"
             defaultValue={env?.autoDeployBranches || ""}
             InputProps={{
-              endAdornment: <code className="ml-1 text-pink-50">/i</code>,
+              endAdornment: (
+                <Typography component="code" sx={{ ml: 1 }}>
+                  /i
+                </Typography>
+              ),
             }}
             fullWidth
             helperText={
@@ -173,6 +178,53 @@ export default function TabConfigGeneral({
                       sx={{ mt: 0.5, display: "block" }}
                     >
                       Match anything that starts with <b>release-</b>
+                    </Typography>
+                  </Box>
+                </Box>
+              </>
+            }
+          />
+        </Box>
+      )}
+
+      {autoDeploy === "custom_commit" && (
+        <Box sx={{ mb: 4 }}>
+          <TextField
+            variant="filled"
+            name="autoDeployCommits"
+            label="Auto deploy commit regexp"
+            defaultValue={env?.autoDeployCommits || ""}
+            InputProps={{
+              endAdornment: (
+                <Typography component="code" sx={{ ml: 1 }}>
+                  /i
+                </Typography>
+              ),
+            }}
+            fullWidth
+            helperText={
+              <>
+                <Typography component="span" sx={{ mb: 2, display: "block" }}>
+                  Specify which commits should be automatically deployed to this
+                  environment. Below are some examples:
+                </Typography>
+                <Box component="span" sx={{ display: "block" }}>
+                  <Box component="span" sx={{ mb: 2, display: "block" }}>
+                    <Box component="code">^(?!release).+</Box>{" "}
+                    <Typography
+                      component="span"
+                      sx={{ mt: 0.5, display: "block" }}
+                    >
+                      Match anything that does not start with <b>release</b>
+                    </Typography>
+                  </Box>
+                  <Box component="span" sx={{ display: "block" }}>
+                    <Box component="code">^chore\(release\):.+</Box>
+                    <Typography
+                      component="span"
+                      sx={{ mt: 0.5, display: "block" }}
+                    >
+                      Match anything that starts with <b>chore(release):</b>
                     </Typography>
                   </Box>
                 </Box>

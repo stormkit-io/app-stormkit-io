@@ -6,11 +6,19 @@ export const computeAutoDeployValue = (env?: Environment): AutoDeployValues => {
     return "all";
   }
 
-  return env?.autoDeploy
-    ? !env?.autoDeployBranches
-      ? "all"
-      : "custom"
-    : "disabled";
+  if (env.autoDeployBranches) {
+    return "custom";
+  }
+
+  if (env.autoDeployCommits) {
+    return "custom_commit";
+  }
+
+  if (env.autoDeploy) {
+    return "all";
+  }
+
+  return "disabled";
 };
 
 export const prepareBuildObject = (values: FormValues): BuildConfig => {
@@ -94,8 +102,14 @@ export const buildFormValues = (
   }
 
   // Normalize autoDeploy values
-  if (values.autoDeploy && values.autoDeploy !== "custom") {
-    values.autoDeployBranches = "";
+  if (values.autoDeploy) {
+    if (values.autoDeploy !== "custom") {
+      values.autoDeployBranches = "";
+    }
+
+    if (values.autoDeploy !== "custom_commit") {
+      values.autoDeployCommits = "";
+    }
   }
 
   return {
@@ -104,6 +118,7 @@ export const buildFormValues = (
     autoPublish: env.autoPublish ? "on" : "off",
     autoDeploy: computeAutoDeployValue(env),
     autoDeployBranches: env.autoDeployBranches || undefined,
+    autoDeployCommits: env.autoDeployCommits || undefined,
     "build.statusChecks": JSON.stringify(env.build.statusChecks),
     "build.previewLinks": env.build.previewLinks ? "on" : "off",
     "build.headersFile": env.build.headersFile,
@@ -187,7 +202,7 @@ export const useFetchRepoMeta = ({
   return { meta, loading, error };
 };
 
-export type AutoDeployValues = "disabled" | "all" | "custom";
+export type AutoDeployValues = "disabled" | "all" | "custom" | "custom_commit";
 
 interface ControlledFormValues {
   autoPublish?: "on" | "off";
@@ -202,6 +217,7 @@ export interface FormValues {
   autoDeploy?: AutoDeployValues;
   autoPublish?: "on" | "off";
   autoDeployBranches?: string;
+  autoDeployCommits?: string;
   "build.statusChecks"?: string;
   "build.previewLinks"?: "on" | "off";
   "build.buildCmd"?: string;
@@ -242,10 +258,9 @@ export const updateEnvironment = ({
   setRefreshToken,
   successMsg = "The environment has been successfully updated.",
 }: UpdateEnvironmentProps): Promise<void> => {
-  const { name, branch, autoDeployBranches, autoDeploy } = values;
   const build = prepareBuildObject(values);
 
-  if (!name || !branch) {
+  if (!values.name || !values.branch) {
     setError("Environment and branch names are required.");
     return Promise.resolve();
   }
@@ -257,13 +272,14 @@ export const updateEnvironment = ({
   return api
     .put<{ status: boolean }>(`/app/env`, {
       id: envId,
-      appId: app.id,
-      env: name,
-      branch,
       build,
+      appId: app.id,
+      env: values.name,
+      branch: values.branch,
       autoPublish: values.autoPublish === "on",
-      autoDeploy: autoDeploy !== "disabled",
-      autoDeployBranches: autoDeployBranches,
+      autoDeploy: values.autoDeploy !== "disabled",
+      autoDeployBranches: values.autoDeployBranches,
+      autoDeployCommits: values.autoDeployCommits,
     })
     .then(() => {
       setSuccess(successMsg);
