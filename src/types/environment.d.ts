@@ -59,6 +59,7 @@ declare type Environment = {
   build: BuildConfig;
   autoDeploy: boolean;
   autoDeployBranches?: string | null;
+  autoDeployCommits?: string | null;
   lastDeploy?: LastDeploy;
   published?: PublishedInfo[];
   preview: string;

@@ -65,6 +65,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/actions.tsx", () => {
         branch: env.branch,
         autoDeploy: "custom",
         autoDeployBranches: "^(?!dependabot).+",
+        autoDeployCommits: "",
         autoPublish: "off",
         "build.redirects": undefined,
         "build.serverCmd": undefined,
