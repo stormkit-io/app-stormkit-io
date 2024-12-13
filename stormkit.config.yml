@@ -1,8 +1,0 @@
-app:
-  - redirects:
-      - from: /manifest.json
-        to: /manifest.json
-        cdn: true
-      - from: /*
-        to: /index.html
-        assets: false
