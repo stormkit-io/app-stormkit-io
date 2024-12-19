@@ -6,17 +6,17 @@ interface MockFetchFunctionTriggersProps {
   appId: string;
   envId: string;
   status?: number;
-  response: FunctionTrigger[];
+  response: { triggers: FunctionTrigger[] };
 }
 
 export const mockFetchFunctionTriggers = ({
   appId,
   envId,
   status = 200,
-  response = [],
+  response = { triggers: [] },
 }: MockFetchFunctionTriggersProps) => {
   return nock(endpoint)
-    .get(`/apps/${appId}/envs/${envId}/function-triggers`)
+    .get(`/apps/triggers?appId=${appId}&envId=${envId}`)
     .reply(status, response);
 };
 
@@ -30,7 +30,7 @@ export const mockDeleteFunctionTrigger = ({
   tfid,
 }: mockDeleteFunctionTriggerProps) => {
   return nock(endpoint)
-    .delete(`/apps/function-trigger/${tfid}`, { appId })
+    .delete(`/apps/trigger?triggerId=${tfid}`, { appId })
     .reply(200, { ok: true });
 };
 
@@ -85,3 +85,30 @@ export const mockCreateFunctionTrigger = ({
     })
     .reply(201, { ok: true });
 };
+
+interface MockFetchTriggerLogsProps {
+  appId: string;
+  envId: string;
+  triggerId: string;
+  status?: number;
+  response: { logs?: TriggerLog[] };
+}
+
+export const mockFetchTriggerLogs = ({
+  appId,
+  envId,
+  triggerId,
+  status = 200,
+  response = {},
+}: MockFetchTriggerLogsProps) => {
+  return nock(endpoint)
+    .get(
+      `/apps/trigger/logs?appId=${appId}&envId=${envId}&triggerId=${triggerId}`
+    )
+    .reply(status, response);
+};
+
+interface mockDeleteFunctionTriggerProps {
+  appId: string;
+  tfid: string;
+}

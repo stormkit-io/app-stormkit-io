@@ -4,70 +4,57 @@ import api from "~/utils/api/Api";
 interface FetchFunctionTriggersArgs {
   appId?: string;
   environmentId?: string;
-}
-
-interface FetchFunctionTriggersReturnValue {
-  functionTriggers: FunctionTrigger[];
-  error: string | null;
-  loading: boolean;
-  setReload: (val: number) => void;
+  refreshToken?: number;
 }
 
 export const useFetchFunctionTriggers = ({
   appId,
   environmentId,
-}: FetchFunctionTriggersArgs): FetchFunctionTriggersReturnValue => {
-  const [flags, setFlags] = useState<FunctionTrigger[]>([]);
+  refreshToken,
+}: FetchFunctionTriggersArgs) => {
+  const [triggers, setTriggers] = useState<FunctionTrigger[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [reload, setReload] = useState<number>();
 
   useEffect(() => {
     if (!appId || !environmentId) {
       return;
     }
 
-    let unmounted = false;
     setLoading(true);
 
     api
-      .fetch<FunctionTrigger[]>(
-        `/apps/${appId}/envs/${environmentId}/function-triggers`
+      .fetch<{ triggers: FunctionTrigger[] }>(
+        `/apps/triggers?appId=${appId}&envId=${environmentId}`
       )
-      .then(result => {
-        if (!unmounted) {
-          setFlags(result);
-        }
+      .then(({ triggers }) => {
+        setTriggers(triggers);
       })
       .catch(() => {
-        if (!unmounted) {
-          setError("Something went wrong while fetching trigger functions");
-        }
+        setError("Something went wrong while fetching triggers");
       })
       .finally(() => {
-        if (!unmounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       });
+  }, [appId, environmentId, refreshToken]);
 
-    return () => {
-      unmounted = true;
-    };
-  }, [appId, environmentId, reload]);
-
-  return { functionTriggers: flags, loading, error, setReload };
+  return { functionTriggers: triggers, loading, error };
 };
 
 interface DeleteFunctionTriggerProps {
   tfid: string;
   appId: string;
+  envId: string;
 }
 
 export function deleteFunctionTrigger({
   tfid,
   appId,
+  envId,
 }: DeleteFunctionTriggerProps): Promise<void> {
-  return api.delete(`/apps/function-trigger/${tfid}`, { appId });
+  return api.delete(
+    `/apps/trigger?triggerId=${tfid}&appId=${appId}&envId=${envId}`
+  );
 }
 
 interface CreateFunctionTriggerProps extends Omit<FunctionTrigger, "options"> {
@@ -76,28 +63,37 @@ interface CreateFunctionTriggerProps extends Omit<FunctionTrigger, "options"> {
   options: FunctionTriggerOptions;
 }
 
-export function createFunctionTrigger(
-  args: CreateFunctionTriggerProps
-): Promise<FunctionTrigger> {
-  if (args.appId === "" || args.envId === "") {
+export function createFunctionTrigger({
+  appId,
+  envId,
+  cron,
+  options,
+  status,
+}: CreateFunctionTriggerProps): Promise<FunctionTrigger> {
+  if (appId === "" || envId === "") {
     return Promise.reject("AppId and EnvId cannot be empty.");
   }
 
-  if (args.cron === "") {
+  if (cron === "") {
     return Promise.reject("Cron cannot be empty.");
   }
 
-  if (args.options.url === "") {
+  if (options.url === "") {
     return Promise.reject("Url cannot be empty.");
   }
 
-  return api.post(`/apps/function-trigger`, {
-    ...args,
+  return api.post(`/apps/trigger`, {
+    appId,
+    envId,
+    cron,
+    status,
+    options,
   });
 }
 
 interface UpdateFunctionTriggerProps {
   appId: string;
+  envId: string;
   tfid: string;
   cron: string;
   status: boolean;
@@ -106,6 +102,7 @@ interface UpdateFunctionTriggerProps {
 
 export const updateFunctionTrigger = ({
   appId,
+  envId,
   tfid,
   cron,
   status,
@@ -119,9 +116,10 @@ export const updateFunctionTrigger = ({
     return Promise.reject("Cron cannot be empty.");
   }
 
-  return api.patch(`/apps/function-trigger`, {
+  return api.patch(`/apps/trigger`, {
     id: tfid,
     appId,
+    envId,
     status,
     cron,
     options,
@@ -146,7 +144,7 @@ export const upsertFunctionTrigger = ({
   options,
 }: UpsertFunctionTriggerProps): Promise<void | FunctionTrigger> => {
   if (tfid) {
-    return updateFunctionTrigger({ tfid, status, cron, options, appId });
+    return updateFunctionTrigger({ tfid, status, cron, options, appId, envId });
   }
 
   return createFunctionTrigger({
@@ -156,4 +154,46 @@ export const upsertFunctionTrigger = ({
     cron,
     options,
   });
+};
+
+interface UseFetchTriggerLogsProps {
+  appId: string;
+  envId: string;
+  triggerId: string;
+  refreshToken?: number;
+}
+
+export const useFetchTriggerLogs = ({
+  appId,
+  envId,
+  triggerId,
+  refreshToken,
+}: UseFetchTriggerLogsProps) => {
+  const [logs, setLogs] = useState<TriggerLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    if (!appId || !envId || !triggerId) {
+      return;
+    }
+
+    setLoading(true);
+
+    api
+      .fetch<{ logs: TriggerLog[] }>(
+        `/apps/trigger/logs?appId=${appId}&envId=${envId}&triggerId=${triggerId}`
+      )
+      .then(({ logs }) => {
+        setLogs(logs);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching logs.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [appId, envId, triggerId, refreshToken]);
+
+  return { logs, loading, error };
 };

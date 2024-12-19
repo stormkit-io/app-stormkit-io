@@ -7,7 +7,7 @@ export default (): FunctionTrigger[] => [
       url: "https://app.stormkit.io/api/test",
       method: "POST",
       payload: "hello-world",
-      headers: "",
+      headers: {},
     },
   },
 ];

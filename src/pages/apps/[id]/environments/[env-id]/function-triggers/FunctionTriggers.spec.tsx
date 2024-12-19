@@ -41,7 +41,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
     scope = mockFetchFunctionTriggers({
       appId: currentApp.id,
       envId: currentEnv.id!,
-      response: currentTriggers,
+      response: { triggers: currentTriggers },
     });
 
     const memoryRouter = createMemoryRouter([
@@ -108,7 +108,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
     const refetchScope = mockFetchFunctionTriggers({
       appId: currentApp.id,
       envId: currentEnv.id!,
-      response: currentTriggers,
+      response: { triggers: currentTriggers },
     });
 
     fireEvent.click(wrapper.getByText("Yes, continue"));

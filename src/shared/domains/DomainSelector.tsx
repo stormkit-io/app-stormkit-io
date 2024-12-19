@@ -13,6 +13,7 @@ interface Props {
   label?: string;
   fullWidth?: boolean;
   withDevDomains?: boolean;
+  placeholder?: string;
   onFetch?: (d: Domain[]) => void;
   // If withDevDomains is true, returns selected domain names
   // Otherwise, returns the domains.
@@ -29,6 +30,7 @@ export default function DomainSelector({
   label,
   size = "small",
   variant = "outlined",
+  placeholder = "All domains",
   onFetch,
   onDomainSelect,
 }: Props) {
@@ -70,7 +72,7 @@ export default function DomainSelector({
       label={label}
       variant={variant}
       size={size}
-      placeholder="All domains"
+      placeholder={placeholder}
       fullWidth={fullWidth}
       multiple={multiple}
       items={items}

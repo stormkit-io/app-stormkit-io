@@ -213,8 +213,7 @@ export default function SnippetModal({
             labelPlacement="start"
           />
           <Typography sx={{ color: "rgba(255, 255, 255, 0.7)", fontSize: 11 }}>
-            Turn this feature on to automatically publish successful deployments
-            on the default branch.
+            Enable this snippet to inject it dynamically into your page.
           </Typography>
         </Box>
         <CardFooter>

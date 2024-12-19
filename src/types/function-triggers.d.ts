@@ -7,7 +7,7 @@ declare type FunctionTriggerMethod =
 
 declare interface FunctionTriggerOptions {
   method: FunctionTriggerMethod;
-  headers?: string;
+  headers?: Record<string, string>;
   url: string;
   payload?: string;
 }
@@ -17,4 +17,19 @@ declare interface FunctionTrigger {
   cron: string;
   status: boolean;
   options: FunctionTriggerOptions;
+  nextRunAt?: number;
+}
+
+declare interface TriggerLog {
+  request: {
+    headers?: Record<string, string>;
+    method?: string;
+    url?: string;
+    payload?: string;
+  };
+  response: {
+    body?: string;
+    code: number;
+  };
+  createdAt: number;
 }
