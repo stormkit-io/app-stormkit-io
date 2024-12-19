@@ -310,7 +310,7 @@ export default (mode: "dark" | "light") => {
               dark: "#c62828",
             },
             success: {
-              main: "#1d5a20",
+              main: "#103f12",
               light: "#4caf50",
               dark: "#1b5e20",
             },
