@@ -117,7 +117,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
       expect(wrapper.getByText(/It\'s quite empty in here\./)).toBeTruthy();
       expect(
         wrapper.getByText(
-          /Click the Deploy Now button to start your first deployment\./
+          /Click the Deploy button to start your first deployment\./
         )
       ).toBeTruthy();
     });

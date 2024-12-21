@@ -43,7 +43,7 @@ export default function Deployments() {
       {!loading && !error && !deployments.length && (
         <EmptyPage>
           It's quite empty in here. <br />
-          Click the Deploy Now button to start your first deployment.
+          Click the Deploy button to start your first deployment.
         </EmptyPage>
       )}
     </Card>
