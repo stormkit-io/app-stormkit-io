@@ -142,27 +142,31 @@ export default function NewGithubApp() {
         </CardHeader>
         <Box>
           {accounts?.length > 0 && (
-            <Accounts
-              accounts={accounts}
-              selected={installationId}
-              onAccountChange={id => {
-                setPage(1);
-                setInstallationId(id);
-              }}
-            />
+            <Box sx={{ mb: loading ? 4 : 0 }}>
+              <Accounts
+                accounts={accounts}
+                selected={installationId}
+                onAccountChange={id => {
+                  setPage(1);
+                  setInstallationId(id);
+                }}
+              />
+            </Box>
           )}
 
-          <Box sx={{ mb: !githubAccount ? 4 : 0 }}>
-            <RepoList
-              repositories={repos}
-              provider="github"
-              loading={loading}
-              error={error}
-              isLoadingMore={isLoadingMore}
-              hasNextPage={hasNextPage}
-              onNextPage={() => setPage(page + 1)}
-            />
-          </Box>
+          {!loading && (
+            <Box sx={{ mb: !githubAccount ? 4 : 0 }}>
+              <RepoList
+                repositories={repos}
+                provider="github"
+                loading={loading}
+                error={error}
+                isLoadingMore={isLoadingMore}
+                hasNextPage={hasNextPage}
+                onNextPage={() => setPage(page + 1)}
+              />
+            </Box>
+          )}
         </Box>
       </Card>
     </Box>
