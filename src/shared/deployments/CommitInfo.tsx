@@ -61,11 +61,13 @@ export default function CommitInfo({
   showProject,
   clickable = true,
 }: Props) {
+  const isSuccess = deployment.status === "success";
+
   const message =
     deployment.commit?.message?.split("\n")[0] || defaultMessage(deployment);
 
   const duration = deployment.stoppedAt
-    ? Number(deployment.stoppedAt) - Number(deployment.createdAt)
+    ? deployment.logs?.reduce((acc, log) => acc + log.duration!, 0)
     : 0;
 
   return (
@@ -83,7 +85,7 @@ export default function CommitInfo({
           ) : (
             <Typography>{message}</Typography>
           )}
-          {deployment.stoppedAt && (
+          {isSuccess && deployment.stoppedAt && duration && (
             <Span size="small" sx={{ ml: 1, mr: 0 }}>
               {toHumanTime(duration)}
             </Span>
