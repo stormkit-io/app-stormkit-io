@@ -5,6 +5,7 @@ import Link from "@mui/material/Link";
 import AltRoute from "@mui/icons-material/AltRoute";
 import Tooltip from "@mui/material/Tooltip";
 import Chip from "@mui/material/Chip";
+import Span from "~/components/Span";
 import Dot from "~/components/Dot";
 import Sha from "./Sha";
 import AppChip from "./AppChip";
@@ -44,6 +45,17 @@ const author = (author?: string) => {
   return <>by {author.split("<")[0].trim()}</>;
 };
 
+export const toHumanTime = (duration: number) => {
+  const minutes = Math.floor(duration / 60);
+  const seconds = duration % 60;
+
+  if (minutes === 0) {
+    return `${seconds}s`;
+  }
+
+  return `${minutes}m ${seconds}s`;
+};
+
 export default function CommitInfo({
   deployment,
   showProject,
@@ -51,6 +63,10 @@ export default function CommitInfo({
 }: Props) {
   const message =
     deployment.commit?.message?.split("\n")[0] || defaultMessage(deployment);
+
+  const duration = deployment.stoppedAt
+    ? Number(deployment.stoppedAt) - Number(deployment.createdAt)
+    : 0;
 
   return (
     <Box
@@ -67,6 +83,12 @@ export default function CommitInfo({
           ) : (
             <Typography>{message}</Typography>
           )}
+          {deployment.stoppedAt && (
+            <Span size="small" sx={{ ml: 1, mr: 0 }}>
+              {toHumanTime(duration)}
+            </Span>
+          )}
+
           {deployment.published?.length > 0 && (
             <Chip
               color={deployment.published.length ? "success" : "info"}

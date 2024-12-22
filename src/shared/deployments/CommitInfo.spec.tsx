@@ -1,7 +1,7 @@
 import { MemoryRouter } from "react-router";
 import { render, RenderResult } from "@testing-library/react";
 import mockDeployments from "~/testing/data/mock_deployments_v2";
-import CommitInfo from "./CommitInfo";
+import CommitInfo, { toHumanTime } from "./CommitInfo";
 
 interface Props {
   deployment: DeploymentV2;
@@ -28,6 +28,13 @@ describe("~/shared/deployments/CommitInfo.tsx", () => {
       </MemoryRouter>
     );
   };
+
+  test("toHumanTime", () => {
+    expect(toHumanTime(60)).toBe("1m 0s");
+    expect(toHumanTime(61)).toBe("1m 1s");
+    expect(toHumanTime(120)).toBe("2m 0s");
+    expect(toHumanTime(121)).toBe("2m 1s");
+  });
 
   test("should display information properly", () => {
     const deployment = mockDeployments()[0];
