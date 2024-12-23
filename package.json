@@ -13,18 +13,6 @@
     "lint": "eslint .",
     "prettier": "prettier \"**/*.{ts,js,tsx,md}\" --write"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "prettier \"**/*.{ts,js,tsx,md}\" --write",
-      "eslint --fix",
-      "git add"
-    ]
-  },
   "dependencies": {
     "@codemirror/lang-html": "^6.4.9",
     "@codemirror/lang-javascript": "^6.2.2",
@@ -52,14 +40,6 @@
     "tldts": "^5.7.112"
   },
   "devDependencies": {
-    "@babel/core": "7.17.2",
-    "@babel/plugin-proposal-class-properties": "7.16.7",
-    "@babel/plugin-syntax-dynamic-import": "7.8.3",
-    "@babel/plugin-transform-runtime": "7.17.0",
-    "@babel/polyfill": "7.12.1",
-    "@babel/preset-env": "7.16.11",
-    "@babel/preset-react": "7.16.7",
-    "@babel/preset-typescript": "7.16.7",
     "@mui/icons-material": "^5.16.11",
     "@mui/lab": "^5.0.0-alpha.130",
     "@mui/material": "^5.16.11",
@@ -87,7 +67,6 @@
     "isomorphic-fetch": "3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "lint-staged": "12.3.4",
     "nock": "^13.5.6",
     "postcss": "8.4.21",
     "postcss-loader": "4.3.0",
