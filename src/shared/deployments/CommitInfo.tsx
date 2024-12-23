@@ -79,11 +79,11 @@ export default function CommitInfo({
           ) : (
             <Typography>{message}</Typography>
           )}
-          {deployment.duration && (
+          {deployment.duration ? (
             <Span size="small" sx={{ ml: 1, mr: 0 }}>
               {toHumanTime(deployment.duration)}
             </Span>
-          )}
+          ) : null}
 
           {deployment.published?.length > 0 && (
             <Chip
