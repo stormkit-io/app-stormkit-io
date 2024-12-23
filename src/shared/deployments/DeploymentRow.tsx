@@ -1,5 +1,6 @@
 import type { SxProps } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -11,7 +12,7 @@ import CommitInfo from "./CommitInfo";
 import PublishModal from "./PublishModal";
 import ManifestModal from "./ManifestModal";
 import { deleteForever, stopDeployment } from "./actions";
-import { useWithMenuItems } from "./actions";
+import { useWithMenuItems, restartDeployment } from "./actions";
 import { formattedDate } from "~/utils/helpers/deployments";
 
 interface Props {
@@ -40,6 +41,7 @@ export default function DeploymentRow({
 }: Props) {
   const isRunning = deployment.status === "running";
   const isSuccess = deployment.status === "success";
+  const navigate = useNavigate();
   const [showStopModal, setShowStopModal] = useState<boolean>();
   const [showManifest, setShowManifest] = useState<boolean>();
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>();
@@ -51,6 +53,18 @@ export default function DeploymentRow({
     onStateChangeClick: () =>
       isRunning ? setShowStopModal(true) : setShowDeleteModal(true),
     onPublishClick: () => setShowPublishModal(true),
+    onRestartClick: () => {
+      restartDeployment({
+        appId: deployment.appId,
+        deploymentId: deployment.id,
+        envId: deployment.envId,
+      }).then(() => {
+        navigate(
+          `/apps/${deployment.appId}/environments/${deployment.envId}/deployments/${deployment.id}`
+        );
+        setRefreshToken(Date.now());
+      });
+    },
   });
 
   return (

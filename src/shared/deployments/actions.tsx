@@ -1,4 +1,10 @@
 import { useEffect, useState, useMemo } from "react";
+import RefreshIcon from "@mui/icons-material/RefreshOutlined";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import StopIcon from "@mui/icons-material/StopCircle";
+import PreviewIcon from "@mui/icons-material/Preview";
+import ArticleIcon from "@mui/icons-material/Article";
+import ManifestIcon from "@mui/icons-material/ReceiptLong";
 import api from "~/utils/api/Api";
 
 interface DeleteForeverProps {
@@ -106,12 +112,27 @@ export const stopDeployment = ({
   return api.post("/app/deploy/stop", { appId, deploymentId });
 };
 
+interface RestartDeploymentProps {
+  appId: string;
+  envId: string;
+  deploymentId: string;
+}
+
+export const restartDeployment = ({
+  appId,
+  envId,
+  deploymentId,
+}: RestartDeploymentProps): Promise<void> => {
+  return api.post("/app/deploy/restart", { appId, envId, deploymentId });
+};
+
 interface WithMenuItemsProps {
   omittedItems: Array<"view-details">;
   deployment: DeploymentV2;
   onPublishClick: () => void;
   onManifestClick: () => void;
   onStateChangeClick: () => void;
+  onRestartClick: () => void;
 }
 
 export const useWithMenuItems = ({
@@ -120,6 +141,7 @@ export const useWithMenuItems = ({
   onPublishClick,
   onManifestClick,
   onStateChangeClick,
+  onRestartClick,
 }: WithMenuItemsProps) => {
   return useMemo(() => {
     const items = [];
@@ -141,26 +163,31 @@ export const useWithMenuItems = ({
     items.push(
       {
         text: "Manifest",
-        icon: "fas fa-scroll",
+        icon: <ManifestIcon />,
         disabled: deployment.status !== "success",
         onClick: onManifestClick,
       },
       {
         text: "Runtime logs",
-        icon: "far fa-chart-bar",
+        icon: <ArticleIcon />,
         disabled: deployment.status !== "success",
         href: `${deployment.detailsUrl}/runtime-logs`,
       },
       {
         text: "Preview",
-        icon: "fas fa-external-link-square-alt",
+        icon: <PreviewIcon />,
         disabled: deployment.status !== "success",
         href: deployment.previewUrl,
       },
       {
+        text: "Restart",
+        icon: <RefreshIcon />,
+        onClick: onRestartClick,
+        disabled: deployment.status !== "failed",
+      },
+      {
         text: deployment.status === "running" ? "Stop" : "Delete",
-        icon:
-          deployment.status === "running" ? "fas fa-stop" : "fas fa-trash-alt",
+        icon: deployment.status === "running" ? <StopIcon /> : <DeleteIcon />,
         onClick: onStateChangeClick,
       }
     );
