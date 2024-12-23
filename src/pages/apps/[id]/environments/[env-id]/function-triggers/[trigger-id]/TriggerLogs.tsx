@@ -11,7 +11,7 @@ import CardHeader from "~/components/CardHeader";
 import Span from "~/components/Span";
 import { useFetchTriggerLogs } from "../actions";
 import CardRow from "~/components/CardRow";
-import { RefreshOutlined } from "@mui/icons-material";
+import RefreshOutlined from "@mui/icons-material/RefreshOutlined";
 import EmptyList from "~/components/EmptyPage";
 
 function formatDate(time: number) {
