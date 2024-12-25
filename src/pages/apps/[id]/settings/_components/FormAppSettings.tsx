@@ -118,7 +118,7 @@ const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
           The repo address of your application.
         </Typography>
       </Box>
-      <Box sx={{ mb: 4, display: isSelfHostedInstance ? "block" : "none" }}>
+      <Box sx={{ mb: 4, display: isSelfHostedInstance ? "none" : undefined }}>
         <FormControl variant="standard" fullWidth>
           <InputLabel id="app-runtime-settings" sx={{ pl: 2, pt: 1 }}>
             Runtime
