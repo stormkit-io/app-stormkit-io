@@ -1,5 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { AppSettings } from "../types";
+import { describe, expect, it, beforeEach } from "vitest";
 import { waitFor, fireEvent, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import { mockUpdateSettings } from "~/testing/nocks/nock_update_settings";
@@ -24,27 +25,27 @@ describe("~/pages/apps/[id]/settings/_components/FormAppSettings", () => {
     currentApp = mockApp();
     createWrapper({
       app: currentApp,
-      additionalSettings: { envs: [], runtime: "nodejs16.x" },
+      additionalSettings: { envs: [], runtime: "nodejs22.x" },
     });
   });
 
-  test("have the form prefilled", async () => {
+  it("have the form prefilled", async () => {
     await waitFor(() => {
       expect(wrapper.getByDisplayValue(currentApp.displayName)).toBeTruthy();
       expect(
         wrapper.getByDisplayValue("https://gitlab.com/stormkit-io/frontend.git")
       ).toBeTruthy();
-      expect(wrapper.getByText("NodeJS 16.x")).toBeTruthy();
+      expect(wrapper.getByText("NodeJS 22.x")).toBeTruthy();
     });
   });
 
-  test("updates the settings", async () => {
+  it("updates the settings", async () => {
     const scope = mockUpdateSettings({
       payload: {
         appId: currentApp.id,
         displayName: currentApp.displayName,
         repo: currentApp.repo,
-        runtime: "nodejs16.x",
+        runtime: "nodejs22.x",
       },
       response: { ok: true },
     });

@@ -5,7 +5,7 @@ export interface LocationState extends Location {
   app: number | null;
 }
 
-export type Runtime = "nodejs12.x" | "nodejs14.x" | "nodejs16.x";
+export type Runtime = "nodejs18.x" | "nodejs20.x" | "nodejs22.x";
 
 export interface AppSettings {
   envs: Array<string>;
