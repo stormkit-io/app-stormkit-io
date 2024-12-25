@@ -1,14 +1,14 @@
-import type { RenderResult } from "@testing-library/react";
-import { MemoryRouter, MemoryRouterProps } from "react-router";
-import { render, waitFor } from "@testing-library/react";
+import { describe, expect, beforeEach, it } from "vitest";
+import { waitFor, type RenderResult } from "@testing-library/react";
 import { mockFetchLicense } from "~/testing/nocks/nock_user";
 import SubscriptionDetails from "./SubscriptionDetails";
 import mockUser from "~/testing/data/mock_user";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface Props {
   user: User;
-  routerProps?: MemoryRouterProps;
   isSelfHostedInstance: boolean;
+  initialEntries?: string[];
 }
 
 describe("~/pages/user/account/_components/SubscriptionDetails", () => {
@@ -16,17 +16,18 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
 
   const createWrapper = ({
     user,
-    routerProps,
     isSelfHostedInstance,
+    initialEntries = ["/"],
   }: Props) => {
-    wrapper = render(
-      <MemoryRouter {...routerProps}>
+    wrapper = renderWithRouter({
+      el: () => (
         <SubscriptionDetails
           user={user}
           isSelfHostedInstance={isSelfHostedInstance}
         />
-      </MemoryRouter>
-    );
+      ),
+      initialEntries,
+    });
   };
 
   describe("Self-Hosted", () => {
@@ -39,7 +40,7 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
       });
     });
 
-    test("should not make a call to fetch the license", () => {
+    it("should not make a call to fetch the license", () => {
       const scope = mockFetchLicense({
         status: 200,
         response: { license: { raw: "abc", premium: true, seat: 6 } },
@@ -48,7 +49,7 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
       expect(scope.isDone()).toBe(false);
     });
 
-    test("should display a link to app.stormkit.io", () => {
+    it("should display a link to app.stormkit.io", () => {
       expect(wrapper.container.textContent).toContain("Subscription Details");
       expect(wrapper.container.textContent).toContain(
         "Visit your Cloud Account on app.stormkit.io to manage your subscription."
@@ -67,12 +68,12 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
         });
       });
 
-      test("should display the checkout form", () => {
+      it("should display the checkout form", () => {
         expect(wrapper.getByText("Cloud Edition")).toBeTruthy();
         expect(wrapper.getByText("Self-Hosted Edition")).toBeTruthy();
       });
 
-      test("should display a checkout title", () => {
+      it("should display a checkout title", () => {
         expect(wrapper.getByText("Checkout")).toBeTruthy();
         expect(() => wrapper.getByText("Subscription Details")).toThrow();
       });
@@ -88,16 +89,16 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
         });
       });
 
-      test("should no longer display the checkout form", () => {
+      it("should no longer display the checkout form", () => {
         expect(() => wrapper.getByText("Cloud Edition")).toThrow();
         expect(() => wrapper.getByText("Self-Hosted Edition")).toThrow();
       });
 
-      test("should no longer display a checkout title", () => {
+      it("should no longer display a checkout title", () => {
         expect(() => wrapper.getByText("Checkout")).toThrow();
       });
 
-      test("should display the subscription details title", () => {
+      it("should display the subscription details title", () => {
         expect(wrapper.getByText("Subscription Details")).toBeTruthy();
       });
     });
@@ -120,20 +121,20 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
         });
       });
 
-      test("should no longer display the checkout form", () => {
+      it("should no longer display the checkout form", () => {
         expect(() => wrapper.getByText("Cloud Edition")).toThrow();
         expect(() => wrapper.getByText("Self-Hosted Edition")).toThrow();
       });
 
-      test("should no longer display a checkout title", () => {
+      it("should no longer display a checkout title", () => {
         expect(() => wrapper.getByText("Checkout")).toThrow();
       });
 
-      test("should display the subscription details title", () => {
+      it("should display the subscription details title", () => {
         expect(wrapper.getByText("Subscription Details")).toBeTruthy();
       });
 
-      test("should display the liceense", () => {
+      it("should display the liceense", () => {
         expect(wrapper.getByText(/STORMKIT_LICENSE/)).toBeTruthy();
         expect(wrapper.getByDisplayValue("abc")).toBeTruthy();
       });
@@ -142,14 +143,11 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
     describe("when the user made a payment", () => {
       const user = mockUser({ packageId: "medium" });
 
-      test("should display a payment success message", () => {
+      it("should display a payment success message", () => {
         createWrapper({
           user,
-          routerProps: {
-            initialEntries: ["/?payment=success"],
-            initialIndex: 0,
-          },
           isSelfHostedInstance: false,
+          initialEntries: ["/?payment=success"],
         });
 
         expect(
@@ -159,13 +157,10 @@ describe("~/pages/user/account/_components/SubscriptionDetails", () => {
         ).toBeTruthy();
       });
 
-      test("should not display a payment success message when query param is missing", () => {
+      it("should not display a payment success message when query param is missing", () => {
         createWrapper({
           user,
-          routerProps: {
-            initialEntries: ["/"],
-            initialIndex: 0,
-          },
+          initialEntries: ["/"],
           isSelfHostedInstance: false,
         });
 

@@ -1,6 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
-import * as router from "react-router";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
+import { fireEvent, waitFor } from "@testing-library/react";
 import mockTeams from "~/testing/data/mock_teams";
 import mockUser from "~/testing/data/mock_user";
 import mockTeamMembers from "~/testing/data/mock_team_members";
@@ -9,12 +9,11 @@ import {
   mockRemoveTeamMember,
 } from "~/testing/nocks/nock_team_members";
 import TeamMembers from "./TeamMembers";
-
-const { RouterProvider, createMemoryRouter } = router;
+import { renderWithRouter } from "~/testing/helpers";
 
 describe("~/pages/team/TeamMembers.tsx", () => {
   let wrapper: RenderResult;
-  let reloadTeams: jest.Func;
+  let reloadTeams: Mock;
   let members: TeamMember[];
 
   interface Props {
@@ -22,28 +21,15 @@ describe("~/pages/team/TeamMembers.tsx", () => {
   }
 
   const createWrapper = ({ team }: Props) => {
-    reloadTeams = jest.fn();
+    reloadTeams = vi.fn();
 
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/:team/settings",
-          element: (
-            <TeamMembers
-              team={team}
-              reloadTeams={reloadTeams}
-              user={mockUser()}
-            />
-          ),
-        },
-      ],
-      {
-        initialEntries: [`/${team?.slug}/settings`],
-        initialIndex: 0,
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      path: "/:team/settings",
+      initialEntries: [`/${team?.slug}/settings`],
+      el: () => (
+        <TeamMembers team={team} reloadTeams={reloadTeams} user={mockUser()} />
+      ),
+    });
   };
 
   describe("when has admin access", () => {
@@ -56,7 +42,7 @@ describe("~/pages/team/TeamMembers.tsx", () => {
       createWrapper({ team: teams[1] });
     });
 
-    test("should display title and subtitle", () => {
+    it("should display title and subtitle", () => {
       expect(wrapper.getByText("Team members")).toBeTruthy();
       expect(
         wrapper.getByText(
@@ -65,7 +51,7 @@ describe("~/pages/team/TeamMembers.tsx", () => {
       ).toBeTruthy();
     });
 
-    test("should list team members", async () => {
+    it("should list team members", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(members[0].displayName)).toBeTruthy();
         expect(wrapper.getByText(members[1].displayName)).toBeTruthy();
@@ -76,12 +62,12 @@ describe("~/pages/team/TeamMembers.tsx", () => {
       });
     });
 
-    test("invite member button should open the modal", () => {
+    it("invite member button should open the modal", () => {
       fireEvent.click(wrapper.getByText("Invite member"));
       expect(wrapper.getByText("Invite team member")).toBeTruthy();
     });
 
-    test("should remove team member", async () => {
+    it("should remove team member", async () => {
       let menu;
 
       const scope = mockRemoveTeamMember({
@@ -114,7 +100,7 @@ describe("~/pages/team/TeamMembers.tsx", () => {
       createWrapper({ team: teams[1] });
     });
 
-    test("should display title and subtitle", () => {
+    it("should display title and subtitle", () => {
       expect(wrapper.getByText("Team members")).toBeTruthy();
       expect(
         wrapper.getByText(
@@ -123,7 +109,7 @@ describe("~/pages/team/TeamMembers.tsx", () => {
       ).toBeTruthy();
     });
 
-    test("should list team members", async () => {
+    it("should list team members", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(members[0].displayName)).toBeTruthy();
         expect(wrapper.getByText(members[1].displayName)).toBeTruthy();
@@ -134,7 +120,7 @@ describe("~/pages/team/TeamMembers.tsx", () => {
       });
     });
 
-    test("should not display the invite member button", () => {
+    it("should not display the invite member button", () => {
       expect(() => wrapper.getByText("Invite member")).toThrow();
     });
   });

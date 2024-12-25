@@ -1,5 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -50,7 +51,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/[trigger-id]/Trigg
         value={{
           app: currentApp,
           environments: [currentEnv],
-          setRefreshToken: jest.fn(),
+          setRefreshToken: vi.fn(),
         }}
       >
         <EnvironmentContext.Provider value={{ environment: currentEnv }}>
@@ -83,12 +84,12 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/[trigger-id]/Trigg
     });
   });
 
-  test("renders without error", () => {
+  it("renders without error", () => {
     expect(wrapper.getByText("Trigger logs")).toBeTruthy();
     expect(wrapper.getByText("Last 25 logs for this trigger")).toBeTruthy();
   });
 
-  test("should display a loader when fetching logs", async () => {
+  it("should display a loader when fetching logs", async () => {
     expect(wrapper.container.innerHTML).toContain("MuiLinearProgress-root");
 
     await waitFor(() => {
@@ -98,7 +99,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/[trigger-id]/Trigg
     expect(wrapper.container.innerHTML).not.toContain("MuiLinearProgress-root");
   });
 
-  test("should display a loader when fetching logs", async () => {
+  it("should display a loader when fetching logs", async () => {
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
     });
@@ -107,7 +108,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/[trigger-id]/Trigg
     expect(wrapper.getByText("https://api.example.com/trigger-2")).toBeTruthy();
   });
 
-  test("should refetch the trigger logs when refresh button is clicked", async () => {
+  it("should refetch the trigger logs when refresh button is clicked", async () => {
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
     });
@@ -125,7 +126,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/[trigger-id]/Trigg
     });
   });
 
-  test("should open a drawer when a row is clicked", async () => {
+  it("should open a drawer when a row is clicked", async () => {
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
     });

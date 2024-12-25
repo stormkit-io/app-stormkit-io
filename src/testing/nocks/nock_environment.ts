@@ -1,4 +1,5 @@
 import nock from "nock";
+import { expect } from "vitest";
 
 const endpoint = process.env.API_DOMAIN || "";
 

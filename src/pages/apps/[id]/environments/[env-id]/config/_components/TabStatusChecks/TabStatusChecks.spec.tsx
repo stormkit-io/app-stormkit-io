@@ -1,4 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
@@ -15,10 +16,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabStatusCh
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let setRefreshToken: jest.Func;
+  let setRefreshToken: Mock;
 
   const createWrapper = ({ app, environment }: WrapperProps) => {
-    setRefreshToken = jest.fn();
+    setRefreshToken = vi.fn();
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironments({ app: currentApp })[0];
 
@@ -36,7 +37,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabStatusCh
       createWrapper({});
     });
 
-    test("should display an empty state message", () => {
+    it("should display an empty state message", () => {
       expect(
         wrapper.getByText(
           "You do not have any status checks for this environment."
@@ -44,11 +45,11 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabStatusCh
       ).toBeTruthy();
     });
 
-    test("should have a button to add status checks", () => {
+    it("should have a button to add status checks", () => {
       expect(wrapper.getByText("Add status check")).toBeTruthy();
     });
 
-    test("clicking the button should open the modal", () => {
+    it("clicking the button should open the modal", () => {
       fireEvent.click(wrapper.getByText("Add status check"));
       expect(wrapper.getByText("Command")).toBeTruthy();
     });
@@ -77,14 +78,14 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabStatusCh
       createWrapper({ app, environment });
     });
 
-    test("should contain a list of status checks", () => {
+    it("should contain a list of status checks", () => {
       expect(wrapper.getByText(checks[0].cmd)).toBeTruthy();
       expect(wrapper.getByText(checks[0].name!)).toBeTruthy();
       expect(wrapper.getByText(checks[1].cmd)).toBeTruthy();
       expect(wrapper.getByText(checks[1].name!)).toBeTruthy();
     });
 
-    test("should open the modify modal", () => {
+    it("should open the modify modal", () => {
       fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
       fireEvent.click(wrapper.getByText("Modify"));
 
@@ -92,7 +93,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabStatusCh
       expect(() => wrapper.getByDisplayValue("npm run test:random")).toThrow();
     });
 
-    test("should open the delete confirm and delete the status check", async () => {
+    it("should open the delete confirm and delete the status check", async () => {
       fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
       fireEvent.click(wrapper.getByText("Delete"));
 

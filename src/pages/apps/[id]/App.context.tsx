@@ -25,7 +25,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const AppProvider: React.FC<Props> = ({ children }) => {
+export default function AppProvider({ children }: Props) {
   const appId = useParams().id;
   const { app, error, loading, setRefreshToken, setApp } = useFetchApp({
     appId,
@@ -91,6 +91,4 @@ const AppProvider: React.FC<Props> = ({ children }) => {
       {children}
     </AppContext.Provider>
   );
-};
-
-export default AppProvider;
+}

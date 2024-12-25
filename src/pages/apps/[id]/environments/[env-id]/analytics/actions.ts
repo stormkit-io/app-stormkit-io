@@ -68,7 +68,7 @@ export const useFetchVisitors = ({
 
         setVisitors(VisitorsChartData);
       })
-      .catch(() => {
+      .catch(e => {
         setError("Something went wrong while fetching unique visitors.");
       })
       .finally(() => {

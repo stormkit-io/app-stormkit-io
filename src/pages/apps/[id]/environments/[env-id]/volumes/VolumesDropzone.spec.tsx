@@ -1,7 +1,6 @@
 import type { Scope } from "nock";
-import type { RenderResult } from "@testing-library/react";
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
+import { fireEvent, type RenderResult, waitFor } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnv from "~/testing/data/mock_environment";
 import {
@@ -10,6 +9,7 @@ import {
   mockToggleVisibility,
 } from "~/testing/nocks/nock_volumes";
 import VolumesDropzone from "./VolumesDropzone";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface Props {
   openDialog?: { mode: string };
@@ -22,12 +22,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesDropzone.tsx", 
   let currentApp: App;
   let currentEnv: Environment;
   let fetchFilesScope: Scope;
-  let setError: jest.Mock;
-  let setLoading: jest.Mock;
+  let setError: Mock;
+  let setLoading: Mock;
 
   const createWrapper = ({ openDialog, loading, files = [] }: Props) => {
-    setError = jest.fn();
-    setLoading = jest.fn();
+    setError = vi.fn();
+    setLoading = vi.fn();
     currentApp = mockApp();
     currentEnv = mockEnv({ app: currentApp });
 
@@ -38,8 +38,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesDropzone.tsx", 
       response: { files },
     });
 
-    wrapper = render(
-      <MemoryRouter>
+    wrapper = renderWithRouter({
+      el: () => (
         <VolumesDropzone
           loading={loading}
           appId={currentApp.id}
@@ -48,8 +48,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesDropzone.tsx", 
           setError={setError}
           setLoading={setLoading}
         />
-      </MemoryRouter>
-    );
+      ),
+    });
   };
 
   describe("with no files", () => {
@@ -57,11 +57,11 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesDropzone.tsx", 
       createWrapper({});
     });
 
-    test("should mount dropzone", () => {
+    it("should mount dropzone", () => {
       expect(wrapper.getByTestId("volumes-dropzone")).toBeTruthy();
     });
 
-    test("should display an empty message", () => {
+    it("should display an empty message", () => {
       expect(wrapper.getByText("No files uploaded yet")).toBeTruthy();
     });
   });
@@ -73,11 +73,11 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesDropzone.tsx", 
       });
     });
 
-    test("should mount dropzone", () => {
+    it("should mount dropzone", () => {
       expect(wrapper.getByTestId("volumes-dropzone")).toBeTruthy();
     });
 
-    test("should not display an empty message", () => {
+    it("should not display an empty message", () => {
       expect(() => wrapper.getByText("No files uploaded yet")).toThrow();
     });
   });
@@ -108,11 +108,11 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesDropzone.tsx", 
       });
     });
 
-    test("should mount dropzone", () => {
+    it("should mount dropzone", () => {
       expect(wrapper.getByTestId("volumes-dropzone")).toBeTruthy();
     });
 
-    test("should display an empty message first and then the files", async () => {
+    it("should display an empty message first and then the files", async () => {
       expect(wrapper.getByText("No files uploaded yet")).toBeTruthy();
       expect(() => wrapper.getByText("test.txt")).toThrow();
 
@@ -126,7 +126,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesDropzone.tsx", 
       expect(wrapper.getByText("http://localhost/volumes/142")).toBeTruthy();
     });
 
-    test("should delete a file", async () => {
+    it("should delete a file", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("text.txt")).toBeTruthy();
       });
@@ -162,7 +162,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesDropzone.tsx", 
       });
     });
 
-    test.each`
+    it.each`
       status       | fileIndex | buttonText        | expectedText
       ${"private"} | ${0}      | ${"Make public"}  | ${/a public file. Anyone with the link will be able to see the file/}
       ${"public"}  | ${1}      | ${"Make private"} | ${/ Only authenticated users will be able to access the file./}

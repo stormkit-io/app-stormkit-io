@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi } from "vitest";
 import { waitFor, fireEvent, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import { mockDeleteApp } from "~/testing/nocks/nock_app";
@@ -21,7 +22,7 @@ describe("~/pages/apps/[id]/settings/_components/FormDangerZone", () => {
     createWrapper({ app: currentApp });
   });
 
-  test("displays a warning message", async () => {
+  it("displays a warning message", async () => {
     await waitFor(() => {
       expect(
         wrapper.getByText(
@@ -31,7 +32,7 @@ describe("~/pages/apps/[id]/settings/_components/FormDangerZone", () => {
     });
   });
 
-  test("clicking Remove application should call the confirm action", async () => {
+  it("clicking Remove application should call the confirm action", async () => {
     await fireEvent.click(wrapper.getByText("Remove application"));
 
     const modal = wrapper.getByText(
@@ -53,7 +54,7 @@ describe("~/pages/apps/[id]/settings/_components/FormDangerZone", () => {
 
     Object.defineProperty(window, "location", {
       value: {
-        assign: jest.fn(),
+        assign: vi.fn(),
       },
     });
 

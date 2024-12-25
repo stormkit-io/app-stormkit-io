@@ -24,6 +24,7 @@ interface Props extends Omit<SelectProps, "onSelect"> {
   selected?: string[];
   label?: string;
   helperText?: React.ReactNode;
+  placeholder?: string;
   onSearch?: (v: string) => void;
   onSelect: (v: string[]) => void;
 }

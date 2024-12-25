@@ -17,10 +17,9 @@
     "moduleResolution": "Node",
     "newLine": "lf",
     "jsx": "react-jsx",
-    "types": ["react", "node", "jest"],
+    "types": ["react", "node", ],
     "paths": {
       "~/*": ["./src/*"],
-      "~/testing/*": ["./testing/*"]
     }
   },
   "exclude": ["node_modules"]

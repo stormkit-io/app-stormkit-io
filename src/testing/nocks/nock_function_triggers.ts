@@ -22,21 +22,24 @@ export const mockFetchFunctionTriggers = ({
 
 interface mockDeleteFunctionTriggerProps {
   appId: string;
+  envId: string;
   tfid: string;
 }
 
 export const mockDeleteFunctionTrigger = ({
   appId,
+  envId,
   tfid,
 }: mockDeleteFunctionTriggerProps) => {
   return nock(endpoint)
-    .delete(`/apps/trigger?triggerId=${tfid}`, { appId })
+    .delete(`/apps/trigger?triggerId=${tfid}&appId=${appId}&envId=${envId}`)
     .reply(200, { ok: true });
 };
 
 interface MockUpdateFunctionTriggerProps {
   tfid: string;
   appId: string;
+  envId: string;
   status: boolean;
   cron: string;
   options: any;
@@ -45,13 +48,15 @@ interface MockUpdateFunctionTriggerProps {
 export const mockUpdateFunctionTrigger = ({
   tfid,
   appId,
+  envId,
   status,
   cron,
   options,
 }: MockUpdateFunctionTriggerProps) => {
   return nock(endpoint)
-    .patch(`/apps/function-trigger`, {
+    .patch(`/apps/trigger`, {
       id: tfid,
+      envId,
       appId,
       status,
       cron,
@@ -76,7 +81,7 @@ export const mockCreateFunctionTrigger = ({
   options,
 }: MockCreateFunctionTriggerProps) => {
   return nock(endpoint)
-    .post(`/apps/function-trigger`, {
+    .post(`/apps/trigger`, {
       appId,
       envId,
       status,

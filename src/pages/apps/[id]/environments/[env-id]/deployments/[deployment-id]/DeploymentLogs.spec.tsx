@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, RenderResult } from "@testing-library/react";
 import DeploymentLogs from "./DeploymentLogs";
 
@@ -6,7 +7,7 @@ interface Props {
   isRunning: boolean;
 }
 
-jest.mock("~/utils/helpers/deployments", () => ({
+vi.mock("~/utils/helpers/deployments", () => ({
   formattedDate: () => "21.09.2022 - 21:30",
 }));
 
@@ -27,12 +28,12 @@ describe("~/apps/[id]/environments/[env-id]/deployments/DeploymentLogs.tsx", () 
     },
   ];
 
-  test("should show the log duration", () => {
+  it("should show the log duration", () => {
     createWrapper({ logs, isRunning: false });
     expect(wrapper.getByText("10s")).toBeTruthy();
   });
 
-  test("should display the logs when expanded", () => {
+  it("should display the logs when expanded", () => {
     createWrapper({ logs, isRunning: false });
 
     // First logs are collapsed
@@ -45,7 +46,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/DeploymentLogs.tsx", () 
     expect(wrapper.getByText("Nuxt CLI v3.0.0-rc.8")).toBeTruthy();
   });
 
-  test("should display the logs by default when running", () => {
+  it("should display the logs by default when running", () => {
     createWrapper({ logs, isRunning: true });
 
     // Then logs are shown

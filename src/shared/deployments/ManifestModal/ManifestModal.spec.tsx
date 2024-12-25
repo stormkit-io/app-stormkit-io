@@ -1,4 +1,5 @@
 import type { Scope } from "nock";
+import { describe, expect, it, vi } from "vitest";
 import {
   fireEvent,
   render,
@@ -16,18 +17,13 @@ interface Props {
   manifest?: Manifest;
 }
 
-jest.mock("@codemirror/lang-json", () => ({ json: jest.fn() }));
-jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
-  <>{value}</>
-));
-
 describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModal/ManifestModal.tsx", () => {
   let wrapper: RenderResult;
   let currentDepl: DeploymentV2;
   let scope: Scope;
 
   const createWrapper = ({
-    onClose = jest.fn(),
+    onClose = vi.fn(),
     deployment,
     manifest = {},
   }: Props | undefined = {}) => {
@@ -44,20 +40,20 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
     );
   };
 
-  test("should render the title properly", () => {
+  it("should render the title properly", () => {
     createWrapper();
     expect(wrapper.getByText(/Deployment manifest/)).toBeTruthy();
     expect(wrapper.getByText(new RegExp(`#${currentDepl.id}`))).toBeTruthy();
   });
 
-  test("should make the api call on mount", async () => {
+  it("should make the api call on mount", async () => {
     createWrapper();
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
     });
   });
 
-  test("should display a warning when top level index.html is missing and ssr is disabled", async () => {
+  it("should display a warning when top level index.html is missing and ssr is disabled", async () => {
     createWrapper({
       manifest: mockManifest({
         functionHandler: "",
@@ -80,7 +76,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
   });
 
   describe("ui view", () => {
-    test("should contain the cdn files as the primary view", async () => {
+    it("should contain the cdn files as the primary view", async () => {
       const manifest = mockManifest();
       createWrapper({ manifest });
 
@@ -102,7 +98,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
       ).toBeTruthy();
     });
 
-    test("should contain a redirects tab", async () => {
+    it("should contain a redirects tab", async () => {
       const manifest = mockManifest();
       createWrapper({ manifest });
 
@@ -126,7 +122,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
       );
     });
 
-    test("should contain a ssr tab", async () => {
+    it("should contain a ssr tab", async () => {
       const manifest = mockManifest();
       createWrapper({ manifest });
 
@@ -149,7 +145,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
   });
 
   describe("json view", () => {
-    test("should code mirror", async () => {
+    it("should code mirror", async () => {
       const manifest = mockManifest();
       createWrapper({ manifest });
 

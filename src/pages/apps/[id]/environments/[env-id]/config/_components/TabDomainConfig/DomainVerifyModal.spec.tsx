@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
@@ -18,10 +19,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
   let currentApp: App;
   let currentEnv: Environment;
   let domain: Domain;
-  let onClose: jest.Func;
+  let onClose: Mock;
 
   const createWrapper = ({ app, environment, domain }: Props) => {
-    onClose = jest.fn();
+    onClose = vi.fn();
 
     wrapper = render(
       <DomainVerifyModal
@@ -59,14 +60,14 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("should display header texts", () => {
+    it("should display header texts", () => {
       expect(wrapper.getByText(domain.domainName)).toBeTruthy();
       expect(
         wrapper.getByText("Follow these steps to verify your domain")
       ).toBeTruthy();
     });
 
-    test("should display txt records text", async () => {
+    it("should display txt records text", async () => {
       await waitFor(() => {
         expect(
           wrapper.getByText(
@@ -80,7 +81,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       );
     });
 
-    test("should make a new call when Verify Now is clicked", async () => {
+    it("should make a new call when Verify Now is clicked", async () => {
       const scope = mockFetchDomainsInfo({
         appId: currentApp.id,
         envId: currentEnv.id!,

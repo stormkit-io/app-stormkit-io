@@ -1,9 +1,10 @@
 import type { RenderResult } from "@testing-library/react";
-import { RouterProvider, createMemoryRouter } from "react-router";
-import { render, waitFor } from "@testing-library/react";
+import { describe, expect, it, beforeEach, afterEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 import bitbucketApi from "~/utils/api/Bitbucket";
 import * as nocks from "~/testing/nocks/nock_bitbucket";
 import NewBitbucketApp from "./NewBitbucketApp";
+import { renderWithRouter } from "~/testing/helpers";
 
 const { mockFetchRepositories } = nocks;
 
@@ -11,11 +12,7 @@ describe("~/pages/apps/new/github/NewBitbucketApp.tsx", () => {
   let wrapper: RenderResult;
 
   const createWrapper = () => {
-    const memoryRouter = createMemoryRouter([
-      { path: "*", element: <NewBitbucketApp /> },
-    ]);
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({ el: () => <NewBitbucketApp /> });
   };
 
   describe("fetching data", () => {
@@ -23,7 +20,7 @@ describe("~/pages/apps/new/github/NewBitbucketApp.tsx", () => {
 
     beforeEach(() => {
       bitbucketApi.accessToken = "123456";
-      bitbucketApi.baseurl = "http://localhost";
+      bitbucketApi.baseurl = process.env.API_DOMAIN || "";
 
       mockFetchRepositories({
         query: {
@@ -50,11 +47,11 @@ describe("~/pages/apps/new/github/NewBitbucketApp.tsx", () => {
       bitbucketApi.baseurl = originalBaseUrl;
     });
 
-    test("should have a proper title", () => {
+    it("should have a proper title", () => {
       expect(wrapper.getByText("Import from Bitbucket")).toBeTruthy();
     });
 
-    test("should render repositories", async () => {
+    it("should render repositories", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("jdoe/simple-project")).toBeTruthy();
       });

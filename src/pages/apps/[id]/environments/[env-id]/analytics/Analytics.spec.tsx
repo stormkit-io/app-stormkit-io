@@ -1,21 +1,11 @@
-import { RenderResult, render, waitFor } from "@testing-library/react";
+import { RenderResult, waitFor } from "@testing-library/react";
+import { describe, expect, it, beforeEach } from "vitest";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import { MemoryRouter } from "react-router";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
 import { mockFetchDomains } from "~/testing/nocks/nock_domains";
 import Analytics from "./Analytics";
-
-jest.mock("recharts", () => ({
-  YAxis: jest.fn(),
-  AreaChart: jest.fn(),
-  Area: jest.fn(),
-  Tooltip: jest.fn(),
-  CartesianGrid: jest.fn(),
-  ResponsiveContainer: ({ children }: { children: any }) => (
-    <div>{children}</div>
-  ),
-}));
+import { renderWithRouter } from "~/testing/helpers";
 
 interface WrapperProps {
   hasDomain?: boolean;
@@ -51,18 +41,14 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       },
     });
 
-    wrapper = render(
-      <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-        <MemoryRouter
-          initialEntries={[
-            { pathname: "/", search: `domain=${selectedDomainName}` },
-          ]}
-          initialIndex={0}
-        >
+    wrapper = renderWithRouter({
+      el: () => (
+        <EnvironmentContext.Provider value={{ environment: currentEnv }}>
           <Analytics />
-        </MemoryRouter>
-      </EnvironmentContext.Provider>
-    );
+        </EnvironmentContext.Provider>
+      ),
+      initialEntries: [`/?domain=${selectedDomainName}`],
+    });
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
@@ -74,7 +60,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       createWrapper({});
     });
 
-    test("should display correct header and subheader", () => {
+    it("should display correct header and subheader", () => {
       expect(wrapper.getByText("Analytics")).toBeTruthy();
       expect(
         wrapper.getByText(
@@ -83,23 +69,23 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       ).toBeTruthy();
     });
 
-    test("should contain visitors section", () => {
+    it("should contain visitors section", () => {
       expect(wrapper.getByText("Visitors")).toBeTruthy();
     });
 
-    test("should contain top referrers section", () => {
+    it("should contain top referrers section", () => {
       expect(wrapper.getByText("Referrers")).toBeTruthy();
     });
 
-    test("should contain top paths section", () => {
+    it("should contain top paths section", () => {
       expect(wrapper.getByText("Paths")).toBeTruthy();
     });
 
-    test("should contain countries section", () => {
+    it("should contain countries section", () => {
       expect(wrapper.getByText("Countries")).toBeTruthy();
     });
 
-    test("should have the initial domain selected", async () => {
+    it("should have the initial domain selected", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("www.stormkit.io")).toBeTruthy();
       });
@@ -114,7 +100,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       });
     });
 
-    test("should have that domain selected", async () => {
+    it("should have that domain selected", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
       });
@@ -126,7 +112,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       await createWrapper({ hasDomain: false });
     });
 
-    test("should display empty page", async () => {
+    it("should display empty page", async () => {
       await waitFor(() => {
         expect(
           wrapper.getByText("Analytics are collected only for custom domains.")
@@ -134,7 +120,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Analytics.tsx", () =
       });
     });
 
-    test("should contain a link to environment's domain page", async () => {
+    it("should contain a link to environment's domain page", async () => {
       await waitFor(() => {
         expect(
           wrapper.getByText("Setup a custom domain").getAttribute("href")

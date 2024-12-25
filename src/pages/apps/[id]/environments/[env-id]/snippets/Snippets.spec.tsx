@@ -1,7 +1,12 @@
 import type { Scope } from "nock/types";
-import type { RenderResult } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi } from "vitest";
 import { MemoryRouter } from "react-router";
-import { waitFor, fireEvent, render } from "@testing-library/react";
+import {
+  waitFor,
+  fireEvent,
+  render,
+  type RenderResult,
+} from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { mockFetchSnippets } from "~/testing/nocks/nock_snippets";
@@ -15,11 +20,6 @@ interface Props {
   app: App;
   env: Environment;
 }
-
-jest.mock("@codemirror/lang-json", () => ({ json: jest.fn() }));
-jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
-  <>{value}</>
-));
 
 describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => {
   let fetchSnippetsScope: Scope;
@@ -43,7 +43,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
           value={{
             app,
             environments: [env],
-            setRefreshToken: jest.fn(),
+            setRefreshToken: vi.fn(),
           }}
         >
           <EnvironmentContext.Provider value={{ environment: env }}>
@@ -68,13 +68,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    test("should fetch domains", async () => {
+    it("should fetch domains", async () => {
       await waitFor(() => {
         expect(fetchDomainsScope.isDone()).toBe(true);
       });
     });
 
-    test("should load snippets", async () => {
+    it("should load snippets", async () => {
       const s1 = snippets[0];
       const s2 = snippets[0];
 
@@ -85,7 +85,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       });
     });
 
-    test("should have a new button which opens a modal", async () => {
+    it("should have a new button which opens a modal", async () => {
       fireEvent.click(wrapper.getByText("New Snippet"));
 
       const fetchDomainsScopeModal = mockFetchDomains({
@@ -118,7 +118,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    test("should have a load more button", async () => {
+    it("should have a load more button", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Load more")).toBeTruthy();
       });
@@ -164,7 +164,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
       createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    test("should load an empty list", async () => {
+    it("should load an empty list", async () => {
       await waitFor(() => {
         expect(fetchSnippetsScope.isDone()).toBe(true);
       });

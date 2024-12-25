@@ -1,5 +1,5 @@
 import { FormEventHandler, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
@@ -35,6 +35,7 @@ export default function TeamSettings({ team, reloadTeams }: Props) {
 
     updateTeam({ name: data.name, teamId: team.id })
       .then(t => {
+        console.log("TEAM", t, team, navigate);
         if (t.slug !== team.slug) {
           navigate(`/${t.id}/settings`, { replace: true });
         }

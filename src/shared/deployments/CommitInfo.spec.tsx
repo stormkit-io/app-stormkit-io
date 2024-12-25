@@ -1,4 +1,5 @@
 import { MemoryRouter } from "react-router";
+import { describe, expect, it } from "vitest";
 import { render, RenderResult } from "@testing-library/react";
 import mockDeployments from "~/testing/data/mock_deployments_v2";
 import CommitInfo, { toHumanTime } from "./CommitInfo";
@@ -29,14 +30,14 @@ describe("~/shared/deployments/CommitInfo.tsx", () => {
     );
   };
 
-  test("toHumanTime", () => {
+  it("toHumanTime", () => {
     expect(toHumanTime(60)).toBe("1m 0s");
     expect(toHumanTime(61)).toBe("1m 1s");
     expect(toHumanTime(120)).toBe("2m 0s");
     expect(toHumanTime(121)).toBe("2m 1s");
   });
 
-  test("should display information properly", () => {
+  it("should display information properly", () => {
     const deployment = mockDeployments()[0];
     deployment.detailsUrl = "/my-test/url";
     createWrapper({ deployment, showProject: true });
@@ -53,7 +54,7 @@ describe("~/shared/deployments/CommitInfo.tsx", () => {
     );
   });
 
-  test("should not contain a link to deployments page when it's not clickable", () => {
+  it("should not contain a link to deployments page when it's not clickable", () => {
     createWrapper({ deployment: mockDeployments()[0], clickable: false });
 
     expect(
@@ -61,7 +62,7 @@ describe("~/shared/deployments/CommitInfo.tsx", () => {
     ).toBe(null);
   });
 
-  test("should not display project when the showProject property is false", () => {
+  it("should not display project when the showProject property is false", () => {
     createWrapper({ deployment: mockDeployments()[0], showProject: false });
 
     expect(() => wrapper.getByText("sample-project")).toThrow();

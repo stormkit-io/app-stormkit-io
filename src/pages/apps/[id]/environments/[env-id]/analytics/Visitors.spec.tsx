@@ -1,12 +1,8 @@
 import type { TimeSpan } from "./index.d";
-import {
-  RenderResult,
-  waitFor,
-  render,
-  fireEvent,
-} from "@testing-library/react";
-import { Scope } from "nock";
-import recharts from "recharts";
+import type { RenderResult } from "@testing-library/react";
+import type { Scope } from "nock";
+import { waitFor, render, fireEvent } from "@testing-library/react";
+import { describe, expect, it, vi, Mock } from "vitest";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
 import mockVisitors from "~/testing/data/mock_analytics_visitors";
@@ -19,26 +15,13 @@ interface WrapperProps {
   ts?: TimeSpan;
 }
 
-jest.mock("recharts", () => ({
-  YAxis: jest.fn(),
-  AreaChart: jest.fn(),
-  Area: jest.fn(),
-  Tooltip: jest.fn(),
-  CartesianGrid: jest.fn(),
-  ResponsiveContainer: ({ children }: { children: any }) => (
-    <div>{children}</div>
-  ),
-}));
-
-jest.useFakeTimers().setSystemTime(new Date("2024-01-14"));
-
 describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () => {
   let wrapper: RenderResult;
   let scope: Scope;
   let currentApp: App;
   let currentEnv: Environment;
   let currentEnvs: Environment[];
-  let onTimeSpanChange: jest.Mock;
+  let onTimeSpanChange: Mock;
   const data = mockVisitors();
 
   const createWrapper = ({ app, ts = "24h" }: WrapperProps) => {
@@ -46,7 +29,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
     currentApp = app || mockApp();
     currentEnvs = mockEnvironments({ app: currentApp });
     currentEnv = currentEnvs[0];
-    onTimeSpanChange = jest.fn();
+    onTimeSpanChange = vi.fn();
 
     scope = mockFetchVisitors({
       unique: "false",
@@ -66,7 +49,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
     );
   };
 
-  test("should include correct texts", async () => {
+  it("should include correct texts", async () => {
     createWrapper({});
 
     expect(
@@ -83,28 +66,25 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
     });
   });
 
-  test("should fetch visitors from the api", async () => {
+  it("should fetch visitors from the api", async () => {
     createWrapper({});
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
     });
 
-    expect(recharts.AreaChart).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: [
-          { name: "2024-01-14", total: 20, unique: 10 },
-          { name: "2024-01-13", total: 50, unique: 25 },
-          { name: "2023-12-19", total: 46, unique: 19 },
-          { name: "2023-11-04", total: 32, unique: 22 },
-          { name: "2023-07-02", total: 12, unique: 12 },
-        ],
-      }),
-      {}
+    expect(wrapper.getByTestId("area-chart").innerHTML).toEqual(
+      JSON.stringify([
+        { name: "2024-01-14", total: 20, unique: 10 },
+        { name: "2024-01-13", total: 50, unique: 25 },
+        { name: "2023-12-19", total: 46, unique: 19 },
+        { name: "2023-11-04", total: 32, unique: 22 },
+        { name: "2023-07-02", total: 12, unique: 12 },
+      ])
     );
   });
 
-  test("should emit event when time span changes", async () => {
+  it("should emit event when time span changes", async () => {
     createWrapper({});
 
     await waitFor(() => {
@@ -118,7 +98,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
     });
   });
 
-  test.only("should fetch with specified time span", async () => {
+  it.only("should fetch with specified time span", async () => {
+    vi.useFakeTimers({
+      now: new Date("2024-01-14").getTime(),
+      toFake: ["Date"],
+    });
+
     createWrapper({
       ts: "7d",
     });
@@ -131,5 +116,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/analytics/Visitors.tsx", () =>
       expect(wrapper.getByText(/visits in the last/)).toBeTruthy();
       expect(wrapper.getByText(/7 days/)).toBeTruthy();
     });
+
+    vi.useRealTimers();
   });
 });

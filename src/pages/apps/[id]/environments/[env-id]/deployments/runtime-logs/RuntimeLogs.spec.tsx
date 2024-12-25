@@ -1,17 +1,13 @@
 import type { Scope } from "nock";
-import {
-  fireEvent,
-  render,
-  RenderResult,
-  waitFor,
-} from "@testing-library/react";
-import { RouterProvider, createMemoryRouter } from "react-router";
+import { fireEvent, type RenderResult, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import mockApp from "~/testing/data/mock_app";
 import mockDeployment from "~/testing/data/mock_deployment";
 import mockEnvironment from "~/testing//data/mock_environment";
 import { mockFetchDeploymentLogs } from "~/testing/nocks/nock_logs";
 import RuntimeLogs from "./RuntimeLogs";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface Props {
   app?: App;
@@ -78,35 +74,26 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
       },
     });
 
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/apps/:appId/environments/:envId/deployments/:deploymentId/runtime-logs",
-          element: (
-            <AppContext.Provider
-              value={{
-                app: currentApp,
-                environments: [currentEnv],
-                setRefreshToken: jest.fn(),
-              }}
-            >
-              <RuntimeLogs />
-            </AppContext.Provider>
-          ),
-        },
+    wrapper = renderWithRouter({
+      path: "/apps/:appId/environments/:envId/deployments/:deploymentId/runtime-logs",
+      initialEntries: [
+        `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${currentDeploy.id}/runtime-logs`,
       ],
-      {
-        initialIndex: 0,
-        initialEntries: [
-          `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${currentDeploy.id}/runtime-logs`,
-        ],
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+      el: () => (
+        <AppContext.Provider
+          value={{
+            app: currentApp,
+            environments: [currentEnv],
+            setRefreshToken: vi.fn(),
+          }}
+        >
+          <RuntimeLogs />
+        </AppContext.Provider>
+      ),
+    });
   };
 
-  test("should contain a link back to the deployment page", async () => {
+  it("should contain a link back to the deployment page", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -117,7 +104,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     });
   });
 
-  test("should display logs", async () => {
+  it("should display logs", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -134,7 +121,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     });
   });
 
-  test("should paginate", async () => {
+  it("should paginate", async () => {
     createWrapper({ hasNextPage: true });
 
     await waitFor(() => {

@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { mockSetVolumesConfig } from "~/testing/nocks/nock_volumes";
 import VolumesConfigModal from "./VolumesConfigModal";
@@ -9,12 +10,12 @@ interface Props {
 
 describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesConfigModal.tsx", () => {
   let wrapper: RenderResult;
-  let onClose: jest.Func;
-  let onSuccess: jest.Func;
+  let onClose: Mock;
+  let onSuccess: Mock;
 
   const createWrapper = ({ config }: Props) => {
-    onClose = jest.fn();
-    onSuccess = jest.fn();
+    onClose = vi.fn();
+    onSuccess = vi.fn();
 
     wrapper = render(
       <VolumesConfigModal
@@ -30,18 +31,18 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesConfigModal.tsx
       createWrapper({});
     });
 
-    test("should display filesys as default selected value", () => {
+    it("should display filesys as default selected value", () => {
       expect(wrapper.getByText("File System")).toBeTruthy();
       expect(wrapper.getByDisplayValue("/shared/volumes")).toBeTruthy();
     });
 
-    test("should display a learn more button", () => {
+    it("should display a learn more button", () => {
       expect(wrapper.getByText("Learn more").getAttribute("href")).toBe(
         "https://www.stormkit.io/docs/features/volumes#filesys"
       );
     });
 
-    test("should save save the config", async () => {
+    it("should save save the config", async () => {
       const scope = mockSetVolumesConfig({
         config: { mountType: "filesys", rootPath: "/shared/volumes" },
       });
@@ -62,7 +63,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/VolumesConfigModal.tsx
       });
     });
 
-    test("should display the pre-filled configuration", () => {
+    it("should display the pre-filled configuration", () => {
       expect(wrapper.getByText("File System")).toBeTruthy();
       expect(wrapper.getByDisplayValue("/mnt/stormkit")).toBeTruthy();
     });

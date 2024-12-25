@@ -1,13 +1,14 @@
 import { RouterProvider, createMemoryRouter } from "react-router";
+import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
 import { render, RenderResult, fireEvent } from "@testing-library/react";
 import mockTeams from "~/testing/data/mock_teams";
 import TeamMenu from "./TeamMenu";
 
 describe("~/layouts/TopMenu/Teams/TeamMenu.tsx", () => {
   let wrapper: RenderResult;
-  let onSettingsClick: jest.Func;
-  let onClickAway: jest.Func;
-  let onCreateTeamButtonClicked: jest.Func;
+  let onSettingsClick: Mock;
+  let onClickAway: Mock;
+  let onCreateTeamButtonClicked: Mock;
 
   interface Props {
     selectedTeam?: Team;
@@ -15,9 +16,9 @@ describe("~/layouts/TopMenu/Teams/TeamMenu.tsx", () => {
   }
 
   const createWrapper = ({ selectedTeam, teams }: Props) => {
-    onSettingsClick = jest.fn();
-    onClickAway = jest.fn();
-    onCreateTeamButtonClicked = jest.fn();
+    onSettingsClick = vi.fn();
+    onClickAway = vi.fn();
+    onCreateTeamButtonClicked = vi.fn();
 
     const memoryRouter = createMemoryRouter([
       {
@@ -44,18 +45,18 @@ describe("~/layouts/TopMenu/Teams/TeamMenu.tsx", () => {
       });
     });
 
-    test("should handle create team button clicked", () => {
+    it("should handle create team button clicked", () => {
       fireEvent.click(wrapper.getByText("Create team"));
       expect(onCreateTeamButtonClicked).toHaveBeenCalled();
     });
 
-    test("should just list personal team", () => {
+    it("should just list personal team", () => {
       expect(wrapper.getByText("default")).toBeTruthy();
       expect(wrapper.getByText("Personal")).toBeTruthy();
       expect(wrapper.getAllByRole("link").length).toBe(1);
     });
 
-    test("should not display the group members icon", () => {
+    it("should not display the group members icon", () => {
       expect(() => wrapper.getByLabelText("Team members")).toThrow();
     });
   });
@@ -75,28 +76,28 @@ describe("~/layouts/TopMenu/Teams/TeamMenu.tsx", () => {
       });
     });
 
-    test("should list all teams", () => {
+    it("should list all teams", () => {
       expect(wrapper.getByRole("list").querySelectorAll("a").length).toBe(4); // 3 links + 1 settings
     });
 
     const findTeam = (id: string) => wrapper.getByTestId(`team-${id}`);
 
     if (shouldShowSettings) {
-      test("should display the group members icon", () => {
+      it("should display the group members icon", () => {
         expect(wrapper.getByLabelText("Team members")).toBeTruthy();
       });
 
-      test("should display the team settings icon", () => {
+      it("should display the team settings icon", () => {
         expect(findTeam(teams[selectedTeam].id).innerHTML).toContain(
           "Team settings"
         );
       });
     } else {
-      test("should not display the group members icon", () => {
+      it("should not display the group members icon", () => {
         expect(() => wrapper.getByLabelText("Team members")).toThrow();
       });
 
-      test("should not display the team settings icon", () => {
+      it("should not display the team settings icon", () => {
         expect(findTeam(teams[selectedTeam].id).innerHTML).not.toContain(
           "Team settings"
         );

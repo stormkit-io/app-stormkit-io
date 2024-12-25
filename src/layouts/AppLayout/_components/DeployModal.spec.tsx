@@ -1,52 +1,58 @@
 import type { RenderResult } from "@testing-library/react";
-import { waitFor, fireEvent, render } from "@testing-library/react";
-import * as router from "react-router";
+import type { Mock } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { waitFor, fireEvent } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnv from "~/testing/data/mock_environment";
 import { mockFetchRepoMeta } from "~/testing/nocks/nock_environment";
 import { mockDeployNow } from "~/testing/nocks/nock_deployments";
 import userEvent from "@testing-library/user-event";
 import DeployModal from "./DeployModal";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface Props {
   app: App;
   env: Environment;
 }
 
+const navigate = vi.fn();
+
+vi.mock("react-router", async () => {
+  const mod = await vi.importActual<typeof import("react-router")>(
+    "react-router"
+  );
+
+  return {
+    ...mod,
+    useNavigate: () => navigate,
+  };
+});
+
 describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let toggleModal: jest.Func;
-  let navigate: jest.Func;
+  let toggleModal: Mock;
   const deploymentId = "15639164571";
 
   const createWrapper = ({ app, env }: Props) => {
-    toggleModal = jest.fn();
-    navigate = jest.fn();
+    toggleModal = vi.fn();
 
-    jest.spyOn(router, "useNavigate").mockReturnValue(navigate);
-
-    const { RouterProvider, createMemoryRouter } = router;
-
-    const memoryRouter = createMemoryRouter([
-      {
-        path: "*",
-        element: (
-          <DeployModal
-            app={app}
-            environments={[env]}
-            selected={env}
-            toggleModal={toggleModal}
-          />
-        ),
-      },
-    ]);
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      el: () => (
+        <DeployModal
+          app={app}
+          environments={[env]}
+          selected={env}
+          toggleModal={toggleModal}
+        />
+      ),
+    });
   };
 
   beforeEach(async () => {
+    navigate.mockClear();
+
     currentApp = mockApp();
     currentEnv = mockEnv({ app: currentApp });
     currentEnv.branch = "";
@@ -95,7 +101,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     await fireEvent.click(wrapper.getByText("Deploy now"));
   };
 
-  test("mounts the modal properly", () => {
+  it("mounts the modal properly", () => {
     expect(wrapper.getByText("Start a deployment")).toBeTruthy();
     expect(wrapper.getByText("Deploy now")).toBeTruthy();
     expect(
@@ -103,7 +109,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     ).toBe(`/apps/${currentApp.id}/environments/${currentEnv.id}`);
   });
 
-  test("creates a new deployment", async () => {
+  it("creates a new deployment", async () => {
     const scope = mockDeployNow({
       appId: currentApp.id,
       config: { ...deployConfig, env: currentEnv.name },
@@ -122,7 +128,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     });
   });
 
-  test("429 errors should display a payment error", async () => {
+  it("429 errors should display a payment error", async () => {
     const scope = mockDeployNow({
       appId: currentApp.id,
       config: { ...deployConfig, env: currentEnv.name },
@@ -145,7 +151,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     });
   });
 
-  test("other errors should display a generic error", async () => {
+  it("other errors should display a generic error", async () => {
     const scope = mockDeployNow({
       appId: currentApp.id,
       config: { ...deployConfig, env: currentEnv.name },

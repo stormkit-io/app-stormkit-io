@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { buildFormValues, validateRedirects } from "./actions";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
@@ -7,7 +8,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/actions.tsx", () => {
   const env = mockEnvironments({ app })[0];
 
   describe("buildFormValues", () => {
-    test("should match the default state", () => {
+    it("should match the default state", () => {
       const values = buildFormValues(env, document.createElement("form"));
 
       expect(values).toEqual({
@@ -30,7 +31,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/actions.tsx", () => {
       });
     });
 
-    test("should match the updated form values", () => {
+    it("should match the updated form values", () => {
       const form = document.createElement("form");
 
       const name = document.createElement("input");
@@ -83,7 +84,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/actions.tsx", () => {
   });
 
   describe("validateRedirects", () => {
-    const setError = jest.fn();
+    const setError = vi.fn();
     let redirects = `{}`;
 
     expect(validateRedirects(redirects, setError)).toBe(false);

@@ -1,4 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi, type Mock } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import mockApp from "~/testing/data/mock_app";
@@ -12,19 +13,14 @@ interface WrapperProps {
   setRefreshToken?: () => void;
 }
 
-jest.mock("@codemirror/lang-json", () => ({ json: jest.fn() }));
-jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
-  <>{value}</>
-));
-
 describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigRedirects.tsx", () => {
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let setRefreshToken: jest.Func;
+  let setRefreshToken: Mock;
 
   const createWrapper = ({ app, environment }: WrapperProps) => {
-    setRefreshToken = jest.fn();
+    setRefreshToken = vi.fn();
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironments({ app: currentApp })[0];
 
@@ -37,7 +33,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigRe
     );
   };
 
-  test("should have a form", () => {
+  it("should have a form", () => {
     createWrapper({});
 
     expect(wrapper.getByText("Redirects")).toBeTruthy();
@@ -68,7 +64,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigRe
     expect(wrapper.getByText("docs")).toBeTruthy();
   });
 
-  test("should submit the form without redirects", async () => {
+  it("should submit the form without redirects", async () => {
     createWrapper({});
 
     await userEvent.type(
@@ -104,7 +100,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigRe
     });
   });
 
-  test("should submit the form with redirects", async () => {
+  it("should submit the form with redirects", async () => {
     createWrapper({});
 
     await userEvent.type(

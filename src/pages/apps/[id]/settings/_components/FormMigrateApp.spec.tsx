@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi } from "vitest";
 import { waitFor, fireEvent, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockTeams from "~/testing/data/mock_teams";
@@ -23,7 +24,7 @@ describe("~/pages/apps/[id]/settings/_components/FormMigrateApp", () => {
     createWrapper({ app: currentApp });
   });
 
-  test("displays title and subtitle correctly", () => {
+  it("displays title and subtitle correctly", () => {
     expect(wrapper.getByText("Migrate app")).toBeTruthy();
     expect(
       wrapper.getByText(
@@ -32,12 +33,12 @@ describe("~/pages/apps/[id]/settings/_components/FormMigrateApp", () => {
     );
   });
 
-  test("developer roles should not appear in the list", () => {
+  it("developer roles should not appear in the list", () => {
     fireEvent.mouseDown(wrapper.getByText(/Personal/));
     expect(() => wrapper.getByText(teams[1].name)).toThrow();
   });
 
-  test("clicking Move application should call the confirm action", async () => {
+  it("clicking Move application should call the confirm action", async () => {
     fireEvent.mouseDown(wrapper.getByText(/Personal/));
     fireEvent.click(wrapper.getByText(teams[2].name));
 
@@ -61,7 +62,7 @@ describe("~/pages/apps/[id]/settings/_components/FormMigrateApp", () => {
 
     Object.defineProperty(window, "location", {
       value: {
-        reload: jest.fn(),
+        reload: vi.fn(),
       },
     });
 

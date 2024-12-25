@@ -1,5 +1,6 @@
 import { RenderResult, waitFor } from "@testing-library/react";
-import { render, fireEvent } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";
@@ -7,7 +8,7 @@ import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
 import { mockInsertEnvironment } from "~/testing/nocks/nock_environment";
 import EnvironmentFormModal from "./EnvironmentFormModal";
-import { MemoryRouter } from "react-router";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface WrapperProps {
   app?: App;
@@ -35,8 +36,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironment({ app: currentApp });
 
-    wrapper = render(
-      <MemoryRouter>
+    wrapper = renderWithRouter({
+      el: () => (
         <AppContext.Provider
           value={{
             app: currentApp,
@@ -48,8 +49,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
             <EnvironmentFormModal isOpen app={currentApp} onClose={onClose} />
           </EnvironmentContext.Provider>
         </AppContext.Provider>
-      </MemoryRouter>
-    );
+      ),
+    });
   };
 
   const envData = ({ name, branch }: { name?: string; branch?: string }) => ({
@@ -70,20 +71,20 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
     },
   });
 
-  test("should load the form properly", () => {
+  it("should load the form properly", () => {
     createWrapper({});
     expect(findNameInput()).toBeTruthy();
     expect(findBranchInput()).toBeTruthy();
   });
 
-  test("should handle closing the modal", () => {
-    const onClose = jest.fn();
+  it("should handle closing the modal", () => {
+    const onClose = vi.fn();
     createWrapper({ onClose });
     fireEvent.click(findCancelButton()!);
     expect(onClose).toHaveBeenCalled();
   });
 
-  test("should handle form submission properly -- success", async () => {
+  it("should handle form submission properly -- success", async () => {
     createWrapper({});
     const scope = mockInsertEnvironment({
       environment: envData({}),
@@ -95,7 +96,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
 
     Object.defineProperty(window, "location", {
       value: {
-        assign: jest.fn(),
+        assign: vi.fn(),
       },
     });
 
@@ -110,7 +111,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
     });
   });
 
-  test("should handle form submission properly -- error", async () => {
+  it("should handle form submission properly -- error", async () => {
     createWrapper({});
     const scope = mockInsertEnvironment({
       environment: envData({ name: "production", branch: "main" }),
@@ -126,7 +127,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentFormModal.ts
 
     Object.defineProperty(window, "location", {
       value: {
-        assign: jest.fn(),
+        assign: vi.fn(),
       },
     });
 

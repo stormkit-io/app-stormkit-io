@@ -1,4 +1,5 @@
 import type { Scope } from "nock";
+import { describe, expect, it } from "vitest";
 import { RenderResult, waitFor } from "@testing-library/react";
 import { fireEvent, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
@@ -38,7 +39,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAPIKey.t
     wrapper = render(<TabAPIKey app={currentApp} environment={currentEnv} />);
   };
 
-  test("should fetch api keys", async () => {
+  it("should fetch api keys", async () => {
     createWrapper({});
 
     await waitFor(() => {
@@ -57,7 +58,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAPIKey.t
     expect(wrapper.getByText("CI")).toBeTruthy();
   });
 
-  test("should delete api key", async () => {
+  it("should delete api key", async () => {
     createWrapper({});
 
     await waitFor(() => {

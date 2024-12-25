@@ -293,7 +293,7 @@ export const updateEnvironment = ({
       try {
         const jsonData = await res.json();
         setError(jsonData.error);
-      } catch {
+      } catch (e) {
         setError(`"Error: ${(await res?.body()) || res}`);
       }
     })

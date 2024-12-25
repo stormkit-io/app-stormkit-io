@@ -5,6 +5,7 @@ import {
   RenderResult,
   waitFor,
 } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { RouterProvider, createMemoryRouter } from "react-router";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -52,7 +53,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
             value={{
               app: currentApp,
               environments: [currentEnv],
-              setRefreshToken: jest.fn(),
+              setRefreshToken: vi.fn(),
             }}
           >
             <EnvironmentContext.Provider value={{ environment: currentEnv }}>
@@ -66,7 +67,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
     wrapper = render(<RouterProvider router={memoryRouter} />);
   };
 
-  test("should list function triggers", async () => {
+  it("should list function triggers", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -78,7 +79,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
     });
   });
 
-  test("should handle deleting function trigger", async () => {
+  it("should handle deleting function trigger", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -90,6 +91,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
 
     const deleteScope = mockDeleteFunctionTrigger({
       appId: currentApp.id,
+      envId: currentEnv.id!,
       tfid: currentTriggers[0].id!,
     });
 
@@ -119,7 +121,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/FunctionTriggers.t
     });
   });
 
-  test("displays an empty list when there are no function triggers", async () => {
+  it("displays an empty list when there are no function triggers", async () => {
     createWrapper({ triggers: [] });
 
     await waitFor(() => {

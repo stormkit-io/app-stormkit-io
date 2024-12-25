@@ -1,11 +1,13 @@
 import type { RenderResult } from "@testing-library/react";
+import type { Mock } from "vitest";
+import { describe, expect, beforeEach, it, vi } from "vitest";
 import { fireEvent, waitFor, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { WelcomeModal } from "./";
 
 interface Props {
   isOpen: boolean;
-  toggleModal: jest.Mock;
+  toggleModal: Mock;
 }
 
 describe("~/pages/apps/_components/WelcomeModal", () => {
@@ -24,18 +26,18 @@ describe("~/pages/apps/_components/WelcomeModal", () => {
   };
 
   describe("when is open", () => {
-    let toggleModal: jest.Mock;
+    let toggleModal: Mock;
 
     beforeEach(() => {
-      toggleModal = jest.fn();
+      toggleModal = vi.fn();
       createWrapper({ isOpen: true, toggleModal });
     });
 
-    test("matches the snapshot", () => {
+    it("matches the snapshot", () => {
       expect(wrapper).toMatchSnapshot();
     });
 
-    test("closes the modal when close button is clicked", async () => {
+    it("closes the modal when close button is clicked", async () => {
       fireEvent.click(wrapper.getByText("Close"));
 
       await waitFor(() => {

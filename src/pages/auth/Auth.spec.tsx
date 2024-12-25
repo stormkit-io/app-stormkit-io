@@ -1,66 +1,56 @@
 import type { Scope } from "nock";
-import * as router from "react-router";
+import { describe, expect, beforeEach, it, vi } from "vitest";
 import { mockUser } from "~/testing/data";
-import { render, waitFor, RenderResult } from "@testing-library/react";
+import { waitFor, RenderResult } from "@testing-library/react";
 import { AuthContext, AuthContextProps } from "./Auth.context";
 import { mockFetchAuthProviders } from "~/testing/nocks/nock_auth";
+import { renderWithRouter } from "~/testing/helpers";
 import Auth from "./Auth";
+
+declare const global: {
+  NavigateMock: any;
+};
+
+interface Props {
+  context?: AuthContextProps;
+  path?: string;
+}
 
 describe("~/pages/auth/Auth.tsx", () => {
   let wrapper: RenderResult;
-  let navigate: jest.Func;
   let scope: Scope;
 
-  const createWrapper = (context?: AuthContextProps) => {
-    navigate = jest.fn();
-    jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
-
-    const memoryRouter = router.createMemoryRouter([
-      {
-        path: "*",
-        element: (
-          <AuthContext.Provider value={{ user: mockUser(), ...context }}>
-            <Auth />
-          </AuthContext.Provider>
-        ),
-      },
-    ]);
-
-    wrapper = render(<router.RouterProvider router={memoryRouter} />);
-  };
-
-  const mockUseLocation = ({ pathname = "", search = "" } = {}) => {
-    jest.spyOn(router, "useLocation").mockReturnValue({
-      key: "",
-      state: {},
-      hash: "",
-      pathname,
-      search,
+  const createWrapper = ({ context, path }: Props = {}) => {
+    wrapper = renderWithRouter({
+      initialEntries: [path || "/"],
+      el: () => (
+        <AuthContext.Provider value={{ user: mockUser(), ...context }}>
+          <Auth />
+        </AuthContext.Provider>
+      ),
     });
   };
 
   describe("when user is logged in and redirect is provided", () => {
     beforeEach(() => {
-      mockUseLocation({ search: "?redirect=/apps" });
-      createWrapper();
+      createWrapper({ path: "/?redirect=/apps" });
     });
 
-    test("redirects user to the given page", async () => {
+    it("redirects user to the given page", async () => {
       await waitFor(() => {
-        expect(navigate).toHaveBeenCalledWith("/apps");
+        expect(global.NavigateMock).toHaveBeenCalledWith("/apps");
       });
     });
   });
 
   describe("when user is logged in and redirect is not provided", () => {
     beforeEach(() => {
-      mockUseLocation();
       createWrapper();
     });
 
-    test("redirects user to the home page", async () => {
+    it("redirects user to the home page", async () => {
       await waitFor(() => {
-        expect(navigate).toHaveBeenCalledWith("/");
+        expect(global.NavigateMock).toHaveBeenCalledWith("/");
       });
     });
   });
@@ -73,12 +63,14 @@ describe("~/pages/auth/Auth.tsx", () => {
         response: { gitlab: true, bitbucket: true, github: true },
       });
 
-      loginOauthSpy = jest.fn();
-      mockUseLocation();
-      createWrapper({ user: undefined, loginOauth: loginOauthSpy });
+      loginOauthSpy = vi.fn();
+
+      createWrapper({
+        context: { user: undefined, loginOauth: loginOauthSpy },
+      });
     });
 
-    test("displays some text", async () => {
+    it("displays some text", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(/SSL/)).toBeTruthy();
         expect(wrapper.getByText(/automated SSL/)).toBeTruthy();
@@ -86,7 +78,7 @@ describe("~/pages/auth/Auth.tsx", () => {
       });
     });
 
-    test("displays three buttons", async () => {
+    it("displays three buttons", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("GitHub")).toBeTruthy();
         expect(wrapper.getByText("Bitbucket")).toBeTruthy();
@@ -103,11 +95,10 @@ describe("~/pages/auth/Auth.tsx", () => {
         response: { gitlab: true, bitbucket: false, github: false },
       });
 
-      mockUseLocation();
-      createWrapper({ user: undefined, loginOauth: jest.fn() });
+      createWrapper({ context: { user: undefined, loginOauth: vi.fn() } });
     });
 
-    test("displays one button", async () => {
+    it("displays one button", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("GitLab")).toBeTruthy();
       });
@@ -121,14 +112,15 @@ describe("~/pages/auth/Auth.tsx", () => {
 
   describe("when there is a login error", () => {
     beforeEach(() => {
-      mockUseLocation();
       createWrapper({
-        user: undefined,
-        authError: "Something went wrong while logging in.",
+        context: {
+          user: undefined,
+          authError: "Something went wrong while logging in.",
+        },
       });
     });
 
-    test("displays an infobox with the authError", async () => {
+    it("displays an infobox with the authError", async () => {
       await waitFor(() => {
         expect(
           wrapper.getByText("Something went wrong while logging in.")

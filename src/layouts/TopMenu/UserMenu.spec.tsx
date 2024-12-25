@@ -1,8 +1,9 @@
 import { render, RenderResult } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { mockUser } from "~/testing/data";
 import UserMenu from "./UserMenu";
 
-jest.mock("~/utils/storage", () => ({
+vi.mock("~/utils/storage", () => ({
   LocalStorage: { get: () => "github", set: () => "" },
 }));
 
@@ -18,7 +19,7 @@ describe("~/components/UserMenu.tsx", () => {
       createWrapper();
     });
 
-    test.each`
+    it.each`
       text               | href
       ${"Documentation"} | ${"https://www.stormkit.io/docs"}
       ${"Account"}       | ${"/user/account"}
@@ -27,7 +28,7 @@ describe("~/components/UserMenu.tsx", () => {
       expect(wrapper.getByText(text).getAttribute("href")).toBe(href);
     });
 
-    test.each`
+    it.each`
       label        | href
       ${"X"}       | ${"https://twitter.com/stormkitio"}
       ${"YouTube"} | ${"https://www.youtube.com/channel/UC6C_-UuAiIWlGOIokT03lRQ"}
@@ -37,7 +38,7 @@ describe("~/components/UserMenu.tsx", () => {
       expect(wrapper.getByLabelText(label).getAttribute("href")).toBe(href);
     });
 
-    test("should not display free tier text", () => {
+    it("should not display free tier text", () => {
       expect(() => wrapper.getByText(/Free trial ends on/)).toThrow();
     });
   });
@@ -56,7 +57,7 @@ describe("~/components/UserMenu.tsx", () => {
       createWrapper({ user });
     });
 
-    test("should display free trial text", () => {
+    it("should display free trial text", () => {
       expect(wrapper.getByText(/Free trial ends on/)).toBeTruthy();
     });
   });

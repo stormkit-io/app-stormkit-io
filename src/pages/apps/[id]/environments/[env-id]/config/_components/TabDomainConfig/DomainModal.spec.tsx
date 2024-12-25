@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -15,12 +16,12 @@ interface Props {
 
 describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainConfig/DomainModal.tsx", () => {
   let wrapper: RenderResult;
-  let setRefreshToken: jest.Mock;
+  let setRefreshToken: Mock;
   let currentApp: App;
   let currentEnv: Environment;
 
   const createWrapper = ({ app, environment }: Props) => {
-    setRefreshToken = jest.fn();
+    setRefreshToken = vi.fn();
 
     wrapper = render(
       <AppContext.Provider
@@ -31,7 +32,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
         }}
       >
         <EnvironmentContext.Provider value={{ environment }}>
-          <DomainModal onClose={jest.fn()} setRefreshToken={setRefreshToken} />
+          <DomainModal onClose={vi.fn()} setRefreshToken={setRefreshToken} />
         </EnvironmentContext.Provider>
       </AppContext.Provider>
     );
@@ -44,7 +45,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     createWrapper({ app: currentApp, environment: currentEnv });
   });
 
-  test("inserts a domain", async () => {
+  it("inserts a domain", async () => {
     const scope = mockDomainInsert({
       appId: currentApp.id,
       envId: currentEnv.id!,
@@ -64,7 +65,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     });
   });
 
-  test("displays error that comes from the api", async () => {
+  it("displays error that comes from the api", async () => {
     const scope = mockDomainInsert({
       appId: currentApp.id,
       envId: currentEnv.id!,
