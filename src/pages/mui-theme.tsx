@@ -45,6 +45,7 @@ export default (mode: "dark" | "light") => {
           root: {
             color: primaryColor,
             textDecoration: "none",
+            fontWeight: 500,
             ":hover": {
               color: isDark ? purple[100] : purple[600],
             },
@@ -130,6 +131,7 @@ export default (mode: "dark" | "light") => {
           colorSuccess: {
             color: "white",
             backgroundColor: green[900],
+            fontWeight: 500,
           },
           colorWarning: {
             backgroundColor: "#b75c22",
@@ -208,6 +210,7 @@ export default (mode: "dark" | "light") => {
           root: {
             fontFamily,
             fontSize,
+            fontWeight: 500,
           },
           body1: {
             fontFamily,
