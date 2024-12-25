@@ -11,16 +11,19 @@ import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
+import { isSelfHosted } from "~/utils/helpers/instance";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
 
+const NodeJS22 = "nodejs22.x";
+const NodeJS20 = "nodejs20.x";
 const NodeJS18 = "nodejs18.x";
 const NodeJS16 = "nodejs16.x";
-const NodeJS14 = "nodejs14.x";
-const NodeJS12 = "nodejs12.x";
 const Bun1 = "bun1.x";
 
 const devDomain = process.env.SK_DEV_DOMAIN || "stormkit.dev";
+
+const isSelfHostedInstance = isSelfHosted();
 
 interface Props {
   app: App;
@@ -115,7 +118,7 @@ const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
           The repo address of your application.
         </Typography>
       </Box>
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 4, display: isSelfHostedInstance ? "block" : "none" }}>
         <FormControl variant="standard" fullWidth>
           <InputLabel id="app-runtime-settings" sx={{ pl: 2, pt: 1 }}>
             Runtime
@@ -127,12 +130,12 @@ const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
             defaultValue={additionalSettings.runtime}
             sx={{ minWidth: 150 }}
           >
-            <MenuItem value={NodeJS12} disabled>
-              NodeJS 12.x
+            <MenuItem value={NodeJS16} disabled>
+              NodeJS 16.x (deprecated)
             </MenuItem>
-            <MenuItem value={NodeJS14}>NodeJS 14.x</MenuItem>
-            <MenuItem value={NodeJS16}>NodeJS 16.x</MenuItem>
             <MenuItem value={NodeJS18}>NodeJS 18.x</MenuItem>
+            <MenuItem value={NodeJS20}>NodeJS 20.x</MenuItem>
+            <MenuItem value={NodeJS22}>NodeJS 22.x</MenuItem>
             <MenuItem value={Bun1}>Bun 1.x</MenuItem>
           </Select>
         </FormControl>
