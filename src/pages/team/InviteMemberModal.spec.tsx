@@ -1,18 +1,17 @@
 import type { RenderResult } from "@testing-library/react";
-import * as router from "react-router";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
+import { fireEvent, waitFor } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import mockTeams from "~/testing/data/mock_teams";
 import mockUser from "~/testing/data/mock_user";
 import { mockInviteTeamMember } from "~/testing/nocks/nock_team_members";
+import { renderWithRouter } from "~/testing/helpers";
 import InviteMemberModal from "./InviteMemberModal";
-
-const { RouterProvider, createMemoryRouter } = router;
 
 describe("~/pages/team/InviteMemberModal.tsx", () => {
   let wrapper: RenderResult;
-  let onClose: jest.Func;
-  let reloadTeams: jest.Func;
+  let onClose: Mock;
+  let reloadTeams: Mock;
 
   interface Props {
     team?: Team;
@@ -21,36 +20,25 @@ describe("~/pages/team/InviteMemberModal.tsx", () => {
   const teams = mockTeams();
 
   const createWrapper = ({ team }: Props) => {
-    onClose = jest.fn();
-    reloadTeams = jest.fn();
+    onClose = vi.fn();
+    reloadTeams = vi.fn();
 
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/:team/settings",
-          element: (
-            <AuthContext.Provider
-              value={{ user: mockUser(), teams, reloadTeams }}
-            >
-              <InviteMemberModal teamId={teams[1].id} onClose={onClose} />
-            </AuthContext.Provider>
-          ),
-        },
-      ],
-      {
-        initialEntries: [`/${team?.slug}/settings`],
-        initialIndex: 0,
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      path: "/:team/settings",
+      initialEntries: [`/${team?.slug}/settings`],
+      el: () => (
+        <AuthContext.Provider value={{ user: mockUser(), teams, reloadTeams }}>
+          <InviteMemberModal teamId={teams[1].id} onClose={onClose} />
+        </AuthContext.Provider>
+      ),
+    });
   };
 
   beforeEach(() => {
     createWrapper({ team: teams[1] });
   });
 
-  test("should display title and subtitle", () => {
+  it("should display title and subtitle", () => {
     expect(wrapper.getByText("Invite team member")).toBeTruthy();
     expect(
       wrapper.getByText(
@@ -59,7 +47,7 @@ describe("~/pages/team/InviteMemberModal.tsx", () => {
     ).toBeTruthy();
   });
 
-  test("should create an invitation token for the invited user", async () => {
+  it("should create an invitation token for the invited user", async () => {
     const scope = mockInviteTeamMember({
       teamId: teams[1].id,
       email: "jamie@stormkit.io",
@@ -84,7 +72,7 @@ describe("~/pages/team/InviteMemberModal.tsx", () => {
 
       expect(
         wrapper.getByDisplayValue(
-          "http://localhost/invitation/accept?token=my-token"
+          "http://localhost:3000/invitation/accept?token=my-token"
         )
       ).toBeTruthy();
     });

@@ -1,3 +1,5 @@
+import type { Mock } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { fireEvent, RenderResult } from "@testing-library/react";
 import { waitFor, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
@@ -15,10 +17,10 @@ describe("~/pages/apps/[id]/environments/Environments.tsx", () => {
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnvs: Environment[];
-  let setRefreshToken: jest.Mock;
+  let setRefreshToken: Mock;
 
   const createWrapper = ({ app, envs }: Props) => {
-    setRefreshToken = jest.fn();
+    setRefreshToken = vi.fn();
 
     wrapper = render(
       <MemoryRouter
@@ -40,7 +42,7 @@ describe("~/pages/apps/[id]/environments/Environments.tsx", () => {
     createWrapper({ app: currentApp, envs: currentEnvs });
   });
 
-  test("should open modal to create a new environment", async () => {
+  it("should open modal to create a new environment", async () => {
     await waitFor(() => {
       expect(wrapper.getByText("New environment")).toBeTruthy();
     });
@@ -52,7 +54,7 @@ describe("~/pages/apps/[id]/environments/Environments.tsx", () => {
     });
   });
 
-  test("should list environments", async () => {
+  it("should list environments", async () => {
     await waitFor(() => {
       expect(currentEnvs.length).toBe(1);
 

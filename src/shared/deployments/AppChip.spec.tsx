@@ -1,5 +1,6 @@
 import { MemoryRouter } from "react-router";
 import { render, RenderResult } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import mockDeployments from "~/testing/data/mock_deployments_v2";
 import AppChip from "./AppChip";
 
@@ -18,7 +19,7 @@ describe("~/shared/deployments/AppChip.tsx", () => {
     );
   };
 
-  test("should display information properly", () => {
+  it("should display information properly", () => {
     const deployment = mockDeployments()[0];
     deployment.detailsUrl = "/my-test/url";
     createWrapper({ deployment });

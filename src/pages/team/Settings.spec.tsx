@@ -1,16 +1,14 @@
 import type { RenderResult } from "@testing-library/react";
-import * as router from "react-router";
-import { render } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
 import { AuthContext } from "~/pages/auth/Auth.context";
+import { renderWithRouter } from "~/testing/helpers";
 import mockTeams from "~/testing/data/mock_teams";
 import mockUser from "~/testing/data/mock_user";
 import Settings from "./Settings";
 
-const { RouterProvider, createMemoryRouter } = router;
-
 describe("~/pages/team/Settings.tsx", () => {
   let wrapper: RenderResult;
-  let reloadTeams: jest.Func;
+  let reloadTeams: Mock;
 
   interface Props {
     selectedTeam: Team;
@@ -18,28 +16,17 @@ describe("~/pages/team/Settings.tsx", () => {
   }
 
   const createWrapper = ({ teams, selectedTeam: team }: Props) => {
-    reloadTeams = jest.fn();
+    reloadTeams = vi.fn();
 
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/:team/settings",
-          element: (
-            <AuthContext.Provider
-              value={{ user: mockUser(), teams, reloadTeams }}
-            >
-              <Settings />
-            </AuthContext.Provider>
-          ),
-        },
-      ],
-      {
-        initialEntries: [`/${team?.slug}/settings`],
-        initialIndex: 0,
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      path: "/:team/settings",
+      initialEntries: [`/${team?.slug}/settings`],
+      el: () => (
+        <AuthContext.Provider value={{ user: mockUser(), teams, reloadTeams }}>
+          <Settings />
+        </AuthContext.Provider>
+      ),
+    });
   };
 
   describe("when has admin access", () => {
@@ -50,7 +37,7 @@ describe("~/pages/team/Settings.tsx", () => {
       createWrapper({ selectedTeam: teams[1], teams });
     });
 
-    test("should load all sections", () => {
+    it("should load all sections", () => {
       expect(wrapper.getByText("Team settings")).toBeTruthy();
       expect(wrapper.getByText("Team members")).toBeTruthy();
       expect(wrapper.getByText("Danger zone")).toBeTruthy();
@@ -65,7 +52,7 @@ describe("~/pages/team/Settings.tsx", () => {
       createWrapper({ selectedTeam: teams[1], teams });
     });
 
-    test("should load all sections", () => {
+    it("should load all sections", () => {
       expect(wrapper.getByText("Team settings")).toBeTruthy();
       expect(wrapper.getByText("Team members")).toBeTruthy();
       expect(() => wrapper.getByText("Danger zone")).toThrow();

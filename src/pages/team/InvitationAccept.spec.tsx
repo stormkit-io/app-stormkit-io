@@ -1,18 +1,20 @@
 import type { RenderResult } from "@testing-library/react";
-import * as router from "react-router";
-import { render, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi, type Mock } from "vitest";
+import { waitFor } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import mockTeams from "~/testing/data/mock_teams";
 import mockUser from "~/testing/data/mock_user";
 import { mockInvitationAccept } from "~/testing/nocks/nock_team_members";
+import { renderWithRouter } from "~/testing/helpers";
 import InvitationAccept from "./InvitationAccept";
 
-const { RouterProvider, createMemoryRouter } = router;
+declare const global: {
+  NavigateMock: any;
+};
 
 describe("~/pages/team/InvitationAccept.tsx", () => {
   let wrapper: RenderResult;
-  let reloadTeams: jest.Func;
-  let navigateSpy: jest.Func;
+  let reloadTeams: Mock;
 
   interface Props {
     token: string;
@@ -20,38 +22,21 @@ describe("~/pages/team/InvitationAccept.tsx", () => {
 
   const teams = mockTeams();
 
-  const mockUseNavigate = () => {
-    navigateSpy = jest.fn();
-    jest.spyOn(router, "useNavigate").mockReturnValue(navigateSpy);
-  };
-
   const createWrapper = ({ token }: Props) => {
-    mockUseNavigate();
-    reloadTeams = jest.fn();
+    reloadTeams = vi.fn();
 
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/invitation/accept",
-          element: (
-            <AuthContext.Provider
-              value={{ user: mockUser(), teams, reloadTeams }}
-            >
-              <InvitationAccept />
-            </AuthContext.Provider>
-          ),
-        },
-      ],
-      {
-        initialEntries: [`/invitation/accept?token=${token}`],
-        initialIndex: 0,
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      path: "/invitation/accept",
+      initialEntries: [`/invitation/accept?token=${token}`],
+      el: () => (
+        <AuthContext.Provider value={{ user: mockUser(), teams, reloadTeams }}>
+          <InvitationAccept />
+        </AuthContext.Provider>
+      ),
+    });
   };
 
-  test("should accept the invitation and navigate to the teams page", async () => {
+  it("should accept the invitation and navigate to the teams page", async () => {
     const scope = mockInvitationAccept({
       token: "my-token",
       response: teams[1],
@@ -61,7 +46,7 @@ describe("~/pages/team/InvitationAccept.tsx", () => {
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
-      expect(navigateSpy).toHaveBeenCalled();
+      expect(global.NavigateMock).toHaveBeenCalled();
     });
   });
 });

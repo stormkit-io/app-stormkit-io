@@ -1,10 +1,5 @@
-import { MemoryRouter } from "react-router";
-import {
-  waitFor,
-  render,
-  fireEvent,
-  RenderResult,
-} from "@testing-library/react";
+import { waitFor, fireEvent, type RenderResult } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import mockDeployments from "~/testing/data/mock_deployments_v2";
 import mockManifest from "~/testing/data/mock_deployment_manifest";
 import {
@@ -13,6 +8,7 @@ import {
   mockFetchManifest,
 } from "~/testing/nocks/nock_deployments_v2";
 import DeploymentRow from "./DeploymentRow";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface Props {
   deployment: DeploymentV2;
@@ -21,27 +17,27 @@ interface Props {
 
 describe("~/shared/deployments/DeploymentRow.tsx", () => {
   let wrapper: RenderResult;
-  let setRefreshToken: jest.Func;
+  let setRefreshToken: Mock;
 
   const createWrapper = ({ deployment, showProject }: Props) => {
-    setRefreshToken = jest.fn();
+    setRefreshToken = vi.fn();
 
-    wrapper = render(
-      <MemoryRouter>
+    wrapper = renderWithRouter({
+      el: () => (
         <DeploymentRow
           deployment={deployment}
           showProject={showProject}
           setRefreshToken={setRefreshToken}
         />
-      </MemoryRouter>
-    );
+      ),
+    });
   };
 
   const openMenu = (id: string) => {
     fireEvent.click(wrapper.getByLabelText(`Deployment ${id} menu`));
   };
 
-  test("should display the commit information properly", () => {
+  it("should display the commit information properly", () => {
     const deployment = mockDeployments()[0];
     deployment.detailsUrl = "/my-test/url";
     createWrapper({ deployment, showProject: true });
@@ -58,7 +54,7 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
     );
   });
 
-  test("should contain a menu to interact with", () => {
+  it("should contain a menu to interact with", () => {
     const deployment = mockDeployments()[0];
     createWrapper({ deployment });
 
@@ -78,19 +74,19 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
       openMenu(deployment.id);
     });
 
-    test("should contain a publish button", () => {
+    it("should contain a publish button", () => {
       expect(
         wrapper.getByText("Publish").closest("button")!.getAttribute("disabled")
       ).toBe(null);
     });
 
-    test("should contain a preview button", () => {
+    it("should contain a preview button", () => {
       expect(
         wrapper.getByText("Preview").closest("a")!.getAttribute("href")
       ).toBe("http://sample-project--36185651722.stormkit:8888");
     });
 
-    test("should open the manifest modal", async () => {
+    it("should open the manifest modal", async () => {
       const scope = mockFetchManifest({
         appId: deployment.appId,
         deploymentId: deployment.id,
@@ -111,13 +107,13 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
       expect(wrapper.getByText(/Deployment manifest/)).toBeTruthy();
     });
 
-    test("should have a link to runtime logs", () => {
+    it("should have a link to runtime logs", () => {
       expect(wrapper.getByText("Runtime logs").getAttribute("href")).toBe(
         "/deployment/details/runtime-logs"
       );
     });
 
-    test("should display delete button", async () => {
+    it("should display delete button", async () => {
       fireEvent.click(wrapper.getByText("Delete"));
 
       expect(wrapper.getByText("Confirm action")).toBeTruthy();
@@ -148,13 +144,13 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
       openMenu(deployment.id);
     });
 
-    test("should have the preview button disabled", () => {
+    it("should have the preview button disabled", () => {
       expect(
         wrapper.getByText("Preview").closest("a")!.getAttribute("aria-disabled")
       ).toBe("true");
     });
 
-    test("should have the manifest button disabled", () => {
+    it("should have the manifest button disabled", () => {
       expect(
         wrapper
           .getByText("Manifest")
@@ -163,7 +159,7 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
       ).toBe("");
     });
 
-    test("should have the runtime logs button disabled", () => {
+    it("should have the runtime logs button disabled", () => {
       expect(
         wrapper
           .getByText("Runtime logs")
@@ -172,7 +168,7 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
       ).toBe("true");
     });
 
-    test("should display delete button", async () => {
+    it("should display delete button", async () => {
       fireEvent.click(wrapper.getByText("Delete"));
 
       expect(wrapper.getByText("Confirm action")).toBeTruthy();
@@ -203,13 +199,13 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
       openMenu(deployment.id);
     });
 
-    test("should have the preview button disabled", () => {
+    it("should have the preview button disabled", () => {
       expect(
         wrapper.getByText("Preview").closest("a")!.getAttribute("aria-disabled")
       ).toBe("true");
     });
 
-    test("should have the manifest button disabled", () => {
+    it("should have the manifest button disabled", () => {
       expect(
         wrapper
           .getByText("Manifest")
@@ -218,7 +214,7 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
       ).toBe("");
     });
 
-    test("should have the runtime logs button disabled", () => {
+    it("should have the runtime logs button disabled", () => {
       expect(
         wrapper
           .getByText("Runtime logs")
@@ -227,13 +223,13 @@ describe("~/shared/deployments/DeploymentRow.tsx", () => {
       ).toBe("true");
     });
 
-    test("should contain a view details button", () => {
+    it("should contain a view details button", () => {
       expect(wrapper.getByText("View details").getAttribute("href")).toBe(
         "/deployment/details"
       );
     });
 
-    test("should display stop button", async () => {
+    it("should display stop button", async () => {
       fireEvent.click(wrapper.getByText("Stop"));
 
       expect(wrapper.getByText("Confirm action")).toBeTruthy();

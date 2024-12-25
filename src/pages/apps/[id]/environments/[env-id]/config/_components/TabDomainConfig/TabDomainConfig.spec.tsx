@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
@@ -16,13 +17,13 @@ interface Props {
 
 describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainConfig/TabDomainConfig.tsx", () => {
   let wrapper: RenderResult;
-  let setRefreshToken: jest.Mock;
+  let setRefreshToken: Mock;
   let currentApp: App;
   let currentEnv: Environment;
   let domain: Domain;
 
   const createWrapper = ({ app, environment }: Props) => {
-    setRefreshToken = jest.fn();
+    setRefreshToken = vi.fn();
 
     wrapper = render(
       <TabDomainConfig
@@ -52,14 +53,14 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("should display a configure domain button", async () => {
+    it("should display a configure domain button", async () => {
       await fireEvent.click(wrapper.getByText("Add domain"));
       await waitFor(() => {
         expect(wrapper.getByText("Setup a new domain")).toBeTruthy();
       });
     });
 
-    test("should display an informative text", () => {
+    it("should display an informative text", () => {
       expect(
         wrapper.getByText("No custom domain configuration found.")
       ).toBeTruthy();
@@ -98,13 +99,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("should not display the configure domain button anymore", async () => {
+    it("should not display the configure domain button anymore", async () => {
       await waitFor(() => {
         expect(() => wrapper.getByText("Configure domain")).toThrow();
       });
     });
 
-    test("should open the custom certificate modal", async () => {
+    it("should open the custom certificate modal", async () => {
       fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
       fireEvent.click(wrapper.getByText("Custom certificate"));
 
@@ -113,7 +114,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("should list domains", async () => {
+    it("should list domains", async () => {
       expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
       expect(wrapper.getByText("www.stormkit.io")).toBeTruthy();
       expect(wrapper.getByTestId("app.stormkit.io-status").textContent).toBe(
@@ -124,7 +125,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       );
     });
 
-    test("should allow removing a domain", async () => {
+    it("should allow removing a domain", async () => {
       fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
       fireEvent.click(wrapper.getByText("Delete"));
 

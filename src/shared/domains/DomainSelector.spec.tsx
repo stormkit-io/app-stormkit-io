@@ -1,5 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import {
   waitFor,
   fireEvent,
@@ -17,7 +18,7 @@ interface Props {
 
 describe("~/shared/domains/DomainSelector.tsx", () => {
   let wrapper: RenderResult;
-  let onDomainSelect: jest.Mock;
+  let onDomainSelect: Mock;
   let fetchDomainsScope: Scope;
 
   const appId = "2541";
@@ -41,7 +42,7 @@ describe("~/shared/domains/DomainSelector.tsx", () => {
       },
     });
 
-    onDomainSelect = jest.fn();
+    onDomainSelect = vi.fn();
 
     wrapper = render(
       <DomainSelector
@@ -81,7 +82,7 @@ describe("~/shared/domains/DomainSelector.tsx", () => {
       await openDropdown();
     });
 
-    test("should display fetched domains", async () => {
+    it("should display fetched domains", async () => {
       expect(findOption("All domains")).toBeTruthy();
       expect(findOption("All development endpoints (*.dev)")).toBeTruthy();
 
@@ -101,7 +102,7 @@ describe("~/shared/domains/DomainSelector.tsx", () => {
       await openDropdown();
     });
 
-    test("should display fetched domains", async () => {
+    it("should display fetched domains", async () => {
       expect(() => findOption("All development endpoints (*.dev)")).toThrow();
 
       fireEvent.click(findOption("www.e.org")!);

@@ -1,5 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Repo } from "../types.d";
+import { describe, expect, it, vi } from "vitest";
 import * as router from "react-router";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
@@ -7,6 +8,10 @@ import mockTeams from "~/testing/data/mock_teams";
 import mockUser from "~/testing/data/mock_user";
 import * as nocks from "~/testing/nocks";
 import RepoList from "./RepoList";
+
+declare const global: {
+  NavigateMock: any;
+};
 
 interface Props {
   provider?: Provider;
@@ -20,7 +25,6 @@ interface Props {
 
 describe("~/pages/apps/new/_components/RepoList.tsx", () => {
   let wrapper: RenderResult;
-  let navigate: jest.Func;
 
   const repositories: Repo[] = [
     { name: "test-repo", fullName: "namespace/test-repo" },
@@ -39,9 +43,6 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
     onNextPage = () => {},
   }: Props) => {
     const { RouterProvider, createMemoryRouter } = router;
-
-    navigate = jest.fn();
-    jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
 
     const memoryRouter = createMemoryRouter([
       {
@@ -66,13 +67,13 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
   };
 
   describe("repositories", () => {
-    test("displays a list of repositories", () => {
+    it("displays a list of repositories", () => {
       createWrapper({ repositories });
       expect(wrapper.getByText("test-repo")).toBeTruthy();
       expect(wrapper.getByText("test-repo-2")).toBeTruthy();
     });
 
-    test("inserts a repository when import is clicked", async () => {
+    it("inserts a repository when import is clicked", async () => {
       const id = "152591";
       const scope = nocks.mockInsertApp({
         provider: "github",
@@ -86,12 +87,12 @@ describe("~/pages/apps/new/_components/RepoList.tsx", () => {
 
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
-        expect(navigate).toHaveBeenCalledWith(`/apps/${id}`);
+        expect(global.NavigateMock).toHaveBeenCalledWith(`/apps/${id}`);
       });
     });
 
-    test("load more", () => {
-      const onNextPage = jest.fn();
+    it("load more", () => {
+      const onNextPage = vi.fn();
       createWrapper({ repositories, hasNextPage: true, onNextPage });
       const button = wrapper.getByText("Load more");
       expect(button).toBeTruthy();

@@ -1,12 +1,13 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
-import { MemoryRouter } from "react-router";
-import { waitFor, render } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi } from "vitest";
+import { waitFor } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import mockApp from "~/testing/data/mock_app";
 import mockUser from "~/testing/data/mock_user";
 import { mockFetchUsage } from "~/testing/nocks";
+import { renderWithRouter } from "~/testing/helpers";
 import Usage from "./Usage";
 
 interface Props {
@@ -20,17 +21,17 @@ describe("~/pages/apps/[id]/usage/Usage", () => {
   let currentUser: User;
 
   const createWrapper = ({ app, user }: Props) => {
-    wrapper = render(
-      <MemoryRouter>
+    wrapper = renderWithRouter({
+      el: () => (
         <AuthContext.Provider value={{ user }}>
           <AppContext.Provider
-            value={{ app, setRefreshToken: jest.fn(), environments: [] }}
+            value={{ app, setRefreshToken: vi.fn(), environments: [] }}
           >
             <Usage />
           </AppContext.Provider>
         </AuthContext.Provider>
-      </MemoryRouter>
-    );
+      ),
+    });
   };
 
   describe("enterprise users", () => {
@@ -51,18 +52,18 @@ describe("~/pages/apps/[id]/usage/Usage", () => {
       createWrapper({ app: currentApp, user: currentUser });
     });
 
-    test("should display a spinner", () => {
+    it("should display a spinner", () => {
       expect(wrapper.container.innerHTML).toContain("MuiLinearProgress");
     });
 
-    test("should list number of deployments", async () => {
+    it("should list number of deployments", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Number of Deployments")).toBeTruthy();
         expect(wrapper.getByText(/3\s\/\s15/)).toBeTruthy();
       });
     });
 
-    test("should not show an upgrade account for enterprise users", async () => {
+    it("should not show an upgrade account for enterprise users", async () => {
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(() => wrapper.getByText(/Upgrade account/)).toThrow();
@@ -87,7 +88,7 @@ describe("~/pages/apps/[id]/usage/Usage", () => {
       createWrapper({ app: currentApp, user: currentUser });
     });
 
-    test("should show an upgrade account for non-enterprise users", async () => {
+    it("should show an upgrade account for non-enterprise users", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(/Upgrade account/).getAttribute("href")).toBe(
           "/user/account"
@@ -109,7 +110,7 @@ describe("~/pages/apps/[id]/usage/Usage", () => {
       createWrapper({ app: currentApp, user: currentUser });
     });
 
-    test("should show an error message", async () => {
+    it("should show an error message", async () => {
       await waitFor(() => {
         expect(
           wrapper.getByText("Something went wrong while fetching usage data.")

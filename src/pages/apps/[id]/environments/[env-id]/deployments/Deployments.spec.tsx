@@ -1,11 +1,6 @@
 import type { Scope } from "nock";
-import {
-  fireEvent,
-  render,
-  RenderResult,
-  waitFor,
-} from "@testing-library/react";
-import { RouterProvider, createMemoryRouter } from "react-router";
+import { fireEvent, RenderResult, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import mockApp from "~/testing/data/mock_app";
 import mockDeployments from "~/testing/data/mock_deployments_v2";
@@ -15,6 +10,7 @@ import {
   mockDeleteDeployment,
 } from "~/testing/nocks/nock_deployments_v2";
 import Deployments from "./Deployments";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface Props {
   app?: App;
@@ -22,7 +18,7 @@ interface Props {
   deployments?: DeploymentV2[];
 }
 
-jest.mock("~/utils/helpers/date", () => ({
+vi.mock("~/utils/helpers/date", () => ({
   timeSince: () => "2 hours",
 }));
 
@@ -47,21 +43,16 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
       response: { deployments: currentDeploys },
     });
 
-    const memoryRouter = createMemoryRouter([
-      {
-        path: "*",
-        element: (
-          <EnvironmentContext.Provider value={{ environment: currentEnv }}>
-            <Deployments />
-          </EnvironmentContext.Provider>
-        ),
-      },
-    ]);
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      el: () => (
+        <EnvironmentContext.Provider value={{ environment: currentEnv }}>
+          <Deployments />
+        </EnvironmentContext.Provider>
+      ),
+    });
   };
 
-  test("should list deployments", async () => {
+  it("should list deployments", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -72,7 +63,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
     });
   });
 
-  test.only("should handle deleting deployment", async () => {
+  it("should handle deleting deployment", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -110,7 +101,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
     });
   });
 
-  test("displays an empty list when there are no deployments", async () => {
+  it("displays an empty list when there are no deployments", async () => {
     createWrapper({ deployments: [] });
 
     await waitFor(() => {

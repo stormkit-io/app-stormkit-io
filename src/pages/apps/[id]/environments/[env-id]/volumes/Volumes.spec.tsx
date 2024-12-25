@@ -1,7 +1,6 @@
 import type { Scope } from "nock";
-import type { RenderResult } from "@testing-library/react";
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router";
+import { describe, expect, beforeEach, it, vi } from "vitest";
+import { fireEvent, waitFor, type RenderResult } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -14,6 +13,7 @@ import {
   mockFetchFiles,
 } from "~/testing/nocks/nock_volumes";
 import Volumes from "./Volumes";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface Props {
   user: User;
@@ -28,7 +28,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
 
   const createWrapper = ({ user }: Props) => {
     const teams = mockTeams();
-    const setRefreshToken = jest.fn();
+    const setRefreshToken = vi.fn();
     currentApp = mockApp();
     currentEnv = mockEnv({ app: currentApp });
 
@@ -39,8 +39,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
       response: { files: [] },
     });
 
-    wrapper = render(
-      <MemoryRouter>
+    wrapper = renderWithRouter({
+      el: () => (
         <AuthContext.Provider value={{ user, teams }}>
           <AppContext.Provider
             value={{
@@ -54,8 +54,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
             </EnvironmentContext.Provider>
           </AppContext.Provider>
         </AuthContext.Provider>
-      </MemoryRouter>
-    );
+      ),
+    });
   };
 
   describe("when user is an instance admin", () => {
@@ -78,7 +78,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         });
       });
 
-      test("should display an empty page with a configure button", async () => {
+      it("should display an empty page with a configure button", async () => {
         expect(
           wrapper.getByText(
             "Persist your files seamlessly using Stormkit Volumes"
@@ -92,7 +92,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         });
       });
 
-      test("should display a learn more button", () => {
+      it("should display a learn more button", () => {
         expect(wrapper.getByText("Learn more").getAttribute("href")).toBe(
           "https://www.stormkit.io/docs/features/volumes"
         );
@@ -113,7 +113,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         });
       });
 
-      test("should not display an empty page with a configure button", () => {
+      it("should not display an empty page with a configure button", () => {
         // This should no longer be rendered
         expect(() =>
           wrapper.getByText(
@@ -148,7 +148,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         });
       });
 
-      test("should display an empty page", () => {
+      it("should display an empty page", () => {
         expect(
           wrapper.getByText(
             /Volumes is not configured for this Stormkit instance\./
@@ -162,7 +162,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         expect(() => wrapper.getByText("Configure")).toThrow();
       });
 
-      test("should display a learn more button", () => {
+      it("should display a learn more button", () => {
         expect(wrapper.getByText("Learn more").getAttribute("href")).toBe(
           "https://www.stormkit.io/docs/features/volumes"
         );
@@ -183,7 +183,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         });
       });
 
-      test("should display empty list", async () => {
+      it("should display empty list", async () => {
         // This should not be rendered anymore
         expect(() =>
           wrapper.getByText(

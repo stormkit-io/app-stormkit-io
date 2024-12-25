@@ -1,4 +1,5 @@
 import { fireEvent, RenderResult } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import type { OutboundWebhook } from "../types";
 import { waitFor, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
@@ -14,21 +15,16 @@ interface Props {
   webhook?: OutboundWebhook;
 }
 
-jest.mock("@codemirror/lang-json", () => ({ json: jest.fn() }));
-jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
-  <span data-testid="editor">{value}</span>
-));
-
 describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () => {
   let currentApp: App;
   let currentWH: OutboundWebhook;
   let wrapper: RenderResult;
-  let onUpdate: jest.Mock;
-  let toggleModal: jest.Mock;
+  let onUpdate: Mock;
+  let toggleModal: Mock;
 
   const createWrapper = ({ app, webhook }: Props) => {
-    toggleModal = jest.fn();
-    onUpdate = jest.fn();
+    toggleModal = vi.fn();
+    onUpdate = vi.fn();
     wrapper = render(
       <FormOutboundWebhookModal
         isOpen={true}
@@ -46,7 +42,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
       createWrapper({ app: currentApp });
     });
 
-    test("displays a simple form initially", () => {
+    it("displays a simple form initially", () => {
       expect(
         wrapper.getByRole("heading", { name: "Create an outbound webhook" })
       ).toBeTruthy();
@@ -59,7 +55,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
       expect(wrapper.getByLabelText(/Trigger when/)).toBeTruthy();
     });
 
-    test("displays request headers when enabled", async () => {
+    it("displays request headers when enabled", async () => {
       fireEvent.click(wrapper.getByLabelText("Enable headers"));
 
       await waitFor(() => {
@@ -68,13 +64,13 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
       });
     });
 
-    test("displays request payload when request method is POST", async () => {
+    it("displays request payload when request method is POST", async () => {
       await fireEvent.mouseDown(wrapper.getByText("Get"));
       await fireEvent.click(wrapper.getByText("Post"));
       expect(wrapper.getByText(/Request payload/)).toBeTruthy();
     });
 
-    test("submits the form request", async () => {
+    it("submits the form request", async () => {
       const scope = mockCreateOutboundWebhook({
         appId: currentApp.id,
         hook: {
@@ -104,7 +100,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
       createWrapper({ app: currentApp, webhook: currentWH });
     });
 
-    test("displays a pre-filled form", () => {
+    it("displays a pre-filled form", () => {
       expect(
         wrapper.getByRole("heading", { name: "Update outbound webhook" })
       ).toBeTruthy();
@@ -124,7 +120,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
       expect(wrapper.getByText("After deployment is published")).toBeTruthy();
     });
 
-    test("submits the form request", async () => {
+    it("submits the form request", async () => {
       const scope = mockUpdateOutboundWebhook({
         appId: currentApp.id,
         whId: currentWH.id!,

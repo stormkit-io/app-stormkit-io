@@ -1,7 +1,7 @@
 module.exports = {
-  purge: {
+  content: ["src/index.js", "src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
+  theme: {
     enabled: process.env.NODE_ENV === "production",
-    content: ["src/index.js", "src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
     options: {
       safelist: {
         standard: [

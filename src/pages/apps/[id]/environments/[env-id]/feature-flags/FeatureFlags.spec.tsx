@@ -1,4 +1,5 @@
 import { fireEvent, RenderResult } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -29,7 +30,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/feature-flags/FeatureFlags.spe
         value={{
           app,
           environments: [env],
-          setRefreshToken: jest.fn(),
+          setRefreshToken: vi.fn(),
         }}
       >
         <EnvironmentContext.Provider value={{ environment: env }}>
@@ -54,14 +55,14 @@ describe("~/pages/apps/[id]/environments/[env-id]/feature-flags/FeatureFlags.spe
       createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    test("should contain a button to open feature flags modal", async () => {
+    it("should contain a button to open feature flags modal", async () => {
       await fireEvent.click(wrapper.getByText("New feature flag"));
       await waitFor(() => {
         expect(wrapper.getByText("Create feature flag")).toBeTruthy();
       });
     });
 
-    test("should list feature flags", async () => {
+    it("should list feature flags", async () => {
       expect(flags.length).toBe(2);
 
       for (let i = 0; i < flags.length; i++) {
@@ -73,7 +74,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/feature-flags/FeatureFlags.spe
       }
     });
 
-    test("should handle updating state", async () => {
+    it("should handle updating state", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(flags[0].flagName)).toBeTruthy();
       });
@@ -100,7 +101,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/feature-flags/FeatureFlags.spe
       });
     });
 
-    test("should handle deleting feature flag", async () => {
+    it("should handle deleting feature flag", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(flags[0].flagName)).toBeTruthy();
       });
@@ -151,7 +152,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/feature-flags/FeatureFlags.spe
       createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    test("should display an empty list", async () => {
+    it("should display an empty list", async () => {
       await waitFor(() => {
         expect(wrapper.getByText(/It\'s quite empty in here\./)).toBeTruthy();
       });

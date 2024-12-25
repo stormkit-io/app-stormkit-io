@@ -1,6 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import type { Scope } from "nock";
-import * as router from "react-router";
 import { render } from "@testing-library/react";
 import { waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
@@ -15,25 +15,13 @@ interface WrapperProps {
 describe("pages/auth/UpdateSnackbar.tsx", () => {
   let wrapper: RenderResult;
   let scope: Scope;
-  let navigate: jest.Func;
 
   const apiVersion = "v1.7.30";
   const apiCommit = "a4ee052";
 
   const createWrapper = ({ status, response }: WrapperProps) => {
-    navigate = jest.fn();
-    jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
-
-    const { RouterProvider, createMemoryRouter } = router;
-    const memoryRouter = createMemoryRouter([
-      {
-        path: "*",
-        element: <UpdateSnackbar />,
-      },
-    ]);
-
     scope = mockFetchInstanceDetails({ status, response });
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = render(<UpdateSnackbar />);
 
     return wrapper;
   };
@@ -61,7 +49,7 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
         });
       });
 
-      test("displays the snackbar", async () => {
+      it("displays the snackbar", async () => {
         expect(wrapper.container.textContent).toBe(
           "Stormkit API has a newer version"
         );
@@ -85,7 +73,7 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
         });
       });
 
-      test("does not display the snackbar", () => {
+      it("does not display the snackbar", () => {
         expect(wrapper.container.innerHTML).toBe("");
       });
     });
@@ -111,7 +99,7 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
         });
       });
 
-      test("does not display the snackbar", () => {
+      it("does not display the snackbar", () => {
         expect(wrapper.container.innerHTML).toBe("");
       });
     });

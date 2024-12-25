@@ -1,7 +1,7 @@
 import qs from "query-string";
 import nock from "nock";
 
-const endpoint = "http://localhost";
+const endpoint = process.env.API_DOMAIN || "";
 
 interface FetchRepositoriesProps {
   query: {
@@ -24,5 +24,8 @@ export const mockFetchRepositories = ({
     order_by: "id",
     ...query,
   });
+
+  console.log(endpoint);
+
   return nock(endpoint).get(`/projects?${params}`).reply(status, response);
 };

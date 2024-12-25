@@ -1,9 +1,6 @@
-import {
-  fireEvent,
-  waitFor,
-  render,
-  RenderResult,
-} from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { fireEvent, waitFor, render } from "@testing-library/react";
 import mockManifest from "~/testing/data/mock_deployment_manifest";
 import TabAPI from "./TabAPI";
 
@@ -28,7 +25,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
     );
   };
 
-  test("should display an info message when api is not enabled", () => {
+  it("should display an info message when api is not enabled", () => {
     createWrapper({ manifest: mockManifest({ apiFiles: [] }) });
 
     expect(wrapper.getByText(/REST API not detected\./)).toBeTruthy();
@@ -40,7 +37,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
     );
   });
 
-  test("should list api endpoints", () => {
+  it("should list api endpoints", () => {
     createWrapper({
       manifest: mockManifest({
         apiFiles: [
@@ -56,8 +53,8 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
     expect(wrapper.getByText("/api/user/:id/list")).toBeTruthy();
   });
 
-  test("should copy curl commands", async () => {
-    const writeText = jest.fn();
+  it("should copy curl commands", async () => {
+    const writeText = vi.fn();
 
     Object.defineProperty(navigator, "clipboard", {
       value: {

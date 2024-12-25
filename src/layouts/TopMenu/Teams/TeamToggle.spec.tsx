@@ -1,10 +1,11 @@
-import { RouterProvider, createMemoryRouter } from "react-router";
-import { fireEvent, render, RenderResult } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { fireEvent, RenderResult } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import mockTeams from "~/testing/data/mock_teams";
 import mockUser from "~/testing/data/mock_user";
 import mockApp from "~/testing/data/mock_app";
 import TeamToggle from "./TeamToggle";
+import { renderWithRouter } from "~/testing/helpers";
 
 describe("~/layouts/TopMenu/Teams/TeamToggle.tsx", () => {
   let wrapper: RenderResult;
@@ -24,36 +25,30 @@ describe("~/layouts/TopMenu/Teams/TeamToggle.tsx", () => {
     teams,
     initialPath = "/personal",
   }: Props) => {
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/:team?",
-          element: (
-            <AuthContext.Provider value={{ user: user || mockUser(), teams }}>
-              <TeamToggle app={app} />
-            </AuthContext.Provider>
-          ),
-        },
-      ],
-      { initialEntries: [initialPath], initialIndex: 0 }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      path: "/:team?",
+      initialEntries: [initialPath],
+      el: () => (
+        <AuthContext.Provider value={{ user: user || mockUser(), teams }}>
+          <TeamToggle app={app} />
+        </AuthContext.Provider>
+      ),
+    });
   };
 
-  test("should pick the right team from the slug", () => {
+  it("should pick the right team from the slug", () => {
     createWrapper({ teams, initialPath: `/${teams[1].slug}` });
     expect(wrapper.getByText(teams[1].name)).toBeTruthy();
   });
 
-  test("should pick the right team based on the app", () => {
+  it("should pick the right team based on the app", () => {
     const app = mockApp();
     app.teamId = teams[2].id;
     createWrapper({ teams, app, initialPath: "/" });
     expect(wrapper.getByText(teams[2].name)).toBeTruthy();
   });
 
-  test("should open team modal when create team button is clicked", () => {
+  it("should open team modal when create team button is clicked", () => {
     createWrapper({ teams, initialPath: `/${teams[1].slug}` });
     fireEvent.click(wrapper.getByText(teams[1].name));
     fireEvent.click(wrapper.getByText("Create team"));
@@ -63,12 +58,12 @@ describe("~/layouts/TopMenu/Teams/TeamToggle.tsx", () => {
     ).toBeTruthy();
   });
 
-  test("should not display free trial chip", () => {
+  it("should not display free trial chip", () => {
     createWrapper({});
     expect(() => wrapper.getByText("Free trial")).toThrow();
   });
 
-  test("should display free trial chip", () => {
+  it("should display free trial chip", () => {
     const user = mockUser();
     user.isPaymentRequired = true;
     user.package = {

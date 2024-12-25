@@ -2,7 +2,7 @@ import type { Installation } from "~/utils/api/Github";
 import qs from "query-string";
 import nock from "nock";
 
-const endpoint = "http://localhost";
+const endpoint = process.env.API_DOMAIN || "";
 
 interface FetchRepositoriesProps {
   installationId: string;

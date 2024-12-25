@@ -1,7 +1,8 @@
 import type { SxProps } from "@mui/material";
+import { describe, expect, it } from "vitest";
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
-import EmptyPage from ".";
+import EmptyPage from "./EmptyPage";
 
 interface Props {
   children: React.ReactNode;
@@ -15,7 +16,7 @@ describe("~/components/EmptyPage.tsx", () => {
     wrapper = render(<EmptyPage children={children} sx={sx} />);
   };
 
-  test("should render the component as expected", () => {
+  it("should render the component as expected", () => {
     createWrapper({
       children: <span>Hello world</span>,
       sx: { color: "black" },

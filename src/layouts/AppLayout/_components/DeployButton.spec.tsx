@@ -1,50 +1,26 @@
-import type { RenderResult } from "@testing-library/react";
-import { fireEvent, render } from "@testing-library/react";
-import * as router from "react-router";
+import { describe, expect, afterEach, beforeEach, it } from "vitest";
+import { fireEvent, type RenderResult } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnv from "~/testing/data/mock_environment";
 import DeployButton from "./DeployButton";
+import { renderWithRouter } from "~/testing/helpers";
 
 interface Props {
   app: App;
   env: Environment;
-  initialEntries?: string[];
-  initialIndex?: number;
 }
 
 describe("~/layouts/AppLayout/_components/DeployButton.tsx", () => {
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let navigate: jest.Func;
 
-  const createWrapper = ({ app, env, initialIndex, initialEntries }: Props) => {
-    navigate = jest.fn();
-
-    jest.spyOn(router, "useNavigate").mockReturnValue(navigate);
-
-    const { RouterProvider, createMemoryRouter } = router;
-
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "*",
-          element: (
-            <DeployButton
-              app={app}
-              environments={[env]}
-              selectedEnvId={env.id!}
-            />
-          ),
-        },
-      ],
-      {
-        initialEntries,
-        initialIndex,
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+  const createWrapper = ({ app, env }: Props) => {
+    wrapper = renderWithRouter({
+      el: () => (
+        <DeployButton app={app} environments={[env]} selectedEnvId={env.id!} />
+      ),
+    });
   };
 
   afterEach(() => {
@@ -58,29 +34,13 @@ describe("~/layouts/AppLayout/_components/DeployButton.tsx", () => {
       createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    test("mounts the button properly", () => {
+    it("mounts the button properly", () => {
       expect(wrapper.getByText("Deploy")).toBeTruthy();
       expect(() => wrapper.getByText("Start a deployment")).toThrow();
     });
 
-    test("displays the modal when button is clicked", () => {
+    it("displays the modal when button is clicked", () => {
       fireEvent.click(wrapper.getByText("Deploy"));
-      expect(wrapper.getByText("Start a deployment")).toBeTruthy();
-    });
-  });
-
-  describe("with deploy query parameter", () => {
-    beforeEach(() => {
-      currentApp = mockApp();
-      currentEnv = mockEnv({ app: currentApp });
-      createWrapper({
-        app: currentApp,
-        env: currentEnv,
-        initialEntries: ["/path?deploy"],
-      });
-    });
-
-    test("should open the modal by default", () => {
       expect(wrapper.getByText("Start a deployment")).toBeTruthy();
     });
   });

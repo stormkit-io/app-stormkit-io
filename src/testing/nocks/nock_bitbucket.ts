@@ -1,7 +1,7 @@
 import qs from "query-string";
 import nock from "nock";
 
-const endpoint = "http://localhost";
+const endpoint = process.env.API_DOMAIN || "";
 
 interface FetchRepositoriesProps {
   query: Record<string, unknown>;

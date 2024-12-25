@@ -1,5 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
-import React from "react";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import mockApp from "~/testing/data/mock_app";
@@ -16,12 +16,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/feature-flags/FeatureFlags.spe
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let closeModal: jest.Mock;
-  let setReload: jest.Mock;
+  let closeModal: Mock;
+  let setReload: Mock;
 
   const createWrapper = ({ app, env }: Props) => {
-    setReload = jest.fn();
-    closeModal = jest.fn();
+    setReload = vi.fn();
+    closeModal = vi.fn();
 
     wrapper = render(
       <FeatureFlagModal
@@ -39,7 +39,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/feature-flags/FeatureFlags.spe
     createWrapper({ app: currentApp, env: currentEnv });
   });
 
-  test("should insert a feature flag", async () => {
+  it("should insert a feature flag", async () => {
     const scope = mockUpsertFeatureFlags({
       appId: currentApp.id,
       envId: currentEnv.id!,

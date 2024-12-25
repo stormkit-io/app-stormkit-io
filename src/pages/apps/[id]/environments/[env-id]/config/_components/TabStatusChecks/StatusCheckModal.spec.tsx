@@ -1,3 +1,4 @@
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import { RenderResult, waitFor } from "@testing-library/react";
 import { fireEvent, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
@@ -16,16 +17,16 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabStatusCh
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let setRefreshToken: jest.Func;
-  let onClose: jest.Func;
+  let setRefreshToken: Mock;
+  let onClose: Mock;
 
   const createWrapper = ({
     app,
     environment,
     statusCheckIndex,
   }: WrapperProps) => {
-    setRefreshToken = jest.fn();
-    onClose = jest.fn();
+    setRefreshToken = vi.fn();
+    onClose = vi.fn();
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironments({ app: currentApp })[0];
 
@@ -45,18 +46,18 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabStatusCh
       createWrapper({ statusCheckIndex: -1 });
     });
 
-    test("should display labels", () => {
+    it("should display labels", () => {
       expect(wrapper.getByText("Command")).toBeTruthy();
       expect(wrapper.getByText("Name")).toBeTruthy();
       expect(wrapper.getByText("Description")).toBeTruthy();
     });
 
-    test("should not allow for empty command inputs", () => {
+    it("should not allow for empty command inputs", () => {
       fireEvent.click(wrapper.getByText("Save"));
       expect(wrapper.getByText("Command is a required field.")).toBeTruthy();
     });
 
-    test("should submit the form and create a status check", async () => {
+    it.only("should submit the form and create a status check", async () => {
       await userEvent.type(wrapper.getByLabelText("Command"), "npm run test");
       await userEvent.type(wrapper.getByLabelText("Name"), "Run e2e tests");
       await userEvent.type(wrapper.getByLabelText("Description"), "desc");
@@ -114,13 +115,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabStatusCh
       createWrapper({ app, environment, statusCheckIndex: 1 });
     });
 
-    test("should display labels", () => {
+    it("should display labels", () => {
       expect(wrapper.getByDisplayValue(checks[1].cmd)).toBeTruthy();
       expect(wrapper.getByDisplayValue(checks[1].name!)).toBeTruthy();
       expect(wrapper.getByDisplayValue(checks[1].description!)).toBeTruthy();
     });
 
-    test("should submit the form and create a status check", async () => {
+    it("should submit the form and create a status check", async () => {
       await userEvent.type(wrapper.getByLabelText("Command"), ":2");
       await userEvent.type(wrapper.getByLabelText("Name"), " - 2");
       await userEvent.type(wrapper.getByLabelText("Description"), " - 2");

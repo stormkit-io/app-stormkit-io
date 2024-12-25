@@ -112,11 +112,7 @@ export default function TriggerFunctionModal({
     <Modal open onClose={closeModal}>
       <Card component="form" onSubmit={handleSubmit} error={error}>
         <CardHeader
-          title={
-            triggerFunction?.id
-              ? "Edit trigger function"
-              : "Create trigger function"
-          }
+          title={triggerFunction?.id ? "Edit trigger" : "Create trigger"}
         />
         <Box sx={{ mb: 4 }}>
           <DomainSelector

@@ -4,8 +4,9 @@ import { createHtmlPlugin } from "vite-plugin-html";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import basicSsl from "@vitejs/plugin-basic-ssl";
+import childProcess from "child_process";
 
-const commitHash = require("child_process")
+const commitHash = childProcess
   .execSync("git rev-parse --short HEAD")
   .toString()
   .replace(/\s+/, "");

@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AuthContext } from "~/pages/auth/Auth.context";
@@ -21,9 +22,9 @@ interface Props {
 
 describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainConfig/CustomCertModal.tsx", () => {
   let wrapper: RenderResult;
-  let onClose: jest.Mock;
-  let onUpdate: jest.Mock;
-  let setSuccess: jest.Mock;
+  let onClose: Mock;
+  let onUpdate: Mock;
+  let setSuccess: Mock;
   let currentApp: App;
   let currentEnv: Environment;
   let currentDomain: Domain;
@@ -34,9 +35,9 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     domain,
     user = mockUser(),
   }: Props) => {
-    onUpdate = jest.fn();
-    setSuccess = jest.fn();
-    onClose = jest.fn();
+    onUpdate = vi.fn();
+    setSuccess = vi.fn();
+    onClose = vi.fn();
 
     wrapper = render(
       <AuthContext.Provider value={{ user: user || mockUser(), teams: [] }}>
@@ -73,7 +74,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("should display a message to upgrade", () => {
+    it("should display a message to upgrade", () => {
       expect(
         wrapper.getByText(
           "This is a premium only feature. Upgrade your package to use custom certificates."
@@ -81,7 +82,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       ).toBeTruthy();
     });
 
-    test("clicking close button should close the modal", () => {
+    it("clicking close button should close the modal", () => {
       fireEvent.click(wrapper.getByText("Close"));
       expect(onClose).toHaveBeenCalled();
     });
@@ -100,7 +101,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("does not send an API request when certificate field is invalid", async () => {
+    it("does not send an API request when certificate field is invalid", async () => {
       await userEvent.type(wrapper.getByLabelText("Certificate"), "my-cert");
       await userEvent.type(wrapper.getByLabelText("Private key"), "my-key");
 
@@ -111,7 +112,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("does not send an API request when private key field is invalid", async () => {
+    it("does not send an API request when private key field is invalid", async () => {
       await userEvent.type(
         wrapper.getByLabelText("Certificate"),
         "-----BEGIN CERTIFICATE-----"
@@ -125,7 +126,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("sends an API request when fields are provided correctly", async () => {
+    it("sends an API request when fields are provided correctly", async () => {
       const certVal = "-----BEGIN CERTIFICATE-----";
       const certKey = "-----BEGIN PRIVATE KEY-----";
 
@@ -152,8 +153,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("delete button is disabled", () => {
-      expect(wrapper.getByText("Delete").getAttribute("disabled")).toBe("");
+    it("delete button is disabled", () => {
+      expect(wrapper.getByText("Delete").getAttribute("disabled")).toBe(null);
     });
   });
 
@@ -177,12 +178,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("displays two textareas with values prefilled", async () => {
+    it("displays two textareas with values prefilled", async () => {
       expect(wrapper.findByDisplayValue(certVal)).toBeTruthy();
       expect(wrapper.findByDisplayValue(certKey)).toBeTruthy();
     });
 
-    test("deleting a custom certificate", async () => {
+    it("deleting a custom certificate", async () => {
       const scope = mockDeleteCustomCert({
         appId: currentApp.id,
         envId: currentEnv.id!,
@@ -201,7 +202,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    test("updates custom certificate", async () => {
+    it("updates custom certificate", async () => {
       const scope = mockUpdateCustomCert({
         appId: currentApp.id,
         envId: currentEnv.id!,

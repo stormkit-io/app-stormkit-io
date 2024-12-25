@@ -1,15 +1,16 @@
 import type { Scope } from "nock";
-import { render, RenderResult, waitFor } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { describe, expect, it, vi } from "vitest";
+import { RenderResult, waitFor } from "@testing-library/react";
 import mockDeployments from "~/testing/data/mock_deployments_v2";
 import { mockFetchDeployments } from "~/testing/nocks/nock_deployments_v2";
+import { renderWithRouter } from "~/testing/helpers";
 import Deployment from "./Deployment";
 
 interface Props {
   deployment?: DeploymentV2;
 }
 
-jest.mock("~/utils/helpers/deployments", () => ({
+vi.mock("~/utils/helpers/deployments", () => ({
   formattedDate: () => "21.09.2022 - 21:30",
 }));
 
@@ -26,25 +27,16 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
       response: { deployments: [currentDeploy] },
     });
 
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/apps/:appId/environments/:envId/deployments/:deploymentId",
-          element: <Deployment />,
-        },
+    wrapper = renderWithRouter({
+      el: () => <Deployment />,
+      path: "/apps/:appId/environments/:envId/deployments/:deploymentId",
+      initialEntries: [
+        `/apps/${currentDeploy.appId}/environments/${currentDeploy.envId}/deployments/${currentDeploy.id}`,
       ],
-      {
-        initialIndex: 0,
-        initialEntries: [
-          `/apps/${currentDeploy.appId}/environments/${currentDeploy.envId}/deployments/${currentDeploy.id}`,
-        ],
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    });
   };
 
-  test("should display deployment details", async () => {
+  it("should display deployment details", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -56,7 +48,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
     });
   });
 
-  test("should display the logs", async () => {
+  it("should display the logs", async () => {
     const deployment = mockDeployments()[0];
     deployment.logs = [
       {
@@ -74,7 +66,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
     });
   });
 
-  test("should display the preview button for successful deployments", async () => {
+  it("should display the preview button for successful deployments", async () => {
     createWrapper();
 
     await waitFor(() => {
@@ -82,7 +74,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployment.tsx", () => {
     });
   });
 
-  test("should display expand menu", async () => {
+  it("should display expand menu", async () => {
     createWrapper();
 
     await waitFor(() => {

@@ -4,6 +4,9 @@ exports[`~/components/EmptyPage.tsx > should render the component as expected 1`
 {
   "asFragment": [Function],
   "baseElement": <body>
+    <div
+      id="side-bar-root"
+    />
     <div>
       <div
         class="MuiBox-root css-1lo9ce4"

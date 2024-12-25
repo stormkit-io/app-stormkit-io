@@ -1,12 +1,13 @@
 import type { RenderResult } from "@testing-library/react";
-import { RouterProvider, createMemoryRouter } from "react-router";
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { fireEvent, waitFor, screen } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import githubApi from "~/utils/api/Github";
 import * as nocks from "~/testing/nocks/nock_github";
 import { mockFetchInstanceDetails } from "~/testing/nocks/nock_user";
 import { mockUser } from "~/testing/data";
 import NewGithubApp from "./NewGithubApp";
+import { renderWithRouter } from "~/testing/helpers";
 
 const { mockFetchInstallations, mockFetchRepositories } = nocks;
 
@@ -29,20 +30,13 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
     });
 
     user = mockUser();
-    wrapper = render(
-      <RouterProvider
-        router={createMemoryRouter([
-          {
-            path: "*",
-            element: (
-              <AuthContext.Provider value={{ user }}>
-                <NewGithubApp />
-              </AuthContext.Provider>
-            ),
-          },
-        ])}
-      />
-    );
+    wrapper = renderWithRouter({
+      el: () => (
+        <AuthContext.Provider value={{ user }}>
+          <NewGithubApp />
+        </AuthContext.Provider>
+      ),
+    });
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
@@ -54,7 +48,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
 
     beforeEach(async () => {
       githubApi.accessToken = "123456";
-      githubApi.baseurl = "http://localhost";
+      githubApi.baseurl = process.env.API_DOMAIN || "";
 
       mockFetchInstallations({
         response: {
@@ -66,8 +60,8 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
       await createWrapper({ github: account });
     });
 
-    test("clicking connect more should open a popup so that the user can configure permissions", () => {
-      window.open = jest.fn();
+    it("clicking connect more should open a popup so that the user can configure permissions", () => {
+      window.open = vi.fn();
       const button = wrapper.getByText("Connect more repositories");
       fireEvent.click(button);
       expect(window.open).toHaveBeenCalledWith(
@@ -81,7 +75,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   describe("empty data", () => {
     beforeEach(() => {
       githubApi.accessToken = "123456";
-      githubApi.baseurl = "http://localhost";
+      githubApi.baseurl = process.env.API_DOMAIN || "";
 
       mockFetchInstallations({
         response: {
@@ -93,7 +87,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
       createWrapper();
     });
 
-    test("no connected accounts should display a warning", async () => {
+    it("no connected accounts should display a warning", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("No connected accounts found")).toBeTruthy();
       });
@@ -107,7 +101,7 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
 
     beforeEach(async () => {
       githubApi.accessToken = "123456";
-      githubApi.baseurl = "http://localhost";
+      githubApi.baseurl = process.env.API_DOMAIN || "";
 
       const scope1 = mockFetchInstallations({
         response: {
@@ -161,23 +155,23 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
       githubApi.baseurl = originalBaseUrl;
     });
 
-    test("should have a proper title", () => {
+    it("should have a proper title", () => {
       expect(wrapper.getByText("Import from GitHub")).toBeTruthy();
     });
 
-    test("should render repositories", async () => {
+    it("should render repositories", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("simple-project")).toBeTruthy();
       });
     });
 
-    test("chooses jdoe as the selected account", async () => {
+    it("chooses jdoe as the selected account", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("jdoe")).toBeTruthy();
       });
     });
 
-    test("selecting a different account should trigger a refetch", async () => {
+    it("selecting a different account should trigger a refetch", async () => {
       const scope = mockFetchRepositories({
         installationId: installationId2,
         query: {
@@ -220,10 +214,10 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
       });
     });
 
-    test("clicking connect more should open a popup so that the user can configure permissions", () => {
+    it("clicking connect more should open a popup so that the user can configure permissions", () => {
       const account = "stormkit-dev";
 
-      window.open = jest.fn();
+      window.open = vi.fn();
       const button = wrapper.getByText("Connect more repositories");
       fireEvent.click(button);
       expect(window.open).toHaveBeenCalledWith(

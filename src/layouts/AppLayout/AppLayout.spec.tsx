@@ -1,15 +1,17 @@
 import { RenderResult } from "@testing-library/react";
-import * as router from "react-router";
-import { render } from "@testing-library/react";
+import { describe, expect, beforeEach, it } from "vitest";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
+import { renderWithRouter } from "~/testing/helpers";
 import { AppLayout } from "./AppLayout";
 
 interface WrapperProps {
   app?: App;
   environments?: Environment[];
   setRefreshToken?: () => void;
+  initialEntries?: string[];
+  path?: string;
 }
 
 describe("~/layouts/AppLayout/Applayout.tsx", () => {
@@ -21,49 +23,33 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
     app = defaultApp,
     environments = defaultEnvs,
     setRefreshToken = () => {},
+    path = "/apps/:id",
+    initialEntries = [`/apps/${app.id}`],
   }: WrapperProps) => {
-    const { RouterProvider } = router;
-    const memoryRouter = router.createMemoryRouter(
-      [
-        {
-          path: "/apps/:id/*",
-          element: (
-            <AppContext.Provider value={{ app, environments, setRefreshToken }}>
-              <AppLayout />
-            </AppContext.Provider>
-          ),
-        },
-      ],
-      {
-        initialEntries: [`/apps/${app.id}`],
-        initialIndex: 0,
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
-  };
-
-  const mockUseLocation = ({ pathname = "", search = "" } = {}) => {
-    jest.spyOn(router, "useLocation").mockReturnValue({
-      key: "",
-      state: {},
-      hash: "",
-      pathname,
-      search,
+    wrapper = renderWithRouter({
+      path,
+      initialEntries,
+      el: () => (
+        <AppContext.Provider value={{ app, environments, setRefreshToken }}>
+          <AppLayout />
+        </AppContext.Provider>
+      ),
     });
   };
 
   describe("app menu - with no selected environment", () => {
     beforeEach(() => {
-      mockUseLocation({ pathname: `/apps/${defaultApp.id}/environments` });
-      createWrapper({});
+      createWrapper({
+        path: "/apps/:id/environments",
+        initialEntries: [`/apps/${defaultApp.id}/environments`],
+      });
     });
 
-    test("should render the application header correctly", () => {
+    it("should render the application header correctly", () => {
       expect(wrapper.getByText("stormkit-io/frontend")).toBeTruthy();
     });
 
-    test("should render menu links", () => {
+    it("should render menu links", () => {
       const links = wrapper
         .getAllByRole("link")
         .map(link => link.getAttribute("href"));
@@ -83,18 +69,20 @@ describe("~/layouts/AppLayout/Applayout.tsx", () => {
 
   describe("app header - with selected environment", () => {
     beforeEach(() => {
-      mockUseLocation({
-        pathname: `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
+      createWrapper({
+        path: "/apps/:id/environments/:envId/deployments",
+        initialEntries: [
+          `/apps/${defaultApp.id}/environments/${defaultEnvs[0].id}/deployments`,
+        ],
       });
-      createWrapper({});
     });
 
-    test("should render the application header correctly", () => {
+    it("should render the application header correctly", () => {
       expect(wrapper.getByText("stormkit-io/frontend")).toBeTruthy();
       expect(() => wrapper.getByText("Select an environment")).toThrow();
     });
 
-    test("should render menu links", () => {
+    it("should render menu links", () => {
       const links = wrapper
         .getAllByRole("link")
         .map(link => link.getAttribute("href"));

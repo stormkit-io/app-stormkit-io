@@ -1,43 +1,31 @@
 import type { RenderResult } from "@testing-library/react";
-import * as router from "react-router";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
+import { fireEvent, waitFor } from "@testing-library/react";
 import mockTeams from "~/testing/data/mock_teams";
 import { mockUpdateTeam } from "~/testing/nocks/nock_team";
+import { renderWithRouter } from "~/testing/helpers";
 import TeamSettings from "./TeamSettings";
 
-const { RouterProvider, createMemoryRouter } = router;
+declare const global: {
+  NavigateMock: any;
+};
 
 describe("~/pages/team/TeamSettings.tsx", () => {
   let wrapper: RenderResult;
-  let reloadTeams: jest.Func;
-  let navigateSpy: jest.Mock;
+  let reloadTeams: Mock;
 
   interface Props {
     team: Team;
   }
 
-  const mockUseNavigate = () => {
-    navigateSpy = jest.fn();
-    jest.spyOn(router, "useNavigate").mockReturnValue(navigateSpy);
-  };
-
   const createWrapper = ({ team }: Props) => {
-    reloadTeams = jest.fn();
+    reloadTeams = vi.fn();
 
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/:team/settings",
-          element: <TeamSettings team={team} reloadTeams={reloadTeams} />,
-        },
-      ],
-      {
-        initialEntries: [`/${team?.slug}/settings`],
-        initialIndex: 0,
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      path: "/:teamId/settings",
+      initialEntries: [`/${team?.slug}/settings`],
+      el: () => <TeamSettings team={team} reloadTeams={reloadTeams} />,
+    });
   };
 
   describe("when has admin rights", () => {
@@ -45,18 +33,17 @@ describe("~/pages/team/TeamSettings.tsx", () => {
     teams[1].currentUserRole = "owner";
 
     beforeEach(() => {
-      mockUseNavigate();
       createWrapper({ team: teams[1] });
     });
 
-    test("should display title and subtitle", () => {
+    it("should display title and subtitle", () => {
       expect(wrapper.getByText("Team settings")).toBeTruthy();
       expect(
         wrapper.getByText("Only Owners and Admins can update team settings.")
       ).toBeTruthy();
     });
 
-    test("should update a team", async () => {
+    it("should update a team", async () => {
       const team = { ...teams[1], name: "My new name", slug: "my-new-name" };
       const scope = mockUpdateTeam({
         name: team.name,
@@ -71,11 +58,14 @@ describe("~/pages/team/TeamSettings.tsx", () => {
       fireEvent.click(wrapper.getByText("Update"));
 
       await waitFor(() => {
-        scope.isDone();
+        expect(scope.isDone()).toBe(true);
         expect(reloadTeams).toHaveBeenCalled();
-        expect(navigateSpy).toHaveBeenCalledWith(`/${team.id}/settings`, {
-          replace: true,
-        });
+        expect(global.NavigateMock).toHaveBeenCalledWith(
+          `/${team.id}/settings`,
+          {
+            replace: true,
+          }
+        );
       });
     });
   });
@@ -85,18 +75,17 @@ describe("~/pages/team/TeamSettings.tsx", () => {
     teams[1].currentUserRole = "developer";
 
     beforeEach(() => {
-      mockUseNavigate();
       createWrapper({ team: teams[1] });
     });
 
-    test("should display title and subtitle", () => {
+    it("should display title and subtitle", () => {
       expect(wrapper.getByText("Team settings")).toBeTruthy();
       expect(
         wrapper.getByText("Only Owners and Admins can update team settings.")
       ).toBeTruthy();
     });
 
-    test("should not have an update button", () => {
+    it("should not have an update button", () => {
       expect(() => wrapper.getByText("Update")).toThrow();
     });
   });

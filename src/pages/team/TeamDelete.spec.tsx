@@ -1,43 +1,27 @@
 import type { RenderResult } from "@testing-library/react";
-import * as router from "react-router";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
+import { fireEvent, waitFor } from "@testing-library/react";
 import mockTeams from "~/testing/data/mock_teams";
 import { mockRemoveTeam } from "~/testing/nocks/nock_team";
+import { renderWithRouter } from "~/testing/helpers";
 import TeamDelete from "./TeamDelete";
-
-const { RouterProvider, createMemoryRouter } = router;
 
 describe("~/pages/team/TeamDelete.tsx", () => {
   let wrapper: RenderResult;
-  let reloadTeams: jest.Func;
-  let navigateSpy: jest.Mock;
+  let reloadTeams: Mock;
 
   interface Props {
     team: Team;
   }
 
-  const mockUseNavigate = () => {
-    navigateSpy = jest.fn();
-    jest.spyOn(router, "useNavigate").mockReturnValue(navigateSpy);
-  };
-
   const createWrapper = ({ team }: Props) => {
-    reloadTeams = jest.fn();
+    reloadTeams = vi.fn();
 
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/:team/settings",
-          element: <TeamDelete team={team} reloadTeams={reloadTeams} />,
-        },
-      ],
-      {
-        initialEntries: [`/${team?.slug}/settings`],
-        initialIndex: 0,
-      }
-    );
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      path: "/:team/settings",
+      initialEntries: [`/${team?.slug}/settings`],
+      el: () => <TeamDelete team={team} reloadTeams={reloadTeams} />,
+    });
   };
 
   describe("when has admin access", () => {
@@ -45,11 +29,10 @@ describe("~/pages/team/TeamDelete.tsx", () => {
     teams[1].currentUserRole = "owner";
 
     beforeEach(() => {
-      mockUseNavigate();
       createWrapper({ team: teams[1] });
     });
 
-    test("should display title and subtitle", () => {
+    it("should display title and subtitle", () => {
       expect(wrapper.getByText("Danger zone")).toBeTruthy();
       expect(
         wrapper.getByText(
@@ -58,7 +41,7 @@ describe("~/pages/team/TeamDelete.tsx", () => {
       ).toBeTruthy();
     });
 
-    test("should remove the team", async () => {
+    it("should remove the team", async () => {
       const scope = mockRemoveTeam({
         teamId: teams[1].id,
       });
@@ -83,11 +66,10 @@ describe("~/pages/team/TeamDelete.tsx", () => {
     teams[1].currentUserRole = "developer";
 
     beforeEach(() => {
-      mockUseNavigate();
       createWrapper({ team: teams[1] });
     });
 
-    test("should not render anyting", () => {
+    it("should not render anyting", () => {
       expect(wrapper.container.innerHTML).toBe("");
     });
   });

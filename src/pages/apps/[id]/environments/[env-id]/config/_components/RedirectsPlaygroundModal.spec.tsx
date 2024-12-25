@@ -1,4 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi, type Mock } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironments from "~/testing/data/mock_environments";
@@ -11,19 +12,14 @@ interface WrapperProps {
   setRefreshToken?: () => void;
 }
 
-jest.mock("@codemirror/lang-json", () => ({ json: jest.fn() }));
-jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
-  <>{value}</>
-));
-
 describe("~/pages/apps/[id]/environments/[env-id]/config/_components/RedirectsPlaygroundModal.tsx", () => {
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let closeSpy: jest.Func;
+  let closeSpy: Mock;
 
   const createWrapper = ({ app, environment }: WrapperProps) => {
-    closeSpy = jest.fn();
+    closeSpy = vi.fn();
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironments({ app: currentApp })[0];
 
@@ -36,7 +32,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/RedirectsPl
     );
   };
 
-  test("should have a form", () => {
+  it("should have a form", () => {
     createWrapper({});
 
     expect(wrapper.getByText("Redirects Playground")).toBeTruthy();
@@ -56,7 +52,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/RedirectsPl
     );
   });
 
-  test("should submit the form", async () => {
+  it("should submit the form", async () => {
     createWrapper({});
 
     const scope = mockPlayground({

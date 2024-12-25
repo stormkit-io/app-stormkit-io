@@ -1,4 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { mockUpdatePersonalAccessToken } from "~/testing/nocks/nock_user";
@@ -9,11 +10,11 @@ interface Props {
 }
 
 describe("~/pages/user/account/_components/PersonalAccessTokenModal", () => {
-  let toggleModal: jest.Func;
+  let toggleModal: Mock;
   let wrapper: RenderResult;
 
   const createWrapper = ({ hasToken }: Props) => {
-    toggleModal = jest.fn();
+    toggleModal = vi.fn();
 
     wrapper = render(
       <PersonalAccessTokenModal hasToken={hasToken} toggleModal={toggleModal} />
@@ -27,7 +28,7 @@ describe("~/pages/user/account/_components/PersonalAccessTokenModal", () => {
       });
     });
 
-    test("should display an informative message that the token was already set", () => {
+    it("should display an informative message that the token was already set", () => {
       expect(wrapper.getByText("Set personal access token")).toBeTruthy();
 
       expect(() =>
@@ -37,7 +38,7 @@ describe("~/pages/user/account/_components/PersonalAccessTokenModal", () => {
       ).toThrow();
     });
 
-    test("should make an api call when submit is clicked", async () => {
+    it("should make an api call when submit is clicked", async () => {
       const token = "my-personal-access-token";
       const scope = mockUpdatePersonalAccessToken({ payload: { token } });
 
@@ -66,7 +67,7 @@ describe("~/pages/user/account/_components/PersonalAccessTokenModal", () => {
       });
     });
 
-    test("should display an informative message that the token was already set", () => {
+    it("should display an informative message that the token was already set", () => {
       expect(wrapper.getByText("Reset personal access token")).toBeTruthy();
 
       expect(
@@ -76,7 +77,7 @@ describe("~/pages/user/account/_components/PersonalAccessTokenModal", () => {
       ).toBeTruthy();
     });
 
-    test("should make an api call when delete old one button is clicked", async () => {
+    it("should make an api call when delete old one button is clicked", async () => {
       const scope = mockUpdatePersonalAccessToken({
         payload: { token: "" },
       });

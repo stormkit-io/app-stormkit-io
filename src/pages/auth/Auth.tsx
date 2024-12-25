@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
 import qs from "query-string";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";

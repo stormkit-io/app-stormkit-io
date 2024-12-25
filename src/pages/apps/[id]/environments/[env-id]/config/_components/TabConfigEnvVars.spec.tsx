@@ -1,4 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi, type Mock } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import mockApp from "~/testing/data/mock_app";
@@ -16,10 +17,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigEn
   let wrapper: RenderResult;
   let currentApp: App;
   let currentEnv: Environment;
-  let setRefreshToken: jest.Func;
+  let setRefreshToken: Mock;
 
   const createWrapper = ({ app, environment }: WrapperProps) => {
-    setRefreshToken = jest.fn();
+    setRefreshToken = vi.fn();
     currentApp = app || mockApp();
     currentEnv = environment || mockEnvironments({ app: currentApp })[0];
 
@@ -32,7 +33,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigEn
     );
   };
 
-  test("default state", () => {
+  it("default state", () => {
     currentApp = mockApp();
     currentEnv = mockEnvironments({ app: currentApp })[0];
     currentEnv.build.vars = {};
@@ -61,7 +62,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigEn
     expect(wrapper.getByText("Save")).toBeTruthy();
   });
 
-  test("with pre-populated environment variables", () => {
+  it("with pre-populated environment variables", () => {
     currentApp = mockApp();
     currentEnv = mockEnvironments({ app: currentApp })[0];
     currentEnv.build.vars = {
@@ -83,7 +84,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigEn
     expect(wrapper.getByDisplayValue("UTC+3")).toBeTruthy();
   });
 
-  test("updating environment variables", async () => {
+  it("updating environment variables", async () => {
     currentApp = mockApp();
     currentEnv = mockEnvironments({ app: currentApp })[0];
     currentEnv.build.vars = {};
@@ -120,7 +121,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabConfigEn
     });
   });
 
-  test("resetting environment variables", async () => {
+  it("resetting environment variables", async () => {
     currentApp = mockApp();
     currentEnv = mockEnvironments({ app: currentApp })[0];
     currentEnv.build.vars = {};

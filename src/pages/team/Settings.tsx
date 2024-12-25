@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import Box from "@mui/material/Box";
-import Error404 from "~/components/Errors/Error404";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
+import Error404 from "~/components/Errors/Error404";
 import TeamMembers from "./TeamMembers";
 import TeamDelete from "./TeamDelete";
 import TeamAPIKeys from "./TeamAPIKeys";

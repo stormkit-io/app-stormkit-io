@@ -1,5 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
+import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
 import { MemoryRouter } from "react-router";
 import { waitFor, fireEvent, render, getByText } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -14,11 +15,6 @@ import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
 import SnippetModal from "./SnippetModal";
 
-jest.mock("@codemirror/lang-json", () => ({ json: jest.fn() }));
-jest.mock("@uiw/react-codemirror", () => ({ value }: { value: string }) => (
-  <>{value}</>
-));
-
 interface Props {
   app: App;
   env: Environment;
@@ -32,8 +28,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
   let currentApp: App;
   let currentEnv: Environment;
   let snippets: Snippet[];
-  let closeModal: jest.Mock;
-  let setRefreshToken: jest.Mock;
+  let closeModal: Mock;
+  let setRefreshToken: Mock;
   let fetchDomainsScope: Scope;
 
   const snippet: Snippet = {
@@ -67,7 +63,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
           value={{
             app,
             environments: [env],
-            setRefreshToken: jest.fn(),
+            setRefreshToken: vi.fn(),
           }}
         >
           <EnvironmentContext.Provider value={{ environment: env }}>
@@ -87,8 +83,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       currentApp = mockApp();
       currentEnv = mockEnvironment({ app: currentApp });
       snippets = [];
-      closeModal = jest.fn();
-      setRefreshToken = jest.fn();
+      closeModal = vi.fn();
+      setRefreshToken = vi.fn();
 
       createWrapper({
         app: currentApp,
@@ -98,13 +94,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       });
     });
 
-    test("should fetch domains", async () => {
+    it("should fetch domains", async () => {
       await waitFor(() => {
         expect(fetchDomainsScope.isDone()).toBe(true);
       });
     });
 
-    test("should handle form submission", async () => {
+    it("should handle form submission", async () => {
       const scope = mockInsertSnippet({
         appId: currentApp.id,
         envId: currentEnv.id!,
@@ -142,8 +138,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       currentEnv = mockEnvironment({ app: currentApp });
       snippets = [{ ...snippet, location: "body", id: "1" }];
 
-      closeModal = jest.fn();
-      setRefreshToken = jest.fn();
+      closeModal = vi.fn();
+      setRefreshToken = vi.fn();
 
       createWrapper({
         app: currentApp,
@@ -154,7 +150,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/SnippetModal.tsx", ()
       });
     });
 
-    test("should handle form submission", async () => {
+    it("should handle form submission", async () => {
       const scope = mockUpdateSnippet({
         appId: currentApp.id,
         envId: currentEnv.id!,

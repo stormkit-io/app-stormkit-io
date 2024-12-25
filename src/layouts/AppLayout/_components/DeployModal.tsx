@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { deploy } from "~/pages/apps/actions";
 import { useFetchRepoMeta } from "~/pages/apps/[id]/environments/[env-id]/config/actions";
 import { isFrameworkRecognized } from "~/pages/apps/[id]/environments/[env-id]/config/helpers";
+import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Button from "@mui/lab/LoadingButton";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import BuildIcon from "@mui/icons-material/Build";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import Link from "~/components/Link";
 import Spinner from "~/components/Spinner";
 
 interface Props {
@@ -24,12 +25,12 @@ interface Props {
   toggleModal: (val: boolean) => void;
 }
 
-const DeployModal: React.FC<Props> = ({
+export default function DeployModal({
   toggleModal,
   environments,
   selected: environment,
   app,
-}): React.ReactElement => {
+}: Props) {
   const navigate = useNavigate();
   const [selectedEnv, setSelectedEnv] = useState<Environment | undefined>(
     environment
@@ -69,7 +70,7 @@ const DeployModal: React.FC<Props> = ({
               Repository is inaccessible. See the{" "}
               <Link
                 className="font-bold hover:text-white hover:underline"
-                to="https://www.stormkit.io/docs/other/troubleshooting#repository-is-innaccessible"
+                href="https://www.stormkit.io/docs/other/troubleshooting#repository-is-innaccessible"
               >
                 troubleshooting
               </Link>{" "}
@@ -193,15 +194,15 @@ const DeployModal: React.FC<Props> = ({
           </Typography>
         </Box>
         <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Button
+          <Link
             href={`/apps/${app.id}/environments/${selectedEnv?.id}`}
             onClick={() => {
               toggleModal(false);
             }}
           >
-            <span className="fas fa-wrench mr-3" />
+            <BuildIcon fontSize="small" sx={{ mr: 1 }} />
             Update default settings
-          </Button>
+          </Link>
           <Button
             variant="contained"
             color="secondary"
@@ -214,6 +215,4 @@ const DeployModal: React.FC<Props> = ({
       </Card>
     </Modal>
   );
-};
-
-export default DeployModal;
+}

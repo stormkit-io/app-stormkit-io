@@ -28,7 +28,7 @@ export default function SubscriptionDetails({
   user,
   isSelfHostedInstance,
 }: Props) {
-  const [params, _] = useSearchParams();
+  const [params] = useSearchParams();
   const { license, loading, error } = useFetchLicense({
     user,
     isSelfHostedInstance,

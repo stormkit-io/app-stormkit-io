@@ -1,4 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
+import { describe, expect, it, beforeEach } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import ConnectedAccounts from "./ConnectedAccounts";
@@ -41,12 +42,12 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
       });
     });
 
-    test("should list the email addresses", () => {
+    it("should list the email addresses", () => {
       expect(wrapper.getByText("hello@example.org")).toBeTruthy();
       expect(wrapper.getByText("hi@example.org")).toBeTruthy();
     });
 
-    test("should mark the Primary email", () => {
+    it("should mark the Primary email", () => {
       expect(wrapper.getByTestId("hello@example.org").innerHTML).toContain(
         "Primary"
       );
@@ -85,11 +86,11 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
       });
     });
 
-    test("should display the provider as a connected account", () => {
+    it("should display the provider as a connected account", () => {
       expect(wrapper.getByText(human)).toBeTruthy();
     });
 
-    test("should display a set personal access token link", () => {
+    it("should display a set personal access token link", () => {
       const parent = wrapper
         .getByText(human)
         .closest(`[data-testid=${provider}]`);
@@ -109,11 +110,11 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
       });
     });
 
-    test("displays reset instead of set when hasPersonalAccessToken is true", () => {
+    it("displays reset instead of set when hasPersonalAccessToken is true", () => {
       expect(wrapper.getByText("Reset personal access token")).toBeTruthy();
     });
 
-    test("the link should toggle the modal", async () => {
+    it("the link should toggle the modal", async () => {
       await fireEvent.click(wrapper.getByText("Reset personal access token"));
 
       await waitFor(() => {

@@ -1,14 +1,18 @@
 import type { RenderResult } from "@testing-library/react";
 import type { AuthContextProps } from "~/pages/auth/Auth.context";
 import type { Scope } from "nock";
-import * as router from "react-router";
-import { render } from "@testing-library/react";
+import { describe, expect, beforeEach, afterEach, it, vi } from "vitest";
 import { waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
 import Api from "~/utils/api/Api";
 import * as Auth from "~/pages/auth/Auth.context";
 import { mockFetchUser } from "~/testing/nocks/nock_user";
 import { mockFetchTeam } from "~/testing/nocks/nock_team";
+import { renderWithRouter } from "~/testing/helpers";
+
+declare const global: {
+  NavigateMock: any;
+};
 
 const { AuthContext, default: ContextProvider } = Auth;
 
@@ -16,40 +20,21 @@ describe("pages/auth/Auth.context", () => {
   let wrapper: RenderResult;
   let scope: Scope;
   let context: AuthContextProps;
-  let navigate: jest.Func;
-
-  const mockUseLocation = () => {
-    jest.spyOn(router, "useLocation").mockReturnValue({
-      search: "my-query=1",
-      pathname: "/apps/1231231",
-      state: {},
-      key: "",
-      hash: "",
-    });
-  };
 
   const createWrapper = () => {
-    navigate = jest.fn();
-    jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
-
-    const { RouterProvider, createMemoryRouter } = router;
-    const memoryRouter = createMemoryRouter([
-      {
-        path: "*",
-        element: (
-          <ContextProvider>
-            <AuthContext.Consumer>
-              {ctx => {
-                context = ctx;
-                return <></>;
-              }}
-            </AuthContext.Consumer>
-          </ContextProvider>
-        ),
-      },
-    ]);
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      initialEntries: ["/apps/1231231?my-query=1"],
+      el: () => (
+        <ContextProvider>
+          <AuthContext.Consumer>
+            {ctx => {
+              context = ctx;
+              return <></>;
+            }}
+          </AuthContext.Consumer>
+        </ContextProvider>
+      ),
+    });
 
     return wrapper;
   };
@@ -60,7 +45,6 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.set("skit_access_token", "my-access-token");
       LocalStorage.set("skit_provider", "github");
 
-      mockUseLocation();
       mockFetchTeam({ response: [] });
 
       scope = mockFetchUser({ response: { ok: false, user: null } });
@@ -73,13 +57,13 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.del("skit_token");
     });
 
-    test("redirects user to the auth page", async () => {
-      jest.spyOn(Api, "getAuthToken").mockReturnValue("my-expired-token");
+    it("redirects user to the auth page", async () => {
+      vi.spyOn(Api, "getAuthToken").mockReturnValue("my-expired-token");
 
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
-        expect(navigate).toHaveBeenCalledWith(
-          "/auth?redirect=%2Fapps%2F1231231my-query%3D1"
+        expect(global.NavigateMock).toHaveBeenCalledWith(
+          "/auth?redirect=%2Fapps%2F1231231%3Fmy-query%3D1"
         );
       });
     });
@@ -91,7 +75,6 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.set("skit_access_token", "my-access-token");
       LocalStorage.set("skit_provider", "github");
 
-      mockUseLocation();
       mockFetchTeam({ response: [] });
 
       scope = mockFetchUser({});
@@ -102,7 +85,7 @@ describe("pages/auth/Auth.context", () => {
       LocalStorage.del("skit_token");
     });
 
-    test("shows the context properly", async () => {
+    it("shows the context properly", async () => {
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(context).toEqual({

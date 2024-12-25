@@ -1,5 +1,6 @@
 import type { Scope } from "nock";
 import type { RenderResult } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { AuthContext } from "~/pages/auth/Auth.context";
@@ -42,7 +43,7 @@ describe("~/pages/my/deployments/Deployments.tsx", () => {
     });
   };
 
-  test("it displays correct header and subheader", async () => {
+  it("it displays correct header and subheader", async () => {
     await createWrapper({});
     expect(wrapper.getByText("Team Deployments")).toBeTruthy();
     expect(
@@ -52,7 +53,7 @@ describe("~/pages/my/deployments/Deployments.tsx", () => {
     ).toBeTruthy();
   });
 
-  test("it displays a list of deployments", async () => {
+  it("it displays a list of deployments", async () => {
     await createWrapper({});
     expect(wrapper.getByText("chore: update packages")).toBeTruthy();
     expect(wrapper.getByText("fix: image size")).toBeTruthy();
@@ -60,7 +61,7 @@ describe("~/pages/my/deployments/Deployments.tsx", () => {
     expect(wrapper.getByText("by Sally Doe")).toBeTruthy();
   });
 
-  test("it displays an empty page when there are no deployments", async () => {
+  it("it displays an empty page when there are no deployments", async () => {
     await createWrapper({ deployments: [] });
     expect(wrapper.getByText(/It's quite empty in here./)).toBeTruthy();
     expect(wrapper.getByText(/Go back to your/)).toBeTruthy();

@@ -163,6 +163,7 @@ export default function Visitors({
       <Box sx={{ height: 300, mb: 4 }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
+            data-testid="area-chart"
             data={visitors}
             margin={{
               top: 10,
