@@ -12,8 +12,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import Modal from "~/components/Modal";
-import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBox";
 import { useFetchManifest } from "../actions";
 import TabAPI from "./TabAPI";
 import TabCDNFiles from "./TabCDNFiles";
@@ -41,7 +39,7 @@ export default function ManifestModal({ deployment, onClose }: Props) {
 
   return (
     <Modal open onClose={onClose} height="100%">
-      <Card sx={{ height: "100%" }}>
+      <Card sx={{ minHeight: "100%" }} loading={loading} error={error}>
         <CardHeader
           actions={
             <ToggleButtonGroup
@@ -69,12 +67,6 @@ export default function ManifestModal({ deployment, onClose }: Props) {
             <br />#{deployment.id}
           </Typography>
         </CardHeader>
-        {loading && (
-          <div className="flex justify-center w-full">
-            <Spinner />
-          </div>
-        )}
-        {!loading && error && <InfoBox type={InfoBox.ERROR}>{error}</InfoBox>}
         {!loading && !error && !manifest && (
           <div className="bg-blue-10 mx-4 p-4">Manifest is not found.</div>
         )}

@@ -1,8 +1,11 @@
-import React, { useMemo, useState } from "react";
-import cn from "classnames";
+import { useMemo, useState } from "react";
+import WarningIcon from "@mui/icons-material/Warning";
+import ChevronRight from "@mui/icons-material/ChevronRight";
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import Link from "~/components/Link";
-import InfoBox from "~/components/InfoBox";
+import Link from "@mui/material/Link";
+import Alert from "@mui/material/Alert";
+import Typography from "@mui/material/Typography";
 
 interface Props {
   manifest: Manifest;
@@ -66,83 +69,104 @@ const recursiveRender = (deployment: DeploymentV2, treeNode: TreeNode) => {
   const [expanded, setExpanded] = useState(isRoot);
 
   return (
-    <div>
+    <Box>
       {!isRoot && (
-        <button
+        <Button
           type="button"
-          className="bg-blue-10 p-3 flex w-full items-center font-bold justify-start"
-          style={{ minHeight: "53px" }}
+          sx={{
+            width: "100%",
+            minHeight: "53px",
+            bgcolor: "container.transparent",
+            display: "flex",
+            justifyContent: "flex-start",
+            flex: 1,
+            p: 2,
+          }}
           onClick={() => {
             setExpanded(!expanded);
           }}
         >
-          <span
-            className={cn("fas w-6 text-left", {
-              "fa-chevron-right": !expanded,
-              "fa-chevron-down": expanded,
-            })}
+          <ChevronRight
+            sx={{
+              transform: expanded ? "rotate(90deg)" : undefined,
+              ml: 0,
+              mr: 0.5,
+            }}
           />
           {treeNode.currentFolder}
-        </button>
+        </Button>
       )}
-      <div
-        className={cn({
-          "mt-3": !isRoot,
-          "border-l border-blue-20 pl-3": expanded && !isRoot,
-        })}
+      <Box
+        sx={{
+          mt: isRoot ? 0 : 2,
+          pl: expanded && !isRoot ? 2 : 0,
+          borderLeft: expanded && !isRoot ? "1px solid" : "none",
+          borderColor: "container.transparent",
+        }}
       >
         {Object.keys(treeNode.folders).map(k => (
-          <div key={k} className={cn({ hidden: !expanded, "ml-0": !isRoot })}>
+          <Box
+            key={k}
+            sx={{
+              display: !expanded ? "none" : undefined,
+              ml: isRoot ? undefined : 0,
+            }}
+          >
             {recursiveRender(deployment, treeNode.folders[k])}
-          </div>
+          </Box>
         ))}
         {expanded &&
           treeNode.files.map(file => (
-            <div className="bg-blue-10 mb-3 p-3" key={file.fileName}>
+            <Box
+              sx={{ bgcolor: "container.transparent", mb: 2, p: 2 }}
+              key={file.fileName}
+            >
               <span className="block font-bold">
                 {file.fileName.split("/").pop()}
               </span>
               <Link
-                to={`${deployment.previewUrl}${
+                href={`${deployment.previewUrl}${
                   file.fileName === "/index.html" ? "" : file.fileName
                 }`}
-                className="text-xs block truncate"
+                sx={{
+                  fontSize: "0.75rem",
+                  display: "block",
+                  overflow: "hidden",
+                }}
               >
                 {deployment.previewUrl}
                 {file.fileName}
               </Link>
-            </div>
+            </Box>
           ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
-const TabCDNFiles: React.FC<Props> = ({ manifest, deployment }) => {
+export default function TabCDNFiles({ manifest, deployment }: Props) {
   const ssrEnabled = Boolean(manifest?.functionHandler);
   const indexHTMLWarning =
-    !ssrEnabled &&
-    !manifest?.cdnFiles?.find(file => file.fileName === "/index.html");
+    (!ssrEnabled &&
+      !manifest?.cdnFiles?.find(file => file.fileName === "/index.html")) ||
+    true;
 
   const tree = useTree({ manifest });
 
   return (
     <>
       {indexHTMLWarning && (
-        <InfoBox type={InfoBox.WARNING} className="mx-4 mb-4">
-          Top level <span className="font-bold">/index.html</span> is missing
-          and server side rendering is not detected.{" "}
-          <Link
-            className="font-bold"
-            to="https://www.stormkit.io/docs/other/troubleshooting#index-html-missing"
-          >
-            Learn more.
-          </Link>
-        </InfoBox>
+        <Alert color="warning" sx={{ mb: 2 }} icon={<WarningIcon />}>
+          <Typography>
+            Top level <span className="font-bold">/index.html</span> is missing
+            and server side rendering is not detected.{" "}
+            <Link href="https://www.stormkit.io/docs/other/troubleshooting#index-html-missing">
+              Learn more.
+            </Link>
+          </Typography>
+        </Alert>
       )}
       <Box>{recursiveRender(deployment, tree["/"])}</Box>
     </>
   );
-};
-
-export default TabCDNFiles;
+}
