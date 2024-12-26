@@ -60,6 +60,7 @@ function Card({
     } else if (child.type === CardFooter) {
       footer = child;
     } else {
+      // @ts-ignore
       const { children } = child.props || {};
 
       if (Array.isArray(children) && children[0]?.type === CardRow) {
