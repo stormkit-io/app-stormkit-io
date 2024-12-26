@@ -23,12 +23,12 @@ const { useFetchFunctionTriggers, deleteFunctionTrigger } = actions;
 
 const colors: Record<
   FunctionTriggerMethod,
-  "warning" | "info" | "error" | "primary"
+  "warning" | "info" | "error" | "primary" | "success"
 > = {
   POST: "warning",
   PUT: "info",
   DELETE: "error",
-  GET: "primary",
+  GET: "success",
   PATCH: "primary",
 };
 
@@ -124,14 +124,21 @@ export default function FunctionTriggers() {
             },
           ]}
         >
-          <Typography>
-            <Span>
-              <CircleIcon
-                color={f.status ? "success" : "error"}
-                sx={{ fontSize: 10, mr: 1 }}
-              />
-              {f.status ? "Enabled" : "Disabled"}
-            </Span>
+          <Typography sx={{ display: "flex" }}>
+            <Chip
+              size="small"
+              component="span"
+              color={colors[f.options.method] || "primary"}
+              label={f.options.method}
+              sx={{ fontSize: 10, mr: 2, minWidth: "60px" }}
+            />
+            <Typography
+              component="span"
+              color="text.secondary"
+              sx={{ mr: 2, flex: 1 }}
+            >
+              {f.options.url}
+            </Typography>
             <Span>
               <Tooltip
                 title={
@@ -149,16 +156,13 @@ export default function FunctionTriggers() {
                 </span>
               </Tooltip>
             </Span>
-            <Chip
-              size="small"
-              component="span"
-              color={colors[f.options.method] || "primary"}
-              label={f.options.method}
-              sx={{ fontSize: 10, mr: 2 }}
-            />
-            <Typography component="span" color="text.secondary" sx={{ mr: 2 }}>
-              {f.options.url}
-            </Typography>
+            <Span>
+              <CircleIcon
+                color={f.status ? "success" : "error"}
+                sx={{ fontSize: 10, mr: 1 }}
+              />
+              {f.status ? "Enabled" : "Disabled"}
+            </Span>
           </Typography>
         </CardRow>
       ))}
