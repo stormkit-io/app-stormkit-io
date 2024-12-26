@@ -28,7 +28,7 @@ const Welcome: React.FC<Props> = ({
   };
 
   return (
-    <Modal open onClose={close}>
+    <Modal open={isOpen} onClose={close}>
       <Card>
         <CardHeader title="Welcome to Stormkit 🎉" />
         <Button
