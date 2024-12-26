@@ -1,10 +1,12 @@
 import type { FormValues } from "../actions";
 import React, { useState } from "react";
+import Button from "@mui/lab/LoadingButton";
 import Modal from "~/components/Modal";
 import Form from "~/components/FormV2";
 import InfoBox from "~/components/InfoBox";
-import Button from "~/components/ButtonV2";
-import Container from "~/components/Container";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import { upsertFeatureFlag, deleteFeatureFlag } from "../actions";
 
 interface Props {
@@ -27,49 +29,49 @@ const FeatureFlagModal: React.FC<Props> = ({
 
   return (
     <Modal open onClose={closeModal}>
-      <Container
-        title={flag?.flagName ? "Edit feature flag" : "Create feature flag"}
-      >
-        <Form<FormValues>
-          handleSubmit={async values => {
-            setLoading(true);
-            setError(null);
+      <Form<FormValues>
+        handleSubmit={async values => {
+          setLoading(true);
+          setError(null);
 
-            if (flag && flag.flagName !== values.flagName) {
-              try {
-                await deleteFeatureFlag({
-                  app,
-                  environment,
-                  flagName: flag.flagName,
-                });
-              } catch {
-                // Do nothing, as this step is to clear up the existing one
-              }
-            }
-
-            upsertFeatureFlag({
-              app,
-              environment,
-              values,
-            })
-              .then(() => {
-                setLoading(false);
-                setReload(Date.now());
-                closeModal();
-              })
-              .catch(e => {
-                if (typeof e === "string") {
-                  setError(e);
-                } else {
-                  setError("Something went wrong while saving feature flag.");
-                }
-              })
-              .finally(() => {
-                setLoading(false);
+          if (flag && flag.flagName !== values.flagName) {
+            try {
+              await deleteFeatureFlag({
+                app,
+                environment,
+                flagName: flag.flagName,
               });
-          }}
-          className="mb-4"
-        >
+            } catch {
+              // Do nothing, as this step is to clear up the existing one
+            }
+          }
+
+          upsertFeatureFlag({
+            app,
+            environment,
+            values,
+          })
+            .then(() => {
+              setLoading(false);
+              setReload(Date.now());
+              closeModal();
+            })
+            .catch(e => {
+              if (typeof e === "string") {
+                setError(e);
+              } else {
+                setError("Something went wrong while saving feature flag.");
+              }
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }}
+      >
+        <Card>
+          <CardHeader
+            title={flag?.flagName ? "Edit feature flag" : "Create feature flag"}
+          />
           <Form.WithLabel label="Flag name" className="py-0">
             <Form.Input
               name="flagName"
@@ -95,26 +97,22 @@ const FeatureFlagModal: React.FC<Props> = ({
               {error}
             </InfoBox>
           )}
-          <div className="flex justify-center items-center mt-4 mb-0">
-            <Button
-              type="button"
-              category="cancel"
-              onClick={closeModal}
-              className="bg-blue-20"
-            >
+          <CardFooter>
+            <Button type="button" variant="text" onClick={closeModal}>
               Cancel
             </Button>
             <Button
               type="submit"
-              category="action"
-              className="ml-4"
+              variant="contained"
+              color="secondary"
+              sx={{ ml: 2 }}
               loading={loading}
             >
               {flag ? "Update" : "Create"}
             </Button>
-          </div>
-        </Form>
-      </Container>
+          </CardFooter>
+        </Card>
+      </Form>
     </Modal>
   );
 };
