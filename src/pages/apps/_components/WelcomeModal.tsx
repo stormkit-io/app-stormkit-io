@@ -1,8 +1,15 @@
 import React from "react";
 import { LocalStorage } from "~/utils/storage";
+import XIcon from "@mui/icons-material/X";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Modal from "~/components/Modal";
-import Button from "~/components/ButtonV2";
-import Container from "~/components/Container";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
+import DiscordIcon from "~/assets/logos/discord.svg";
 
 interface Props {
   isOpen: boolean;
@@ -21,57 +28,76 @@ const Welcome: React.FC<Props> = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={close}>
-      <Container className="p-4 md:p-8 justify-center h-full md:h-auto flex md:block flex-col md:flex-none">
-        <h1 className="font-bold text-xl md:text-3xl text-center mb-8">
-          Welcome to Stormkit 🎉
-        </h1>
+    <Modal open onClose={close}>
+      <Card>
+        <CardHeader title="Welcome to Stormkit 🎉" />
         <Button
-          styled={false}
-          category="button"
           type="button"
           href="https://discord.gg/6yQWhyY"
-          className="flex justify-between items-center shadow w-full p-4 md:p-8 bg-blue-10 hover:bg-black text-gray-80 mb-8"
+          target="_blank"
+          rel="noreferrer"
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            boxShadow: 1,
+            backgroundColor: "container.transparent",
+            p: { xs: 2, md: 4 },
+            mb: 4,
+          }}
         >
-          <span className="text-3xl mr-8">
-            <i
-              className="fa-brands fa-discord"
-              style={{ color: "#5865F2" }}
-            ></i>
-          </span>
-          <span className="flex flex-col flex-grow">
-            <span className="font-bold">Join our Discord community</span>
-            <span className="text-sm">Ask questions and join discussions.</span>
-          </span>
-          <span className="fas fa-chevron-right text-base ml" />
+          <Box
+            component="img"
+            src={DiscordIcon}
+            alt="Discord"
+            sx={{ color: "#5865F2", width: 32, mr: 4 }}
+          />
+          <Typography
+            component="span"
+            sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
+          >
+            <Box component="b">Join our Discord community</Box>
+            <Box component="span">Ask questions and join discussions.</Box>
+          </Typography>
+          <ChevronRightIcon />
         </Button>
         <Button
-          styled={false}
           type="button"
-          category="button"
-          href="https://twitter.com/stormkitio"
-          className="flex justify-between items-center shadow w-full p-4 md:p-8 bg-blue-10 hover:bg-black text-gray-80"
+          href="https://x.com/stormkitio"
+          target="_blank"
+          rel="noreferrer"
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            boxShadow: 1,
+            backgroundColor: "container.transparent",
+            p: { xs: 2, md: 4 },
+            mb: 4,
+          }}
         >
-          <span className="text-3xl mr-8">
-            <i
-              className="fa-brands fa-twitter"
-              style={{ color: "#00acee" }}
-            ></i>
-          </span>
-          <span className="flex flex-col flex-grow">
-            <span className="font-bold">Follow us on Twitter</span>
-            <span className="text-sm">
+          <XIcon sx={{ fontSize: 32, mr: 4 }} />
+          <Typography
+            sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
+          >
+            <Box component="b">Follow us on X</Box>
+            <Box component="span">
               Stay tuned about latest developments on Stormkit.
-            </span>
-          </span>
-          <span className="fas fa-chevron-right text-base ml" />
+            </Box>
+          </Typography>
+          <ChevronRightIcon />
         </Button>
-        <div className="mt-8 flex justify-end w-full">
-          <Button type="button" category="button" onClick={close}>
+        <CardFooter>
+          <Button
+            type="button"
+            variant="contained"
+            color="secondary"
+            onClick={close}
+          >
             Close
           </Button>
-        </div>
-      </Container>
+        </CardFooter>
+      </Card>
     </Modal>
   );
 };

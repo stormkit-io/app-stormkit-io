@@ -31,90 +31,123 @@ exports[`~/pages/apps/_components/WelcomeModal > when is open > matches the snap
         tabindex="-1"
       >
         <div
-          class="w-full text-gray-80 max-w-2xl p-4 md:p-8 justify-center h-full md:h-auto flex md:block flex-col md:flex-none MuiBox-root css-12bxit9"
+          class="MuiBox-root css-ur0hlt"
         >
-          <h1
-            class="font-bold text-xl md:text-3xl text-center mb-8"
-          >
-            Welcome to Stormkit 🎉
-          </h1>
-          <a
-            class="relative flex justify-between items-center shadow w-full p-4 md:p-8 bg-blue-10 hover:bg-black text-gray-80 mb-8 hover:text-white"
-            href="https://discord.gg/6yQWhyY"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            <span
-              class="text-3xl mr-8"
-            >
-              <i
-                class="fa-brands fa-discord"
-                style="color: rgb(88, 101, 242);"
-              />
-            </span>
-            <span
-              class="flex flex-col flex-grow"
-            >
-              <span
-                class="font-bold"
-              >
-                Join our Discord community
-              </span>
-              <span
-                class="text-sm"
-              >
-                Ask questions and join discussions.
-              </span>
-            </span>
-            <span
-              class="fas fa-chevron-right text-base ml"
-            />
-          </a>
-          <a
-            class="relative flex justify-between items-center shadow w-full p-4 md:p-8 bg-blue-10 hover:bg-black text-gray-80 hover:text-white"
-            href="https://twitter.com/stormkitio"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            <span
-              class="text-3xl mr-8"
-            >
-              <i
-                class="fa-brands fa-twitter"
-                style="color: rgb(0, 172, 238);"
-              />
-            </span>
-            <span
-              class="flex flex-col flex-grow"
-            >
-              <span
-                class="font-bold"
-              >
-                Follow us on Twitter
-              </span>
-              <span
-                class="text-sm"
-              >
-                Stay tuned about latest developments on Stormkit.
-              </span>
-            </span>
-            <span
-              class="fas fa-chevron-right text-base ml"
-            />
-          </a>
           <div
-            class="mt-8 flex justify-end w-full"
+            class="MuiBox-root css-1rf68w1"
           >
-            <button
-              class="relative sk-button bg-blue-20 px-6 py-2"
+            <div
+              class="MuiBox-root css-1rr4qq7"
+            >
+              <h2
+                class="MuiTypography-root MuiTypography-h2 css-1bn6ydy-MuiTypography-root"
+              >
+                Welcome to Stormkit 🎉
+              </h2>
+            </div>
+          </div>
+          <div
+            class="MuiBox-root css-1yhq37y"
+          >
+            <a
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-1x9mjwo-MuiButtonBase-root-MuiButton-root"
+              href="https://discord.gg/6yQWhyY"
+              rel="noreferrer"
+              tabindex="0"
+              target="_blank"
               type="button"
             >
+              <img
+                alt="Discord"
+                class="MuiBox-root css-ooxxc4"
+                src="/src/assets/logos/discord.svg"
+              />
               <span
-                class="inline-flex w-full items-center justify-center"
+                class="MuiTypography-root MuiTypography-body1 css-dueshr-MuiTypography-root"
+              >
+                <b
+                  class="MuiBox-root css-0"
+                >
+                  Join our Discord community
+                </b>
+                <span
+                  class="MuiBox-root css-0"
+                >
+                  Ask questions and join discussions.
+                </span>
+              </span>
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+                data-testid="ChevronRightIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                />
+              </svg>
+            </a>
+            <a
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-1x9mjwo-MuiButtonBase-root-MuiButton-root"
+              href="https://x.com/stormkitio"
+              rel="noreferrer"
+              tabindex="0"
+              target="_blank"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-4yxcn7-MuiSvgIcon-root"
+                data-testid="XIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                />
+              </svg>
+              <p
+                class="MuiTypography-root MuiTypography-body1 css-dueshr-MuiTypography-root"
+              >
+                <b
+                  class="MuiBox-root css-0"
+                >
+                  Follow us on X
+                </b>
+                <span
+                  class="MuiBox-root css-0"
+                >
+                  Stay tuned about latest developments on Stormkit.
+                </span>
+              </p>
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+                data-testid="ChevronRightIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                />
+              </svg>
+            </a>
+          </div>
+          <div
+            class="MuiBox-root css-1j8fxty"
+          >
+            <div
+              class="MuiBox-root css-14hs0co"
+            >
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary css-dk52k6-MuiButtonBase-root-MuiButton-root"
+                tabindex="0"
+                type="button"
               >
                 Close
-              </span>
-            </button>
+              </button>
+            </div>
           </div>
         </div>
       </div>
