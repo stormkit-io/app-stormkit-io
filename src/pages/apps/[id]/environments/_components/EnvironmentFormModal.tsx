@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Modal from "~/components/Modal";
-import InputDescription from "~/components/InputDescription";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import { insertEnvironment } from "../[env-id]/config/actions";
-import { Typography } from "@mui/material";
 
 interface Props {
   onClose: () => void;
@@ -26,9 +28,8 @@ const EnvironmentFormModal: React.FC<Props> = ({ isOpen, app, onClose }) => {
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Box
+      <Card
         component="form"
-        sx={{ p: 4 }}
         onSubmit={e => {
           e.preventDefault();
 
@@ -71,10 +72,10 @@ const EnvironmentFormModal: React.FC<Props> = ({ isOpen, app, onClose }) => {
             });
         }}
       >
-        <Typography variant="h6">Create new environment</Typography>
-        <Typography variant="subtitle2" sx={{ opacity: 0.5, mb: 4 }}>
-          Environments allow you to work with different configurations.
-        </Typography>
+        <CardHeader
+          title="Create new environment"
+          subtitle="Environments allow you to work with different configurations."
+        />
         <Box sx={{ mb: 4 }}>
           <TextField
             label="Environment name"
@@ -97,11 +98,9 @@ const EnvironmentFormModal: React.FC<Props> = ({ isOpen, app, onClose }) => {
             placeholder="release/development"
             variant="filled"
             autoComplete="off"
+            helperText="The default branch for this environment."
             required
           />
-          <InputDescription>
-            The default branch for this environment.
-          </InputDescription>
         </Box>
         {error && (
           <Alert color="error" sx={{ mb: 4 }}>
@@ -109,7 +108,7 @@ const EnvironmentFormModal: React.FC<Props> = ({ isOpen, app, onClose }) => {
             <Typography>{error}</Typography>
           </Alert>
         )}
-        <Box sx={{ textAlign: "right" }}>
+        <CardFooter>
           <Button
             type="button"
             variant="text"
@@ -127,8 +126,8 @@ const EnvironmentFormModal: React.FC<Props> = ({ isOpen, app, onClose }) => {
           >
             Create
           </Button>
-        </Box>
-      </Box>
+        </CardFooter>
+      </Card>
     </Modal>
   );
 };

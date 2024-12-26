@@ -1,9 +1,9 @@
 import React, { createContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Spinner from "~/components/Spinner";
 import InfoBox from "~/components/InfoBox";
-import Link from "~/components/Link";
 import Error404 from "~/components/Errors/Error404";
 import { useFetchFeatureFlags } from "~/pages/apps/[id]/environments/[env-id]/feature-flags/actions";
 import { useFetchApp } from "./actions";
@@ -72,7 +72,7 @@ export default function AppProvider({ children }: Props) {
         <Typography sx={{ fontSize: "inherit" }}>
           We couldn't find this app <br />
           Click to go back to{" "}
-          <Link to="/" secondary>
+          <Link href="/" sx={{ fontSize: "inherit" }}>
             My Apps
           </Link>
         </Typography>
