@@ -13,7 +13,7 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import Modal from "~/components/Modal";
 import Spinner from "~/components/Spinner";
-import InfoBox from "~/components/InfoBoxV2";
+import InfoBox from "~/components/InfoBox";
 import { useFetchManifest } from "../actions";
 import TabAPI from "./TabAPI";
 import TabCDNFiles from "./TabCDNFiles";

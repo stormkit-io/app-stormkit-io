@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import cn from "classnames";
 import Box from "@mui/material/Box";
 import Link from "~/components/Link";
-import InfoBox from "~/components/InfoBoxV2";
+import InfoBox from "~/components/InfoBox";
 
 interface Props {
   manifest: Manifest;

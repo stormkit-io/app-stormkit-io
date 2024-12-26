@@ -2,7 +2,7 @@ import type { FormValues } from "../actions";
 import React, { useState } from "react";
 import Modal from "~/components/Modal";
 import Form from "~/components/FormV2";
-import InfoBox from "~/components/InfoBoxV2";
+import InfoBox from "~/components/InfoBox";
 import Button from "~/components/ButtonV2";
 import Container from "~/components/Container";
 import { upsertFeatureFlag, deleteFeatureFlag } from "../actions";

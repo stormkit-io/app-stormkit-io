@@ -1,5 +1,5 @@
-import React, { useEffect} from "react";
-import InfoBox from "~/components/InfoBoxV2";
+import { useEffect } from "react";
+import InfoBox from "~/components/InfoBox";
 import Spinner from "~/components/Spinner";
 import { useClone } from "./actions";
 import qs from "query-string";
@@ -12,9 +12,9 @@ export default function Clone() {
 
   useEffect(() => {
     if (!loading && !error) {
-      navigate("/")
+      navigate("/");
     }
-  }, [loading, error])
+  }, [loading, error]);
 
   return (
     <>

@@ -8,7 +8,6 @@ import Input from "./Input";
 import WithLabel from "./WithLabel";
 import Select from "./Select";
 import KeyValue from "./KeyValue";
-import PasswordField from "./PasswordField";
 
 type FormRef = React.RefObject<HTMLFormElement>;
 type FormValue = boolean | string;
@@ -107,6 +106,7 @@ function Form<T>({
 }: Props<T>): React.ReactElement {
   const ref = useRef<HTMLFormElement>(null);
   const handleFormSubmit = useFormSubmit<T>({
+    // @ts-ignore
     ref,
     handleSubmit,
     ignoreDisabled,
@@ -129,6 +129,5 @@ Form.Option = MenuItem;
 Form.Checkbox = Checkbox;
 Form.Switch = Switch;
 Form.Radio = Radio;
-Form.Password = PasswordField
 
 export default Form;

@@ -17,10 +17,10 @@ const icons = {
 
 const colors = {
   [DEFAULT]: {
-    text: "blue-30",
-    bg: "blue-80",
-    border: "transparent",
-    icon: "blue-80",
+    text: "gray-80",
+    bg: "black",
+    border: "blue-30",
+    icon: "blue-30",
   },
   [SUCCESS]: {
     text: "white",
@@ -29,15 +29,15 @@ const colors = {
     icon: "",
   },
   [WARNING]: {
-    text: "",
-    bg: "yellow-80",
-    border: "yellow-60",
-    icon: "yellow-30",
+    text: "black font-light",
+    bg: "yellow-10",
+    border: "",
+    icon: "yellow-60",
   },
   [ERROR]: {
     text: "white",
     bg: "red-50",
-    border: "red-50",
+    border: "",
     icon: "",
   },
 };
@@ -56,6 +56,7 @@ interface Props {
   scrollIntoView?: boolean;
   toaster?: boolean;
   dismissable?: boolean;
+  baseline?: boolean;
   onDismissed?: () => void;
 }
 
@@ -67,10 +68,11 @@ const InfoBox: React.FC<Props> & {
   children,
   className,
   scrollIntoView,
-  showIcon,
+  showIcon = true,
   type = DEFAULT,
   toaster,
   dismissable,
+  baseline,
   onDismissed,
 }): React.ReactElement => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -83,17 +85,14 @@ const InfoBox: React.FC<Props> & {
   }, [ref, scrollIntoView]);
 
   const classes: Array<string> = [
-    "rounded",
     "px-4",
     "py-2",
     "flex",
-    "items-center",
+    baseline ? "items-baseline" : "items-center",
     "text-sm",
     `bg-${colors[type].bg}`,
     `text-${colors[type].text}`,
-    "border",
-    "border-solid",
-    `border-${colors[type].border}`,
+    colors[type].border && `border border-solid border-${colors[type].border}`,
   ];
 
   if (isOpen === false) {
@@ -106,17 +105,19 @@ const InfoBox: React.FC<Props> & {
       className={cn(classes, className, {
         shadow: toaster,
         "infobox-toaster": toaster,
-        "w-full": !toaster,
       })}
     >
       {showIcon && (
         <span
           className={cn(
-            "inline-flex flex-auto flex-grow-0 min-w-10 max-w-10 h-10 items-center justify-center rounded-full mr-4",
-            `bg-${colors[type].icon}`
+            "inline-flex flex-auto flex-grow-0 min-w-6 max-w-6 h-6 items-center justify-center mr-4"
           )}
         >
-          <span className={cn(icons[type], "text-2xl")} />
+          <span
+            className={cn(icons[type], "text-lg", {
+              [`text-${colors[type].icon}`]: Boolean(colors[type].icon),
+            })}
+          />
         </span>
       )}
       <div className="flex-auto">{children}</div>
@@ -139,10 +140,5 @@ const InfoBox: React.FC<Props> & {
 InfoBox.ERROR = ERROR;
 InfoBox.SUCCESS = SUCCESS;
 InfoBox.WARNING = WARNING;
-
-InfoBox.defaultProps = {
-  type: DEFAULT,
-  showIcon: true,
-} as Partial<Props>;
 
 export default InfoBox;

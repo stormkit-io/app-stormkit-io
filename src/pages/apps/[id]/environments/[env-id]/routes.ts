@@ -9,12 +9,6 @@ const routes: Array<RouteProps> = [
     ),
   },
   {
-    path: "/logs",
-    element: Async(
-      () => import("~/pages/apps/[id]/environments/[env-id]/logs")
-    ),
-  },
-  {
     path: "/feature-flags",
     element: Async(
       () => import("~/pages/apps/[id]/environments/[env-id]/feature-flags")

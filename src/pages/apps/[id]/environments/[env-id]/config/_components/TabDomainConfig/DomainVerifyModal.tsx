@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { parse as parseUrl } from "tldts";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -19,12 +19,12 @@ interface Props {
   onClose: () => void;
 }
 
-const DomainVerificationStatus: React.FC<Props> = ({
+export default function DomainVerifyModal({
   app,
   environment,
   domain,
   onClose,
-}) => {
+}: Props) {
   const [refreshToken, setRefreshToken] = useState(0);
   const { error, loading, info } = useDomainLookup({
     appId: app.id,
@@ -105,6 +105,4 @@ const DomainVerificationStatus: React.FC<Props> = ({
       </Card>
     </Modal>
   );
-};
-
-export default DomainVerificationStatus;
+}
