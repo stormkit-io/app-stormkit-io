@@ -1,20 +1,18 @@
 import type { RenderResult } from "@testing-library/react";
-import { render } from "@testing-library/react";
-import { RouterProvider, createMemoryRouter } from "react-router";
+import { describe, expect, it } from "vitest";
 import EmptyList from "./EmptyList";
+import { renderWithRouter } from "~/testing/helpers";
 
 describe("~/pages/apps/_components/EmptyList", () => {
   let wrapper: RenderResult;
 
   const createWrapper = () => {
-    const memoryRouter = createMemoryRouter([
-      { path: "*", element: <EmptyList actionLink="/apps/new" /> },
-    ]);
-
-    wrapper = render(<RouterProvider router={memoryRouter} />);
+    wrapper = renderWithRouter({
+      el: () => <EmptyList actionLink="/apps/new" />,
+    });
   };
 
-  test("renders correctly", () => {
+  it("renders correctly", () => {
     createWrapper();
     expect(wrapper.getByText(/It's quite empty in here./)).toBeTruthy();
     expect(
