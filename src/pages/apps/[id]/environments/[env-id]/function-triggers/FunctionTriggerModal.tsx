@@ -121,7 +121,7 @@ export default function TriggerFunctionModal({
             placeholder="Select a domain"
             appId={app.id}
             envId={environment.id!}
-            selected={parsed.host ? [parsed.host] : []}
+            selected={host ? [host] : []}
             onDomainSelect={value => {
               if (Array.isArray(value) && typeof value[0] !== "string") {
                 setSelectedHost(value[0]?.domainName);
