@@ -24,7 +24,6 @@ const toRequestObject = (environment: Environment) => {
         distFolder: environment.build.distFolder,
         buildCmd: environment.build.buildCmd || "",
         serverCmd: environment.build.serverCmd || "",
-        serverFolder: environment.build.serverFolder || "",
         vars: environment.build.vars,
       },
     })
@@ -58,21 +57,6 @@ export const mockFetchEnvironments = ({
   response,
 }: FetchEnvironmentsProps) =>
   nock(endpoint).get(`/app/${app.id}/envs`).reply(status, response);
-
-interface FetchRepoTypeProps {
-  name: string;
-  appId: string;
-  status?: number;
-  response?: object;
-}
-
-export const mockFetchRepoMeta = ({
-  name,
-  appId,
-  status,
-  response,
-}: FetchRepoTypeProps) =>
-  nock(endpoint).get(`/app/${appId}/envs/${name}/meta`).reply(status, response);
 
 interface InsertEnvironmentProps {
   environment: Environment;

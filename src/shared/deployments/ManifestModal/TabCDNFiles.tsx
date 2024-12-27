@@ -147,9 +147,8 @@ const recursiveRender = (deployment: DeploymentV2, treeNode: TreeNode) => {
 export default function TabCDNFiles({ manifest, deployment }: Props) {
   const ssrEnabled = Boolean(manifest?.functionHandler);
   const indexHTMLWarning =
-    (!ssrEnabled &&
-      !manifest?.cdnFiles?.find(file => file.fileName === "/index.html")) ||
-    true;
+    !ssrEnabled &&
+    !manifest?.cdnFiles?.find(file => file.fileName === "/index.html");
 
   const tree = useTree({ manifest });
 

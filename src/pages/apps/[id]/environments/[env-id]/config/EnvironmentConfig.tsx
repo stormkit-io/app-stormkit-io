@@ -7,10 +7,12 @@ import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
+import { isSelfHosted } from "~/utils/helpers/instance";
 import TabDomainConfig from "./_components/TabDomainConfig/TabDomainConfig";
 import TabConfigEnvVars from "./_components/TabConfigEnvVars";
 import TabConfigGeneral from "./_components/TabConfigGeneral";
 import TabConfigBuild from "./_components/TabConfigBuild";
+import TabConfigServer from "./_components/TabConfigServer";
 import TabConfigHeaders from "./_components/TabConfigHeaders";
 import TabConfigRedirects from "./_components/TabConfigRedirects";
 import TabConfigServerless from "./_components/TabConfigServerless";
@@ -19,9 +21,12 @@ import TabStatusChecks from "./_components/TabStatusChecks";
 import TabAPIKey from "./_components/TabAPIKey";
 import TabMailer from "./_components/TabMailer";
 
+const selfHosted = isSelfHosted();
+
 interface NavItem {
   path: string;
   text: string;
+  visible?: boolean;
 }
 
 interface NavItemParent {
@@ -35,14 +40,15 @@ const listItems: NavItemParent[] = [
     children: [
       { path: "#general", text: "General" },
       { path: "#build", text: "Build" },
+      { path: "#server", text: "Server", visible: selfHosted },
       { path: "#env-vars", text: "Environment variables" },
       { path: "#status-checks", text: "Status checks" },
-    ],
+    ].filter(i => i.visible !== false),
   },
   {
     title: "Runtime Settings",
     children: [
-      { path: "#serverless", text: "Serverless" },
+      { path: "#serverless", text: "Serverless functions" },
       { path: "#headers", text: "Headers" },
       { path: "#redirects", text: "Redirects" },
     ],
@@ -102,6 +108,7 @@ export default function EnvironmentConfig() {
       case "":
       case "#general":
       case "#build":
+      case "#server":
       case "#env-vars":
       case "#status-checks":
         return ({ app, environment, setRefreshToken }: TabProps) => (
@@ -116,6 +123,13 @@ export default function EnvironmentConfig() {
               environment={environment}
               setRefreshToken={setRefreshToken}
             />
+            {selfHosted && (
+              <TabConfigServer
+                app={app}
+                environment={environment}
+                setRefreshToken={setRefreshToken}
+              />
+            )}
             <TabConfigEnvVars
               app={app}
               environment={environment}

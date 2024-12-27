@@ -57,7 +57,6 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
 
   const build: BuildConfig = {
     buildCmd: values["build.buildCmd"]?.trim() || "",
-    serverFolder: values["build.serverFolder"]?.trim() || "",
     serverCmd: values["build.serverCmd"]?.trim() || "",
     distFolder: (values["build.distFolder"] || "").trim(),
     headersFile: values["build.headersFile"],
@@ -126,8 +125,7 @@ export const buildFormValues = (
     "build.apiFolder": env.build.apiFolder,
     "build.buildCmd": env.build.buildCmd,
     "build.serverCmd": env.build.serverCmd,
-    "build.serverFolder": env.build.serverFolder,
-    "build.distFolder": env.build.distFolder,
+    "build.distFolder": env.build.distFolder || env.build.serverFolder,
     "build.redirects": JSON.stringify(env.build.redirects),
     "build.vars": Object.keys(env.build?.vars || {})
       .filter(key => env.build.vars[key])
@@ -135,71 +133,6 @@ export const buildFormValues = (
       .join("\n"),
     ...values,
   };
-};
-
-interface FetchRepoMetaProps {
-  app: App;
-  env?: Environment;
-}
-
-interface FetchRepoMetaReturnValue {
-  loading: boolean;
-  meta?: Meta;
-  error?: string;
-}
-
-interface Meta {
-  packageJson: { scripts: Record<string, string> };
-  framework: "angular" | "nuxt" | "next" | "angular";
-  frameworkVersion: string;
-}
-
-export const useFetchRepoMeta = ({
-  env,
-  app,
-}: FetchRepoMetaProps): FetchRepoMetaReturnValue => {
-  const [meta, setMeta] = useState<Meta>();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>();
-
-  useEffect(() => {
-    if (!env) {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-
-    api
-      .fetch<Meta>(`/app/${app.id}/envs/${env.name}/meta`)
-      .then(meta => {
-        setMeta(meta);
-      })
-      .catch(async res => {
-        try {
-          const json = await res.json();
-
-          if (res.status === 403) {
-            setError("403");
-          } else if (json.code === "branch-not-found") {
-            setError(
-              "We can't seem to access this branch. Make sure it's spelled correctly."
-            );
-          } else if (res.status === 503) {
-            setError(
-              "We cannot fetch repository information. Please check your internet connection."
-            );
-          }
-        } catch {
-          setError("Something went wrong while fetching repository meta.");
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [app.id, env?.id, env?.build?.vars?.["SK_CWD"]]);
-
-  return { meta, loading, error };
 };
 
 export type AutoDeployValues = "disabled" | "all" | "custom" | "custom_commit";
@@ -222,7 +155,6 @@ export interface FormValues {
   "build.previewLinks"?: "on" | "off";
   "build.buildCmd"?: string;
   "build.serverCmd"?: string;
-  "build.serverFolder"?: string;
   "build.distFolder"?: string;
   "build.headersFile"?: string;
   "build.redirects"?: string;

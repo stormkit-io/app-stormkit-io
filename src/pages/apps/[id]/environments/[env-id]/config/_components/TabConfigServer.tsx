@@ -12,7 +12,7 @@ interface Props {
   setRefreshToken: (v: number) => void;
 }
 
-export default function TabConfigGeneral({
+export default function TabConfigServer({
   environment: env,
   app,
   setRefreshToken,
@@ -29,7 +29,7 @@ export default function TabConfigGeneral({
 
   return (
     <Card
-      id="serverless"
+      id="server"
       component="form"
       sx={{ mb: 2 }}
       error={error}
@@ -37,22 +37,25 @@ export default function TabConfigGeneral({
       onSubmit={submitHandler}
     >
       <CardHeader
-        title="Serverless functions"
-        subtitle="Configure your application's serverless settings."
+        title="Server settings"
+        subtitle="Configure your long-running processes."
       />
       <Box sx={{ mb: 4 }}>
         <TextField
-          label="API folder"
+          label="Start command"
           variant="filled"
           autoComplete="off"
-          defaultValue={env?.build.apiFolder || "/api"}
-          name="build.apiFolder"
+          defaultValue={env?.build.serverCmd || ""}
+          name="build.serverCmd"
           fullWidth
           InputLabelProps={{
             shrink: true,
           }}
-          placeholder="/api"
-          helperText={`The path to the \`api\` folder where your serverless functions reside. The request path for the API functions will match the same name.`}
+          placeholder="npm run start"
+          helperText={
+            "The command to run your server application. Leave empty if you don't have any."
+          }
+          sx={{ mb: 4 }}
         />
       </Box>
 
