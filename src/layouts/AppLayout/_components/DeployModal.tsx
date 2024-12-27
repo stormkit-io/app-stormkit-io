@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { deploy } from "~/pages/apps/actions";
-import { useFetchRepoMeta } from "~/pages/apps/[id]/environments/[env-id]/config/actions";
-import { isFrameworkRecognized } from "~/pages/apps/[id]/environments/[env-id]/config/helpers";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Button from "@mui/lab/LoadingButton";
@@ -16,7 +14,6 @@ import EnvironmentSelector from "~/components/EnvironmentSelector";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import Spinner from "~/components/Spinner";
 
 interface Props {
   app: App;
@@ -35,7 +32,6 @@ export default function DeployModal({
   const [selectedEnv, setSelectedEnv] = useState<Environment | undefined>(
     environment
   );
-  const fetchResult = useFetchRepoMeta({ app, env: selectedEnv });
   const [cmd, setCmd] = useState(environment?.build?.buildCmd || "");
   const [dist, setDist] = useState(environment?.build?.distFolder || "");
   const [branch, setBranch] = useState(environment?.branch || "");
@@ -44,7 +40,6 @@ export default function DeployModal({
     environment?.autoPublish || false
   );
   const [loading, setLoading] = useState<boolean>(false);
-  const { meta, loading: metaLoading } = fetchResult;
 
   const clearForm = () => {
     setCmd("");
@@ -152,26 +147,16 @@ export default function DeployModal({
           />
         </Box>
         <Box sx={{ mb: 4 }}>
-          {!metaLoading && isFrameworkRecognized(meta?.framework) ? (
-            <Box sx={{ cursor: "not-allowed" }}>
-              <span className="fa fa-info-circle mr-2 ml-1" />
-              Output folder read from framework configuration file.
-            </Box>
-          ) : (
-            <TextField
-              value={dist}
-              variant="filled"
-              label="Output folder"
-              fullWidth
-              name="build.distFolder"
-              onChange={e => setDist(e.target.value)}
-              placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
-              helperText="The folder where the build artifacts are located"
-              InputProps={{
-                endAdornment: metaLoading && <Spinner width={4} height={4} />,
-              }}
-            />
-          )}
+          <TextField
+            value={dist}
+            variant="filled"
+            label="Output folder"
+            fullWidth
+            name="build.distFolder"
+            onChange={e => setDist(e.target.value)}
+            placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
+            helperText="The folder where the build artifacts are located"
+          />
         </Box>
         <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 4 }}>
           <FormControlLabel

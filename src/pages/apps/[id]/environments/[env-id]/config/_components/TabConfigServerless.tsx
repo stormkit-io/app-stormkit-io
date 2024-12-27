@@ -67,9 +67,8 @@ export default function TabConfigGeneral({
           <Alert color="info" sx={{ mb: 4 }}>
             <AlertTitle>Experimental Feature</AlertTitle>
             <Typography>
-              Server Command is only available to local deployments. If you are
-              using an external service such as GitHub Actions for your
-              deployments, you may want to use Serverless Functions instead.
+              Server Command is only available to local deployments on
+              Self-Hosted environments.
             </Typography>
           </Alert>
 
@@ -88,20 +87,6 @@ export default function TabConfigGeneral({
               "The command to run your Node.js application. Leave empty if you don't have any."
             }
             sx={{ mb: 4 }}
-          />
-
-          <TextField
-            label="Server folder"
-            variant="filled"
-            autoComplete="off"
-            defaultValue={env?.build.serverFolder || ""}
-            name="build.serverFolder"
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-            placeholder=""
-            helperText={"The for where the server side application is located."}
           />
         </Box>
       )}

@@ -6,13 +6,7 @@ import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import Spinner from "~/components/Spinner";
-import { isFrameworkRecognized } from "../helpers";
-import {
-  updateEnvironment,
-  buildFormValues,
-  useFetchRepoMeta,
-} from "../actions";
+import { updateEnvironment, buildFormValues } from "../actions";
 
 interface Props {
   app: App;
@@ -29,7 +23,6 @@ export default function TabConfigGeneral({
   const [success, setSuccess] = useState<string>();
   const [isLoading, setLoading] = useState(false);
   const [root, setRoot] = useState(env?.build?.vars?.["SK_CWD"] || "./");
-  const { meta, loading: metaLoading } = useFetchRepoMeta({ app, env });
 
   if (!env) {
     return <></>;
@@ -95,22 +88,27 @@ export default function TabConfigGeneral({
           label="Output folder"
           variant="filled"
           autoComplete="off"
-          defaultValue={env?.build.distFolder || ""}
-          fullWidth
-          disabled={metaLoading || isFrameworkRecognized(meta?.framework)}
-          name="build.distFolder"
-          InputProps={{
-            endAdornment: metaLoading && <Spinner width={4} height={4} />,
-          }}
-          placeholder={
-            !metaLoading && !isFrameworkRecognized(meta?.framework)
-              ? "Output folder is not needed. It is taken from the framework configuration file."
-              : "Defaults to `build`, `dist`, `output` or `.stormkit`"
+          defaultValue={
+            env?.build.distFolder || env?.build.serverFolder || "./"
           }
+          fullWidth
+          name="build.distFolder"
+          placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
           helperText={
-            !metaLoading &&
-            !isFrameworkRecognized(meta?.framework) &&
-            "The content of this folder will be served by Stormkit."
+            <>
+              The folder containing your built assets. For many projects, this
+              is either{" "}
+              <Box component="code" sx={{ fontSize: 11, px: 0.5, py: 0.25 }}>
+                dist
+              </Box>{" "}
+              <Box component="code" sx={{ fontSize: 11, px: 0.5, py: 0.25 }}>
+                build
+              </Box>{" "}
+              <Box component="code" sx={{ fontSize: 11, px: 0.5, py: 0.25 }}>
+                output
+              </Box>
+              .
+            </>
           }
         />
       </Box>

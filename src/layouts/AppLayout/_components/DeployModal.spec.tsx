@@ -4,7 +4,6 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { waitFor, fireEvent } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnv from "~/testing/data/mock_environment";
-import { mockFetchRepoMeta } from "~/testing/nocks/nock_environment";
 import { mockDeployNow } from "~/testing/nocks/nock_deployments";
 import userEvent from "@testing-library/user-event";
 import DeployModal from "./DeployModal";
@@ -59,16 +58,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     currentEnv.build.buildCmd = "";
     currentEnv.build.distFolder = "";
 
-    const fetchMetaScope = mockFetchRepoMeta({
-      name: currentEnv.name,
-      appId: currentApp.id,
-    });
-
     createWrapper({ app: currentApp, env: currentEnv });
-
-    await waitFor(() => {
-      expect(fetchMetaScope.isDone()).toBe(true);
-    });
   });
 
   afterEach(() => {
