@@ -57,13 +57,17 @@ const renderLog = (log: Log, i: number) => {
       key={`${log.id}-${i}`}
       sx={{
         mb: 1,
-        ":last-child": { mb: 0 },
-        ":hover": { backgroundColor: "rgba(0,0,0,0.1)" },
+        px: 2,
+        py: 0.5,
+        mx: 0,
+        ":hover": { backgroundColor: "container.transparent" },
+        ":first-of-type": { mt: 1.5 },
+        ":last-child": { mb: 1.5 },
         display: "flex",
       }}
     >
       <Box sx={{ color: "text.secondary" }}>{i}.</Box>
-      <Box sx={{ flex: 1, pl: 2 }}>{data}</Box>
+      <Box sx={{ flex: 1, px: 2, pr: 8 }}>{data}</Box>
       <Box sx={{ color: "text.secondary" }}>
         {isoDateTime.split(".")[0].replace("T", " ")}
       </Box>
@@ -144,13 +148,14 @@ const RuntimeLogs: React.FC = () => {
             component="code"
             sx={{
               mt: 2,
-              p: 2,
+              p: 0,
               display: "block",
               border: `1px solid ${grey[900]}`,
               whiteSpace: whitespace ? "pre-wrap" : undefined,
               wordBreak: whitespace ? "break-all" : undefined,
               fontFamily: "monospace",
               fontSize: 12,
+              color: "inherit",
               background: "transparent",
             }}
           >
