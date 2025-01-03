@@ -49,6 +49,7 @@ function RedirectPaymentSuccess() {
 
 const centerLayout = () => import("~/layouts/CenterLayout");
 const teamLayout = () => import("~/layouts/TeamLayout");
+const adminLayout = () => import("~/layouts/AdminLayout");
 
 const routes: Array<RouteProps> = [
   {
@@ -114,6 +115,14 @@ const routes: Array<RouteProps> = [
   {
     path: "/invitation/accept",
     element: Async(() => import("~/pages/team/InvitationAccept"), centerLayout),
+  },
+  {
+    path: "/admin",
+    element: Async(() => import("~/pages/admin"), adminLayout),
+  },
+  {
+    path: "/admin/jobs",
+    element: Async(() => import("~/pages/admin/Jobs"), adminLayout),
   },
   {
     path: "/:team",
