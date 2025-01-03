@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
+import RefreshOutlined from "@mui/icons-material/RefreshOutlined";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import Card from "~/components/Card";
@@ -11,7 +12,6 @@ import CardHeader from "~/components/CardHeader";
 import Span from "~/components/Span";
 import { useFetchTriggerLogs } from "../actions";
 import CardRow from "~/components/CardRow";
-import RefreshOutlined from "@mui/icons-material/RefreshOutlined";
 import EmptyList from "~/components/EmptyPage";
 
 function formatDate(time: number) {
