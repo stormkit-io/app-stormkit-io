@@ -1,5 +1,8 @@
 import { useContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
+import RollbackIcon from "@mui/icons-material/RefreshOutlined";
+import ShieldIcon from "@mui/icons-material/Shield";
+import CloudIcon from "@mui/icons-material/Cloud";
 import qs from "query-string";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -86,7 +89,7 @@ export default function Auth() {
               maxWidth: { sm: "28rem" },
             }}
           >
-            <Typography sx={{ lineHeight: 2 }}>
+            <Typography sx={{ lineHeight: 2, fontSize: 14 }}>
               /def/{" "}
               <Typography component="span" color="secondary.dark">
                 Noun.
@@ -97,18 +100,29 @@ export default function Auth() {
               2. A set of tools built to save dev-ops time for your Javascript
               application.
             </Typography>
-            <Box component="ul" sx={{ mt: 4, lineHeight: 2 }}>
-              <Box component="li">
-                <i className="fas fa-undo-alt mr-4" /> Environments with instant
+            <Box component="ul" sx={{ mt: 4 }}>
+              <Typography
+                component="li"
+                sx={{ mb: 2, fontSize: 14 }}
+                color="text.secondary"
+              >
+                <RollbackIcon sx={{ mr: 1 }} /> Environments with instant
                 rollbacks
-              </Box>
-              <Box component="li">
-                <i className="fas fa-shield-alt mr-4" /> Custom domains &amp;
-                automated SSL
-              </Box>
-              <Box component="li">
-                <i className="fas fa-cloud mr-3" /> Serverless functions
-              </Box>
+              </Typography>
+              <Typography
+                component="li"
+                sx={{ mb: 2, fontSize: 14 }}
+                color="text.secondary"
+              >
+                <ShieldIcon sx={{ mr: 1 }} /> Custom domains &amp; automated TLS
+              </Typography>
+              <Typography
+                component="li"
+                sx={{ fontSize: 14 }}
+                color="text.secondary"
+              >
+                <CloudIcon sx={{ mr: 1 }} /> Serverless functions
+              </Typography>
             </Box>
           </Box>
           <Card

@@ -72,8 +72,8 @@ describe("~/pages/auth/Auth.tsx", () => {
 
     it("displays some text", async () => {
       await waitFor(() => {
-        expect(wrapper.getByText(/SSL/)).toBeTruthy();
-        expect(wrapper.getByText(/automated SSL/)).toBeTruthy();
+        expect(wrapper.getByText(/TLS/)).toBeTruthy();
+        expect(wrapper.getByText(/automated TLS/)).toBeTruthy();
         expect(wrapper.getByText(/Serverless functions/)).toBeTruthy();
       });
     });
