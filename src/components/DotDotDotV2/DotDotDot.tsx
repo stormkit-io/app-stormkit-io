@@ -13,6 +13,7 @@ export interface Item {
   icon?: string | React.ReactNode;
   className?: string;
   disabled?: boolean;
+  hidden?: boolean;
   onClick?: (close?: () => void) => boolean | void;
 }
 
@@ -43,6 +44,7 @@ export default function DotDotDot({ label, items }: Props) {
               <Box
                 key={index}
                 sx={{
+                  display: item.hidden ? "none" : undefined,
                   width: "100%",
                   borderBottom: `1px solid rgba(255,255,255,0.1)`,
                   cursor: item.disabled ? "not-allowed" : undefined,
