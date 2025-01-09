@@ -88,6 +88,15 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
           domains: [
             domain,
             { id: "2", domainName: "www.stormkit.io", verified: false },
+            {
+              id: "3",
+              domainName: "api.stormkit.io",
+              verified: true,
+              lastPing: {
+                status: 200,
+                lastPingAt: new Date(2024, 6, 5).getTime() / 1000,
+              },
+            },
           ],
         },
       });
@@ -107,7 +116,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
 
     it("should open the custom certificate modal", async () => {
       fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
-      fireEvent.click(wrapper.getByText("Custom certificate"));
+      fireEvent.click(wrapper.getAllByText("Custom certificate").at(1)!);
 
       await waitFor(() => {
         expect(wrapper.getByText("Configure custom certificate")).toBeTruthy();
@@ -117,11 +126,15 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     it("should list domains", async () => {
       expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
       expect(wrapper.getByText("www.stormkit.io")).toBeTruthy();
+      expect(wrapper.getByText("api.stormkit.io")).toBeTruthy();
       expect(wrapper.getByTestId("app.stormkit.io-status").textContent).toBe(
-        "Status: verified·Custom certificate"
+        "Status: not yet pinged"
       );
       expect(wrapper.getByTestId("www.stormkit.io-status").textContent).toBe(
-        "Status: needs verification"
+        "Status: not yet verified"
+      );
+      expect(wrapper.getByTestId("api.stormkit.io-status").textContent).toBe(
+        "Status: 200"
       );
     });
 

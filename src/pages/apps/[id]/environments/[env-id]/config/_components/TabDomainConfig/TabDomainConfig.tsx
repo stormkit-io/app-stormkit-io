@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import HttpsIcon from "@mui/icons-material/Https";
@@ -13,13 +14,15 @@ import CardRow from "~/components/CardRow";
 import CardFooter from "~/components/CardFooter";
 import EmptyPage from "~/components/EmptyPage";
 import ConfirmModal from "~/components/ConfirmModal";
+import Span from "~/components/Span";
 import IconBg from "~/components/IconBg";
+import Dot from "~/components/Dot";
 import { isSelfHosted } from "~/utils/helpers/instance";
 import DomainModal from "./DomainModal";
 import DomainVerifyModal from "./DomainVerifyModal";
 import CustomCertModal from "./CustomCertModal";
 import { deleteDomain, useFetchDomains } from "./actions";
-import Dot from "~/components/Dot";
+import { formattedDate } from "~/utils/helpers/deployments";
 
 interface Props {
   app: App;
@@ -67,21 +70,14 @@ export default function TabDomainConfig({ app, environment }: Props) {
         {domains.map(domain => (
           <CardRow
             key={domain.id}
-            chipLabel={
-              !domain.verified && (
-                <Button
-                  variant="text"
-                  color="primary"
-                  size="small"
-                  onClick={() => setDomainToVerify(domain)}
-                  sx={{ lineHeight: 1 }}
-                >
-                  verify now
-                </Button>
-              )
-            }
-            chipColor={domain.verified ? "success" : undefined}
             menuItems={[
+              {
+                text: "Verify now",
+                hidden: domain.verified,
+                onClick: () => {
+                  setDomainToVerify(domain);
+                },
+              },
               {
                 text: "Custom certificate",
                 onClick: () => toggleCustomCertModal(domain),
@@ -93,29 +89,67 @@ export default function TabDomainConfig({ app, environment }: Props) {
             ]}
           >
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
-              <Typography sx={{ display: "inline-flex", alignItems: "center" }}>
-                <IconBg>
-                  {domain.verified ? (
-                    <HttpsIcon color="success" sx={{ fontSize: 14 }} />
-                  ) : (
-                    <WarningIcon sx={{ color: yellow[500], fontSize: 14 }} />
+              <Typography
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Box
+                  component="span"
+                  sx={{ display: "inline-flex", alignItems: "center" }}
+                >
+                  <IconBg>
+                    {domain.verified ? (
+                      <HttpsIcon
+                        color={
+                          domain.lastPing?.status?.toString()[0] == "2"
+                            ? "success"
+                            : domain.lastPing?.status
+                            ? "error"
+                            : "warning"
+                        }
+                        sx={{ fontSize: 14 }}
+                      />
+                    ) : (
+                      <WarningIcon sx={{ color: yellow[500], fontSize: 14 }} />
+                    )}
+                  </IconBg>
+                  {domain.domainName}
+                  {domain.customCert && (
+                    <Typography component="span" color="text.secondary">
+                      <Dot sx={{ mx: 1 }} />
+                      Custom certificate
+                    </Typography>
                   )}
-                </IconBg>
-                {domain.domainName}
+                </Box>
+                <Tooltip
+                  title={`${
+                    domain.lastPing
+                      ? `Last ping ${formattedDate(
+                          domain.lastPing.lastPingAt!
+                        ).toLowerCase()}`
+                      : ""
+                  }`}
+                >
+                  <Box
+                    component="span"
+                    data-testid={`${domain.domainName}-status`}
+                  >
+                    <Span sx={{ m: 0 }}>
+                      Status:{" "}
+                      {domain.lastPing?.status
+                        ? domain.lastPing.status
+                        : domain.verified
+                        ? "not yet pinged"
+                        : "not yet verified"}
+                    </Span>
+                  </Box>
+                </Tooltip>
               </Typography>
             </Box>
-            <Typography
-              sx={{ fontSize: 12, color: "text.secondary", ml: 4.2 }}
-              data-testid={`${domain.domainName}-status`}
-            >
-              Status: {!domain.verified ? "needs verification" : "verified"}
-              {domain.customCert && (
-                <>
-                  <Dot sx={{ mx: 1 }} />
-                  Custom certificate
-                </>
-              )}
-            </Typography>
           </CardRow>
         ))}
       </Box>

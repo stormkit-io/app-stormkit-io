@@ -74,6 +74,10 @@ declare interface Domain {
     value: string;
     key: string;
   };
+  lastPing?: {
+    status: number;
+    lastPingAt: number;
+  };
 }
 
 declare interface DomainLookup {
