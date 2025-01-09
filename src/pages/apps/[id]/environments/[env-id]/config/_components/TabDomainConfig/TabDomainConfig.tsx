@@ -131,6 +131,8 @@ export default function TabDomainConfig({ app, environment }: Props) {
                       ? `Last ping ${formattedDate(
                           domain.lastPing.lastPingAt!
                         ).toLowerCase()}`
+                      : domain.verified
+                      ? "Domain health is checked every 5 minutes. Refresh to see the latest status."
                       : ""
                   }`}
                 >
