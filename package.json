@@ -9,7 +9,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite serve",
-    "test:watch": "vitest",
+    "test:watch": "vitest --reporter=basic --disable-console-intercept",
     "test": "vitest run",
     "lint": "eslint .",
     "prettier": "prettier \"**/*.{ts,js,tsx,md}\" --write"
