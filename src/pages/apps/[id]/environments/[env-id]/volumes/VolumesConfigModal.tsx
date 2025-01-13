@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -12,8 +13,8 @@ import Modal from "~/components/Modal";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
+import PasswordField from "~/components/PasswordField";
 import api from "~/utils/api/Api";
-import { useState } from "react";
 
 interface ChildProps {
   config?: VolumeConfig;
@@ -67,6 +68,81 @@ function FileSystemConfig({ config }: ChildProps) {
   );
 }
 
+function AWSConfig({ config }: ChildProps) {
+  return (
+    <>
+      <Box sx={{ mb: 4 }}>
+        <TextField
+          variant="filled"
+          name="region"
+          label="Region"
+          defaultValue={config?.region || "eu-central-1"}
+          fullWidth
+          helperText={
+            <>
+              <Typography component="span" sx={{ mb: 2, display: "block" }}>
+                Specify the bucket region.
+              </Typography>
+            </>
+          }
+        />
+      </Box>
+      <Box sx={{ mb: 4 }}>
+        <TextField
+          variant="filled"
+          name="bucketName"
+          label="Bucket name"
+          defaultValue={config?.bucketName || ""}
+          fullWidth
+          helperText={
+            <>
+              <Typography component="span" sx={{ mb: 2, display: "block" }}>
+                Enter your S3 bucket name. The bucket must already exist in your
+                AWS account.
+              </Typography>
+            </>
+          }
+        />
+      </Box>
+      <Box sx={{ mb: 4 }}>
+        <PasswordField
+          variant="filled"
+          name="accessKey"
+          label="Access key"
+          defaultVisible={!config?.accessKey}
+          defaultValue={config?.accessKey || ""}
+          fullWidth
+          helperText={
+            <>
+              <Typography component="span" sx={{ mb: 2, display: "block" }}>
+                Enter your AWS Access Key ID. We recommend using an IAM user
+                with limited S3 permissions.
+              </Typography>
+            </>
+          }
+        />
+      </Box>
+      <Box sx={{ mb: 4 }}>
+        <PasswordField
+          variant="filled"
+          name="secretKey"
+          label="Secret key"
+          defaultVisible={!config?.secretKey}
+          defaultValue={config?.secretKey || ""}
+          fullWidth
+          helperText={
+            <>
+              <Typography component="span" sx={{ mb: 2, display: "block" }}>
+                Enter your AWS Secret Access key.
+              </Typography>
+            </>
+          }
+        />
+      </Box>
+    </>
+  );
+}
+
 export default function VolumesConfigModal({
   config,
   onClose,
@@ -102,7 +178,9 @@ export default function VolumesConfigModal({
             })
             .catch(res => {
               if (res.status === 401) {
-                setError("You do not have to perform the requested operation.");
+                setError(
+                  "You do not have enough permissions to perform the requested operation."
+                );
               } else {
                 setError(
                   "Something went wrong while updating volumes configuration."
@@ -122,7 +200,7 @@ export default function VolumesConfigModal({
           <Box sx={{ mb: 4 }}>
             <FormControl variant="standard" fullWidth>
               <InputLabel id="mount-type" sx={{ pl: 2, pt: 1.25 }}>
-                Mount
+                Volume type
               </InputLabel>
               <Select
                 labelId="mount-type"
@@ -135,8 +213,15 @@ export default function VolumesConfigModal({
                 }}
               >
                 <Option value="filesys">File System</Option>
+                <Option value="aws:s3">
+                  <Box
+                    component="span"
+                    sx={{ display: "inline-flex", alignItems: "center" }}
+                  >
+                    AWS S3
+                  </Box>
+                </Option>
                 <Option value="other">Other</Option>
-                {/* <Option value="aws:s3">AWS S3</Option> */}
                 {/* <Option value="alibaba:oss">Alibaba Cloud OSS</Option> */}
                 {/* <Option value="hetzner:oss">Hetzner Cloud OSS</Option> */}
               </Select>
@@ -144,6 +229,8 @@ export default function VolumesConfigModal({
           </Box>
           {mountType === "filesys" ? (
             <FileSystemConfig config={config} />
+          ) : mountType === "aws:s3" ? (
+            <AWSConfig config={config} />
           ) : (
             <ToBeImplemented />
           )}

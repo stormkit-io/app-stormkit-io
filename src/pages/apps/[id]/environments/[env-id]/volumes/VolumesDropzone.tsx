@@ -24,7 +24,7 @@ interface Props {
   envId: string;
   appId: string;
   loading?: boolean;
-  setError: (v?: string) => void;
+  setError: (v?: React.ReactNode) => void;
   setLoading: (v: boolean) => void;
   openDialog?: { mode: string };
 }

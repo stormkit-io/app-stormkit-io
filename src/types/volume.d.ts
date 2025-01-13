@@ -9,6 +9,7 @@ declare interface VolumeConfig {
   accessKey?: string;
   secretKey?: string;
   bucketName?: string;
+  region?: string;
   rootPath?: string;
 }
 

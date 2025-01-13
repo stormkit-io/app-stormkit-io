@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import Box from "@mui/material/Box";
 import api from "~/utils/api/Api";
 
 interface UseFetchConfigProps {
@@ -81,7 +82,7 @@ interface UploadFilesProps {
   appId: string;
   envId: string;
   setLoading: (v: boolean) => void;
-  setError: (v: string) => void;
+  setError: (v: React.ReactNode) => void;
   setRefreshToken: (v: number) => void;
 }
 
@@ -107,11 +108,23 @@ export const uploadFiles = ({
     formData.append("envId", envId);
 
     api
-      .upload("/volumes", {
+      .upload<{ failed: Record<string, string>; files: File[] }>("/volumes", {
         body: formData,
       })
-      .then(() => {
-        setRefreshToken(Date.now());
+      .then(({ failed }) => {
+        if (Object.keys(failed || {}).length > 0) {
+          setError(
+            <Box component="ul">
+              {Object.keys(failed).map(fileName => (
+                <Box component="li" key={fileName}>
+                  {fileName}: {failed[fileName]}
+                </Box>
+              ))}
+            </Box>
+          );
+        } else {
+          setRefreshToken(Date.now());
+        }
       })
       .catch(() => {
         setError("Something went wrong while uploading files.");

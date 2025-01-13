@@ -112,7 +112,7 @@ export default function Volumes() {
   const { app } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const { config, loading, error } = useFetchConfig({ refreshToken });
-  const [uploadErr, setUploadErr] = useState<string>();
+  const [uploadErr, setUploadErr] = useState<React.ReactNode>();
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState<string>();
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
@@ -131,6 +131,7 @@ export default function Volumes() {
       successTitle={false}
       onSuccessClose={() => setSuccess(undefined)}
       error={error || uploadErr}
+      errorTitle={uploadErr ? "Upload failed:" : undefined}
       loading={loading || uploading}
       contentPadding={false}
       sx={{ width: "100%" }}
