@@ -35,7 +35,6 @@ export default function TeamSettings({ team, reloadTeams }: Props) {
 
     updateTeam({ name: data.name, teamId: team.id })
       .then(t => {
-        console.log("TEAM", t, team, navigate);
         if (t.slug !== team.slug) {
           navigate(`/${t.id}/settings`, { replace: true });
         }
