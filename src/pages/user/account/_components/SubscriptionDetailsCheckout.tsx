@@ -61,6 +61,7 @@ export default function Checkout({ user }: Props) {
         }}
       >
         <Card
+          contentPadding={false}
           sx={{
             flex: 1,
             height: "100%",
@@ -72,6 +73,7 @@ export default function Checkout({ user }: Props) {
           <CardHeader
             title="Self-Hosted Edition"
             subtitle={`Host Stormkit on your own servers, ensuring complete control and security of your data. Perfect for teams requiring flexibility, scalability, and compliance with internal policies.`}
+            sx={{ px: 0 }}
           />
           <Box>
             <Box sx={{ mb: 4, flex: 1 }}>
@@ -108,7 +110,7 @@ export default function Checkout({ user }: Props) {
                     ) : (
                       <XIcon sx={{ fill: "red", mr: 2, ml: 0 }} />
                     )}{" "}
-                    {feature.text}
+                    <Typography component="span">{feature.text}</Typography>
                   </Box>
                 ))}
               </Box>
@@ -129,8 +131,9 @@ export default function Checkout({ user }: Props) {
             </Button>
           </CardFooter>
         </Card>
-        <Card sx={{ flex: 1, height: "100%" }}>
+        <Card contentPadding={false} sx={{ flex: 1, height: "100%" }}>
           <CardHeader
+            sx={{ px: 0 }}
             title="Cloud Edition"
             subtitle={`Host your applications on Stormkit's powerful infrastructure, ensuring a high quality serverless environment. Perfect for teams requiring speed, and scalability.`}
           />
@@ -163,7 +166,7 @@ export default function Checkout({ user }: Props) {
               {includedFeatures(packageName).map(feature => (
                 <Box sx={{ mb: 1 }} key={feature.text}>
                   <CheckIcon sx={{ fill: "green", mr: 2, ml: 0 }} />{" "}
-                  {feature.text}
+                  <Typography component="span">{feature.text}</Typography>
                 </Box>
               ))}
             </Box>
