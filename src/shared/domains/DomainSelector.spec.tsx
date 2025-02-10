@@ -111,4 +111,36 @@ describe("~/shared/domains/DomainSelector.tsx", () => {
       expect(onDomainSelect).toHaveBeenCalledWith([domains[0]]);
     });
   });
+
+  describe("searching", () => {
+    beforeEach(async () => {
+      await createWrapper({ withDevDomains: true, multiple: true });
+      await openDropdown();
+    });
+
+    it("should search a domain", async () => {
+      const searchInput = wrapper
+        .getByTestId("multiselect-search")
+        .querySelector("input");
+
+      expect(searchInput).toBeTruthy();
+
+      fetchDomainsScope = mockFetchDomains({
+        appId,
+        envId,
+        verified: true,
+        domainName: "my-domain",
+        response: {
+          domains: [],
+        },
+      });
+
+      await userEvent.type(searchInput!, "my-domain");
+
+      await waitFor(() => {
+        expect(fetchDomainsScope.isDone()).toBe(true);
+        expect(wrapper.getByText("No domain found")).toBeTruthy();
+      });
+    });
+  });
 });

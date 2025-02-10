@@ -7,7 +7,9 @@ interface FetchDomainsProps {
   search: string;
   afterId?: string;
   refreshToken?: number;
+  domainName?: string;
   verified?: boolean;
+  onFetch?: (d: Domain[]) => void;
 }
 
 export const useFetchDomains = ({
@@ -17,11 +19,13 @@ export const useFetchDomains = ({
   afterId,
   search,
   refreshToken,
+  onFetch,
 }: FetchDomainsProps) => {
   const [domains, setDomains] = useState<Domain[]>([]);
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState<Pagination>();
+  const [isFirstFetch, setIsFirstFetch] = useState(true);
 
   useEffect(() => {
     const qs = new URLSearchParams(
@@ -30,9 +34,9 @@ export const useFetchDomains = ({
           verified,
           envId,
           appId,
-          afterId,
           pageSize: 100,
-          search: search || undefined,
+          afterId: search ? undefined : afterId,
+          domainName: search || undefined,
         })
       )
     );
@@ -42,7 +46,15 @@ export const useFetchDomains = ({
         `/domains?${qs.toString()}`
       )
       .then(({ domains: newDomains, pagination }) => {
-        setDomains(afterId ? [...domains, ...newDomains] : newDomains);
+        const allDomains = afterId ? [...domains, ...newDomains] : newDomains;
+
+        // Trigger onFetch only for domain fetches, not for searching
+        if (!search && (afterId || isFirstFetch)) {
+          onFetch?.(allDomains);
+          setIsFirstFetch(false);
+        }
+
+        setDomains(allDomains);
         setPagination(pagination);
       })
       .catch(() => {

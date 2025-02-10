@@ -18,10 +18,10 @@ export default function Analytics() {
   const [timeSpan, setTimeSpan] = useState<TimeSpan>("24h");
   const [params, setParams] = useSearchParams();
   const [domain, setDomain] = useState<Domain>();
-  const [noDomainYet, setNoDomainYet] = useState(false);
+  const [hasDomains, setHasDomains] = useState<boolean>();
   const { environment } = useContext(EnvironmentContext);
 
-  if (noDomainYet) {
+  if (hasDomains === false) {
     return (
       <Card sx={{ width: "100%" }}>
         <CardHeader title="Analytics" />
@@ -47,6 +47,8 @@ export default function Analytics() {
     );
   }
 
+  const selectedDomain = domain?.domainName || params.get("domain");
+
   return (
     <Box>
       <Card sx={{ mb: 2 }}>
@@ -55,7 +57,7 @@ export default function Analytics() {
           subtitle="Monitor user analytics for the specified domain within this environment configuration."
           actions={
             <DomainSelector
-              selected={domain ? [domain.domainName] : []}
+              selected={selectedDomain ? [selectedDomain] : []}
               appId={environment.appId}
               envId={environment.id!}
               fullWidth={false}
@@ -65,8 +67,10 @@ export default function Analytics() {
                     domains.find(d => d.domainName === params.get("domain")) ||
                       domains[0]
                   );
-                } else {
-                  setNoDomainYet(true);
+
+                  setHasDomains(true);
+                } else if (typeof hasDomains === "undefined") {
+                  setHasDomains(false);
                 }
               }}
               onDomainSelect={d => {
