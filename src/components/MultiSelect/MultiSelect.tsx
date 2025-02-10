@@ -24,6 +24,7 @@ interface Props extends Omit<SelectProps, "onSelect"> {
   selected?: string[];
   label?: string;
   helperText?: React.ReactNode;
+  emptyText?: string;
   placeholder?: string;
   onSearch?: (v: string) => void;
   onSelect: (v: string[]) => void;
@@ -37,6 +38,7 @@ export default function MultiSelect({
   size,
   label,
   placeholder,
+  emptyText = "No item found",
   multiple = true,
   fullWidth = true,
   disabled = false,
@@ -45,9 +47,9 @@ export default function MultiSelect({
   onSelect,
 }: Props) {
   const [selectedItems, setSelectedItems] = useState<string[]>(selected || []);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string>();
   const filteredItems = useMemo(() => {
-    if (search.length < 3) {
+    if (!search?.length) {
       return items;
     }
 
@@ -105,30 +107,39 @@ export default function MultiSelect({
             onSelect(values.filter(i => i));
           }
         }}
-        renderValue={selected => {
+        renderValue={renderValue => {
+          // Find the `.text` property from items
+          // If not exists, check if selected is provided and use the value
+          // Otherwise use placeholder
           return (
             items
-              .filter(s => selected.includes(s.value))
+              .filter(s => renderValue.includes(s.value))
               .map(i => i.text)
-              .join(", ") || placeholder
+              .join(", ") ||
+            selected?.join(", ") ||
+            placeholder
           );
         }}
       >
-        <ListSubheader sx={{ bgcolor: "transparent", p: 0 }}>
+        <ListSubheader sx={{ bgcolor: "transparent", p: 0, minWidth: 300 }}>
           {onSearch && (
             <TextField
               variant="filled"
               placeholder="Search"
               autoFocus
-              value={search}
+              value={search || ""}
               fullWidth
-              sx={{ mb: 2 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
+              sx={{ mb: 1 }}
+              autoComplete="off"
+              data-testid="multiselect-search"
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                },
               }}
               onKeyDown={e => {
                 if (e.key !== "Escape") {
@@ -152,14 +163,20 @@ export default function MultiSelect({
           // Fixes an issue with MUI Warning
           <MenuItem value={""} sx={{ display: "none" }} />
         )}
-        {filteredItems.map(item => (
-          <MenuItem key={item.value} value={item.value}>
-            {multiple && (
-              <Checkbox checked={selectedItems.includes(item.value)} />
-            )}
-            <ListItemText primary={item.text} />
+        {filteredItems.length ? (
+          filteredItems.map(item => (
+            <MenuItem key={item.value} value={item.value}>
+              {multiple && (
+                <Checkbox checked={selectedItems.includes(item.value)} />
+              )}
+              <ListItemText primary={item.text} />
+            </MenuItem>
+          ))
+        ) : (
+          <MenuItem>
+            <ListItemText primary={emptyText} />
           </MenuItem>
-        ))}
+        )}
       </Select>
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
