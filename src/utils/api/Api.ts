@@ -92,7 +92,7 @@ class Api {
         window.location.href = "/auth";
         return;
       }
-    } catch (e) {
+    } catch {
       throw response;
     }
   }
@@ -126,25 +126,22 @@ class Api {
     }
 
     const request = new Request(url, { ...opts, headers });
-    const resp = await fetch(request);
-
-    if (resp.status === 403) {
-      try {
-        this.handle403(resp);
-      } catch (e) {
-        throw resp;
-      }
-    }
-
-    if (resp.status.toString()[0] !== "2") {
-      throw resp;
-    }
-
-    if (resp.headers.get("content-type") != "application/json") {
-      return resp as T;
-    }
 
     try {
+      const resp = await fetch(request);
+
+      if (resp.status === 403) {
+        this.handle403(resp);
+      }
+
+      if (resp.status.toString()[0] !== "2") {
+        throw resp;
+      }
+
+      if (resp.headers.get("content-type") != "application/json") {
+        return resp as T;
+      }
+
       const json = await resp.json();
 
       if (json && json.jwt) {
@@ -153,7 +150,7 @@ class Api {
 
       return json as T;
     } catch (e) {
-      return {} as T;
+      throw e;
     }
   }
 
