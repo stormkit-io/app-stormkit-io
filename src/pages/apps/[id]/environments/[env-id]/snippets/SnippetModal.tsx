@@ -87,10 +87,17 @@ export default function SnippetModal({
         setRefreshToken(Date.now());
         closeModal();
       })
-      .catch(e => {
+      .catch(async e => {
         if (typeof e === "string") {
           setError(e);
         } else {
+          const data = await e.json();
+
+          if (typeof data.error === "string") {
+            setError(data.error);
+            return;
+          }
+
           setError("Something went wrong while saving snippet.");
         }
       })
