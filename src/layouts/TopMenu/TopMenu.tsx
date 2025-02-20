@@ -1,7 +1,5 @@
-import React, { useState, useContext, useMemo } from "react";
-import { AuthContext } from "~/pages/auth/Auth.context";
+import React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Speed from "@mui/icons-material/Speed";
 import Logo from "~/components/Logo";
@@ -16,15 +14,8 @@ interface Props {
   app?: App;
 }
 
-const isLocal = process.env.NODE_ENV === "development";
-
 export default function TopMenu({ children, submenu, app, team }: Props) {
   const slug = `/${team?.slug || ""}`;
-  const { user } = useContext(AuthContext);
-  const [isCanary, setIsCanary] = useState(!!localStorage.getItem("sk_canary"));
-  const shouldShowEnvButton = useMemo(() => {
-    return user?.isAdmin || isLocal;
-  }, [user]);
 
   return (
     <Box
@@ -54,23 +45,6 @@ export default function TopMenu({ children, submenu, app, team }: Props) {
           <TeamsToggle app={app} />
         </Box>
         <Box sx={{ flex: 1 }}>{children}</Box>
-        {shouldShowEnvButton && (
-          <Button
-            onClick={() => {
-              if (!isCanary) {
-                localStorage.setItem("sk_canary", "true");
-                setIsCanary(true);
-              } else {
-                localStorage.removeItem("sk_canary");
-                setIsCanary(false);
-              }
-            }}
-            size="small"
-            sx={{ color: "text.secondary", fontSize: 12 }}
-          >
-            {isCanary ? "Canary" : isLocal ? "Local" : "Prod"}
-          </Button>
-        )}
         {app && (
           <Box
             sx={{
