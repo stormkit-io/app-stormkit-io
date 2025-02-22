@@ -6,8 +6,6 @@ import gitlabApi from "~/utils/api/Gitlab";
 import openPopup, { DataMessage } from "~/utils/helpers/popup";
 import { LocalStorage } from "~/utils/storage";
 
-const LS_USER = "skit_user";
-
 interface FetchUserReturnValue {
   error: string | null;
   loading: boolean;
@@ -43,7 +41,6 @@ export const useFetchUser = (): FetchUserReturnValue => {
           if (ok && !unmounted) {
             setUser(user);
             setAccounts(accounts);
-            LocalStorage.set(LS_USER, user);
           }
         })
         .catch(e => {
