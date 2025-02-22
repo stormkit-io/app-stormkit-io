@@ -15,7 +15,6 @@ import {
   BitbucketButton,
   GitlabButton,
 } from "~/components/Buttons";
-import { LocalStorage } from "~/utils/storage";
 import { useFetchActiveProviders } from "./actions";
 
 export default function Auth() {
@@ -42,13 +41,6 @@ export default function Auth() {
 
   if (user) {
     return null;
-  }
-
-  const referral = new URLSearchParams(location.search).get("referral");
-
-  if (referral !== null) {
-    // set cookie for a week
-    LocalStorage.set("referral", referral);
   }
 
   return (
