@@ -1,6 +1,3 @@
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-
 export const appMenuItems = ({
   app,
   pathname,
@@ -78,22 +75,7 @@ export const envMenuItems = ({
       isActive: pathname.includes("/function-triggers"),
     },
     {
-      text: (
-        <Box component="span" sx={{ position: "relative" }}>
-          Volumes{" "}
-          <Chip
-            label="beta"
-            size="small"
-            color="warning"
-            sx={{
-              position: "absolute",
-              top: -15.5,
-              right: -25,
-              transform: "scale(0.75)",
-            }}
-          />
-        </Box>
-      ),
+      text: "Volumes",
       path: `${envPath}/volumes`,
       isActive: pathname.includes("/volumes"),
     },
