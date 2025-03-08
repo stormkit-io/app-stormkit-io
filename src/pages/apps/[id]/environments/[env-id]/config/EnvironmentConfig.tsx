@@ -16,7 +16,6 @@ import TabConfigServer from "./_components/TabConfigServer";
 import TabConfigHeaders from "./_components/TabConfigHeaders";
 import TabConfigRedirects from "./_components/TabConfigRedirects";
 import TabConfigServerless from "./_components/TabConfigServerless";
-import TabConfigPrerender from "./_components/TabConfigPrerender";
 import TabStatusChecks from "./_components/TabStatusChecks";
 import TabAPIKey from "./_components/TabAPIKey";
 import TabMailer from "./_components/TabMailer";
@@ -75,15 +74,6 @@ export default function EnvironmentConfig() {
   const { environment } = useContext(EnvironmentContext);
   const { hash } = useLocation();
   const navigate = useNavigate();
-
-  const prerendering = environment?.build.vars?.["SK_PRERENDER"] === "true";
-
-  if (prerendering && listItems[0]?.children[6]?.path !== "#prerender") {
-    listItems[0].children.splice(6, 0, {
-      path: "#prerender",
-      text: "Prerender",
-    });
-  }
 
   const Tab = useMemo(() => {
     switch (hash) {
@@ -160,13 +150,6 @@ export default function EnvironmentConfig() {
               environment={environment}
               setRefreshToken={setRefreshToken}
             />
-            {prerendering && (
-              <TabConfigPrerender
-                app={app}
-                environment={environment}
-                setRefreshToken={setRefreshToken}
-              />
-            )}
           </>
         );
     }

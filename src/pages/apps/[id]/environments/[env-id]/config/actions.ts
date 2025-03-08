@@ -50,11 +50,6 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     } catch {}
   }
 
-  const hasPrerendering =
-    values["build.prerender.matchUserAgent"] ||
-    values["build.prerender.cacheDuration"] ||
-    values["build.prerender.waitFor"];
-
   const build: BuildConfig = {
     buildCmd: values["build.buildCmd"]?.trim() || "",
     serverCmd: values["build.serverCmd"]?.trim() || "",
@@ -64,13 +59,6 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     errorFile: values["build.errorFile"],
     apiFolder: values["build.apiFolder"],
     previewLinks: values["build.previewLinks"] === "on",
-    prerender: hasPrerendering
-      ? {
-          waitFor: values["build.prerender.waitFor"]!,
-          matchUserAgent: values["build.prerender.matchUserAgent"]!,
-          cacheDuration: Number(values["build.prerender.cacheDuration"]),
-        }
-      : undefined,
     statusChecks,
     redirects,
     vars,
@@ -159,9 +147,6 @@ export interface FormValues {
   "build.headersFile"?: string;
   "build.redirects"?: string;
   "build.errorFile"?: string;
-  "build.prerender.matchUserAgent"?: string;
-  "build.prerender.waitFor"?: string;
-  "build.prerender.cacheDuration"?: string;
   "build.redirectsFile"?: string;
   "build.apiFolder"?: string;
   "build.vars"?: string; // This is the textarea version
