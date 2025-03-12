@@ -78,9 +78,9 @@ export default function ButtonDropdown({ buttonText, children, items }: Props) {
         >
           {buttonText}{" "}
           {isMenuOpen ? (
-            <ArrowDropUp sx={{ ml: 0.5 }} />
+            <ArrowDropUp color="info" sx={{ ml: 0.5 }} />
           ) : (
-            <ArrowDropDown sx={{ ml: 0.5 }} />
+            <ArrowDropDown color="info" sx={{ ml: 0.5 }} />
           )}
         </Button>
       </Tooltip>

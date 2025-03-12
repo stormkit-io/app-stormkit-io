@@ -30,7 +30,7 @@ export default function DeployButton({
         size="medium"
         sx={{ borderRadius: 1 }}
       >
-        <RocketLaunch sx={{ fontSize: 16 }} />
+        <RocketLaunch sx={{ fontSize: 16 }} color="info" />
         <Typography component="span" sx={{ display: "inline-block", ml: 1 }}>
           Deploy
         </Typography>

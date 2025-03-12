@@ -95,6 +95,10 @@ export default (mode: "dark" | "light") => {
             props: { variant: "text", color: "info" },
             style: { color: primaryColor },
           },
+          {
+            props: { variant: "contained", color: "secondary" },
+            style: { color: "white", ":hover": { color: "white" } },
+          },
         ],
       },
       MuiCircularProgress: {
@@ -148,6 +152,10 @@ export default (mode: "dark" | "light") => {
         variants: [
           { props: { color: "success" }, style: { color: green[600] } },
           { props: { color: "error" }, style: { color: red[600] } },
+          {
+            props: { color: "info" },
+            style: { color: isDark ? primaryColor : "white" },
+          },
         ],
       },
       MuiFilledInput: {
@@ -281,9 +289,9 @@ export default (mode: "dark" | "light") => {
               contrastText: "#e7e5ee",
             },
             secondary: {
-              main: "#ff4389",
-              light: "#78193b",
-              dark: "#",
+              dark: "#78193b",
+              light: "#e7e5ee",
+              main: "#f6005c",
               contrastText: "#e7e5ee",
             },
             text: {
