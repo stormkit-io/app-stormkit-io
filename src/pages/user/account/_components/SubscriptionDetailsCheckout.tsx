@@ -64,6 +64,7 @@ export default function Checkout({ user }: Props) {
           contentPadding={false}
           sx={{
             flex: 1,
+            px: 2,
             height: "100%",
             display: "flex",
             flexDirection: "column",
@@ -131,7 +132,7 @@ export default function Checkout({ user }: Props) {
             </Button>
           </CardFooter>
         </Card>
-        <Card contentPadding={false} sx={{ flex: 1, height: "100%" }}>
+        <Card contentPadding={false} sx={{ flex: 1, px: 2, height: "100%" }}>
           <CardHeader
             sx={{ px: 0 }}
             title="Cloud Edition"
