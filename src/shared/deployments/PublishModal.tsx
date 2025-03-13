@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/lab/LoadingButton";
 import Card from "~/components/Card";
@@ -7,6 +7,7 @@ import CardFooter from "~/components/CardFooter";
 import CardRow from "~/components/CardRow";
 import Modal from "~/components/Modal";
 import CommitInfo from "./CommitInfo";
+import { RootContext } from "~/pages/Root.context";
 import { publishDeployments } from "./actions";
 import AppChip from "./AppChip";
 
@@ -17,8 +18,10 @@ interface Props {
 }
 
 export default function PublishModal({ deployment, onClose, onUpdate }: Props) {
+  const { mode } = useContext(RootContext);
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const isDark = mode === "dark";
 
   return (
     <Modal
@@ -73,7 +76,11 @@ export default function PublishModal({ deployment, onClose, onUpdate }: Props) {
             <AppChip
               repo={deployment.repo}
               envName={deployment.envName}
-              sx={{ alignSelf: "flex-start", bgcolor: "transparent" }}
+              sx={{
+                alignSelf: "flex-start",
+                bgcolor: "transparent",
+                color: isDark ? undefined : "white",
+              }}
             >
               Publish to
             </AppChip>

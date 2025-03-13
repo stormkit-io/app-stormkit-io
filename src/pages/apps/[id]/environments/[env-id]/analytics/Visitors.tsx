@@ -1,5 +1,5 @@
 import type { TimeSpan } from "./index.d";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import {
   YAxis,
   AreaChart,
@@ -16,6 +16,7 @@ import { grey, pink } from "@mui/material/colors";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
+import { RootContext } from "~/pages/Root.context";
 import { useFetchVisitors } from "./actions";
 
 interface CustomTooltipProps {
@@ -82,12 +83,15 @@ export default function Visitors({
   ts,
   domain,
 }: Props) {
+  const { mode } = useContext(RootContext);
   const [display, setDisplay] = useState<"unique" | "total" | "all">("all");
   const { visitors, error, loading } = useFetchVisitors({
     envId: environment.id!,
     domainId: domain?.id,
     ts,
   });
+
+  const isDark = mode === "dark";
 
   const totalVisitors = useMemo(() => {
     return visitors.reduce((prev, curr) => {
@@ -173,12 +177,16 @@ export default function Visitors({
               bottom: 10,
             }}
           >
-            <CartesianGrid horizontalPoints={[0]} stroke="#181329" />
+            <CartesianGrid
+              horizontalPoints={[0]}
+              stroke={isDark ? "#181329" : grey[400]}
+            />
             <Tooltip content={<CustomTooltip />} />
             <YAxis
               tick={{
-                fill: "white",
+                fill: isDark ? grey[500] : grey[800],
                 fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+                fontWeight: 400,
                 fontSize: 12,
               }}
             />
