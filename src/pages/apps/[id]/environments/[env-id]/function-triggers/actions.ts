@@ -31,7 +31,7 @@ export const useFetchFunctionTriggers = ({
         setTriggers(triggers);
       })
       .catch(() => {
-        setError("Something went wrong while fetching triggers");
+        setError("Something went wrong while fetching periodic triggers");
       })
       .finally(() => {
         setLoading(false);
@@ -188,7 +188,7 @@ export const useFetchTriggerLogs = ({
         setLogs(logs);
       })
       .catch(() => {
-        setError("Something went wrong while fetching logs.");
+        setError("Something went wrong while fetching periodic triggers");
       })
       .finally(() => {
         setLoading(false);

@@ -99,8 +99,10 @@ export default function TriggerFunctionModal({
       .catch((e: string | Error) => {
         if (typeof e === "string") {
           setError(e);
+        } else if (typeof e === "object") {
+          setError("Cron is invalid. Example expected format: 5 4 * * *");
         } else {
-          setError("Something went wrong while saving function trigger.");
+          setError("Something went wrong while saving periodic trigger");
         }
       })
       .finally(() => {
