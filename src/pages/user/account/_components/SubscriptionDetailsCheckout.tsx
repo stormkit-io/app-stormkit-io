@@ -23,11 +23,11 @@ const paymentLinks: Record<SubName, string> = {
   },
   prod: {
     free: "",
-    starter: "https://buy.stripe.com/9AQbLQafd1hh0rS3ck",
-    medium: "https://buy.stripe.com/5kA5ns7317FFgqQdQX",
-    enterprise: "https://buy.stripe.com/4gw17cbjhe43eiIbIO",
-    "self-hosted": "https://buy.stripe.com/6oEg26cnlcZZeiIeUZ",
-    "self-hosted-premium": "https://buy.stripe.com/7sI3fk3QP7FFb6w9AJ",
+    starter: "https://buy.stripe.com/cN25m44aK15OdmUfYZ",
+    medium: "https://buy.stripe.com/28o3dW6iSaGo2Ig3cc",
+    enterprise: "https://buy.stripe.com/fZe9CkdLk3dWeqYeUW",
+    "self-hosted": "https://buy.stripe.com/aEU7uccHgeWEfv28wz",
+    "self-hosted-premium": "https://buy.stripe.com/eVacOwbDc3dW2IgdQU",
   },
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
 
