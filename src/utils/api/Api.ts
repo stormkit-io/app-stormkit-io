@@ -142,16 +142,21 @@ class Api {
         return resp as T;
       }
 
-      if (resp.status === 201) {
-        return {} as T;
+      try {
+        const json = await resp.json();
+
+        if (json && json.jwt) {
+          this.setAuthToken(json.jwt);
+        }
+
+        return json as T;
+      } catch {
+        if (resp.status === 201) {
+          return {} as T;
+        }
       }
 
-      const json = await resp.json();
-
-      if (json && json.jwt) {
-        this.setAuthToken(json.jwt);
-      }
-      return json as T;
+      return {} as T;
     } catch (e) {
       throw e;
     }

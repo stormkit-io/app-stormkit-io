@@ -38,7 +38,7 @@ export default function APIKeyModal({
             value={name}
             onChange={e => setName(e.target.value)}
             helperText={
-              <Typography sx={{ mt: 1 }}>
+              <Typography component="span" sx={{ mt: 1 }}>
                 The name will be used in the UI. It helps distinguishing your
                 API keys.
               </Typography>
