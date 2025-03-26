@@ -67,6 +67,7 @@ interface Providers {
   github: boolean;
   gitlab: boolean;
   bitbucket: boolean;
+  basicAuth?: "enabled";
 }
 
 export const useFetchActiveProviders = () => {
@@ -81,12 +82,10 @@ export const useFetchActiveProviders = () => {
     api
       .fetch<Providers>("/auth/providers")
       .then(p => setProviders(p))
-      .catch(() => {
-        setError("Something went wrong, try again.");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch(() =>
+        setError("Something went wrong while fetching providers, try again.")
+      )
+      .finally(() => setLoading(false));
   }, []);
 
   return { error, loading, providers };
