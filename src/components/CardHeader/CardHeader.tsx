@@ -40,9 +40,7 @@ export default function CardHeader({
           </Typography>
         )}
         {title && subtitle && (
-          <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
-            {subtitle}
-          </Typography>
+          <Typography sx={{ color: "text.secondary" }}>{subtitle}</Typography>
         )}
         {children}
       </Box>

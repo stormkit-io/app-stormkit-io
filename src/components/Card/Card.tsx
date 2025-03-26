@@ -91,7 +91,13 @@ function Card({
       >
         {header}
         {content && !isLoadingFirstTime && (
-          <Box sx={{ px: isCardRow || !contentPadding ? 0 : p, flex: 1 }}>
+          <Box
+            sx={{
+              px: isCardRow || !contentPadding ? 0 : p,
+              flex: 1,
+              width: "100%",
+            }}
+          >
             {content}
           </Box>
         )}
