@@ -55,7 +55,7 @@ describe("~/pages/auth/Auth.tsx", () => {
     });
   });
 
-  describe("when user is not logged in", () => {
+  describe("when user is not logged in and has providers ready", () => {
     let loginOauthSpy;
 
     beforeEach(() => {
@@ -110,20 +110,46 @@ describe("~/pages/auth/Auth.tsx", () => {
     });
   });
 
-  describe("when there is a login error", () => {
+  describe("when the user is self-hosted and is visiting for the first time", () => {
     beforeEach(() => {
+      scope = mockFetchAuthProviders({
+        response: { gitlab: false, bitbucket: false, github: false },
+      });
+
       createWrapper({
-        context: {
-          user: undefined,
-          authError: "Something went wrong while logging in.",
-        },
+        context: { user: undefined },
       });
     });
 
-    it("displays an infobox with the authError", async () => {
+    // The rest is tested in BasicAuthRegister.spec.tsx
+    it("displays the welcome text", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("Welcome to Stormkit")).toBeTruthy();
+      });
+    });
+  });
+
+  describe("when the user is self-hosted and is already registered", () => {
+    beforeEach(() => {
+      scope = mockFetchAuthProviders({
+        response: {
+          gitlab: false,
+          bitbucket: false,
+          github: false,
+          basicAuth: "enabled",
+        },
+      });
+
+      createWrapper({
+        context: { user: undefined },
+      });
+    });
+
+    // The rest is tested in BasicAuthRegister.spec.tsx
+    it("displays the welcome text", async () => {
       await waitFor(() => {
         expect(
-          wrapper.getByText("Something went wrong while logging in.")
+          wrapper.getByText("Login to your administrator account")
         ).toBeTruthy();
       });
     });
