@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import UserAvatar from "~/components/UserAvatar";
 import SideBar from "~/components/SideBar";
 import Spinner from "~/components/Spinner";
 import UserMenu from "./UserMenu";
@@ -62,12 +63,7 @@ const UserButtons: React.FC = () => {
             toggleNews(false);
           }}
         >
-          <Box
-            component="img"
-            sx={{ borderRadius: "50%", w: 24, height: 24, maxWidth: 24 }}
-            src={user.avatar}
-            alt={`${user.fullName || user.displayName} profile`}
-          />
+          <UserAvatar user={user} />
         </IconButton>
       </Tooltip>
 
