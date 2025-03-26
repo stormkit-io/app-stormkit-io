@@ -1,5 +1,4 @@
 import { createRoutesStub } from "react-router";
-import { MemoryRouter } from "react-router-dom";
 import { render } from "@testing-library/react";
 
 interface RenderWithRouterProps {
