@@ -55,13 +55,6 @@ class Api {
   }
 
   getAuthToken(): string | undefined {
-    const accessToken = LocalStorage.get(LS_ACCESS_TOKEN);
-    const provider = LocalStorage.get(LS_PROVIDER);
-
-    if (!accessToken || !provider) {
-      return undefined;
-    }
-
     return LocalStorage.get(Api.STORAGE_TOKEN_KEY);
   }
 
