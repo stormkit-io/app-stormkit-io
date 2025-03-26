@@ -8,6 +8,7 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import { deleteUser } from "../actions";
+import UserAvatar from "~/components/UserAvatar";
 
 interface Props {
   user: User;
@@ -38,18 +39,10 @@ export default function UserProfile({ user }: Props) {
               flexDirection: "column",
             }}
           >
-            <Box
-              sx={{
-                borderRadius: "100%",
-                width: "7rem",
-                height: "7rem",
-                overflow: "hidden",
-                margin: "0 auto",
-                mb: 2,
-              }}
-            >
-              <Box component="img" src={user.avatar} alt="User Profile" />
-            </Box>
+            <UserAvatar
+              user={user}
+              sx={{ width: "7rem", height: "7rem", margin: "0 auto", mb: 2 }}
+            />
             <Typography>
               {user.fullName.trim() || user.displayName}
               <br />
