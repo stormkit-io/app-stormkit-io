@@ -70,3 +70,29 @@ export const mockFetchInstanceDetails = ({
   response,
 }: MockFetchInstanceDetailsProps) =>
   nock(endpoint).get("/instance").reply(status, response);
+
+interface MockAdminLoginProps {
+  status?: number;
+  payload: { email: string; password: string };
+  response?: { sessionToken?: string };
+}
+
+export const mockAdminLogin = ({
+  status = 200,
+  response,
+  payload,
+}: MockAdminLoginProps) =>
+  nock(endpoint).post("/auth/admin/login", payload).reply(status, response);
+
+interface MockAdminRegisterProps {
+  status?: number;
+  payload: { email: string; password: string };
+  response?: { ok: boolean };
+}
+
+export const mockAdminRegister = ({
+  status = 200,
+  response,
+  payload,
+}: MockAdminRegisterProps) =>
+  nock(endpoint).post("/auth/admin/register", payload).reply(status, response);
