@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, expect } from "vitest";
 import { RenderResult, waitFor } from "@testing-library/react";
 import type { Scope } from "nock/types";
 import { render } from "@testing-library/react";
@@ -46,13 +47,13 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
       createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    test("should fetch the status for the environment", async () => {
+    it("should fetch the status for the environment", async () => {
       await waitFor(() => {
         expect(fetchStatusScope.isDone()).toBe(true);
       });
     });
 
-    test("should display a text on the published version", async () => {
+    it("should display a text on the published version", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("200")).toBeTruthy();
       });
@@ -74,7 +75,7 @@ describe("~/pages/apps/[id]/environments/_components/EnvironmentStatus.tsx", () 
       createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    test("should not fetch the status for the environment", async () => {
+    it("should not fetch the status for the environment", async () => {
       await waitFor(() => {
         expect(fetchStatusScope.isDone()).toBe(false);
       });
