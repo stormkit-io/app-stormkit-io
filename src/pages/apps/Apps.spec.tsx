@@ -1,6 +1,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { Scope } from "nock";
 import * as router from "react-router";
+import { describe, it, beforeEach, expect, afterEach } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { mockFetchApps } from "~/testing/nocks/nock_app";
@@ -11,6 +12,10 @@ import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
 import Apps from "./Apps";
 
+interface Props {
+  provider?: Provider | null;
+}
+
 describe("~/pages/apps/Apps.tsx", () => {
   const teams = mockTeams();
   const apps = [
@@ -20,8 +25,10 @@ describe("~/pages/apps/Apps.tsx", () => {
 
   let wrapper: RenderResult;
 
-  const createWrapper = () => {
-    LocalStorage.set(LS_PROVIDER, "github");
+  const createWrapper = ({ provider = "github" }: Props = {}) => {
+    if (provider) {
+      LocalStorage.set(LS_PROVIDER, provider);
+    }
 
     const memoryRouter = router.createMemoryRouter([
       {
@@ -37,6 +44,10 @@ describe("~/pages/apps/Apps.tsx", () => {
     wrapper = render(<router.RouterProvider router={memoryRouter} />);
   };
 
+  afterEach(() => {
+    LocalStorage.del(LS_PROVIDER);
+  });
+
   describe("when user has already created apps", () => {
     let scope: Scope;
 
@@ -49,20 +60,20 @@ describe("~/pages/apps/Apps.tsx", () => {
       createWrapper();
     });
 
-    test("should fetch the list of apps", async () => {
+    it("should fetch the list of apps", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("My-app")).toBeTruthy();
         expect(wrapper.getByText("My-second-app")).toBeTruthy();
       });
     });
 
-    test("should have a button to create a new app", async () => {
+    it("should have a button to create a new app", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Create new app")).toBeTruthy();
       });
     });
 
-    test("should have a button to create a new app from url", async () => {
+    it("should have a button to create a new app from url", async () => {
       let button: HTMLElement;
 
       await waitFor(() => {
@@ -78,7 +89,7 @@ describe("~/pages/apps/Apps.tsx", () => {
       });
     });
 
-    test("should not have a button to load more", async () => {
+    it("should not have a button to load more", async () => {
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
         expect(() => wrapper.getByText("Load more")).toThrow();
@@ -96,13 +107,13 @@ describe("~/pages/apps/Apps.tsx", () => {
       createWrapper();
     });
 
-    test("should have a button to load more", async () => {
+    it("should have a button to load more", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("Load more")).toBeTruthy();
       });
     });
 
-    test("should trigger a new call when the button is clicked", async () => {
+    it("should trigger a new call when the button is clicked", async () => {
       const newApps = [{ ...apps[0], id: "7481841" }];
 
       const scope = mockFetchApps({
@@ -125,7 +136,7 @@ describe("~/pages/apps/Apps.tsx", () => {
     });
   });
 
-  describe("empty list", () => {
+  describe("empty list - with provider", () => {
     beforeEach(() => {
       mockFetchApps({
         teamId: teams[0].id,
@@ -134,9 +145,31 @@ describe("~/pages/apps/Apps.tsx", () => {
       createWrapper();
     });
 
-    test("should display an empty list text", async () => {
+    it("should display an empty list text", async () => {
       await waitFor(() => {
-        expect(wrapper.getByText(/quite empty in here/)).toBeTruthy();
+        expect(
+          wrapper.getByText("Grant access to import your private repositories")
+        ).toBeTruthy();
+      });
+    });
+  });
+
+  describe("empty list - without provider", () => {
+    beforeEach(() => {
+      mockFetchApps({
+        teamId: teams[0].id,
+        response: { apps: [], hasNextPage: false },
+      });
+      createWrapper({ provider: null });
+    });
+
+    it("should display an empty list text", async () => {
+      await waitFor(() => {
+        expect(
+          wrapper.getByText(
+            "Follow the documentation to start importing from private repositories"
+          )
+        ).toBeTruthy();
       });
     });
   });
@@ -153,7 +186,7 @@ describe("~/pages/apps/Apps.tsx", () => {
       createWrapper();
     });
 
-    test("should submit a new request when search input is updated", async () => {
+    it("should submit a new request when search input is updated", async () => {
       await waitFor(() => {
         expect(findInput()).toBeTruthy();
         expect(wrapper.getByText("My-second-app")).toBeTruthy();
