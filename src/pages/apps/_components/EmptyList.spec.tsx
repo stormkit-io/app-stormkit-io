@@ -8,21 +8,47 @@ describe("~/pages/apps/_components/EmptyList", () => {
 
   const createWrapper = () => {
     wrapper = renderWithRouter({
-      el: () => <EmptyList actionLink="/apps/new" />,
+      el: () => (
+        <EmptyList
+          primaryDesc="Lorem ipsum dolor sit amet"
+          primaryActionText="Import from GitHub"
+          primaryLink="/apps/new/github"
+          secondaryDesc="Consectetur adipiscing elit"
+          secondaryLink="/apps/new/url"
+          secondaryActionText="Import from URL"
+        />
+      ),
     });
   };
 
   it("renders correctly", () => {
     createWrapper();
-    expect(wrapper.getByText(/It's quite empty in here./)).toBeTruthy();
+
     expect(
-      wrapper.getByText(/Connect your repository to get started./)
+      wrapper.getByText("Choose one of these options to get started")
     ).toBeTruthy();
 
-    const button1 = wrapper.getByText("Create new app");
-    expect(button1.getAttribute("href")).toBe("/apps/new");
+    expect(wrapper.getByText("Lorem ipsum dolor sit amet")).toBeTruthy();
+    expect(wrapper.getByText("Consectetur adipiscing elit")).toBeTruthy();
 
-    const button2 = wrapper.getByText("Import from URL");
-    expect(button2.getAttribute("href")).toBe("/apps/new/url");
+    expect(
+      wrapper
+        .getByRole("link", { name: "Import from URL" })
+        .getAttribute("href")
+    ).toBe("/apps/new/url");
+
+    expect(
+      wrapper
+        .getByRole("link", { name: "Import from GitHub" })
+        .getAttribute("href")
+    ).toBe("/apps/new/github");
+
+    expect(
+      wrapper.getByRole("heading", { name: "Public repositories" })
+    ).toBeTruthy();
+
+    expect(
+      wrapper.getByRole("heading", { name: "Public repositories" })
+    ).toBeTruthy();
   });
 });
