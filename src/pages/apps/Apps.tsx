@@ -53,7 +53,7 @@ export default function Apps() {
             primaryActionText="Configure authentication"
             primaryDesc="Follow the documentation to start importing from private repositories"
             primaryLink="https://www.stormkit.io/docs/welcome/self-hosting#authentication"
-            secondaryLink={newAppHref}
+            secondaryLink="/apps/new/url"
             secondaryActionText="Import from URL"
             secondaryDesc="Start importing immediately by providing a public repository URL"
           />
