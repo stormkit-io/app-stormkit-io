@@ -1,44 +1,89 @@
-import React from "react";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Card from "~/components/Card";
+import CardHeader from "~/components/CardHeader";
+import CardFooter from "~/components/CardFooter";
 import Typography from "@mui/material/Typography";
 import emptyListSvg from "~/assets/images/empty-list.svg";
 
 interface Props {
-  actionLink: string;
-  actionText?: string;
+  primaryDesc?: string;
+  primaryActionText?: string;
+  primaryLink?: string;
+  secondaryDesc?: string;
+  secondaryLink?: string;
+  secondaryActionText?: string;
 }
 
-const EmptyList: React.FC<Props> = ({
-  actionLink,
-  actionText = "Create new app",
-}) => {
+export default function EmptyList({
+  primaryLink,
+  primaryActionText,
+  primaryDesc,
+  secondaryLink,
+  secondaryActionText,
+  secondaryDesc,
+}: Props) {
   return (
-    <div className="text-center">
-      <img src={emptyListSvg} alt="Empty app list" className="m-auto" />
-      <Typography sx={{ my: 6 }}>
-        It's quite empty in here.
-        <br />
-        Connect your repository to get started.
+    <Box sx={{ textAlign: "center" }}>
+      <Box
+        component="img"
+        src={emptyListSvg}
+        alt="Empty app list"
+        sx={{ margin: "0 auto" }}
+      />
+      <Typography sx={{ my: 6, fontSize: 18, color: "text.secondary" }}>
+        Choose one of these options to get started
       </Typography>
-      <Button
-        variant="contained"
-        color="secondary"
-        href={actionLink}
-        sx={{ mr: 2 }}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        {actionText}
-      </Button>
-      or
-      <Button
-        variant="contained"
-        color="secondary"
-        href={`/apps/new/url`}
-        sx={{ ml: 2 }}
-      >
-        Import from URL
-      </Button>
-    </div>
+        <Card
+          sx={{
+            backgroundColor: "container.paper",
+            mr: { xs: 0, md: 2 },
+            mb: { xs: 2, md: 0 },
+            maxWidth: { xs: "auto", md: 340 },
+            borderRadius: 1,
+            flex: 1,
+          }}
+        >
+          <CardHeader title="Private repositories" sx={{ pb: 2 }} />
+          <Typography sx={{ mb: 4, color: "text.secondary" }}>
+            {primaryDesc}
+          </Typography>
+          <CardFooter sx={{ textAlign: "center" }}>
+            <Button variant="contained" color="secondary" href={primaryLink}>
+              {primaryActionText}
+            </Button>
+          </CardFooter>
+        </Card>
+        <Typography component="span">or</Typography>
+        <Card
+          sx={{
+            backgroundColor: "container.paper",
+            ml: { xs: 0, md: 2 },
+            mt: { xs: 2, md: 0 },
+            maxWidth: { xs: "auto", md: 340 },
+            borderRadius: 1,
+            flex: 1,
+          }}
+        >
+          <CardHeader title="Public repositories" sx={{ pb: 2 }} />
+          <Typography sx={{ mb: 4, color: "text.secondary" }}>
+            {secondaryDesc}
+          </Typography>
+          <CardFooter sx={{ textAlign: "center" }}>
+            <Button variant="contained" color="secondary" href={secondaryLink}>
+              {secondaryActionText}
+            </Button>
+          </CardFooter>
+        </Card>
+      </Box>
+    </Box>
   );
-};
-
-export default EmptyList;
+}

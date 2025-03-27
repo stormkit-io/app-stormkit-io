@@ -44,11 +44,19 @@ export default function Apps() {
   const provider = LocalStorage.get<Provider>(LS_PROVIDER);
   const newAppHref = `/apps/new/${provider}`;
 
+  // This can happen if the self-hosted user has no provider configured
   if (!provider) {
     return (
-      <Box maxWidth="md" sx={{ width: "100%" }}>
-        <Card error="We cannot detect the connected provider. Please login again.">
-          <CardHeader title="Invalid provider" />
+      <Box sx={{ width: "100%" }} maxWidth="lg">
+        <Card sx={{ px: { xs: 1, md: 4 } }}>
+          <EmptyList
+            primaryActionText="Configure authentication"
+            primaryDesc="Follow the documentation to start importing from private repositories"
+            primaryLink="https://www.stormkit.io/docs/welcome/self-hosting#authentication"
+            secondaryLink={newAppHref}
+            secondaryActionText="Import from URL"
+            secondaryDesc="Start importing immediately by providing a public repository URL"
+          />
         </Card>
       </Box>
     );
@@ -58,9 +66,16 @@ export default function Apps() {
 
   if (apps.length === 0 && !loading && !filter) {
     return (
-      <Box sx={{ width: "100%" }} maxWidth="md">
-        <Card sx={{ p: 4 }}>
-          <EmptyList actionLink={newAppHref} actionText={importFromProvider} />
+      <Box sx={{ width: "100%" }} maxWidth="lg">
+        <Card sx={{ px: { xs: 1, md: 4 } }}>
+          <EmptyList
+            primaryDesc="Grant access to import your private repositories"
+            primaryActionText={importFromProvider}
+            primaryLink={newAppHref}
+            secondaryLink="/apps/new/url"
+            secondaryDesc="Import directly by providing a public repository URL"
+            secondaryActionText="Import from URL"
+          />
         </Card>
       </Box>
     );
