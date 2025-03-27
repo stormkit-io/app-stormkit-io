@@ -67,6 +67,7 @@ export default function BasicAuthRegister() {
       />
       <TextField
         variant="filled"
+        type="password"
         name="password"
         label="Password"
         placeholder="Admin password"
@@ -75,6 +76,7 @@ export default function BasicAuthRegister() {
       />
       <TextField
         variant="filled"
+        type="password"
         name="password_confirmation"
         label="Password confirmation"
         placeholder="Confirm your password"
