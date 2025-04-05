@@ -13,6 +13,7 @@ import DiffModal from "./DiffModal";
 interface Props {
   audit: Audit;
   children?: React.ReactNode;
+  forceDiff?: boolean;
 }
 
 interface LinkProps {
@@ -43,13 +44,14 @@ function AppLink({ audit, children }: LinkProps) {
   return <Link href={`/apps/${audit.appId}`}>{children || "application"}</Link>;
 }
 
-function AuditRow({ audit, children }: Props) {
+function AuditRow({ audit, children, forceDiff }: Props) {
   const [showModal, setShowModal] = useState(false);
   const hasDiff =
-    audit.diff?.old &&
-    audit.diff?.new &&
-    Object.keys(audit.diff.old).length > 0 &&
-    Object.keys(audit.diff.new).length > 0;
+    (audit.diff?.old &&
+      audit.diff?.new &&
+      Object.keys(audit.diff.old).length > 0 &&
+      Object.keys(audit.diff.new).length > 0) ||
+    forceDiff;
 
   return (
     <CardRow
@@ -183,7 +185,7 @@ export default function AuditMessage({ audit }: Props) {
 
     case "CREATE:SNIPPET":
       return (
-        <AuditRow audit={audit}>
+        <AuditRow audit={audit} forceDiff>
           Created{" "}
           {plural(
             "new snippet",
@@ -211,6 +213,28 @@ export default function AuditMessage({ audit }: Props) {
             audit.diff.new?.snippets?.length || audit.diff.old?.snippets?.length // Backwards compatibility. It should be old.snippets.
           )}{" "}
           in <EnvLink audit={audit} /> environment
+        </AuditRow>
+      );
+
+    case "UPDATE:AUTHWALL":
+      return (
+        <AuditRow audit={audit} forceDiff>
+          {audit.diff.new.authWallStatus === "off" ? "Disabled" : "Enabled"}{" "}
+          auth wall in <EnvLink audit={audit} /> environment
+        </AuditRow>
+      );
+
+    case "CREATE:AUTHWALL":
+      return (
+        <AuditRow audit={audit} forceDiff>
+          Created new auth login for <EnvLink audit={audit} /> environment
+        </AuditRow>
+      );
+
+    case "DELETE:AUTHWALL":
+      return (
+        <AuditRow audit={audit} forceDiff>
+          Deleted auth login from <EnvLink audit={audit} /> environment
         </AuditRow>
       );
   }

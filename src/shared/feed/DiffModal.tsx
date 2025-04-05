@@ -14,6 +14,11 @@ interface Props {
 }
 
 export default function DiffModal({ onClose, audit }: Props) {
+  const oldDiff = audit.diff.old;
+  const newDiff = audit.diff.new;
+  const hasOldDiff = Object.keys(oldDiff).length > 0;
+  const hasNewDiff = Object.keys(newDiff).length > 0;
+
   return (
     <Modal open maxWidth="lg" onClose={onClose}>
       <Card>
@@ -22,42 +27,46 @@ export default function DiffModal({ onClose, audit }: Props) {
           subtitle="Visualize changes with this activity item"
         />
         <Box sx={{ display: "flex", mb: 4 }}>
-          <Box
-            sx={{
-              flex: 1,
-              mr: 2,
-              maxWidth: "50%",
-            }}
-          >
-            <Typography sx={{ mb: 2 }} variant="h4">
-              Old Version
-            </Typography>
-            <CodeMirror
-              basicSetup={{ lineNumbers: false, foldGutter: false }}
-              value={JSON.stringify(audit.diff.old, null, 2)}
-              extensions={[json()]}
-              readOnly
-              theme="dark"
-            />
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              maxWidth: "50%",
-              width: "100%",
-            }}
-          >
-            <Typography sx={{ mb: 2 }} variant="h4">
-              New Version
-            </Typography>
-            <CodeMirror
-              basicSetup={{ lineNumbers: false, foldGutter: false }}
-              value={JSON.stringify(audit.diff.new, null, 2)}
-              extensions={[json()]}
-              readOnly
-              theme="dark"
-            />
-          </Box>
+          {hasOldDiff && (
+            <Box
+              sx={{
+                flex: 1,
+                mr: 2,
+                maxWidth: hasNewDiff ? "50%" : undefined,
+              }}
+            >
+              <Typography sx={{ mb: 2 }} variant="h4">
+                Old version
+              </Typography>
+              <CodeMirror
+                basicSetup={{ lineNumbers: false, foldGutter: false }}
+                value={JSON.stringify(oldDiff, null, 2)}
+                extensions={[json()]}
+                readOnly
+                theme="dark"
+              />
+            </Box>
+          )}
+          {hasNewDiff && (
+            <Box
+              sx={{
+                flex: 1,
+                maxWidth: hasOldDiff ? "50%" : undefined,
+                width: "100%",
+              }}
+            >
+              <Typography sx={{ mb: 2 }} variant="h4">
+                New version
+              </Typography>
+              <CodeMirror
+                basicSetup={{ lineNumbers: false, foldGutter: false }}
+                value={JSON.stringify(newDiff, null, 2)}
+                extensions={[json()]}
+                readOnly
+                theme="dark"
+              />
+            </Box>
+          )}
         </Box>
         <CardFooter>
           <Button variant="contained" color="secondary" onClick={onClose}>
