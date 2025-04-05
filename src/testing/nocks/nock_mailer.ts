@@ -2,7 +2,7 @@ import nock from "nock";
 
 const endpoint = process.env.API_DOMAIN || "";
 
-interface MockMailerConfig {
+export interface MockMailerConfig {
   host: string;
   port: string;
   username: string;

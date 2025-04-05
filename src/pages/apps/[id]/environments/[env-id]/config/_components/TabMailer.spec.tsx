@@ -1,5 +1,6 @@
 import type { Scope } from "nock";
 import type { MockMailerConfig } from "~/testing/nocks/nock_mailer";
+import { describe, expect, it } from "vitest";
 import { RenderResult, waitFor } from "@testing-library/react";
 import { fireEvent, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -42,7 +43,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabMailer.t
     wrapper = render(<TabMailer app={currentApp} environment={currentEnv} />);
   };
 
-  test("should fetch mailer config", async () => {
+  it("should fetch mailer config", async () => {
     createWrapper({});
 
     await waitFor(() => {
@@ -59,7 +60,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabMailer.t
     expect(() => wrapper.getByText("Send test email")).toThrow();
   });
 
-  test("should create a mailer configuration", async () => {
+  it("should create a mailer configuration", async () => {
     createWrapper({});
 
     const username = "joe@example.org";
@@ -98,7 +99,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabMailer.t
     expect(fetchScope.isDone()).toBe(true);
   });
 
-  test("should send a test email", async () => {
+  it("should send a test email", async () => {
     createWrapper({
       config: {
         host: "smtp.example.org",
