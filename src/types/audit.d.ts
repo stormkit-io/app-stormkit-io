@@ -1,4 +1,4 @@
-interface DiffFields {
+declare interface DiffFields {
   appName?: string;
   appRepo?: string;
   appRuntime?: string;
@@ -19,9 +19,13 @@ interface DiffFields {
   snippetRules?: SnippetRules;
   snippetLocation?: "head" | "body";
   snippets?: string[]; // Name of created snippets.
+  authWallStatus?: string;
+  authWallCreateLoginEmail?: string;
+  authWallCreateLoginID?: string;
+  authWallDeleteLoginIDs?: string;
 }
 
-interface Diff {
+declare interface Diff {
   old: DiffFields;
   new: DiffFields;
 }
