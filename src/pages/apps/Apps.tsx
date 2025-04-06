@@ -42,10 +42,17 @@ export default function Apps() {
   );
 
   const provider = LocalStorage.get<Provider>(LS_PROVIDER);
-  const newAppHref = `/apps/new/${provider}`;
+
+  if (loading && !filter) {
+    return (
+      <Box sx={{ width: "100%", position: "relative", mt: -2 }}>
+        <Card loading={true} />
+      </Box>
+    );
+  }
 
   // This can happen if the self-hosted user has no provider configured
-  if (!provider) {
+  if (!provider && apps.length === 0) {
     return (
       <Box sx={{ width: "100%" }} maxWidth="lg">
         <Card sx={{ px: { xs: 1, md: 4 } }}>
@@ -62,9 +69,15 @@ export default function Apps() {
     );
   }
 
-  const importFromProvider = `Import from ${providerToText[provider]}`;
+  const importFromProvider = provider
+    ? `Import from ${providerToText[provider]}`
+    : "Configure authentication";
 
-  if (apps.length === 0 && !loading && !filter) {
+  const newAppHref = provider
+    ? `/apps/new/${provider}`
+    : "https://www.stormkit.io/docs/welcome/self-hosting#authentication";
+
+  if (apps.length === 0 && !filter) {
     return (
       <Box sx={{ width: "100%" }} maxWidth="lg">
         <Card sx={{ px: { xs: 1, md: 4 } }}>
