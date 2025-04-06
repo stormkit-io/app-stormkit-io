@@ -1,4 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
 import { MemoryRouter } from "react-router";
 import { fireEvent, render } from "@testing-library/react";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -47,7 +48,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     );
   };
 
-  test("should default to the #general tab", () => {
+  it("should default to the #general tab", () => {
     createWrapper({});
 
     expect(wrapper.getByText("General settings")).toBeTruthy();
@@ -62,7 +63,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     expect(wrapper.getByLabelText("Auto deploy")).toBeTruthy();
   });
 
-  test("should contain tabs to switch views", () => {
+  it("should contain tabs to switch views", () => {
     createWrapper({});
     expect(wrapper.getByText("General")).toBeTruthy();
     expect(wrapper.getByText("Build")).toBeTruthy();
@@ -70,11 +71,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     expect(wrapper.getByText("API Keys")).toBeTruthy();
   });
 
-  test.each`
+  it.each`
     hash           | expectedString
     ${""}          | ${"Use these settings to configure your environment details."}
     ${""}          | ${"These variables will be available to build time, status checks and serverless runtime."}
     ${""}          | ${"Use these settings to configure your build options."}
+    ${"#authwall"} | ${"Limit access to your deployments with an authentication wall."}
     ${"#api-keys"} | ${"This key will allow you to interact with our API and modify this environment."}
   `(
     "should load different tab based on hash: $hash",
@@ -84,7 +86,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     }
   );
 
-  test("should switch between tabs", async () => {
+  it("should switch between tabs", async () => {
     createWrapper({});
 
     fireEvent.click(wrapper.getAllByText("Environment variables").at(0)!);

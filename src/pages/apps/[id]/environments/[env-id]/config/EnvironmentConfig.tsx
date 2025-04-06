@@ -19,6 +19,7 @@ import TabConfigServerless from "./_components/TabConfigServerless";
 import TabStatusChecks from "./_components/TabStatusChecks";
 import TabAPIKey from "./_components/TabAPIKey";
 import TabMailer from "./_components/TabMailer";
+import TabAuthWall from "./_components/TabAuthWall";
 
 const selfHosted = isSelfHosted();
 
@@ -50,10 +51,11 @@ const listItems: NavItemParent[] = [
       { path: "#serverless", text: "Serverless functions" },
       { path: "#headers", text: "Headers" },
       { path: "#redirects", text: "Redirects" },
+      { path: "#authwall", text: "Auth wall" },
     ],
   },
   {
-    title: "Other",
+    title: "Other Settings",
     children: [
       { path: "#domains", text: "Domains" },
       { path: "#mailer", text: "Mailer" },
@@ -78,22 +80,20 @@ export default function EnvironmentConfig() {
   const Tab = useMemo(() => {
     switch (hash) {
       case "#domains":
-        return TabDomainConfig;
+        return ({ app, environment }: TabProps) => (
+          <TabDomainConfig app={app} environment={environment} />
+        );
       case "#api-keys":
-        return ({ app, environment, setRefreshToken }: TabProps) => (
-          <TabAPIKey
-            app={app}
-            environment={environment}
-            setRefreshToken={setRefreshToken}
-          />
+        return ({ app, environment }: TabProps) => (
+          <TabAPIKey app={app} environment={environment} />
         );
       case "#mailer":
-        return ({ app, environment, setRefreshToken }: TabProps) => (
-          <TabMailer
-            app={app}
-            environment={environment}
-            setRefreshToken={setRefreshToken}
-          />
+        return ({ app, environment }: TabProps) => (
+          <TabMailer app={app} environment={environment} />
+        );
+      case "#authwall":
+        return ({ app, environment }: TabProps) => (
+          <TabAuthWall app={app} environment={environment} />
         );
       case "":
       case "#general":
