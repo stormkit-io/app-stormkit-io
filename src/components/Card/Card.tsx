@@ -103,6 +103,7 @@ function Card({
         )}
         {loading && (
           <Box
+            data-testid="card-loading"
             sx={{
               position: "absolute",
               left: 0,
