@@ -10,19 +10,10 @@ import { AppContext } from "~/pages/apps/[id]/App.context";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import Span from "~/components/Span";
-import { useFetchTriggerLogs } from "../actions";
 import CardRow from "~/components/CardRow";
 import EmptyList from "~/components/EmptyPage";
-
-function formatDate(time: number) {
-  return new Date(time).toLocaleDateString("en", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+import { formatDate } from "~/utils/helpers/date";
+import { useFetchTriggerLogs } from "../actions";
 
 export default function TriggerLogs() {
   const [refreshToken, setRefreshToken] = useState(0);
