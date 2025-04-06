@@ -11,7 +11,6 @@ import { useFetchMailerConfig } from "../actions";
 interface Props {
   app: App;
   environment: Environment;
-  setRefreshToken?: (v: number) => void; // This is there just to accomodate the Tab signature. It's not really used.
 }
 
 export default function TabMailer({ app, environment: env }: Props) {

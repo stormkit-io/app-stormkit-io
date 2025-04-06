@@ -27,7 +27,6 @@ import { formattedDate } from "~/utils/helpers/deployments";
 interface Props {
   app: App;
   environment: Environment;
-  setRefreshToken: (val: number) => void;
 }
 
 export default function TabDomainConfig({ app, environment }: Props) {
