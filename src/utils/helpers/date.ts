@@ -2,6 +2,25 @@ const n = (value: number, text: string) => {
   return `${value} ${text}${value === 1 ? "" : "s"}`;
 };
 
+export function formatDate(time?: number) {
+  if (!time) {
+    return "";
+  }
+
+  // in seconds
+  if (time.toString().length === 10) {
+    time = time * 1000;
+  }
+
+  return new Date(time).toLocaleDateString("en", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export function timeSince(timestamp: number) {
   const now = new Date();
   const seconds = Math.floor((+now - timestamp) / 1000);
