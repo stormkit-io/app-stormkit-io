@@ -133,7 +133,7 @@ export default function AuthWallUsers({ app, environment: env }: Props) {
             setShowDeleteModal(false);
           }}
           onConfirm={({ setLoading, setError }) => {
-            setLoading(false);
+            setLoading(true);
 
             deleteLogins({ appId: app.id, envId: env.id!, loginIds: checked })
               .then(() => {
