@@ -125,6 +125,10 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/admin/Jobs"), adminLayout),
   },
   {
+    path: "/admin/subscription",
+    element: Async(() => import("~/pages/admin/Subscription"), adminLayout),
+  },
+  {
     path: "/:team",
     element: Async(() => import("~/pages/apps"), teamLayout),
   },

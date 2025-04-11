@@ -38,6 +38,9 @@ declare interface InstanceDetails {
   };
   license?: {
     seats: number;
+    remaining: number;
+    premium: boolean;
+    isFree: boolean;
   };
   stormkit?: {
     apiCommit: string;

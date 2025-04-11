@@ -65,6 +65,13 @@ export default function AdminLayout({ children }: Props) {
             <Box sx={{ mb: 4 }}>
               <MenuLink
                 item={{
+                  path: "/admin/subscription",
+                  text: "Subscription",
+                  isActive: pathname.includes("/admin/subscription"),
+                }}
+              />
+              <MenuLink
+                item={{
                   path: "/admin/jobs",
                   text: "Jobs",
                   isActive: pathname.includes("/admin/jobs"),
