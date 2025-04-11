@@ -145,7 +145,10 @@ export default function NewGithubApp() {
               isLoadingMore={isLoadingMore}
               hasNextPage={hasNextPage}
               onNextPage={() => setPage(page + 1)}
-              onSearch={setSearch}
+              onSearch={term => {
+                setSearch(term);
+                setRepos([]);
+              }}
             />
           </Box>
         </Box>
