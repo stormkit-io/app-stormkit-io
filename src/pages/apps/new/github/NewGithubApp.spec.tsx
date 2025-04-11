@@ -1,8 +1,8 @@
 import type { RenderResult } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { Scope } from "nock";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { fireEvent, waitFor, screen } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import githubApi from "~/utils/api/Github";
 import * as nocks from "~/testing/nocks/nock_github";
 import { mockFetchInstanceDetails } from "~/testing/nocks/nock_user";
 import { mockUser } from "~/testing/data";
@@ -18,16 +18,19 @@ interface Props {
 describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   let wrapper: RenderResult;
   let user: User;
+  let fetchInstanceDetailsScope: Scope;
 
   const findOption = (text: string) => screen.getByText(text);
 
   const createWrapper = async (props?: Props) => {
-    const scope = mockFetchInstanceDetails({
-      response: {
-        update: { api: false },
-        auth: { github: props?.github || "stormkit-dev" },
-      },
-    });
+    if (!fetchInstanceDetailsScope) {
+      fetchInstanceDetailsScope = mockFetchInstanceDetails({
+        response: {
+          update: { api: false },
+          auth: { github: props?.github || "stormkit-dev" },
+        },
+      });
+    }
 
     user = mockUser();
     wrapper = renderWithRouter({
@@ -39,21 +42,17 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
     });
 
     await waitFor(() => {
-      expect(scope.isDone()).toBe(true);
+      expect(fetchInstanceDetailsScope.isDone()).toBe(true);
     });
   };
 
-  describe("github account with environment variable", () => {
+  describe("github account", () => {
     const account = "my-stormkit-app";
 
     beforeEach(async () => {
-      githubApi.accessToken = "123456";
-      githubApi.baseurl = process.env.API_DOMAIN || "";
-
       mockFetchInstallations({
         response: {
-          total_count: 0,
-          installations: [],
+          accounts: [],
         },
       });
 
@@ -73,18 +72,14 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   });
 
   describe("empty data", () => {
-    beforeEach(() => {
-      githubApi.accessToken = "123456";
-      githubApi.baseurl = process.env.API_DOMAIN || "";
-
+    beforeEach(async () => {
       mockFetchInstallations({
         response: {
-          total_count: 0,
-          installations: [],
+          accounts: [],
         },
       });
 
-      createWrapper();
+      await createWrapper();
     });
 
     it("no connected accounts should display a warning", async () => {
@@ -97,29 +92,20 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   describe("fetching data", () => {
     const installationId = "5818";
     const installationId2 = "5911";
-    const originalBaseUrl = githubApi.baseurl;
 
     beforeEach(async () => {
-      githubApi.accessToken = "123456";
-      githubApi.baseurl = process.env.API_DOMAIN || "";
-
       const scope1 = mockFetchInstallations({
         response: {
-          total_count: 10,
-          installations: [
+          accounts: [
             {
               id: installationId,
-              account: {
-                login: "jdoe",
-                avatar_url: "https://example.com/jdoe",
-              },
+              login: "jdoe",
+              avatarUrl: "https://example.com/jdoe",
             },
             {
               id: installationId2,
-              account: {
-                login: "jane",
-                avatar_url: "https://example.com/jane",
-              },
+              login: "jane",
+              avatarUrl: "https://example.com/jane",
             },
           ],
         },
@@ -127,22 +113,20 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
 
       const scope2 = mockFetchRepositories({
         installationId,
-        query: {
-          page: 1,
-          per_page: 25,
-        },
+        page: 1,
+        search: "",
         response: {
-          total_count: 10,
-          repositories: [
+          hasNextPage: false,
+          repos: [
             {
               name: "simple-project",
-              full_name: "jdoe/simple-project",
+              fullName: "jdoe/simple-project",
             },
           ],
         },
       });
 
-      createWrapper();
+      await createWrapper();
 
       await waitFor(() => {
         expect(scope1.isDone()).toBe(true);
@@ -150,40 +134,28 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
       });
     });
 
-    afterEach(() => {
-      githubApi.accessToken = "";
-      githubApi.baseurl = originalBaseUrl;
-    });
-
     it("should have a proper title", () => {
       expect(wrapper.getByText("Import from GitHub")).toBeTruthy();
     });
 
-    it("should render repositories", async () => {
-      await waitFor(() => {
-        expect(wrapper.getByText("simple-project")).toBeTruthy();
-      });
-    });
-
-    it("chooses jdoe as the selected account", async () => {
+    it("should render repositories and the selected account", async () => {
       await waitFor(() => {
         expect(wrapper.getByText("jdoe")).toBeTruthy();
+        expect(wrapper.getByText("simple-project")).toBeTruthy();
       });
     });
 
     it("selecting a different account should trigger a refetch", async () => {
       const scope = mockFetchRepositories({
         installationId: installationId2,
-        query: {
-          page: 1,
-          per_page: 25,
-        },
+        page: 1,
+        search: "",
         response: {
-          total_count: 1,
-          repositories: [
+          hasNextPage: false,
+          repos: [
             {
               name: "sample-project",
-              full_name: "jane/sample-project",
+              fullName: "jane/sample-project",
             },
           ],
         },
@@ -212,19 +184,6 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
         expect(scope.isDone()).toBe(true);
         expect(wrapper.getByText("sample-project")).toBeTruthy();
       });
-    });
-
-    it("clicking connect more should open a popup so that the user can configure permissions", () => {
-      const account = "stormkit-dev";
-
-      window.open = vi.fn();
-      const button = wrapper.getByText("Connect more repositories");
-      fireEvent.click(button);
-      expect(window.open).toHaveBeenCalledWith(
-        `https://github.com/apps/${account}/installations/new`,
-        "Add repository",
-        "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=1000,height=600,left=100,top=100"
-      );
     });
   });
 });

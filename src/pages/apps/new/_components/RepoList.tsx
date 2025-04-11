@@ -5,14 +5,15 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/lab/LoadingButton";
 import SearchIcon from "@mui/icons-material/Search";
+import Typography from "@mui/material/Typography";
 import ArrowRightIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import Typography from "@mui/material/Typography";
 import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
 import gitlabLogo from "~/assets/logos/gitlab-logo.svg";
 import { insertRepo } from "./actions";
+import { CircularProgress } from "@mui/material";
 
 const logos: Record<Provider, string> = {
   github: githubLogo,
@@ -23,11 +24,11 @@ const logos: Record<Provider, string> = {
 export interface Props {
   repositories: Repo[];
   provider: Provider;
-  loading: boolean;
+  isLoadingList: boolean;
   isLoadingMore: boolean;
-  error?: string;
   hasNextPage: boolean;
   onNextPage: () => void;
+  onSearch?: (term: string) => void;
 }
 
 let filterTimer: NodeJS.Timeout;
@@ -35,11 +36,11 @@ let filterTimer: NodeJS.Timeout;
 export default function RepoList({
   repositories,
   provider,
-  loading,
+  isLoadingList,
   isLoadingMore,
-  error,
   hasNextPage,
   onNextPage,
+  onSearch,
 }: Props) {
   const [filter, setFilter] = useState<string>("");
   const [loadingInsert, setLoadingInsert] = useState("");
@@ -69,33 +70,37 @@ export default function RepoList({
 
   return (
     <>
-      {((repos.length > 0 && !loading) || filter) && (
-        <TextField
-          fullWidth
-          label="Filter repos"
-          variant="filled"
-          placeholder="Filter repos by name"
-          sx={{ mb: 2 }}
-          onChange={e => {
-            setFilter(e.target.value);
-            clearTimeout(filterTimer);
-            filterTimer = setTimeout(() => {
+      <TextField
+        fullWidth
+        label={onSearch ? "Search repositories" : "Filter repositories"}
+        variant="filled"
+        placeholder="Search repositories by name"
+        sx={{ mb: 2 }}
+        autoFocus
+        onChange={e => {
+          clearTimeout(filterTimer);
+          filterTimer = setTimeout(() => {
+            if (onSearch) {
+              onSearch(e.target.value);
+            } else {
               setFilter(e.target.value);
-            }, 250);
-          }}
-          InputLabelProps={{
-            sx: {
-              pl: 1,
-            },
-          }}
-          InputProps={{
+            }
+          }, 250);
+        }}
+        slotProps={{
+          inputLabel: { sx: { pl: 1 } },
+          input: {
             sx: {
               pl: 0.75,
             },
-            endAdornment: <SearchIcon sx={{ width: 24 }} />,
-          }}
-        />
-      )}
+            endAdornment: isLoadingList ? (
+              <CircularProgress size="1rem" />
+            ) : (
+              <SearchIcon sx={{ width: "1rem" }} />
+            ),
+          },
+        }}
+      />
 
       {repos.map(r => (
         <Box

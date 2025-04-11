@@ -5,6 +5,7 @@ import { render } from "@testing-library/react";
 import { waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
 import { mockFetchInstanceDetails } from "~/testing/nocks/nock_user";
+import { cache } from "./actions";
 import UpdateSnackbar from "./UpdateSnackbar";
 
 interface WrapperProps {
@@ -20,6 +21,11 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
   const apiCommit = "a4ee052";
 
   const createWrapper = ({ status, response }: WrapperProps) => {
+    // Reset cache
+    cache.details = undefined;
+    cache.fetchPromise = null;
+    cache.loading = false;
+
     scope = mockFetchInstanceDetails({ status, response });
     wrapper = render(<UpdateSnackbar />);
 

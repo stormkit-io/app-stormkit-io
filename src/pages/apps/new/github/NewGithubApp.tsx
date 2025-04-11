@@ -2,16 +2,15 @@ import { useState, useContext, useEffect, useMemo } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { useFetchInstanceDetails } from "~/pages/auth/actions";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
-import openPopup from "~/utils/helpers/popup";
 import RepoList from "../_components/RepoList";
 import Accounts from "../_components/Accounts";
 import { useFetchAccounts, useFetchRepos } from "./actions";
+import ConnectMoreRepos from "./ConnectMoreRepos";
 
 export default function NewGithubApp() {
   const { user } = useContext(AuthContext);
@@ -22,6 +21,7 @@ export default function NewGithubApp() {
     return { githubAccount, openPopupURL };
   }, [details?.auth, detailsLoading]);
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState<string>();
   const [refreshToken, setRefreshToken] = useState<number>();
   const [installationId, setInstallationId] = useState<string>();
   const {
@@ -32,14 +32,12 @@ export default function NewGithubApp() {
 
   const {
     repos,
+    setRepos,
     hasNextPage,
     error: frError,
     loading: frLoading,
     isLoadingMore,
-  } = useFetchRepos({ installationId, page });
-
-  const error = faError || frError;
-  const loading = faLoading || frLoading;
+  } = useFetchRepos({ installationId, search, page });
 
   useEffect(() => {
     for (let i = 0; i < accounts.length; i++) {
@@ -62,11 +60,13 @@ export default function NewGithubApp() {
     }
   }, [accounts, user?.displayName]);
 
+  const loading = faLoading || frLoading;
+
   return (
     <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
       <Card
         sx={{ width: "100%", mb: 4 }}
-        loading={loading}
+        loading={faLoading}
         info={
           accounts?.length === 0 ? (
             <>
@@ -76,7 +76,12 @@ export default function NewGithubApp() {
               </Typography>
             </>
           ) : (
-            ""
+            repos?.length === 0 &&
+            !loading && (
+              <Typography>
+                No repositories found. Try connecting more repositories.
+              </Typography>
+            )
           )
         }
         error={
@@ -94,40 +99,17 @@ export default function NewGithubApp() {
               .
             </>
           ) : (
-            ""
+            faError || frError
           )
         }
       >
         <CardHeader
           actions={
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() => {
-                openPopup({
-                  url: openPopupURL,
-                  title: "Add repository",
-                  width: 1000,
-                  onClose: () => {
-                    setInstallationId(undefined);
-                    setRefreshToken(Date.now());
-                  },
-                });
-              }}
-            >
-              <Box
-                component="span"
-                sx={{ display: { xs: "none", md: "inline-block" } }}
-              >
-                Connect more repositories
-              </Box>
-              <Box
-                component="span"
-                sx={{ display: { xs: "inline-block", md: "none" } }}
-              >
-                More repos
-              </Box>
-            </Button>
+            <ConnectMoreRepos
+              setInstallationId={setInstallationId}
+              setRefreshToken={setRefreshToken}
+              openPopupURL={openPopupURL}
+            />
           }
         >
           <Typography>
@@ -142,31 +124,30 @@ export default function NewGithubApp() {
         </CardHeader>
         <Box>
           {accounts?.length > 0 && (
-            <Box sx={{ mb: loading ? 4 : 0 }}>
+            <Box>
               <Accounts
                 accounts={accounts}
                 selected={installationId}
                 onAccountChange={id => {
                   setPage(1);
+                  setRepos([]);
                   setInstallationId(id);
                 }}
               />
             </Box>
           )}
 
-          {!loading && (
-            <Box sx={{ mb: !githubAccount ? 4 : 0 }}>
-              <RepoList
-                repositories={repos}
-                provider="github"
-                loading={loading}
-                error={error}
-                isLoadingMore={isLoadingMore}
-                hasNextPage={hasNextPage}
-                onNextPage={() => setPage(page + 1)}
-              />
-            </Box>
-          )}
+          <Box sx={{ mb: !githubAccount ? 4 : 0 }}>
+            <RepoList
+              repositories={repos}
+              provider="github"
+              isLoadingList={loading}
+              isLoadingMore={isLoadingMore}
+              hasNextPage={hasNextPage}
+              onNextPage={() => setPage(page + 1)}
+              onSearch={setSearch}
+            />
+          </Box>
         </Box>
       </Card>
     </Box>

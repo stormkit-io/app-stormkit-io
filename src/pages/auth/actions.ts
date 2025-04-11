@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import api, { LS_ACCESS_TOKEN, LS_PROVIDER } from "~/utils/api/Api";
 import bitbucketApi from "~/utils/api/Bitbucket";
-import githubApi from "~/utils/api/Github";
 import gitlabApi from "~/utils/api/Gitlab";
 import openPopup, { DataMessage } from "~/utils/helpers/popup";
 import { LocalStorage } from "~/utils/storage";
@@ -134,11 +133,10 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
           // Persist it for this session
           if (data.accessToken) {
             bitbucketApi.accessToken = data.accessToken!;
-            githubApi.accessToken = data.accessToken;
             gitlabApi.accessToken = data.accessToken;
+            LocalStorage.set(LS_ACCESS_TOKEN, data.accessToken);
           }
 
-          LocalStorage.set(LS_ACCESS_TOKEN, data.accessToken);
           LocalStorage.set(LS_PROVIDER, provider);
 
           resolve({
@@ -207,31 +205,91 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
   return { teams, error, loading };
 };
 
+// instanceDetailsCache.ts
+type CacheState = {
+  details?: InstanceDetails;
+  loading: boolean;
+  subscribers: Set<
+    (data: { details?: InstanceDetails; loading: boolean }) => void
+  >;
+  fetchPromise: Promise<void> | null;
+};
+
+export const cache: CacheState = {
+  loading: true,
+  subscribers: new Set(),
+  fetchPromise: null,
+};
+
+const notifySubscribers = () => {
+  cache.subscribers.forEach(callback =>
+    callback({ details: cache.details, loading: cache.loading })
+  );
+};
+
+const fetchData = async () => {
+  if (cache.fetchPromise) return cache.fetchPromise;
+
+  cache.fetchPromise = api
+    .fetch<InstanceDetails>("/instance")
+    .then(d => {
+      cache.details = {
+        ...d,
+        update: {
+          api: d.latest?.apiVersion !== d.stormkit?.apiVersion,
+        },
+      };
+    })
+    .catch(() => {
+      cache.details = {
+        update: { api: true },
+        stormkit: { selfHosted: true, apiCommit: "", apiVersion: "" },
+      };
+    })
+    .finally(() => {
+      cache.loading = false;
+      notifySubscribers();
+    });
+
+  return cache.fetchPromise;
+};
+
+// Hook that uses the cache
 export const useFetchInstanceDetails = () => {
-  const [details, setDetails] = useState<InstanceDetails>();
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState<{
+    details?: InstanceDetails;
+    loading: boolean;
+  }>({
+    details: cache.details,
+    loading: cache.loading,
+  });
 
   useEffect(() => {
-    api
-      .fetch<InstanceDetails>("/instance")
-      .then(d => {
-        setDetails({
-          ...d,
-          update: {
-            api: d.latest?.apiVersion !== d.stormkit?.apiVersion,
-          },
-        });
-      })
-      .catch(() => {
-        setDetails({
-          update: { api: true },
-          stormkit: { selfHosted: true, apiCommit: "", apiVersion: "" },
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    // If we already have data, use it
+    if (cache.details && !cache.loading) {
+      setState({ details: cache.details, loading: false });
+      return;
+    }
+
+    // Subscribe to updates
+    const callback = (data: {
+      details?: InstanceDetails;
+      loading: boolean;
+    }) => {
+      setState(data);
+    };
+
+    cache.subscribers.add(callback);
+
+    // Start fetch if it hasn't started
+    if (!cache.fetchPromise) {
+      fetchData();
+    }
+
+    return () => {
+      cache.subscribers.delete(callback);
+    };
   }, []);
 
-  return { details, loading };
+  return state;
 };
