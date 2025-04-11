@@ -1,47 +1,27 @@
-import type { Installation, PageQueryParams } from "~/utils/api/Github";
 import type { Repo, Account } from "../types.d";
 import { useEffect, useState } from "react";
-import githubApi from "~/utils/api/Github";
+import api from "~/utils/api/Api";
 
 const errorMessage =
   "We were not able to fetch GitHub repositories. " +
   "Please make sure that we have enough permissions.";
 
-const defaultPageQueryParams: PageQueryParams = {
-  page: 1,
-  per_page: 25,
-};
-
-const getAccounts = (installations: Installation[]): Account[] => {
-  return installations.map((inst: any) => ({
-    id: inst.id,
-    login: inst.account.login,
-    avatar: inst.account.avatar_url,
-  }));
-};
-
 interface UseFetchRepoProps {
   page?: number;
+  search?: string;
   installationId?: string;
-}
-
-interface UseFetchReposReturnValue {
-  loading: boolean;
-  isLoadingMore: boolean;
-  error?: string;
-  repos: Repo[];
-  hasNextPage: boolean;
 }
 
 export const useFetchRepos = ({
   installationId,
+  search = "",
   page = 1,
-}: UseFetchRepoProps): UseFetchReposReturnValue => {
+}: UseFetchRepoProps) => {
   const [loading, setLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(true);
   const [error, setError] = useState<string>();
   const [repos, setRepos] = useState<Repo[]>([]);
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState<boolean>();
 
   useEffect(() => {
     if (!installationId) {
@@ -55,32 +35,18 @@ export const useFetchRepos = ({
       setLoading(true);
     }
 
-    githubApi
-      .repositories({
-        installationId,
-        params: {
-          page,
-          per_page: defaultPageQueryParams.per_page,
-        },
-      })
+    api
+      .fetch<{ repos: Repo[]; hasNextPage: boolean }>(
+        `/provider/github/repos?search=${search}&page=${page}&installationId=${installationId}`
+      )
       .then(res => {
-        setHasNextPage(
-          res.total_count > page * defaultPageQueryParams.per_page!
-        );
+        setHasNextPage(res.hasNextPage);
 
-        let repoList: Repo[] = [];
-
-        if (page > 1) {
-          repoList = repos;
+        if (search) {
+          setRepos(res.repos);
+        } else {
+          setRepos([...repos, ...res.repos]);
         }
-
-        setRepos([
-          ...repoList,
-          ...res.repositories.map(r => ({
-            name: r.name,
-            fullName: r.full_name,
-          })),
-        ]);
       })
       .catch(() => {
         setError(errorMessage);
@@ -89,9 +55,16 @@ export const useFetchRepos = ({
         setLoading(false);
         setIsLoadingMore(false);
       });
-  }, [page, installationId]);
+  }, [page, installationId, search]);
 
-  return { repos, hasNextPage, loading, isLoadingMore, error };
+  return {
+    repos,
+    setRepos,
+    hasNextPage: Boolean(hasNextPage),
+    loading,
+    isLoadingMore,
+    error,
+  };
 };
 
 interface FetchAccountsReturnValue {
@@ -114,12 +87,10 @@ export const useFetchAccounts = ({
   useEffect(() => {
     setLoading(true);
 
-    githubApi
-      .installations()
-      .then(inst => {
-        if (inst.total_count > 0) {
-          setAccounts(getAccounts(inst.installations));
-        }
+    api
+      .fetch<{ accounts: Account[] }>("/provider/github/accounts")
+      .then(({ accounts }) => {
+        setAccounts(accounts);
       })
       .catch(e => {
         console.log(e);

@@ -1,28 +1,29 @@
-import type { Installation } from "~/utils/api/Github";
-import qs from "query-string";
 import nock from "nock";
 
 const endpoint = process.env.API_DOMAIN || "";
 
 interface FetchRepositoriesProps {
   installationId: string;
-  query: Record<string, unknown>;
+  search?: string;
+  page?: number;
   status?: number;
   response: {
-    total_count: number;
-    repositories: { name: string; full_name: string }[];
+    hasNextPage?: boolean;
+    repos: { name: string; fullName: string }[];
   };
 }
 
 export const mockFetchRepositories = ({
   installationId,
-  query,
+  search,
+  page,
   status = 200,
   response,
 }: FetchRepositoriesProps) => {
-  const params = qs.stringify(query);
   return nock(endpoint)
-    .get(`/user/installations/${installationId}/repositories?${params}`)
+    .get(
+      `/provider/github/repos?search=${search}&page=${page}&installationId=${installationId}`
+    )
     .reply(status, response);
 };
 
@@ -30,17 +31,15 @@ interface FetchInstallationsProps {
   page?: number;
   status?: number;
   response: {
-    total_count: number;
-    installations: Installation[];
+    accounts: { id: string; login: string; avatarUrl: string }[];
   };
 }
 
 export const mockFetchInstallations = ({
-  page = 1,
   status = 200,
   response,
 }: FetchInstallationsProps) => {
   return nock(endpoint)
-    .get(`/user/installations?page=${page}&per_page=25`)
+    .get(`/provider/github/accounts`)
     .reply(status, response);
 };

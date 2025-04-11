@@ -16,7 +16,7 @@ export default function NewGitLabApp() {
 
   return (
     <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
-      <Card sx={{ width: "100%", mb: 4 }} loading={loading}>
+      <Card sx={{ width: "100%", mb: 4 }} error={error}>
         <CardHeader>
           <Typography>
             <Link
@@ -31,8 +31,7 @@ export default function NewGitLabApp() {
         <RepoList
           repositories={repos}
           provider="gitlab"
-          error={error}
-          loading={loading}
+          isLoadingList={loading}
           isLoadingMore={isLoadingMore}
           hasNextPage={hasNextPage}
           onNextPage={() => setPage(page + 1)}
