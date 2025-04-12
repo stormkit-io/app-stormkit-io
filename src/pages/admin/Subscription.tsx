@@ -33,7 +33,7 @@ export default function Subscription() {
             Seats
           </Typography>
           <Typography>
-            {license?.seats === -1 ? "unlimited" : license?.seats}
+            {license?.seats === -1 ? "Unlimited" : license?.seats}
           </Typography>
         </Box>
       </CardRow>
@@ -43,7 +43,7 @@ export default function Subscription() {
             Remaining seats
           </Typography>
           <Typography>
-            {license?.seats === -1 ? "unlimited" : license?.remaining}
+            {license?.seats === -1 ? "Unlimited" : license?.remaining}
           </Typography>
         </Box>
       </CardRow>
