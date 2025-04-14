@@ -26,64 +26,66 @@ export default function ButtonDropdown({ buttonText, children, items }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <ClickAwayListener
-      onClickAway={() => {
-        setIsMenuOpen(false);
-      }}
-    >
-      <Tooltip
-        title={
-          children || (
-            <MenuList sx={{ minWidth: 250 }}>
-              {items?.map(item => {
-                return (
-                  <MenuItem
-                    key={item.href || item.text}
-                    sx={{
-                      mb: 1,
-                      ":last-child": {
-                        mb: 0,
-                      },
-                    }}
-                  >
-                    <Link
-                      href={item.href || "#"}
-                      onClick={item.onClick}
+    <Tooltip
+      title={
+        children || (
+          <div>
+            <ClickAwayListener
+              onClickAway={() => {
+                setIsMenuOpen(false);
+              }}
+            >
+              <MenuList sx={{ minWidth: 250 }}>
+                {items?.map(item => {
+                  return (
+                    <MenuItem
+                      key={item.href || item.text}
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
+                        mb: 1,
+                        ":last-child": {
+                          mb: 0,
+                        },
                       }}
                     >
-                      {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-                      {item.text}
-                    </Link>
-                  </MenuItem>
-                );
-              })}
-            </MenuList>
-          )
-        }
-        placement="bottom-end"
-        open={isMenuOpen}
-        arrow
+                      <Link
+                        href={item.href || "#"}
+                        onClick={item.onClick}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          width: "100%",
+                        }}
+                      >
+                        {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+                        {item.text}
+                      </Link>
+                    </MenuItem>
+                  );
+                })}
+              </MenuList>
+            </ClickAwayListener>
+          </div>
+        )
+      }
+      placement="bottom-end"
+      open={isMenuOpen}
+      arrow
+    >
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          setIsMenuOpen(!isMenuOpen);
+        }}
+        sx={{ pr: 0.5 }}
       >
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => {
-            setIsMenuOpen(!isMenuOpen);
-          }}
-          sx={{ pr: 0.5 }}
-        >
-          {buttonText}{" "}
-          {isMenuOpen ? (
-            <ArrowDropUp color="info" sx={{ ml: 0.5 }} />
-          ) : (
-            <ArrowDropDown color="info" sx={{ ml: 0.5 }} />
-          )}
-        </Button>
-      </Tooltip>
-    </ClickAwayListener>
+        {buttonText}{" "}
+        {isMenuOpen ? (
+          <ArrowDropUp color="info" sx={{ ml: 0.5 }} />
+        ) : (
+          <ArrowDropDown color="info" sx={{ ml: 0.5 }} />
+        )}
+      </Button>
+    </Tooltip>
   );
 }
