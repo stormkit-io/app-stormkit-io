@@ -61,7 +61,11 @@ export default function TopPaths({ environment, domain }: Props) {
           paths.map(path => (
             <CardRow
               key={path.name}
-              chipLabel={path.count.toString()}
+              chipLabel={
+                <Typography component="span">
+                  {path.count.toString()}
+                </Typography>
+              }
               actions={
                 <IconButton
                   sx={{ ml: 2 }}
@@ -74,7 +78,7 @@ export default function TopPaths({ environment, domain }: Props) {
                 </IconButton>
               }
             >
-              {truncate(path.name)}
+              <Typography component="span">{truncate(path.name)}</Typography>
             </CardRow>
           ))
         ) : (
@@ -93,14 +97,23 @@ export default function TopPaths({ environment, domain }: Props) {
                 </IconButton>
               }
             >
-              {requestPath}
+              <Typography component="span">{requestPath}</Typography>
             </CardRow>
             {refsLoading && <LinearProgress color="secondary" />}
             {!refsLoading &&
               (referrers.length ? (
                 referrers.map(ref => (
-                  <CardRow key={ref.name} chipLabel={ref.count.toString()}>
-                    {truncate(ref.name)}
+                  <CardRow
+                    key={ref.name}
+                    chipLabel={
+                      <Typography component="span">
+                        {ref.count.toString()}
+                      </Typography>
+                    }
+                  >
+                    <Typography component="span">
+                      {truncate(ref.name)}
+                    </Typography>
                   </CardRow>
                 ))
               ) : (

@@ -42,8 +42,13 @@ export default function TopReferrers({ environment, domain }: Props) {
         }}
       >
         {referrers.map(ref => (
-          <CardRow key={ref.name} chipLabel={ref.count.toString()}>
-            {truncate(ref.name)}
+          <CardRow
+            key={ref.name}
+            chipLabel={
+              <Typography component="span">{ref.count.toString()} </Typography>
+            }
+          >
+            <Typography component="span">{truncate(ref.name)}</Typography>
           </CardRow>
         ))}
       </Box>
