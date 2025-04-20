@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -15,32 +15,18 @@ const isSelfHostedInstance = isSelfHosted();
 export default function Account() {
   const { user, accounts } = useContext(AuthContext);
 
-  const trialEnds = useMemo(() => {
-    if (!user?.freeTrialEnds) {
-      return;
-    }
-
-    return new Date(user?.freeTrialEnds * 1000).toLocaleDateString("de-CH", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-    });
-  }, [user?.freeTrialEnds]);
-
   if (!user) {
     return <Error404 />;
   }
 
   return (
     <Box sx={{ margin: "0 auto" }} maxWidth="768px">
-      {trialEnds && (
-        <Alert color="info" sx={{ mb: 2 }}>
-          <AlertTitle sx={{ fontSize: 20 }}>Free trial</AlertTitle>
-          <Typography>
-            Thanks for exploring Stormkit.
-            {user?.isPaymentRequired
-              ? "Your free trial is ended. Please upgrade your subscription to continue."
-              : `Your free trial will end on ${trialEnds}. Please upgrade your subscription to continue using our service without interruption.`}
+      {user?.isPaymentRequired && (
+        <Alert color="warning" sx={{ mb: 2 }}>
+          <AlertTitle fontSize={20}>Upgrade required</AlertTitle>
+          <Typography variant="body2" fontSize={14}>
+            Stormkit Cloud is a paid service. You can contact us for a free
+            trial or self-host it.
           </Typography>
         </Alert>
       )}

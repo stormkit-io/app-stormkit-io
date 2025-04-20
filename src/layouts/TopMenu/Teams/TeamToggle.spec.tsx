@@ -57,23 +57,4 @@ describe("~/layouts/TopMenu/Teams/TeamToggle.tsx", () => {
       wrapper.getByText("Use teams to collaborate with other team members.")
     ).toBeTruthy();
   });
-
-  it("should not display free trial chip", () => {
-    createWrapper({});
-    expect(() => wrapper.getByText("Free trial")).toThrow();
-  });
-
-  it("should display free trial chip", () => {
-    const user = mockUser();
-    user.isPaymentRequired = true;
-    user.package = {
-      id: "free",
-      name: "Free Trial",
-      edition: "",
-      maxDeploymentsPerMonth: 50,
-    };
-
-    createWrapper({ user });
-    expect(wrapper.getByText("Free trial")).toBeTruthy();
-  });
 });

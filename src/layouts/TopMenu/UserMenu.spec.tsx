@@ -37,28 +37,5 @@ describe("~/components/UserMenu.tsx", () => {
     `("should load menu item: $text", ({ label, href }) => {
       expect(wrapper.getByLabelText(label).getAttribute("href")).toBe(href);
     });
-
-    it("should not display free tier text", () => {
-      expect(() => wrapper.getByText(/Free trial ends on/)).toThrow();
-    });
-  });
-
-  describe("with free user", () => {
-    beforeEach(() => {
-      const user = mockUser();
-      user.isPaymentRequired = true;
-      user.package = {
-        id: "free",
-        name: "Free Trial",
-        maxDeploymentsPerMonth: 100,
-        edition: "",
-      };
-      user.freeTrialEnds = new Date(2024, 0, 5).getTime();
-      createWrapper({ user });
-    });
-
-    it("should display free trial text", () => {
-      expect(wrapper.getByText(/Free trial ends on/)).toBeTruthy();
-    });
   });
 });
