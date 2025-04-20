@@ -27,39 +27,17 @@ describe("~/pages/user/account/Account", () => {
 
   describe("when user free trial is ended", () => {
     const user = mockUser();
-    user.freeTrialEnds = 1716392905;
 
-    it("should display a free trial will end message if payment is not required", () => {
-      createWrapper({
-        user,
-      });
-
-      expect(wrapper.getByText(/Thanks for exploring Stormkit\./)).toBeTruthy();
-
-      expect(
-        wrapper.getByText(/Your free trial will end on 2024-05-22\./)
-      ).toBeTruthy();
-
-      expect(
-        wrapper.getByText(
-          /Please upgrade your subscription to continue using our service without interruption\./
-        )
-      ).toBeTruthy();
-    });
-
-    it("should display a free trial will end message if payment is not required", () => {
+    it("should display a message if payment is  required", () => {
       user.isPaymentRequired = true;
 
       createWrapper({
         user,
       });
 
-      expect(wrapper.getByText(/Thanks for exploring Stormkit\./)).toBeTruthy();
-
+      expect(wrapper.getByText(/Upgrade required/)).toBeTruthy();
       expect(
-        wrapper.getByText(
-          /Your free trial is ended\. Please upgrade your subscription to continue\./
-        )
+        wrapper.getByText(/Stormkit Cloud is a paid service\./)
       ).toBeTruthy();
     });
   });

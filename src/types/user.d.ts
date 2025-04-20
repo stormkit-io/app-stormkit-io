@@ -16,7 +16,6 @@ declare interface User {
   memberSince: number;
   isAdmin?: boolean;
   isPaymentRequired?: boolean;
-  freeTrialEnds?: number;
   package: {
     id: SubscriptionName;
     name: string;
