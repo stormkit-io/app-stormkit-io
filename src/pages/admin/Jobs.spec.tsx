@@ -20,6 +20,7 @@ describe("~/pages/admin/Jobs.tsx", () => {
     ${"Sync analytics last 30 days"}  | ${0}  | ${"/admin/jobs/sync-analytics?ts=30d"}
     ${"Sync analytics last 7 days"}   | ${1}  | ${"/admin/jobs/sync-analytics?ts=7d"}
     ${"Sync analytics last 24 hours"} | ${2}  | ${"/admin/jobs/sync-analytics?ts=24h"}
+    ${"Remove old artifacts"}         | ${3}  | ${"/admin/jobs/remove-old-artifacts"}
   `("Job: $job", ({ job, index, endpoint }) => {
     it("should render", () => {
       expect(wrapper.getByText(job)).toBeTruthy();

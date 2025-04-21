@@ -24,6 +24,10 @@ const jobs: Job[] = [
     text: "Sync analytics last 24 hours",
     endpoint: "/admin/jobs/sync-analytics?ts=24h",
   },
+  {
+    text: "Remove old artifacts",
+    endpoint: "/admin/jobs/remove-old-artifacts",
+  },
 ];
 
 export default function Jobs() {
