@@ -104,20 +104,22 @@ const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
           for others to use.
         </Typography>
       </Box>
-      <Box sx={{ mb: 4 }}>
-        <TextField
-          label="Repository"
-          name="repo"
-          variant="filled"
-          required
-          placeholder="e.g. https://github.com/stormkit-io/app-stormkit-io"
-          defaultValue={toRepoAddr(app.repo)}
-          fullWidth
-        />
-        <Typography sx={{ px: 1.25, pt: 2, opacity: 0.5 }}>
-          The repo address of your application.
-        </Typography>
-      </Box>
+      {!app.isBare && (
+        <Box sx={{ mb: 4 }}>
+          <TextField
+            label="Repository"
+            name="repo"
+            variant="filled"
+            required
+            placeholder="e.g. https://github.com/stormkit-io/app-stormkit-io"
+            defaultValue={toRepoAddr(app.repo)}
+            fullWidth
+          />
+          <Typography sx={{ px: 1.25, pt: 2, opacity: 0.5 }}>
+            The repo address of your application.
+          </Typography>
+        </Box>
+      )}
       <Box sx={{ mb: 4, display: isSelfHostedInstance ? "none" : undefined }}>
         <FormControl variant="standard" fullWidth>
           <InputLabel id="app-runtime-settings" sx={{ pl: 2, pt: 1 }}>

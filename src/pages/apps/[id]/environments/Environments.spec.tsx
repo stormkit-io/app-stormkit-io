@@ -64,7 +64,7 @@ describe("~/pages/apps/[id]/environments/Environments.tsx", () => {
         expect(
           wrapper.getByText(env?.preview.split("https://")[1])
         ).toBeTruthy();
-        expect(wrapper.getAllByText(/Last deployed 4 years ago/)).toBeTruthy();
+        expect(wrapper.getAllByText(/Last deployed 5 years ago/)).toBeTruthy();
       });
     });
   });

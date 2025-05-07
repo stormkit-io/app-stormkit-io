@@ -22,7 +22,7 @@ const defaultMessage = (deployment: DeploymentV2): React.ReactNode => {
   }
 
   if (deployment.status === "success") {
-    return `#${deployment.id}`;
+    return `${!deployment.repo ? "Uploaded zip file" : `#${deployment.id}`}`;
   }
 
   if (deployment.stoppedManually) {
@@ -79,7 +79,7 @@ export default function CommitInfo({
           ) : (
             <Typography>{message}</Typography>
           )}
-          {deployment.duration ? (
+          {typeof deployment.duration !== "undefined" ? (
             <Span size="small" sx={{ ml: 1, mr: 0 }}>
               {toHumanTime(deployment.duration)}
             </Span>
@@ -112,8 +112,14 @@ export default function CommitInfo({
           }}
         >
           <Box component="span">
-            <AltRoute sx={{ fontSize: 11, mr: 0.5 }} />
-            {deployment.branch}
+            ID: {deployment.id}
+            {deployment.branch && (
+              <>
+                <Dot />
+                <AltRoute sx={{ fontSize: 11, mr: 0.5 }} />
+                {deployment.branch}
+              </>
+            )}
             {deployment.commit.sha && (
               <>
                 <Dot />

@@ -1,10 +1,10 @@
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 
-interface Props {
+interface Props extends BoxProps {
   children: React.ReactNode;
 }
 
-export default function IconBg({ children }: Props) {
+export default function IconBg({ children, sx }: Props) {
   return (
     <Box
       component="span"
@@ -17,6 +17,7 @@ export default function IconBg({ children }: Props) {
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
+        ...sx,
       }}
     >
       {children}

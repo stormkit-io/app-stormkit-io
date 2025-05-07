@@ -21,39 +21,61 @@ describe("~/pages/apps/[id]/settings/_components/FormAppSettings", () => {
     );
   };
 
-  beforeEach(() => {
-    currentApp = mockApp();
-    createWrapper({
-      app: currentApp,
-      additionalSettings: { envs: [], runtime: "nodejs22.x" },
+  describe("when it is a normal app", () => {
+    beforeEach(() => {
+      currentApp = mockApp();
+      createWrapper({
+        app: currentApp,
+        additionalSettings: { envs: [], runtime: "nodejs22.x" },
+      });
+    });
+
+    it("have the form prefilled", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByDisplayValue(currentApp.displayName)).toBeTruthy();
+        expect(
+          wrapper.getByDisplayValue(
+            "https://gitlab.com/stormkit-io/frontend.git"
+          )
+        ).toBeTruthy();
+        expect(wrapper.getByText("NodeJS 22.x")).toBeTruthy();
+      });
+    });
+
+    it("updates the settings", async () => {
+      const scope = mockUpdateSettings({
+        payload: {
+          appId: currentApp.id,
+          displayName: currentApp.displayName,
+          repo: currentApp.repo,
+          runtime: "nodejs22.x",
+        },
+        response: { ok: true },
+      });
+
+      fireEvent.click(wrapper.getByText("Update"));
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+      });
     });
   });
 
-  it("have the form prefilled", async () => {
-    await waitFor(() => {
-      expect(wrapper.getByDisplayValue(currentApp.displayName)).toBeTruthy();
-      expect(
+  describe("when it is a bare app", () => {
+    beforeEach(() => {
+      currentApp = mockApp();
+      currentApp.isBare = true;
+
+      createWrapper({
+        app: currentApp,
+        additionalSettings: { envs: [], runtime: "nodejs22.x" },
+      });
+    });
+
+    it("should not display the repository field", () => {
+      expect(() =>
         wrapper.getByDisplayValue("https://gitlab.com/stormkit-io/frontend.git")
-      ).toBeTruthy();
-      expect(wrapper.getByText("NodeJS 22.x")).toBeTruthy();
-    });
-  });
-
-  it("updates the settings", async () => {
-    const scope = mockUpdateSettings({
-      payload: {
-        appId: currentApp.id,
-        displayName: currentApp.displayName,
-        repo: currentApp.repo,
-        runtime: "nodejs22.x",
-      },
-      response: { ok: true },
-    });
-
-    fireEvent.click(wrapper.getByText("Update"));
-
-    await waitFor(() => {
-      expect(scope.isDone()).toBe(true);
+      ).toThrow();
     });
   });
 });

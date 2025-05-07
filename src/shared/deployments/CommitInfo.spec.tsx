@@ -67,4 +67,15 @@ describe("~/shared/deployments/CommitInfo.tsx", () => {
 
     expect(() => wrapper.getByText("sample-project")).toThrow();
   });
+
+  it("should display the default message when the commit message is empty", () => {
+    const deployment = mockDeployments()[0];
+    deployment.commit.message = "";
+    deployment.status = "success";
+    deployment.repo = "";
+
+    createWrapper({ deployment });
+
+    expect(wrapper.getByText("Uploaded zip file")).toBeTruthy();
+  });
 });

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { deploy } from "~/pages/apps/actions";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Button from "@mui/lab/LoadingButton";
@@ -9,6 +8,8 @@ import TextField from "@mui/material/TextField";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import BuildIcon from "@mui/icons-material/Build";
+import { deploy } from "~/pages/apps/actions";
+import MyDropzone from "~/components/Dropzone";
 import Modal from "~/components/Modal";
 import EnvironmentSelector from "~/components/EnvironmentSelector";
 import Card from "~/components/Card";
@@ -35,6 +36,7 @@ export default function DeployModal({
   const [cmd, setCmd] = useState(environment?.build?.buildCmd || "");
   const [dist, setDist] = useState(environment?.build?.distFolder || "");
   const [branch, setBranch] = useState(environment?.branch || "");
+  const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<null | string>(null);
   const [isAutoPublish, setIsAutoPublish] = useState<boolean>(
     environment?.autoPublish || false
@@ -83,6 +85,7 @@ export default function DeployModal({
             environment: selectedEnv,
             setError,
             setLoading,
+            files,
             config: {
               branch,
               buildCmd: cmd,
@@ -119,45 +122,64 @@ export default function DeployModal({
             }}
           />
         </Box>
-        <Box sx={{ mb: 4 }}>
-          <TextField
-            name="branch"
-            variant="filled"
-            label="Checkout branch"
-            value={branch}
-            onChange={e => {
-              setBranch(e.target.value);
-            }}
-            inputProps={{
-              "aria-label": "Branch to deploy",
-            }}
-            fullWidth
-          />
-        </Box>
-        <Box sx={{ mb: 4 }}>
-          <TextField
-            value={cmd}
-            variant="filled"
-            label="Build command"
-            fullWidth
-            name="build.buildCmd"
-            onChange={e => setCmd(e.target.value)}
-            placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
-            helperText="Concatenate multiple commands with the logical `&&` operator (e.g. npm run test && npm run build)"
-          />
-        </Box>
-        <Box sx={{ mb: 4 }}>
-          <TextField
-            value={dist}
-            variant="filled"
-            label="Output folder"
-            fullWidth
-            name="build.distFolder"
-            onChange={e => setDist(e.target.value)}
-            placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
-            helperText="The folder where the build artifacts are located"
-          />
-        </Box>
+        {app.isBare ? (
+          <Box sx={{ mb: 4 }}>
+            <MyDropzone
+              files={files}
+              showDropZone
+              clickToOpen
+              props={{ accept: "application/zip" }}
+              onDrop={(acceptedFiles: File[]) => {
+                setFiles(acceptedFiles);
+              }}
+            />
+          </Box>
+        ) : (
+          <>
+            <Box sx={{ mb: 4 }}>
+              <TextField
+                name="branch"
+                variant="filled"
+                label="Checkout branch"
+                value={branch}
+                onChange={e => {
+                  setBranch(e.target.value);
+                }}
+                slotProps={{
+                  input: {
+                    "aria-label": "Branch to deploy",
+                  },
+                }}
+                fullWidth
+              />
+            </Box>
+
+            <Box sx={{ mb: 4 }}>
+              <TextField
+                value={cmd}
+                variant="filled"
+                label="Build command"
+                fullWidth
+                name="build.buildCmd"
+                onChange={e => setCmd(e.target.value)}
+                placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
+                helperText="Concatenate multiple commands with the logical `&&` operator (e.g. npm run test && npm run build)"
+              />
+            </Box>
+            <Box sx={{ mb: 4 }}>
+              <TextField
+                value={dist}
+                variant="filled"
+                label="Output folder"
+                fullWidth
+                name="build.distFolder"
+                onChange={e => setDist(e.target.value)}
+                placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
+                helperText="The folder where the build artifacts are located"
+              />
+            </Box>
+          </>
+        )}
         <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 4 }}>
           <FormControlLabel
             sx={{ pl: 0, ml: 0 }}

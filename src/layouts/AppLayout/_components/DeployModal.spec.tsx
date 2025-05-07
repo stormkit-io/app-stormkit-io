@@ -49,118 +49,166 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     });
   };
 
-  beforeEach(async () => {
-    navigate.mockClear();
+  describe("when it is a bare app", () => {
+    beforeEach(async () => {
+      navigate.mockClear();
 
-    currentApp = mockApp();
-    currentEnv = mockEnv({ app: currentApp });
-    currentEnv.branch = "";
-    currentEnv.build.buildCmd = "";
-    currentEnv.build.distFolder = "";
+      currentApp = mockApp();
+      currentApp.isBare = true;
+      currentEnv = mockEnv({ app: currentApp });
+      currentEnv.branch = "";
+      currentEnv.build.buildCmd = "";
+      currentEnv.build.distFolder = "";
 
-    createWrapper({ app: currentApp, env: currentEnv });
-  });
-
-  afterEach(() => {
-    wrapper.unmount();
-  });
-
-  const deployConfig = {
-    distFolder: "my-dist",
-    branch: "master",
-    publish: true,
-    buildCmd: "echo hi",
-  };
-
-  const executeDeployFlow = async () => {
-    await userEvent.type(
-      wrapper.getByLabelText("Build command"),
-      deployConfig.buildCmd
-    );
-
-    await userEvent.type(
-      wrapper.getByLabelText("Output folder"),
-      deployConfig.distFolder
-    );
-
-    await userEvent.type(
-      wrapper.getByLabelText("Checkout branch"),
-      deployConfig.branch
-    );
-
-    await fireEvent.click(wrapper.getByText("Deploy now"));
-  };
-
-  it("mounts the modal properly", () => {
-    expect(wrapper.getByText("Start a deployment")).toBeTruthy();
-    expect(wrapper.getByText("Deploy now")).toBeTruthy();
-    expect(
-      wrapper.getByText("Update default settings").getAttribute("href")
-    ).toBe(`/apps/${currentApp.id}/environments/${currentEnv.id}`);
-  });
-
-  it("creates a new deployment", async () => {
-    const scope = mockDeployNow({
-      appId: currentApp.id,
-      config: { ...deployConfig, env: currentEnv.name },
-      status: 200,
-      response: { id: deploymentId },
+      createWrapper({ app: currentApp, env: currentEnv });
     });
 
-    await executeDeployFlow();
+    it("should not display the branch, build command and output folder fields", () => {
+      expect(() => wrapper.getByLabelText("Build command")).toThrow();
+      expect(() => wrapper.getByLabelText("Output folder")).toThrow();
+      expect(() => wrapper.getByLabelText("Checkout branch")).toThrow();
+    });
 
-    await waitFor(() => {
-      expect(scope.isDone()).toBe(true);
-      expect(toggleModal).toHaveBeenCalledWith(false);
-      expect(navigate).toHaveBeenCalledWith(
-        `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${deploymentId}`
+    it("should upload the zip files", async () => {
+      const input = wrapper.getByTestId("my-dropzone");
+      const file = new File(["hello world"], "hello.zip", {
+        type: "application/zip",
+      });
+
+      const scope = mockDeployNow({
+        appId: currentApp.id,
+        envId: currentEnv.id!,
+        files: [file],
+        status: 200,
+        response: { id: deploymentId },
+      });
+
+      await userEvent.upload(input, file);
+      await fireEvent.click(wrapper.getByText("Deploy now"));
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(toggleModal).toHaveBeenCalledWith(false);
+        expect(navigate).toHaveBeenCalledWith(
+          `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${deploymentId}`
+        );
+      });
+    });
+  });
+
+  describe("when it is a repository app", () => {
+    beforeEach(async () => {
+      navigate.mockClear();
+
+      currentApp = mockApp();
+      currentEnv = mockEnv({ app: currentApp });
+      currentEnv.branch = "";
+      currentEnv.build.buildCmd = "";
+      currentEnv.build.distFolder = "";
+
+      createWrapper({ app: currentApp, env: currentEnv });
+    });
+
+    afterEach(() => {
+      wrapper.unmount();
+    });
+
+    const deployConfig = {
+      distFolder: "my-dist",
+      branch: "master",
+      publish: true,
+      buildCmd: "echo hi",
+    };
+
+    const executeDeployFlow = async () => {
+      await userEvent.type(
+        wrapper.getByLabelText("Build command"),
+        deployConfig.buildCmd
       );
-    });
-  });
 
-  it("429 errors should display a payment error", async () => {
-    const scope = mockDeployNow({
-      appId: currentApp.id,
-      config: { ...deployConfig, env: currentEnv.name },
-      status: 429,
-      response: {
-        error: "You have exceeded the maximum number of concurrent builds",
-      },
-    });
+      await userEvent.type(
+        wrapper.getByLabelText("Output folder"),
+        deployConfig.distFolder
+      );
 
-    await executeDeployFlow();
+      await userEvent.type(
+        wrapper.getByLabelText("Checkout branch"),
+        deployConfig.branch
+      );
 
-    await waitFor(() => {
-      expect(scope.isDone()).toBe(true);
-      expect(navigate).not.toHaveBeenCalled();
+      await fireEvent.click(wrapper.getByText("Deploy now"));
+    };
+
+    it("mounts the modal properly", () => {
+      expect(wrapper.getByText("Start a deployment")).toBeTruthy();
+      expect(wrapper.getByText("Deploy now")).toBeTruthy();
       expect(
-        wrapper.getByText(
-          /You have exceeded the maximum number of concurrent builds/
-        )
-      ).toBeTruthy();
-    });
-  });
-
-  it("other errors should display a generic error", async () => {
-    const scope = mockDeployNow({
-      appId: currentApp.id,
-      config: { ...deployConfig, env: currentEnv.name },
-      status: 400,
-      response: {
-        error: "Something went wrong.",
-      },
+        wrapper.getByText("Update default settings").getAttribute("href")
+      ).toBe(`/apps/${currentApp.id}/environments/${currentEnv.id}`);
     });
 
-    await executeDeployFlow();
+    it("creates a new deployment", async () => {
+      const scope = mockDeployNow({
+        appId: currentApp.id,
+        envId: currentEnv.id!,
+        config: deployConfig,
+        status: 200,
+        response: { id: deploymentId },
+      });
 
-    await waitFor(() => {
-      expect(scope.isDone()).toBe(true);
-      expect(navigate).not.toHaveBeenCalled();
-      expect(
-        wrapper.getByText(
-          /Something wrong happened here. Please contact us at hello@stormkit.io/
-        )
-      ).toBeTruthy();
+      await executeDeployFlow();
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(toggleModal).toHaveBeenCalledWith(false);
+        expect(navigate).toHaveBeenCalledWith(
+          `/apps/${currentApp.id}/environments/${currentEnv.id}/deployments/${deploymentId}`
+        );
+      });
+    });
+
+    it("429 errors should display a payment error", async () => {
+      const scope = mockDeployNow({
+        appId: currentApp.id,
+        envId: currentEnv.id!,
+        config: deployConfig,
+        status: 429,
+        response: {
+          error: "You have exceeded the maximum number of concurrent builds",
+        },
+      });
+
+      await executeDeployFlow();
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(navigate).not.toHaveBeenCalled();
+        expect(
+          wrapper.getByText(
+            /You have exceeded the maximum number of concurrent builds/
+          )
+        ).toBeTruthy();
+      });
+    });
+
+    it("other errors should display a generic error", async () => {
+      const scope = mockDeployNow({
+        appId: currentApp.id,
+        envId: currentEnv.id!,
+        config: deployConfig,
+        status: 400,
+        response: {
+          error: "Something went wrong.",
+        },
+      });
+
+      await executeDeployFlow();
+
+      await waitFor(() => {
+        expect(scope.isDone()).toBe(true);
+        expect(navigate).not.toHaveBeenCalled();
+        expect(wrapper.getByText(/Something went wrong\./)).toBeTruthy();
+      });
     });
   });
 });

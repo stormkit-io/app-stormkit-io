@@ -4,6 +4,7 @@ interface CustomTypeBackground {
   default: string;
   paper: string;
   border: string;
+  borderContrast: string;
   transparent: string;
 }
 

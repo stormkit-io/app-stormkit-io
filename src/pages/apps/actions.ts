@@ -169,9 +169,10 @@ export const useFetchApp = ({ appId }: FetchAppProps): FetchAppReturnValue => {
 
 interface DeployProps {
   app: App;
+  files?: File[];
   config?: {
-    buildCmd: string;
-    branch: string;
+    buildCmd?: string;
+    branch?: string;
     distFolder?: string;
     publish: boolean;
   };
@@ -186,6 +187,7 @@ interface DeployAPIResponse {
 
 export const deploy = ({
   app,
+  files,
   config,
   setLoading,
   setError,
@@ -197,28 +199,63 @@ export const deploy = ({
 
   setLoading(true);
 
-  return api
-    .post<DeployAPIResponse>(`/app/deploy`, {
-      env: environment.env,
+  var res: Promise<DeployAPIResponse>;
+
+  if (files && files.length > 0) {
+    // Create a FormData object to hold the files
+    const formData = new FormData();
+
+    // Append the files to the formData object
+    files.forEach(file => {
+      formData.append("files", file);
+    });
+
+    formData.append("appId", app.id);
+    formData.append("envId", environment.id!);
+    formData.append("publish", config?.publish ? "true" : "false");
+
+    res = api.upload<DeployAPIResponse>("/app/deploy", {
+      body: formData,
+    });
+  } else {
+    res = api.post<DeployAPIResponse>(`/app/deploy`, {
+      envId: environment.id,
       appId: app.id,
       ...config,
-    })
+    });
+  }
+
+  return res
     .catch(async res => {
       if (res.status === 429) {
-        setError((await api.errors(res))[0]);
-      } else if (
-        res.status === 401 ||
-        res.status === 403 ||
-        res.status === 404
-      ) {
-        setError("repo-not-found");
-      } else {
-        setError(
-          "Something wrong happened here. Please contact us at hello@stormkit.io"
-        );
+        return setError((await api.errors(res))[0]);
       }
+
+      if (res.status === 401 || res.status === 403 || res.status === 404) {
+        return setError("repo-not-found");
+      }
+
+      let message = "";
+
+      try {
+        const data = await res.json();
+        message = data.error;
+      } catch {}
+
+      setError(
+        message ||
+          "Something wrong happened here. Please contact us at hello@stormkit.io"
+      );
     })
     .finally(() => {
       setLoading(false);
     });
+};
+
+interface CreateAppProps {
+  teamId?: string;
+}
+
+export const createApp = ({ teamId }: CreateAppProps): Promise<App> => {
+  return api.post<{ app: App }>("/app", { teamId }).then(({ app }) => app);
 };

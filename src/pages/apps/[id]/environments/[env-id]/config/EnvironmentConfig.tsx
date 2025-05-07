@@ -34,15 +34,15 @@ interface NavItemParent {
   children: NavItem[];
 }
 
-const listItems: NavItemParent[] = [
+const generateListItems = (app: App): NavItemParent[] => [
   {
     title: "Deployment settings",
     children: [
       { path: "#general", text: "General" },
-      { path: "#build", text: "Build" },
+      { path: "#build", text: "Build", visible: !app.isBare },
       { path: "#server", text: "Server", visible: selfHosted },
       { path: "#env-vars", text: "Environment variables" },
-      { path: "#status-checks", text: "Status checks" },
+      { path: "#status-checks", text: "Status checks", visible: !app.isBare },
     ].filter(i => i.visible !== false),
   },
   {
@@ -75,6 +75,9 @@ export default function EnvironmentConfig() {
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const { hash } = useLocation();
+  const listItems = useMemo(() => {
+    return generateListItems(app);
+  }, [app]);
   const navigate = useNavigate();
 
   const Tab = useMemo(() => {
@@ -108,11 +111,13 @@ export default function EnvironmentConfig() {
               environment={environment}
               setRefreshToken={setRefreshToken}
             />
-            <TabConfigBuild
-              app={app}
-              environment={environment}
-              setRefreshToken={setRefreshToken}
-            />
+            {!app.isBare && (
+              <TabConfigBuild
+                app={app}
+                environment={environment}
+                setRefreshToken={setRefreshToken}
+              />
+            )}
             {selfHosted && (
               <TabConfigServer
                 app={app}
@@ -125,11 +130,13 @@ export default function EnvironmentConfig() {
               environment={environment}
               setRefreshToken={setRefreshToken}
             />
-            <TabStatusChecks
-              app={app}
-              environment={environment}
-              setRefreshToken={setRefreshToken}
-            />
+            {!app.isBare && (
+              <TabStatusChecks
+                app={app}
+                environment={environment}
+                setRefreshToken={setRefreshToken}
+              />
+            )}
           </>
         );
       default:

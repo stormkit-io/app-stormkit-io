@@ -261,6 +261,7 @@ export default (mode: "dark" | "light") => {
               default: "#0b061e",
               paper: "#090518",
               border: "#111111",
+              borderContrast: "#e2e2e2",
               transparent: "rgba(255,255,255,0.05)",
             },
             info: {
@@ -306,6 +307,7 @@ export default (mode: "dark" | "light") => {
               default: "#ffffff",
               paper: "#f9f9f9",
               border: "#e2e2e2",
+              borderContrast: "#111111",
               transparent: "rgba(0,0,0,0.1)",
             },
             info: {

@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
 import Card from "~/components/Card";
@@ -11,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ImportExport from "@mui/icons-material/ImportExport";
 import LinkIcon from "@mui/icons-material/Link";
+import BoltIcon from "@mui/icons-material/Bolt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowForward from "@mui/icons-material/ArrowForwardIos";
 import { AuthContext } from "~/pages/auth/Auth.context";
@@ -18,7 +20,7 @@ import ButtonDropdown from "~/components/ButtonDropdown";
 import AppName from "~/components/AppName";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { providerToText } from "~/utils/helpers/string";
-import { useFetchAppList } from "./actions";
+import { useFetchAppList, createApp } from "./actions";
 import { WelcomeModal, EmptyList } from "./_components";
 
 let timeout: NodeJS.Timeout;
@@ -30,6 +32,7 @@ export default function Apps() {
   const [from, setFrom] = useState(0);
   const [filter, setFilter] = useState("");
   const selectedTeam = useSelectedTeam({ teams });
+  const navigate = useNavigate();
 
   const { apps, loading, error, hasNextPage } = useFetchAppList({
     from,
@@ -124,6 +127,15 @@ export default function Apps() {
                   icon: <LinkIcon />,
                   text: "Import from URL",
                   href: `/apps/new/url`,
+                },
+                {
+                  icon: <BoltIcon />,
+                  text: "Create bare app",
+                  onClick: () => {
+                    createApp({ teamId: selectedTeam?.id }).then(app => {
+                      navigate(`/apps/${app.id}`);
+                    });
+                  },
                 },
               ]}
             />

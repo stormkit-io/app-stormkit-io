@@ -112,8 +112,9 @@ export const mockFetchManifestCall = ({
 
 interface mockDeployNowProps {
   appId: string;
-  config: {
-    env: string;
+  envId: string;
+  files?: File[];
+  config?: {
     buildCmd: string;
     branch: string;
     distFolder: string;
@@ -125,14 +126,40 @@ interface mockDeployNowProps {
 
 export const mockDeployNow = ({
   appId,
+  envId,
+  files,
   config,
   status = 200,
   response,
 }: mockDeployNowProps) => {
+  if (files && files.length > 0) {
+    // Create a FormData object to hold the files
+    const formData = new FormData();
+
+    // Append the files to the formData object
+    files.forEach(file => {
+      formData.append("files", file);
+    });
+
+    formData.append("appId", appId);
+    formData.append("envId", envId);
+
+    return nock(endpoint)
+      .post("/app/deploy", body => {
+        return (
+          body.includes(`Content-Disposition: form-data; name="appId"`) &&
+          body.includes(`Content-Disposition: form-data; name="envId"`) &&
+          body.includes(`Content-Disposition: form-data; name="files"`)
+        );
+      })
+      .reply(status, response);
+  }
+
   return nock(endpoint)
     .post("/app/deploy", {
-      ...config,
       appId,
+      envId,
+      ...config,
     })
     .reply(status, response);
 };
