@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import pLimit from "p-limit";
 import api from "~/utils/api/Api";
 
 interface FetchAppListProps {
@@ -185,7 +186,7 @@ interface DeployAPIResponse {
   id: string;
 }
 
-const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
+const CHUNK_SIZE = 9 * 1024 * 1024; // 9MB
 
 export const deploy = ({
   app,
@@ -234,6 +235,7 @@ export const deploy = ({
     const fileId = `${app.id}-${Date.now()}`; // Unique file ID
 
     const promises: Promise<DeployAPIResponse>[] = [];
+    const limit = pLimit(3); // Limit the number of concurrent uploads
 
     for (let i = 0; i < totalChunks; i++) {
       const start = i * CHUNK_SIZE;
@@ -249,15 +251,17 @@ export const deploy = ({
       formData.append("files", chunk, file.name);
 
       promises.push(
-        api.upload<DeployAPIResponse>("/app/deploy", {
-          body: formData,
-          headers: {
-            "X-File-ID": fileId,
-            "X-Chunked-Upload": totalChunks > 0 ? "true" : "false",
-            "X-Total-Chunks": Math.max(totalChunks, 1).toString(),
-            "X-Chunk-Index": i.toString(),
-          },
-        })
+        limit(() =>
+          api.upload<DeployAPIResponse>("/app/deploy", {
+            body: formData,
+            headers: {
+              "X-File-ID": fileId,
+              "X-Chunked-Upload": totalChunks > 0 ? "true" : "false",
+              "X-Total-Chunks": Math.max(totalChunks, 1).toString(),
+              "X-Chunk-Index": i.toString(),
+            },
+          })
+        )
       );
     }
 
