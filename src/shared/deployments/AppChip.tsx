@@ -2,6 +2,7 @@ import type { SxProps } from "@mui/material";
 import React from "react";
 import Chip from "@mui/material/Chip";
 import Avatar from "@mui/material/Avatar";
+import BoltIcon from "@mui/icons-material/Bolt";
 import Dot from "~/components/Dot";
 import githubLogo from "~/assets/logos/github-logo.svg";
 import bitbucketLogo from "~/assets/logos/bitbucket-logo.svg";
@@ -29,7 +30,14 @@ export default function AppChip({
   color,
   sx,
 }: Props) {
-  const { repo, provider } = parseRepo(repoNameWithProvider);
+  let repo: string = "";
+  let provider: Provider | undefined;
+
+  if (repoNameWithProvider) {
+    const data = parseRepo(repoNameWithProvider);
+    repo = data.repo;
+    provider = data.provider;
+  }
 
   return (
     <Chip
@@ -42,11 +50,18 @@ export default function AppChip({
               <Dot />
             </>
           )}
-          {repo} <Dot /> {envName}
+          {repo ? (
+            <>
+              {repo} <Dot />
+            </>
+          ) : (
+            ""
+          )}{" "}
+          {envName}
         </>
       }
       sx={color ? sx : { bgcolor: "#1F1C3B", ...sx }}
-      avatar={<Avatar src={logos[provider!]} />}
+      avatar={provider ? <Avatar src={logos[provider]} /> : <BoltIcon />}
     />
   );
 }

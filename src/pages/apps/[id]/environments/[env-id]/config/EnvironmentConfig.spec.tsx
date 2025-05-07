@@ -1,5 +1,5 @@
 import { RenderResult, waitFor } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { fireEvent, render } from "@testing-library/react";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
@@ -69,6 +69,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
     expect(wrapper.getByText("Build")).toBeTruthy();
     expect(wrapper.getAllByText("Environment variables").at(0)).toBeTruthy();
     expect(wrapper.getByText("API Keys")).toBeTruthy();
+    expect(wrapper.getByText("Status checks")).toBeTruthy();
+    expect(wrapper.getByText("Serverless functions")).toBeTruthy();
+    expect(wrapper.getByText("Headers")).toBeTruthy();
+    expect(wrapper.getByText("Redirects")).toBeTruthy();
+    expect(wrapper.getByText("Auth wall")).toBeTruthy();
+    expect(wrapper.getByText("Domains")).toBeTruthy();
+    expect(wrapper.getByText("Mailer")).toBeTruthy();
   });
 
   it.each`
@@ -95,6 +102,20 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/EnvironmentConfig.tsx",
       expect(
         wrapper.getByTestId("env-config-nav").getAttribute("data-selected")
       ).toBe("#env-vars");
+    });
+  });
+
+  describe("when it is a bare app", () => {
+    beforeEach(() => {
+      createWrapper({ app: { ...currentApp, isBare: true } });
+    });
+
+    it("should not display the build tab", () => {
+      expect(() => wrapper.getByText("Build")).toThrow();
+    });
+
+    it("should not display the Status Checks tab", () => {
+      expect(() => wrapper.getByText("Status checks")).toThrow();
     });
   });
 });

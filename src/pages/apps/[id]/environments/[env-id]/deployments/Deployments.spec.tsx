@@ -59,7 +59,7 @@ describe("~/apps/[id]/environments/[env-id]/deployments/Deployments.tsx", () => 
       expect(scope.isDone()).toBe(true);
       expect(wrapper.getByText("chore: update packages")).toBeTruthy();
       expect(wrapper.getAllByText("2 hours ago")).toBeTruthy();
-      expect(wrapper.getByText("main")).toBeTruthy();
+      expect(wrapper.getByText(/main/)).toBeTruthy();
     });
   });
 

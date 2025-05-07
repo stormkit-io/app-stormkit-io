@@ -13,7 +13,8 @@ declare type App = {
   defaultEnv: string;
   displayName: string;
   refreshToken?: number;
-  provider: "github" | "bitbucket" | "gitlab";
+  isBare?: boolean;
+  provider?: "github" | "bitbucket" | "gitlab";
   name?: string;
   featureFlags?: Record<string, boolean>;
   meta?: {

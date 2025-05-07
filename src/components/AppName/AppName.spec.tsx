@@ -32,6 +32,7 @@ describe("~/components/AppName/AppName.tsx", () => {
   it("should display the app name with the display name and repo", () => {
     createWrapper({ app });
 
+    expect(() => wrapper.getByTestId("BoltIcon")).toThrow();
     expect(wrapper.getByText("app")).toBeTruthy();
     expect(wrapper.getByText("app").getAttribute("href")).toBe(
       `/apps/${app.id}/environments`
@@ -41,5 +42,17 @@ describe("~/components/AppName/AppName.tsx", () => {
     expect(wrapper.getByText("stormkit-io/frontend").getAttribute("href")).toBe(
       "https://gitlab.com/stormkit-io/frontend"
     );
+  });
+
+  it("should display only the name if an app is bare", () => {
+    createWrapper({ app: { ...app, isBare: true } });
+
+    expect(wrapper.container.textContent).toBe("app");
+    expect(wrapper.getByTestId("BoltIcon")).toBeTruthy();
+    expect(wrapper.getByText("app").getAttribute("href")).toBe(
+      `/apps/${app.id}/environments`
+    );
+
+    expect(() => wrapper.getByText("stormkit-io/frontend")).toThrow();
   });
 });
