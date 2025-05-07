@@ -1,11 +1,8 @@
 import { useMemo, useState } from "react";
-import WarningIcon from "@mui/icons-material/Warning";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import Alert from "@mui/material/Alert";
-import Typography from "@mui/material/Typography";
 
 interface Props {
   manifest: Manifest;
@@ -43,6 +40,23 @@ const useTree = ({ manifest }: { manifest: Manifest }) => {
       object[path].files.push(item);
       return object;
     };
+
+    Object.keys(manifest?.staticFiles || {}).forEach(fileName => {
+      const pieces = fileName.replace(/^\//, "").split("/");
+      const file = { fileName, headers: manifest.staticFiles![fileName] };
+
+      if (pieces.length === 1) {
+        tree["/"].files.push(file);
+      } else {
+        let lastLeaf = tree["/"].folders;
+
+        pieces.pop(); // last name is file name
+        pieces.forEach(path => {
+          recursiveFolder(lastLeaf, path, file);
+          lastLeaf = lastLeaf[path].folders;
+        });
+      }
+    });
 
     manifest.cdnFiles?.forEach(file => {
       const pieces = file.fileName.replace(/^\//, "").split("/");
@@ -145,27 +159,6 @@ const recursiveRender = (deployment: DeploymentV2, treeNode: TreeNode) => {
 };
 
 export default function TabCDNFiles({ manifest, deployment }: Props) {
-  const ssrEnabled = Boolean(manifest?.functionHandler);
-  const indexHTMLWarning =
-    !ssrEnabled &&
-    !manifest?.cdnFiles?.find(file => file.fileName === "/index.html");
-
   const tree = useTree({ manifest });
-
-  return (
-    <>
-      {indexHTMLWarning && (
-        <Alert color="warning" sx={{ mb: 2 }} icon={<WarningIcon />}>
-          <Typography>
-            Top level <span className="font-bold">/index.html</span> is missing
-            and server side rendering is not detected.{" "}
-            <Link href="https://www.stormkit.io/docs/other/troubleshooting#index-html-missing">
-              Learn more.
-            </Link>
-          </Typography>
-        </Alert>
-      )}
-      <Box>{recursiveRender(deployment, tree["/"])}</Box>
-    </>
-  );
+  return <Box>{recursiveRender(deployment, tree["/"])}</Box>;
 }

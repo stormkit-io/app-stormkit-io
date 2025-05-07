@@ -53,28 +53,6 @@ describe("~/apps/[id]/environments/[env-id]/deployments/_components/ManifestModa
     });
   });
 
-  it("should display a warning when top level index.html is missing and ssr is disabled", async () => {
-    createWrapper({
-      manifest: mockManifest({
-        functionHandler: "",
-        cdnFiles: [{ fileName: "/static/index.js", headers: {} }],
-      }),
-    });
-
-    await waitFor(() => {
-      expect(wrapper.getByText(/Top level/)).toBeTruthy();
-      expect(wrapper.getByText("/index.html")).toBeTruthy();
-      expect(
-        wrapper.getByText(
-          /is missing and server side rendering is not detected\./
-        )
-      ).toBeTruthy();
-      expect(wrapper.getByText("Learn more.").getAttribute("href")).toBe(
-        "https://www.stormkit.io/docs/other/troubleshooting#index-html-missing"
-      );
-    });
-  });
-
   describe("ui view", () => {
     it("should contain the cdn files as the primary view", async () => {
       const manifest = mockManifest();

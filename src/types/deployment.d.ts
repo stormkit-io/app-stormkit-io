@@ -96,7 +96,8 @@ interface APIFile {
 }
 
 declare type Manifest = {
-  cdnFiles?: CDNFile[];
+  staticFiles?: Record<string, Record<string, string>>;
+  cdnFiles?: CDNFile[]; // @deprecated: use staticFiles
   apiFiles?: APIFile[];
   redirects?: Redirects[] | null;
   functionHandler?: string;
