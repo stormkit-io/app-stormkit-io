@@ -185,6 +185,8 @@ interface DeployAPIResponse {
   id: string;
 }
 
+const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
+
 export const deploy = ({
   app,
   files,
@@ -199,54 +201,88 @@ export const deploy = ({
 
   setLoading(true);
 
-  var res: Promise<DeployAPIResponse>;
+  const handleUploadError = async (res: Response) => {
+    if (res.status === 429) {
+      return setError((await api.errors(res))[0]);
+    }
+
+    if (res.status === 401 || res.status === 403 || res.status === 404) {
+      return setError("repo-not-found");
+    }
+
+    let message = "";
+
+    try {
+      const data = await res.json();
+      message = data.error;
+    } catch {}
+
+    setError(
+      message ||
+        "Something wrong happened here. Please contact us at hello@stormkit.io"
+    );
+  };
 
   if (files && files.length > 0) {
-    // Create a FormData object to hold the files
-    const formData = new FormData();
+    if (files.length !== 1) {
+      setError("You can upload only one file at a time.");
+      return Promise.resolve();
+    }
 
-    // Append the files to the formData object
-    files.forEach(file => {
-      formData.append("files", file);
-    });
+    const file = files[0]; // Assume only one file is uploaded
+    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+    const fileId = `${app.id}-${Date.now()}`; // Unique file ID
 
-    formData.append("appId", app.id);
-    formData.append("envId", environment.id!);
-    formData.append("publish", config?.publish ? "true" : "false");
+    const promises: Promise<DeployAPIResponse>[] = [];
 
-    res = api.upload<DeployAPIResponse>("/app/deploy", {
-      body: formData,
-    });
-  } else {
-    res = api.post<DeployAPIResponse>(`/app/deploy`, {
+    for (let i = 0; i < totalChunks; i++) {
+      const start = i * CHUNK_SIZE;
+      const end = Math.min(start + CHUNK_SIZE, file.size);
+      const chunk = file.slice(start, end);
+
+      // Create a FormData object to hold the files
+      const formData = new FormData();
+
+      formData.append("appId", app.id);
+      formData.append("envId", environment.id!);
+      formData.append("publish", config?.publish ? "true" : "false");
+      formData.append("files", chunk, file.name);
+
+      promises.push(
+        api.upload<DeployAPIResponse>("/app/deploy", {
+          body: formData,
+          headers: {
+            "X-File-ID": fileId,
+            "X-Chunked-Upload": totalChunks > 0 ? "true" : "false",
+            "X-Total-Chunks": Math.max(totalChunks, 1).toString(),
+            "X-Chunk-Index": i.toString(),
+          },
+        })
+      );
+    }
+
+    return Promise.all(promises)
+      .then(res => {
+        // Return the response with the deployment id
+        for (let i = 0; i < res.length; i++) {
+          if (res[i].id) {
+            return res[i];
+          }
+        }
+      })
+      .catch(handleUploadError)
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  return api
+    .post<DeployAPIResponse>(`/app/deploy`, {
       envId: environment.id,
       appId: app.id,
       ...config,
-    });
-  }
-
-  return res
-    .catch(async res => {
-      if (res.status === 429) {
-        return setError((await api.errors(res))[0]);
-      }
-
-      if (res.status === 401 || res.status === 403 || res.status === 404) {
-        return setError("repo-not-found");
-      }
-
-      let message = "";
-
-      try {
-        const data = await res.json();
-        message = data.error;
-      } catch {}
-
-      setError(
-        message ||
-          "Something wrong happened here. Please contact us at hello@stormkit.io"
-      );
     })
+    .catch(handleUploadError)
     .finally(() => {
       setLoading(false);
     });
