@@ -186,7 +186,7 @@ interface DeployAPIResponse {
   id: string;
 }
 
-const CHUNK_SIZE = 9 * 1024 * 1024; // 9MB
+const CHUNK_SIZE = 4 * 1024 * 1024; // 4MB
 
 export const deploy = ({
   app,
