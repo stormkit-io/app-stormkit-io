@@ -13,6 +13,7 @@ interface Props {
   secondaryDesc?: string;
   secondaryLink?: string;
   secondaryActionText?: string;
+  onBareAppClick?: () => void;
 }
 
 export default function EmptyList({
@@ -22,6 +23,7 @@ export default function EmptyList({
   secondaryLink,
   secondaryActionText,
   secondaryDesc,
+  onBareAppClick,
 }: Props) {
   return (
     <Box sx={{ textAlign: "center" }}>
@@ -67,6 +69,7 @@ export default function EmptyList({
           sx={{
             backgroundColor: "container.paper",
             ml: { xs: 0, md: 2 },
+            mr: { md: onBareAppClick ? 2 : undefined },
             mt: { xs: 2, md: 0 },
             maxWidth: { xs: "auto", md: 340 },
             borderRadius: 1,
@@ -83,6 +86,38 @@ export default function EmptyList({
             </Button>
           </CardFooter>
         </Card>
+        {onBareAppClick && (
+          <>
+            <Typography component="span">or</Typography>
+            <Card
+              sx={{
+                backgroundColor: "container.paper",
+                ml: { xs: 0, md: 2 },
+                mt: { xs: 2, md: 0 },
+                maxWidth: { xs: "auto", md: 340 },
+                borderRadius: 1,
+                flex: 1,
+              }}
+            >
+              <CardHeader title="Bare app" sx={{ pb: 2 }} />
+              <Typography sx={{ mb: 4, color: "text.secondary" }}>
+                Deploy your websites by uploading zip files
+              </Typography>
+              <CardFooter sx={{ textAlign: "center" }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={e => {
+                    e.preventDefault();
+                    onBareAppClick?.();
+                  }}
+                >
+                  Create bare app
+                </Button>
+              </CardFooter>
+            </Card>
+          </>
+        )}
       </Box>
     </Box>
   );

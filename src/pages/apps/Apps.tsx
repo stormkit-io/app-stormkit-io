@@ -54,6 +54,12 @@ export default function Apps() {
     );
   }
 
+  const createBareApp = () => {
+    createApp({ teamId: selectedTeam?.id }).then(app => {
+      navigate(`/apps/${app.id}`);
+    });
+  };
+
   // This can happen if the self-hosted user has no provider configured
   if (!provider && apps.length === 0) {
     return (
@@ -66,6 +72,7 @@ export default function Apps() {
             secondaryLink="/apps/new/url"
             secondaryActionText="Import from URL"
             secondaryDesc="Start importing immediately by providing a public repository URL"
+            onBareAppClick={createBareApp}
           />
         </Card>
       </Box>
@@ -91,6 +98,7 @@ export default function Apps() {
             secondaryLink="/apps/new/url"
             secondaryDesc="Import directly by providing a public repository URL"
             secondaryActionText="Import from URL"
+            onBareAppClick={createBareApp}
           />
         </Card>
       </Box>
@@ -131,11 +139,7 @@ export default function Apps() {
                 {
                   icon: <BoltIcon />,
                   text: "Create bare app",
-                  onClick: () => {
-                    createApp({ teamId: selectedTeam?.id }).then(app => {
-                      navigate(`/apps/${app.id}`);
-                    });
-                  },
+                  onClick: createBareApp,
                 },
               ]}
             />
