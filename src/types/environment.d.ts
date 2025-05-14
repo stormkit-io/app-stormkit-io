@@ -13,6 +13,7 @@ declare type BuildConfig = {
   errorFile?: string;
   distFolder: string;
   buildCmd?: string;
+  installCmd?: string;
   serverCmd?: string;
   serverFolder?: string; // @deprecated: use distFolder instead.
   statusChecks?: StatusCheck[];

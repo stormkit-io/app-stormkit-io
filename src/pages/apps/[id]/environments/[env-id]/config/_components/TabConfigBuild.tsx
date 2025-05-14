@@ -66,6 +66,18 @@ export default function TabConfigGeneral({
       />
       <Box sx={{ mb: 4 }}>
         <TextField
+          label="Install command"
+          variant="filled"
+          autoComplete="off"
+          defaultValue={env?.build.installCmd || ""}
+          fullWidth
+          name="build.installCmd"
+          placeholder="The command to install your dependencies"
+          helperText={"Leave empty for auto-detection."}
+        />
+      </Box>
+      <Box sx={{ mb: 4 }}>
+        <TextField
           label="Build command"
           variant="filled"
           autoComplete="off"

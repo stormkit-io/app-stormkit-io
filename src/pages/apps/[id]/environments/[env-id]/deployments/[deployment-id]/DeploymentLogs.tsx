@@ -42,9 +42,10 @@ export default function DeploymentLogs({ logs, isRunning }: Props) {
   const isLastStepAndRunning = (i: number) =>
     isRunning && logs.length - 1 === i;
 
-  return logs
-    ?.filter(({ message }) => message.trim())
-    ?.map(({ title, status, duration, message = "" }, i) => (
+  return logs?.map(({ title, status, duration, message = "" }, i) => {
+    const hasContent = message.trim() !== "";
+
+    return (
       <Box
         key={title}
         data-testid={`deployment-step-${i}`}
@@ -59,10 +60,10 @@ export default function DeploymentLogs({ logs, isRunning }: Props) {
             bgcolor: "container.transparent",
             borderRadius: 2,
             p: 1,
-            cursor: "pointer",
+            cursor: hasContent ? "pointer" : "default",
           }}
           onClick={() => {
-            setIsOpen({ ...isOpen, [i]: !isOpen[i] });
+            hasContent ? setIsOpen({ ...isOpen, [i]: !isOpen[i] }) : undefined;
           }}
         >
           {isLastStepAndRunning(i) ? (
@@ -86,7 +87,7 @@ export default function DeploymentLogs({ logs, isRunning }: Props) {
           >
             {title}
             <IconButton
-              sx={{ ml: 0.5 }}
+              sx={{ ml: 0.5, visibility: hasContent ? "visible" : "hidden" }}
               onClick={() => {
                 setIsOpen({ ...isOpen, [i]: !isOpen[i] });
               }}
@@ -153,5 +154,6 @@ export default function DeploymentLogs({ logs, isRunning }: Props) {
           </Box>
         )}
       </Box>
-    ));
+    );
+  });
 }
