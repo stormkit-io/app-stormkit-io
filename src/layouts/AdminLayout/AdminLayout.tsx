@@ -5,9 +5,10 @@ import { AuthContext } from "~/pages/auth/Auth.context";
 import Error404 from "~/components/Errors/Error404";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
+import MenuLink from "~/components/MenuLink";
 import { useSelectedTeam } from "../TopMenu/Teams/actions";
 import TopMenu from "../TopMenu";
-import MenuLink from "~/components/MenuLink";
+import System from "~/pages/admin/System";
 
 interface Props {
   children: React.ReactNode;
@@ -65,6 +66,14 @@ export default function AdminLayout({ children }: Props) {
             <Box sx={{ mb: 4 }}>
               <MenuLink
                 item={{
+                  path: "/admin/system",
+                  text: "System",
+                  isActive:
+                    pathname.includes("/admin/system") || pathname === "/admin",
+                }}
+              />
+              <MenuLink
+                item={{
                   path: "/admin/subscription",
                   text: "Subscription",
                   isActive: pathname.includes("/admin/subscription"),
@@ -78,7 +87,7 @@ export default function AdminLayout({ children }: Props) {
                 }}
               />
             </Box>
-            {children}
+            {pathname === "/admin" ? <System /> : children}
           </Card>
         </Box>
       </Box>

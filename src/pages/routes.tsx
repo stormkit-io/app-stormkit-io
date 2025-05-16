@@ -121,6 +121,10 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/admin"), adminLayout),
   },
   {
+    path: "/admin/system",
+    element: Async(() => import("~/pages/admin/System"), adminLayout),
+  },
+  {
     path: "/admin/jobs",
     element: Async(() => import("~/pages/admin/Jobs"), adminLayout),
   },
