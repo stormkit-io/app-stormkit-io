@@ -25,6 +25,7 @@ interface Props {
   resetToken?: number;
   separator?: string;
   isSensitive?: boolean;
+  modifyAsString?: boolean;
   onChange?: (kv: Record<string, string>) => void;
   onModalOpen?: () => void;
 }
@@ -48,6 +49,7 @@ export default function KeyValue({
   resetToken,
   separator = "=",
   isSensitive = false,
+  modifyAsString = true,
   onChange,
   onModalOpen,
 }: Props) {
@@ -134,7 +136,7 @@ export default function KeyValue({
                 sx={{
                   display: "inline-flex",
                   textTransform: "none",
-                  mr: 2,
+                  mr: modifyAsString ? 2 : 0,
                 }}
                 onClick={e => {
                   e.preventDefault();
@@ -145,19 +147,21 @@ export default function KeyValue({
                 Add Row
               </Button>
 
-              <Button
-                color="primary"
-                type="button"
-                variant="outlined"
-                sx={{ display: "inline-flex", textTransform: "none" }}
-                onClick={() => {
-                  setIsModalOpen(true);
-                  onModalOpen?.();
-                }}
-              >
-                <ContentCopyIcon sx={{ mr: 1, fontSize: 16 }} />
-                Modify as a string
-              </Button>
+              {modifyAsString && (
+                <Button
+                  color="primary"
+                  type="button"
+                  variant="outlined"
+                  sx={{ display: "inline-flex", textTransform: "none" }}
+                  onClick={() => {
+                    setIsModalOpen(true);
+                    onModalOpen?.();
+                  }}
+                >
+                  <ContentCopyIcon sx={{ mr: 1, fontSize: 16 }} />
+                  Modify as a string
+                </Button>
+              )}
             </TableCell>
           </TableRow>
         </TableFooter>
