@@ -67,7 +67,9 @@ export default function Apps() {
         <Card sx={{ px: { xs: 1, md: 4 } }}>
           <EmptyList
             primaryActionText="Configure authentication"
-            primaryDesc="Follow the documentation to start importing from private repositories"
+            primaryDesc="Configure authentication to import from private repositories
+
+"
             primaryLink="https://www.stormkit.io/docs/welcome/self-hosting#authentication"
             secondaryLink="/apps/new/url"
             secondaryActionText="Import from URL"
