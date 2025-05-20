@@ -167,7 +167,7 @@ describe("~/pages/apps/Apps.tsx", () => {
       await waitFor(() => {
         expect(
           wrapper.getByText(
-            "Follow the documentation to start importing from private repositories"
+            "Configure authentication to import from private repositories"
           )
         ).toBeTruthy();
       });

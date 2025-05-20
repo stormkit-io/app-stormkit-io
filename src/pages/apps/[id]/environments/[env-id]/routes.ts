@@ -9,12 +9,6 @@ const routes: Array<RouteProps> = [
     ),
   },
   {
-    path: "/feature-flags",
-    element: Async(
-      () => import("~/pages/apps/[id]/environments/[env-id]/feature-flags")
-    ),
-  },
-  {
     path: "/function-triggers",
     element: Async(
       () => import("~/pages/apps/[id]/environments/[env-id]/function-triggers")

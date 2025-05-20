@@ -65,11 +65,6 @@ export const envMenuItems = ({
       isActive: pathname.includes("/snippets"),
     },
     {
-      text: "Feature Flags",
-      path: `${envPath}/feature-flags`,
-      isActive: pathname.includes("/feature-flags"),
-    },
-    {
       text: "Triggers",
       path: `${envPath}/function-triggers`,
       isActive: pathname.includes("/function-triggers"),

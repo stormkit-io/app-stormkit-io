@@ -16,7 +16,6 @@ declare type App = {
   isBare?: boolean;
   provider?: "github" | "bitbucket" | "gitlab";
   name?: string;
-  featureFlags?: Record<string, boolean>;
   meta?: {
     isFramework: boolean;
     hasPackageJson: boolean;
