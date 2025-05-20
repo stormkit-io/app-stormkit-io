@@ -26,7 +26,7 @@ const paymentLinks: Record<SubName, string> = {
     starter: "https://buy.stripe.com/cN25m44aK15OdmUfYZ",
     medium: "https://buy.stripe.com/28o3dW6iSaGo2Ig3cc",
     enterprise: "https://buy.stripe.com/fZe9CkdLk3dWeqYeUW",
-    "self-hosted": "https://buy.stripe.com/aEU7uccHgeWEfv28wz",
+    "self-hosted": "https://buy.stripe.com/bJecN67Ne0PA4Se6iPbAs05",
     "self-hosted-premium": "https://buy.stripe.com/eVacOwbDc3dW2IgdQU",
   },
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
