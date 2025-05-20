@@ -70,7 +70,7 @@ export default function Apps() {
             primaryDesc="Configure authentication to import from private repositories
 
 "
-            primaryLink="https://www.stormkit.io/docs/welcome/self-hosting#authentication"
+            primaryLink="https://www.stormkit.io/docs/self-hosting/authentication"
             secondaryLink="/apps/new/url"
             secondaryActionText="Import from URL"
             secondaryDesc="Start importing immediately by providing a public repository URL"
@@ -87,7 +87,7 @@ export default function Apps() {
 
   const newAppHref = provider
     ? `/apps/new/${provider}`
-    : "https://www.stormkit.io/docs/welcome/self-hosting#authentication";
+    : "https://www.stormkit.io/docs/self-hosting/authentication";
 
   if (apps.length === 0 && !filter) {
     return (

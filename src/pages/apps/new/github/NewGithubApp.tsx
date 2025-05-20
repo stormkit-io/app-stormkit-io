@@ -90,7 +90,7 @@ export default function NewGithubApp() {
               You don't seem to have a{" "}
               <Box component="code">GITHUB_APP_NAME</Box> configured.{" "}
               <Link
-                href="https://www.stormkit.io/docs/welcome/self-hosting#authentication"
+                href="https://www.stormkit.io/docs/self-hosting/authentication"
                 rel="noreferrer noopener"
                 target="_blank"
               >
