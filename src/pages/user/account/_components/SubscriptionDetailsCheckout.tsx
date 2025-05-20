@@ -36,7 +36,7 @@ const prices: Record<SubName, number> = {
   starter: 20,
   medium: 75,
   enterprise: 150,
-  "self-hosted": 39,
+  "self-hosted": 20,
   "self-hosted-premium": 100,
 };
 
