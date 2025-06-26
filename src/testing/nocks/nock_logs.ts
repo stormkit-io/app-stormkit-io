@@ -7,7 +7,7 @@ interface FetchDeploymentLogsProps {
   appId: string;
   deploymentId: string;
   status?: number;
-  after?: string;
+  beforeId?: string;
   response: {
     logs: Log[];
     hasNextPage: boolean;
@@ -18,7 +18,7 @@ export const mockFetchDeploymentLogs = ({
   appId,
   deploymentId,
   status = 200,
-  after = "",
+  beforeId = "",
   response = {
     logs: [],
     hasNextPage: false,
@@ -27,7 +27,7 @@ export const mockFetchDeploymentLogs = ({
   return nock(endpoint)
     .get(
       `/app/${appId}/logs?deploymentId=${deploymentId}${
-        after ? `&after=${after}` : ""
+        beforeId ? `&beforeId=${beforeId}` : ""
       }`
     )
     .reply(status, response);

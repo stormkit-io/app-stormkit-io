@@ -131,7 +131,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     const paginationScope = mockFetchDeploymentLogs({
       appId: currentApp.id,
       deploymentId: currentDeploy.id,
-      after: "1666187370",
+      beforeId: "456",
       response: {
         hasNextPage: false,
         logs: [

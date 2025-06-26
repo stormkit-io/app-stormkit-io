@@ -3,7 +3,7 @@ import api from "~/utils/api/Api";
 
 interface FetchDeploymentRuntimeLogsProps {
   appId: string;
-  afterTs?: string;
+  beforeId?: string;
   deploymentId: string;
 }
 
@@ -19,7 +19,7 @@ export interface Log {
 export const useFetchDeploymentRuntimeLogs = ({
   appId,
   deploymentId,
-  afterTs,
+  beforeId,
 }: FetchDeploymentRuntimeLogsProps) => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,7 @@ export const useFetchDeploymentRuntimeLogs = ({
     api
       .fetch<{ logs: Log[]; hasNextPage: boolean }>(
         `/app/${appId}/logs?deploymentId=${deploymentId}${
-          afterTs ? `&after=${afterTs}` : ""
+          beforeId ? `&beforeId=${beforeId}` : ""
         }`
       )
       .then(data => {
@@ -46,7 +46,7 @@ export const useFetchDeploymentRuntimeLogs = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, deploymentId, afterTs]);
+  }, [appId, deploymentId, beforeId]);
 
   return { logs, error, loading, hasNextPage };
 };

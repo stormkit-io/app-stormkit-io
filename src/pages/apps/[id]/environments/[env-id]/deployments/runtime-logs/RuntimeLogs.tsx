@@ -5,9 +5,6 @@ import Button from "@mui/lab/LoadingButton";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Switch from "@mui/material/Switch";
-import Typography from "@mui/material/Typography";
-import AlertTitle from "@mui/material/AlertTitle";
-import Alert from "@mui/material/Alert";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { grey } from "@mui/material/colors";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -80,16 +77,16 @@ const RuntimeLogs: React.FC = () => {
   const [whitespace, setWhiteSpace] = useState(true);
   const { deploymentId } = useParams();
   const { app } = useContext(AppContext);
-  const [afterTs, setAfterTs] = useState<string>();
+  const [beforeId, setBeforeId] = useState<string>();
 
   const { logs, error, loading, hasNextPage } = useFetchDeploymentRuntimeLogs({
     appId: app.id,
     deploymentId: deploymentId!,
-    afterTs,
+    beforeId,
   });
 
-  const isLoadingFirstPage = loading && !afterTs;
-  const shouldDisplayLogs = (!loading || afterTs) && logs.length > 0;
+  const isLoadingFirstPage = loading && !beforeId;
+  const shouldDisplayLogs = (!loading || beforeId) && logs.length > 0;
 
   return (
     <Card sx={{ width: "100%" }} loading={isLoadingFirstPage} error={error}>
@@ -108,13 +105,6 @@ const RuntimeLogs: React.FC = () => {
       />
       {shouldDisplayLogs ? (
         <>
-          <Alert color="info" sx={{ mb: 4 }}>
-            <AlertTitle>Note</AlertTitle>
-            <Typography>
-              We are currently displaying last 100 rows. Please contact us if
-              you need to see more.
-            </Typography>
-          </Alert>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormControlLabel
               sx={{ pl: 0, ml: 0 }}
@@ -177,7 +167,7 @@ const RuntimeLogs: React.FC = () => {
             variant="text"
             loading={loading}
             onClick={() => {
-              setAfterTs(logs[logs.length - 1]?.timestamp);
+              setBeforeId(logs[logs.length - 1]?.id);
             }}
           >
             Load more
