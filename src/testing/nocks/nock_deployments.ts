@@ -115,9 +115,7 @@ interface mockDeployNowProps {
   envId: string;
   files?: File[];
   config?: {
-    buildCmd: string;
     branch: string;
-    distFolder: string;
     publish: boolean;
   };
   status?: number;

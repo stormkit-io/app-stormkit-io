@@ -4,14 +4,13 @@ import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Button from "@mui/lab/LoadingButton";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import BuildIcon from "@mui/icons-material/Build";
+import TextField from "@mui/material/TextField";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import { deploy } from "~/pages/apps/actions";
 import MyDropzone from "~/components/Dropzone";
 import Modal from "~/components/Modal";
-import EnvironmentSelector from "~/components/EnvironmentSelector";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
@@ -19,24 +18,17 @@ import CardFooter from "~/components/CardFooter";
 interface Props {
   app: App;
   selected?: Environment;
-  environments: Array<Environment>;
   toggleModal: (val: boolean) => void;
 }
 
 export default function DeployModal({
   toggleModal,
-  environments,
   selected: environment,
   app,
 }: Props) {
   const navigate = useNavigate();
-  const [selectedEnv, setSelectedEnv] = useState<Environment | undefined>(
-    environment
-  );
-  const [cmd, setCmd] = useState(environment?.build?.buildCmd || "");
-  const [dist, setDist] = useState(environment?.build?.distFolder || "");
-  const [branch, setBranch] = useState(environment?.branch || "");
   const [files, setFiles] = useState<File[]>([]);
+  const [branch, setBranch] = useState<string>(environment?.branch || "");
   const [error, setError] = useState<null | string>(null);
   const [isAutoPublish, setIsAutoPublish] = useState<boolean>(
     environment?.autoPublish || false
@@ -44,10 +36,7 @@ export default function DeployModal({
   const [loading, setLoading] = useState<boolean>(false);
 
   const clearForm = () => {
-    setCmd("");
-    setDist("");
     setBranch("");
-    setSelectedEnv(undefined);
     setIsAutoPublish(false);
   };
 
@@ -82,46 +71,25 @@ export default function DeployModal({
 
           deploy({
             app,
-            environment: selectedEnv,
+            environment,
             setError,
             setLoading,
             files,
             config: {
               branch,
-              buildCmd: cmd,
-              distFolder: dist,
               publish: isAutoPublish || false,
             },
           }).then(deploy => {
             if (deploy) {
               toggleModal(false);
               navigate(
-                `/apps/${app.id}/environments/${selectedEnv?.id}/deployments/${deploy.id}`
+                `/apps/${app.id}/environments/${environment?.id}/deployments/${deploy.id}`
               );
             }
           });
         }}
       >
         <CardHeader title="Start a deployment" />
-        <Box sx={{ mb: 4 }}>
-          <EnvironmentSelector
-            placeholder="Select an environment to deploy"
-            environments={environments}
-            defaultValue={environment?.id || ""}
-            onSelect={(env: Environment): void => {
-              if (env) {
-                setBranch(env.branch);
-                setCmd(env.build.buildCmd || "");
-                setDist(env.build.distFolder);
-                setIsAutoPublish(env.autoPublish);
-                setError(null);
-                setSelectedEnv(env);
-              } else {
-                clearForm();
-              }
-            }}
-          />
-        </Box>
         {app.isBare ? (
           <Box sx={{ mb: 4 }}>
             <MyDropzone
@@ -135,50 +103,23 @@ export default function DeployModal({
             />
           </Box>
         ) : (
-          <>
-            <Box sx={{ mb: 4 }}>
-              <TextField
-                name="branch"
-                variant="filled"
-                label="Checkout branch"
-                value={branch}
-                onChange={e => {
-                  setBranch(e.target.value);
-                }}
-                slotProps={{
-                  input: {
-                    "aria-label": "Branch to deploy",
-                  },
-                }}
-                fullWidth
-              />
-            </Box>
-
-            <Box sx={{ mb: 4 }}>
-              <TextField
-                value={cmd}
-                variant="filled"
-                label="Build command"
-                fullWidth
-                name="build.buildCmd"
-                onChange={e => setCmd(e.target.value)}
-                placeholder="Defaults to 'npm run build' or 'yarn build' or 'pnpm build'"
-                helperText="Concatenate multiple commands with the logical `&&` operator (e.g. npm run test && npm run build)"
-              />
-            </Box>
-            <Box sx={{ mb: 4 }}>
-              <TextField
-                value={dist}
-                variant="filled"
-                label="Output folder"
-                fullWidth
-                name="build.distFolder"
-                onChange={e => setDist(e.target.value)}
-                placeholder="Defaults to `build`, `dist`, `output` or `.stormkit`"
-                helperText="The folder where the build artifacts are located"
-              />
-            </Box>
-          </>
+          <Box sx={{ mb: 4 }}>
+            <TextField
+              name="branch"
+              variant="filled"
+              label="Checkout branch"
+              value={branch}
+              onChange={e => {
+                setBranch(e.target.value);
+              }}
+              slotProps={{
+                input: {
+                  "aria-label": "Branch to deploy",
+                },
+              }}
+              fullWidth
+            />
+          </Box>
         )}
         <Box sx={{ bgcolor: "container.paper", p: 1.75, pt: 1, mb: 4 }}>
           <FormControlLabel
@@ -202,13 +143,15 @@ export default function DeployModal({
         </Box>
         <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
           <Link
-            href={`/apps/${app.id}/environments/${selectedEnv?.id}`}
+            color="text.secondary"
+            href={`/apps/${app.id}/environments/${environment?.id}`}
+            sx={{ display: "inline-flex", alignItems: "center" }}
             onClick={() => {
               toggleModal(false);
             }}
           >
-            <BuildIcon fontSize="small" sx={{ mr: 1 }} />
-            Update default settings
+            <ArrowBack sx={{ fontSize: 14, mr: 1 }} /> Update build
+            configuration
           </Link>
           <Button
             variant="contained"

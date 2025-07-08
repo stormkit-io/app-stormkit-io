@@ -39,12 +39,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
 
     wrapper = renderWithRouter({
       el: () => (
-        <DeployModal
-          app={app}
-          environments={[env]}
-          selected={env}
-          toggleModal={toggleModal}
-        />
+        <DeployModal app={app} selected={env} toggleModal={toggleModal} />
       ),
     });
   };
@@ -64,8 +59,6 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     });
 
     it("should not display the branch, build command and output folder fields", () => {
-      expect(() => wrapper.getByLabelText("Build command")).toThrow();
-      expect(() => wrapper.getByLabelText("Output folder")).toThrow();
       expect(() => wrapper.getByLabelText("Checkout branch")).toThrow();
     });
 
@@ -114,23 +107,11 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
     });
 
     const deployConfig = {
-      distFolder: "my-dist",
       branch: "master",
       publish: true,
-      buildCmd: "echo hi",
     };
 
     const executeDeployFlow = async () => {
-      await userEvent.type(
-        wrapper.getByLabelText("Build command"),
-        deployConfig.buildCmd
-      );
-
-      await userEvent.type(
-        wrapper.getByLabelText("Output folder"),
-        deployConfig.distFolder
-      );
-
       await userEvent.type(
         wrapper.getByLabelText("Checkout branch"),
         deployConfig.branch
@@ -143,7 +124,7 @@ describe("~/layouts/AppLayout/_components/DeployModal.tsx", () => {
       expect(wrapper.getByText("Start a deployment")).toBeTruthy();
       expect(wrapper.getByText("Deploy now")).toBeTruthy();
       expect(
-        wrapper.getByText("Update default settings").getAttribute("href")
+        wrapper.getByText("Update build configuration").getAttribute("href")
       ).toBe(`/apps/${currentApp.id}/environments/${currentEnv.id}`);
     });
 
