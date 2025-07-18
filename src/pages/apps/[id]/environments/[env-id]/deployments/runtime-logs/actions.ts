@@ -3,8 +3,10 @@ import api from "~/utils/api/Api";
 
 interface FetchDeploymentRuntimeLogsProps {
   appId: string;
-  beforeId?: string;
+  keySetId?: string;
   deploymentId: string;
+  sort?: "asc" | "desc";
+  reset?: boolean;
 }
 
 export interface Log {
@@ -19,7 +21,9 @@ export interface Log {
 export const useFetchDeploymentRuntimeLogs = ({
   appId,
   deploymentId,
-  beforeId,
+  keySetId,
+  sort = "asc",
+  reset,
 }: FetchDeploymentRuntimeLogsProps) => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
@@ -30,14 +34,28 @@ export const useFetchDeploymentRuntimeLogs = ({
     setLoading(true);
     setError(undefined);
 
+    const params = new URLSearchParams({
+      sort,
+      deploymentId,
+    });
+
+    if (sort === "asc" && keySetId) {
+      params.set("beforeId", keySetId);
+    } else if (sort === "desc" && keySetId) {
+      params.set("afterId", keySetId);
+    }
+
     api
       .fetch<{ logs: Log[]; hasNextPage: boolean }>(
-        `/app/${appId}/logs?deploymentId=${deploymentId}${
-          beforeId ? `&beforeId=${beforeId}` : ""
-        }`
+        `/app/${appId}/logs?${params.toString()}`
       )
       .then(data => {
-        setLogs([...logs, ...data.logs]);
+        if (reset) {
+          setLogs(data.logs);
+        } else {
+          setLogs([...logs, ...data.logs]);
+        }
+
         setHasNextPage(data.hasNextPage);
       })
       .catch(() => {
@@ -46,7 +64,7 @@ export const useFetchDeploymentRuntimeLogs = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, deploymentId, beforeId]);
+  }, [appId, deploymentId, keySetId, sort]);
 
   return { logs, error, loading, hasNextPage };
 };

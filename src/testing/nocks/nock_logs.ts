@@ -7,7 +7,8 @@ interface FetchDeploymentLogsProps {
   appId: string;
   deploymentId: string;
   status?: number;
-  beforeId?: string;
+  keySetId?: string;
+  sort?: "asc" | "desc";
   response: {
     logs: Log[];
     hasNextPage: boolean;
@@ -18,17 +19,25 @@ export const mockFetchDeploymentLogs = ({
   appId,
   deploymentId,
   status = 200,
-  beforeId = "",
+  keySetId,
+  sort = "desc",
   response = {
     logs: [],
     hasNextPage: false,
   },
 }: FetchDeploymentLogsProps) => {
+  const params = new URLSearchParams({
+    sort,
+    deploymentId,
+  });
+
+  if (sort === "asc" && keySetId) {
+    params.set("beforeId", keySetId);
+  } else if (sort === "desc" && keySetId) {
+    params.set("afterId", keySetId);
+  }
+
   return nock(endpoint)
-    .get(
-      `/app/${appId}/logs?deploymentId=${deploymentId}${
-        beforeId ? `&beforeId=${beforeId}` : ""
-      }`
-    )
+    .get(`/app/${appId}/logs?${params.toString()}`)
     .reply(status, response);
 };

@@ -8,6 +8,7 @@ import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { grey } from "@mui/material/colors";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import SortIcon from "@mui/icons-material/SwapVert";
 import EmptyPage from "~/components/EmptyPage";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
@@ -75,18 +76,21 @@ const renderLog = (log: Log, i: number) => {
 const RuntimeLogs: React.FC = () => {
   const location = useLocation();
   const [whitespace, setWhiteSpace] = useState(true);
+  const [sort, setSort] = useState<"asc" | "desc">("desc");
   const { deploymentId } = useParams();
   const { app } = useContext(AppContext);
-  const [beforeId, setBeforeId] = useState<string>();
+  const [resetLogs, setResetLogs] = useState(true);
+  const [keySetId, setKeySeyId] = useState<string>();
 
   const { logs, error, loading, hasNextPage } = useFetchDeploymentRuntimeLogs({
     appId: app.id,
     deploymentId: deploymentId!,
-    beforeId,
+    keySetId,
+    sort,
+    reset: resetLogs,
   });
 
-  const isLoadingFirstPage = loading && !beforeId;
-  const shouldDisplayLogs = (!loading || beforeId) && logs.length > 0;
+  const isLoadingFirstPage = resetLogs && loading && logs?.length === 0;
 
   return (
     <Card sx={{ width: "100%" }} loading={isLoadingFirstPage} error={error}>
@@ -103,7 +107,7 @@ const RuntimeLogs: React.FC = () => {
           </>
         }
       />
-      {shouldDisplayLogs ? (
+      {logs?.length > 0 ? (
         <>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormControlLabel
@@ -120,19 +124,34 @@ const RuntimeLogs: React.FC = () => {
               }
               labelPlacement="start"
             />
-            <Button
-              variant="outlined"
-              color="primary"
-              startIcon={<ArrowDownwardIcon />}
-              onClick={() => {
-                window.scrollTo({
-                  top: document.body.scrollHeight,
-                  behavior: "smooth",
-                });
-              }}
-            >
-              Scroll down
-            </Button>
+            <Box>
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<SortIcon />}
+                sx={{ mr: 2 }}
+                onClick={() => {
+                  setSort(sort === "asc" ? "desc" : "asc");
+                  setResetLogs(true);
+                  setKeySeyId(undefined);
+                }}
+              >
+                {sort === "asc" ? "Ascending" : "Descending"}
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<ArrowDownwardIcon />}
+                onClick={() => {
+                  window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: "smooth",
+                  });
+                }}
+              >
+                Scroll down
+              </Button>
+            </Box>
           </Box>
           <Box
             component="code"
@@ -167,7 +186,8 @@ const RuntimeLogs: React.FC = () => {
             variant="text"
             loading={loading}
             onClick={() => {
-              setBeforeId(logs[logs.length - 1]?.id);
+              setKeySeyId(logs[logs.length - 1]?.id);
+              setResetLogs(false);
             }}
           >
             Load more

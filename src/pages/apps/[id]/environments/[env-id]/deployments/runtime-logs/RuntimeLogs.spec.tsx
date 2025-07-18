@@ -121,37 +121,73 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
     });
   });
 
-  it("should paginate", async () => {
-    createWrapper({ hasNextPage: true });
+  describe("pagination", () => {
+    it("should paginate when load more is clicked", async () => {
+      createWrapper({ hasNextPage: true });
 
-    await waitFor(() => {
-      expect(wrapper.getByText("Load more")).toBeTruthy();
+      await waitFor(() => {
+        expect(wrapper.getByText("Load more")).toBeTruthy();
+      });
+
+      const paginationScope = mockFetchDeploymentLogs({
+        appId: currentApp.id,
+        deploymentId: currentDeploy.id,
+        keySetId: "456",
+        response: {
+          hasNextPage: false,
+          logs: [
+            {
+              id: "123",
+              appId: currentApp.id,
+              envId: currentEnv.id!,
+              deploymentId: currentDeploy.id,
+              data: "Hello from a second page log",
+              timestamp: "1666198441",
+            },
+          ],
+        },
+      });
+
+      fireEvent.click(wrapper.getByText("Load more"));
+
+      await waitFor(() => {
+        expect(paginationScope.isDone()).toBe(true);
+        expect(wrapper.getByText("Hello from a second page log")).toBeTruthy();
+      });
     });
 
-    const paginationScope = mockFetchDeploymentLogs({
-      appId: currentApp.id,
-      deploymentId: currentDeploy.id,
-      beforeId: "456",
-      response: {
-        hasNextPage: false,
-        logs: [
-          {
-            id: "123",
-            appId: currentApp.id,
-            envId: currentEnv.id!,
-            deploymentId: currentDeploy.id,
-            data: "Hello from a second page log",
-            timestamp: "1666198441",
-          },
-        ],
-      },
-    });
+    it("should change sort order when sort button is clicked", async () => {
+      createWrapper({ hasNextPage: true });
 
-    fireEvent.click(wrapper.getByText("Load more"));
+      await waitFor(() => {
+        expect(wrapper.getByText("Load more")).toBeTruthy();
+      });
 
-    await waitFor(() => {
-      expect(paginationScope.isDone()).toBe(true);
-      expect(wrapper.getByText("Hello from a second page log")).toBeTruthy();
+      const paginationScope = mockFetchDeploymentLogs({
+        appId: currentApp.id,
+        deploymentId: currentDeploy.id,
+        sort: "asc",
+        response: {
+          hasNextPage: false,
+          logs: [
+            {
+              id: "123",
+              appId: currentApp.id,
+              envId: currentEnv.id!,
+              deploymentId: currentDeploy.id,
+              data: "Hello from sorted logs",
+              timestamp: "1666198441",
+            },
+          ],
+        },
+      });
+
+      fireEvent.click(wrapper.getByText("Descending"));
+
+      await waitFor(() => {
+        expect(paginationScope.isDone()).toBe(true);
+        expect(wrapper.getByText("Hello from sorted logs")).toBeTruthy();
+      });
     });
   });
 });
