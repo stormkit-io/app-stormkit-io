@@ -91,9 +91,11 @@ export default function EnvironmentHeader() {
                 placement="bottom"
                 arrow
               >
-                <span className="fas fa-info-circle mr-2 text-xl" />
+                <Typography component="span">
+                  <InfoIcon sx={{ mr: 1 }} />
+                  Not yet published
+                </Typography>
               </Tooltip>
-              Not yet published
             </>
           ) : (
             <Box
