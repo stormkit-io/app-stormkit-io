@@ -66,8 +66,8 @@ describe("~/pages/apps/_components/TeamStats.tsx", () => {
         expect(wrapper.getByText("Total apps")).toBeTruthy();
 
         // Check total deployments
-        expect(wrapper.getByText("150")).toBeTruthy();
-        expect(wrapper.getByText("Total deployments")).toBeTruthy();
+        expect(wrapper.getByText("30")).toBeTruthy();
+        expect(wrapper.getByText("Deployments")).toBeTruthy();
 
         // Check average deployment duration
         expect(wrapper.getByText("2m 5s")).toBeTruthy();
@@ -75,7 +75,7 @@ describe("~/pages/apps/_components/TeamStats.tsx", () => {
 
         // Check total requests
         expect(wrapper.getByText("10k")).toBeTruthy();
-        expect(wrapper.getByText("Total requests")).toBeTruthy();
+        expect(wrapper.getByText("Requests")).toBeTruthy();
       });
     });
 

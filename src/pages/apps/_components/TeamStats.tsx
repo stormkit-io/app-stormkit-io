@@ -203,8 +203,8 @@ export default function TeamStats({ teamId }: Props) {
           loading={loading}
         />
         <StatBox
-          desc="Total deployments"
-          header={stats?.totalDeployments.total}
+          desc="Deployments"
+          header={stats?.totalDeployments.current}
           change={deploymentChange}
           changeType="percentage"
           loading={loading}
@@ -218,7 +218,7 @@ export default function TeamStats({ teamId }: Props) {
           loading={loading}
         />
         <StatBox
-          desc="Total requests"
+          desc="Requests"
           header={totalRequests}
           change={requestChange}
           changeType="percentage"
