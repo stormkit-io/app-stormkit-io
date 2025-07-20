@@ -208,7 +208,7 @@ export default function TeamStats({ teamId }: Props) {
         }}
       >
         <StatBox
-          desc="Total apps"
+          desc="Apps"
           tooltip="Number of total apps in this team."
           header={stats?.totalApps.total}
           change={totalNewApps}

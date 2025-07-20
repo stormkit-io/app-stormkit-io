@@ -63,7 +63,7 @@ describe("~/pages/apps/_components/TeamStats.tsx", () => {
       await waitFor(() => {
         // Check total apps
         expect(wrapper.getByText("25")).toBeTruthy();
-        expect(wrapper.getByText("Total apps")).toBeTruthy();
+        expect(wrapper.getByText("Apps")).toBeTruthy();
 
         // Check total deployments
         expect(wrapper.getByText("30")).toBeTruthy();
