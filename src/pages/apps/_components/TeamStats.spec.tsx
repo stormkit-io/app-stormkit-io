@@ -74,7 +74,7 @@ describe("~/pages/apps/_components/TeamStats.tsx", () => {
         expect(wrapper.getByText("Avg. deployment duration")).toBeTruthy();
 
         // Check total requests
-        expect(wrapper.getByText("10000")).toBeTruthy();
+        expect(wrapper.getByText("10k")).toBeTruthy();
         expect(wrapper.getByText("Total requests")).toBeTruthy();
       });
     });
@@ -102,7 +102,38 @@ describe("~/pages/apps/_components/TeamStats.tsx", () => {
     });
   });
 
-  describe("duration formatting", () => {
+  describe("formatting", () => {
+    it.each`
+      current          | previous         | formatted
+      ${999}           | ${3}             | ${"999"}
+      ${172}           | ${120}           | ${"172"}
+      ${1_000_000}     | ${800_000}       | ${"1m"}
+      ${2_500_000_000} | ${2_000_000_000} | ${"2.5b"}
+      ${0}             | ${5}             | ${"0"}
+      ${999_999_999}   | ${1_000_000_000} | ${"999.9m"}
+      ${123456}        | ${654321}        | ${"123.4k"}
+    `(
+      "should format numbers correctly for current: $current and previous: $previous",
+      async ({ current, previous, formatted }) => {
+        mockFetchTeamStats({
+          teamId,
+          response: {
+            ...mockStatsData,
+            totalRequests: {
+              current,
+              previous,
+            },
+          },
+        });
+
+        createWrapper();
+
+        await waitFor(() => {
+          expect(wrapper.getByText(formatted)).toBeTruthy();
+        });
+      }
+    );
+
     it.each`
       current | previous | formatted
       ${45.5} | ${50.2}  | ${"45.50s"}

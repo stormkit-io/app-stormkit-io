@@ -40,6 +40,7 @@ interface StatBoxProps {
   header: React.ReactNode;
   change?: number;
   changeType: "percentage" | "absolute";
+  changeDirection?: "inverse" | "normal";
   desc: string;
   loading?: boolean;
 }
@@ -51,6 +52,7 @@ const StatBox = ({
   header,
   change,
   changeType,
+  changeDirection = "normal",
   loading,
 }: StatBoxProps) => {
   let operator = "%";
@@ -70,9 +72,11 @@ const StatBox = ({
 
   const icons = {
     unknown: undefined,
-    up: <TrendingUpIcon />,
-    down: <TrendingDownIcon />,
     same: <TrendingFlatIcon />,
+    up:
+      changeDirection === "normal" ? <TrendingUpIcon /> : <TrendingDownIcon />,
+    down:
+      changeDirection === "normal" ? <TrendingDownIcon /> : <TrendingUpIcon />,
   };
 
   const bgcolor = {
@@ -136,6 +140,19 @@ const StatBox = ({
     </Box>
   );
 };
+const formatNumber = (num: number): string => {
+  if (num >= 1_000_000_000) {
+    return `${Math.floor((num / 1_000_000_000) * 10) / 10}b`;
+  }
+  if (num >= 1_000_000) {
+    return `${Math.floor((num / 1_000_000) * 10) / 10}m`;
+  }
+  if (num >= 1_000) {
+    return `${Math.floor((num / 1_000) * 10) / 10}k`;
+  }
+
+  return num.toString();
+};
 
 export default function TeamStats({ teamId }: Props) {
   const { stats, loading, error } = useFetchTeamStats({ teamId });
@@ -159,6 +176,8 @@ export default function TeamStats({ teamId }: Props) {
   );
 
   const avgDuration = formatDuration(stats?.avgDeploymentDuration.current || 0);
+
+  const totalRequests = formatNumber(stats?.totalRequests.current || 0);
 
   return (
     <>
@@ -199,7 +218,7 @@ export default function TeamStats({ teamId }: Props) {
         />
         <StatBox
           desc="Total requests"
-          header={stats?.totalRequests.current}
+          header={totalRequests}
           change={requestChange}
           changeType="percentage"
           loading={loading}
