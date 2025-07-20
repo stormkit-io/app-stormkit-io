@@ -8,6 +8,7 @@ import { mockFetchApps } from "~/testing/nocks/nock_app";
 import mockApp from "~/testing/data/mock_app";
 import mockTeams from "~/testing/data/mock_teams";
 import mockUser from "~/testing/data/mock_user";
+import { mockFetchTeamStats } from "~/testing/nocks/nock_team_stats";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
 import Apps from "./Apps";
@@ -50,8 +51,11 @@ describe("~/pages/apps/Apps.tsx", () => {
 
   describe("when user has already created apps", () => {
     let scope: Scope;
+    let teamStatsScope: Scope;
 
     beforeEach(() => {
+      teamStatsScope = mockFetchTeamStats({ teamId: teams[0].id });
+
       scope = mockFetchApps({
         teamId: teams[0].id,
         response: { apps, hasNextPage: false },
@@ -95,10 +99,18 @@ describe("~/pages/apps/Apps.tsx", () => {
         expect(() => wrapper.getByText("Load more")).toThrow();
       });
     });
+
+    it("makes a call to fetch team stats", async () => {
+      await waitFor(() => {
+        expect(teamStatsScope.isDone()).toBeTruthy();
+      });
+    });
   });
 
   describe("when user has more apps to load", () => {
     beforeEach(() => {
+      mockFetchTeamStats({ teamId: teams[0].id });
+
       mockFetchApps({
         teamId: teams[0].id,
         response: { apps, hasNextPage: true },
@@ -137,7 +149,11 @@ describe("~/pages/apps/Apps.tsx", () => {
   });
 
   describe("empty list - with provider", () => {
+    let teamStatsScope: Scope;
+
     beforeEach(() => {
+      teamStatsScope = mockFetchTeamStats({ teamId: teams[0].id });
+
       mockFetchApps({
         teamId: teams[0].id,
         response: { apps: [], hasNextPage: false },
@@ -150,6 +166,9 @@ describe("~/pages/apps/Apps.tsx", () => {
         expect(
           wrapper.getByText("Grant access to import your private repositories")
         ).toBeTruthy();
+
+        // Should not fetch team stats when there are no apps
+        expect(teamStatsScope.isDone()).toBe(false);
       });
     });
   });
@@ -178,6 +197,8 @@ describe("~/pages/apps/Apps.tsx", () => {
     const findInput = () => wrapper.getAllByLabelText("Search apps").at(1);
 
     beforeEach(() => {
+      mockFetchTeamStats({ teamId: teams[0].id });
+
       mockFetchApps({
         teamId: teams[0].id,
         response: { apps, hasNextPage: true },

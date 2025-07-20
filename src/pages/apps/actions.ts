@@ -299,3 +299,61 @@ interface CreateAppProps {
 export const createApp = ({ teamId }: CreateAppProps): Promise<App> => {
   return api.post<{ app: App }>("/app", { teamId }).then(({ app }) => app);
 };
+
+interface FetchTeamStatsProps {
+  teamId?: string;
+}
+
+interface TeamStats {
+  totalRequests: {
+    current: number;
+    previous: number;
+  };
+  totalApps: {
+    total: number;
+    new: number;
+    deleted: number;
+  };
+  totalDeployments: {
+    total: number;
+    current: number;
+    previous: number;
+  };
+  avgDeploymentDuration: {
+    current: number;
+    previous: number;
+  };
+}
+
+export const useFetchTeamStats = ({ teamId }: FetchTeamStatsProps) => {
+  const [stats, setTeamStats] = useState<TeamStats>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!teamId) {
+      setTeamStats(undefined);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    api
+      .fetch<TeamStats>(`/team/stats?teamId=${teamId}`)
+      .then(res => {
+        setTeamStats(res);
+      })
+      .catch(e => {
+        setError(
+          e?.message ||
+            "Something went wrong while fetching stats. Please try again later."
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [teamId]);
+
+  return { stats, loading, error };
+};
