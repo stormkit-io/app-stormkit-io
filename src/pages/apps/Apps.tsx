@@ -22,6 +22,7 @@ import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { providerToText } from "~/utils/helpers/string";
 import { useFetchAppList, createApp } from "./actions";
 import { WelcomeModal, EmptyList } from "./_components";
+import TeamStats from "./_components/TeamStats";
 
 let timeout: NodeJS.Timeout;
 const limit = 20;
@@ -108,7 +109,7 @@ export default function Apps() {
   }
 
   return (
-    <Box maxWidth="md" sx={{ width: "100%" }}>
+    <Box maxWidth="lg" sx={{ width: "100%" }}>
       <Card
         contentPadding={false}
         errorTitle={false}
@@ -147,6 +148,7 @@ export default function Apps() {
             />
           }
         />
+        <TeamStats teamId={selectedTeam?.id} />
         <Box sx={{ mx: 4, mb: 2 }}>
           <TextField
             fullWidth
