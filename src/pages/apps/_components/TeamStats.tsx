@@ -214,6 +214,7 @@ export default function TeamStats({ teamId }: Props) {
           header={avgDuration}
           change={avgDurationChange}
           changeType="percentage"
+          changeDirection="inverse"
           loading={loading}
         />
         <StatBox
