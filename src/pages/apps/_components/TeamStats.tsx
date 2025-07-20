@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import Chip from "@mui/material/Chip";
+import Tooltip from "@mui/material/Tooltip";
 import Skeleton from "@mui/material/Skeleton";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -38,6 +39,7 @@ const calculateChange = (
 
 interface StatBoxProps {
   header: React.ReactNode;
+  tooltip: string;
   change?: number;
   changeType: "percentage" | "absolute";
   changeDirection?: "inverse" | "normal";
@@ -53,6 +55,7 @@ const StatBox = ({
   change,
   changeType,
   changeDirection = "normal",
+  tooltip,
   loading,
 }: StatBoxProps) => {
   let operator = "%";
@@ -95,8 +98,8 @@ const StatBox = ({
 
   const label = {
     unknown: "No data to compare",
-    up: `${operator}${change} this month`,
-    down: `${operator}${change} this month`,
+    up: `${operator}${Math.abs(change || 0)} this month`,
+    down: `${operator}${Math.abs(change || 0)} this month`,
     same: "No change",
   };
 
@@ -108,11 +111,18 @@ const StatBox = ({
         p: 4,
         textAlign: "center",
         borderRadius: 1,
+        position: "relative",
       }}
     >
       <Box>
         <Typography
-          sx={{ fontSize: 32, mr: 1, fontWeight: 600, lineHeight: 1.25, mb: 1 }}
+          sx={{
+            fontSize: 32,
+            mr: 1,
+            fontWeight: 600,
+            lineHeight: 1.25,
+            mb: 1,
+          }}
         >
           {loading ? <Skeleton data-testid="skeleton" /> : header}
         </Typography>
@@ -120,23 +130,25 @@ const StatBox = ({
           {desc}
         </Typography>
       </Box>
-      <Typography sx={{ lineHeight: 1 }}>
-        <Chip
-          size="small"
-          variant="filled"
-          icon={icons[trend]}
-          component="span"
-          label={loading ? undefined : label[trend]}
-          sx={{
-            border: "1px solid",
-            backgroundColor: bgcolor[trend],
-            borderColor: borderColor[trend],
-            color: "white",
-            display: "flex",
-            mt: 2,
-          }}
-        />
-      </Typography>
+      <Tooltip arrow title={<Box sx={{ p: 2 }}>{tooltip}</Box>}>
+        <Typography sx={{ lineHeight: 1 }}>
+          <Chip
+            size="small"
+            variant="filled"
+            icon={icons[trend]}
+            component="span"
+            label={loading ? undefined : label[trend]}
+            sx={{
+              border: "1px solid",
+              backgroundColor: bgcolor[trend],
+              borderColor: borderColor[trend],
+              color: "white",
+              display: "flex",
+              mt: 2,
+            }}
+          />
+        </Typography>
+      </Tooltip>
     </Box>
   );
 };
@@ -196,7 +208,8 @@ export default function TeamStats({ teamId }: Props) {
         }}
       >
         <StatBox
-          desc={"Total apps"}
+          desc="Total apps"
+          tooltip="Number of total apps in this team."
           header={stats?.totalApps.total}
           change={totalNewApps}
           changeType="absolute"
@@ -204,6 +217,7 @@ export default function TeamStats({ teamId }: Props) {
         />
         <StatBox
           desc="Deployments"
+          tooltip="Total number of deployments in the last 30 days. Data is compared against previous 30 days."
           header={stats?.totalDeployments.current}
           change={deploymentChange}
           changeType="percentage"
@@ -211,6 +225,7 @@ export default function TeamStats({ teamId }: Props) {
         />
         <StatBox
           desc="Avg. deployment duration"
+          tooltip="Average time taken for deployments in the last 30 days. Data is compared against previous 30 days."
           header={avgDuration}
           change={avgDurationChange}
           changeType="percentage"
@@ -218,6 +233,7 @@ export default function TeamStats({ teamId }: Props) {
           loading={loading}
         />
         <StatBox
+          tooltip="Total requests accross all domains in this team in the last 30 days. Data is compared against previous 30 days."
           desc="Requests"
           header={totalRequests}
           change={requestChange}
