@@ -145,6 +145,10 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/team/feed"), teamLayout),
   },
   {
+    path: "/:team/insights",
+    element: Async(() => import("~/pages/team/insights"), teamLayout),
+  },
+  {
     path: "/:team/deployments",
     element: Async(() => import("~/pages/team/deployments"), teamLayout),
   },

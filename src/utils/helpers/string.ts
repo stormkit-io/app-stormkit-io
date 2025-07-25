@@ -45,3 +45,24 @@ export const parseBoolean = (value?: string): boolean | undefined => {
 export const truncate = (value: string, len = 100): string => {
   return value.length > len ? value.substring(0, len - 1) + "..." : value;
 };
+
+/**
+ * Formats a number into a more readable string representation.
+ * For example, 1,000 becomes "1k", 1,000,000 becomes "1m", and
+ * 1,000,000,000 becomes "1b".
+ */
+export const formatNumber = (num: number): string => {
+  if (num >= 1_000_000_000) {
+    return `${Math.floor((num / 1_000_000_000) * 10) / 10}b`;
+  }
+
+  if (num >= 1_000_000) {
+    return `${Math.floor((num / 1_000_000) * 10) / 10}m`;
+  }
+
+  if (num >= 1_000) {
+    return `${Math.floor((num / 1_000) * 10) / 10}k`;
+  }
+
+  return num.toString();
+};

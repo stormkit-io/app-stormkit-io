@@ -7,6 +7,8 @@ import Skeleton from "@mui/material/Skeleton";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
+import { formatNumber } from "~/utils/helpers/string";
+import { calculateChange } from "~/utils/helpers/stats";
 import { useFetchTeamStats } from "../actions";
 
 interface Props {
@@ -24,17 +26,6 @@ const formatDuration = (seconds: number): string => {
   return remainingSeconds > 0
     ? `${minutes}m ${remainingSeconds}s`
     : `${minutes}m`;
-};
-
-const calculateChange = (
-  current?: number,
-  previous?: number
-): number | undefined => {
-  if (!previous || !current) {
-    return undefined;
-  }
-
-  return Math.round(((current - previous) / previous) * 100);
 };
 
 interface StatBoxProps {
@@ -151,19 +142,6 @@ const StatBox = ({
       </Tooltip>
     </Box>
   );
-};
-const formatNumber = (num: number): string => {
-  if (num >= 1_000_000_000) {
-    return `${Math.floor((num / 1_000_000_000) * 10) / 10}b`;
-  }
-  if (num >= 1_000_000) {
-    return `${Math.floor((num / 1_000_000) * 10) / 10}m`;
-  }
-  if (num >= 1_000) {
-    return `${Math.floor((num / 1_000) * 10) / 10}k`;
-  }
-
-  return num.toString();
 };
 
 export default function TeamStats({ teamId }: Props) {

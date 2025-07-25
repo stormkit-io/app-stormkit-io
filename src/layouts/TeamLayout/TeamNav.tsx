@@ -41,6 +41,12 @@ const teamMenuItems = ({
     isActive: pathname.includes("/feed"),
   });
 
+  items.push({
+    path: `/${slug}/insights`,
+    text: "Insights",
+    isActive: pathname.includes("/insights"),
+  });
+
   if (!team.isDefault) {
     items.push({
       path: `/${slug}/settings`,
