@@ -6,7 +6,7 @@ import {
   waitFor,
   type RenderResult,
 } from "@testing-library/react";
-import AdminSystem from "./System";
+import AdminSystem, { mapRuntimes } from "./System";
 
 describe("~/pages/admin/System.tsx", () => {
   let wrapper: RenderResult;
@@ -103,5 +103,54 @@ describe("~/pages/admin/System.tsx", () => {
     });
 
     expect(wrapper.getByText("Mise was upgraded successfully")).toBeTruthy();
+  });
+
+  describe("mapRuntimes", () => {
+    it("should map runtimes with versions correctly", () => {
+      const runtimes = ["node@18.0.0", "python@3.9.0", "go@1.19.0"];
+      const expected = {
+        node: "18.0.0",
+        python: "3.9.0",
+        go: "1.19.0",
+      };
+
+      expect(mapRuntimes(runtimes)).toEqual(expected);
+    });
+
+    it("should handle runtimes without versions", () => {
+      const runtimes = ["node", "python", "go"];
+      const expected = {
+        node: "latest",
+        python: "latest",
+        go: "latest",
+      };
+
+      expect(mapRuntimes(runtimes)).toEqual(expected);
+    });
+
+    it("should handle scoped packages with @ in name", () => {
+      const runtimes = ["@angular/cli@15.0.0", "@types/node@18.0.0"];
+      const expected = {
+        "@angular/cli": "15.0.0",
+        "@types/node": "18.0.0",
+      };
+
+      expect(mapRuntimes(runtimes)).toEqual(expected);
+    });
+
+    it("should handle mixed cases", () => {
+      const runtimes = ["node@18.0.0", "python", "@angular/cli@15.0.0"];
+      const expected = {
+        node: "18.0.0",
+        python: "latest",
+        "@angular/cli": "15.0.0",
+      };
+
+      expect(mapRuntimes(runtimes)).toEqual(expected);
+    });
+
+    it("should handle empty array", () => {
+      expect(mapRuntimes([])).toEqual({});
+    });
   });
 });

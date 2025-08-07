@@ -33,15 +33,25 @@ const useFetchRuntimes = () => {
   return { loading, error, runtimes, autoInstall };
 };
 
-const mapRuntimes = (runtimes: string[]): Record<string, string> => {
-  const map: Record<string, string> = {};
+export const mapRuntimes = (runtimes: string[]): Record<string, string> => {
+  const result: Record<string, string> = {};
 
   runtimes.forEach(runtime => {
-    const [name, version] = runtime.split("@");
-    map[name] = version || "latest";
+    // Find the last @ symbol to split package name from version
+    const lastAtIndex = runtime.lastIndexOf("@");
+
+    if (lastAtIndex === -1) {
+      // No @ found, treat entire string as package name with undefined version
+      result[runtime] = "latest";
+    } else {
+      // Normal case: split at the last @
+      const packageName = runtime.substring(0, lastAtIndex);
+      const version = runtime.substring(lastAtIndex + 1);
+      result[packageName] = version;
+    }
   });
 
-  return map;
+  return result;
 };
 
 function Runtimes() {
@@ -175,11 +185,11 @@ const useFetchMise = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  return { loading, error, version };
+  return { loading, error, version, setVersion };
 };
 
 function Mise() {
-  const { error, loading, version } = useFetchMise();
+  const { error, loading, version, setVersion } = useFetchMise();
   const [updateSuccess, setUpdateSuccess] = useState<string>();
   const [updateError, setUpdateError] = useState<string>();
   const [updateLoading, setUpdateLoading] = useState(false);
@@ -203,9 +213,10 @@ function Mise() {
             onClick={() => {
               setUpdateLoading(true);
 
-              Api.post("/admin/system/mise")
-                .then(() => {
+              Api.post<{ version: string }>("/admin/system/mise")
+                .then(({ version }) => {
                   setUpdateSuccess("Mise was upgraded successfully");
+                  setVersion(version);
                 })
                 .catch(() => {
                   setUpdateError("An error occurred while upgrading mise.");
