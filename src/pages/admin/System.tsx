@@ -4,12 +4,13 @@ import Button from "@mui/lab/LoadingButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 import Api from "~/utils/api/Api";
 import KeyValue from "~/components/FormV2/KeyValue";
 import Card from "~/components/Card";
+import CardRow from "~/components/CardRow";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import { Link } from "@mui/material";
 
 const useFetchRuntimes = () => {
   const [loading, setLoading] = useState(true);
@@ -43,7 +44,7 @@ const mapRuntimes = (runtimes: string[]): Record<string, string> => {
   return map;
 };
 
-export default function System() {
+function Runtimes() {
   const { error, loading, runtimes, autoInstall: auto } = useFetchRuntimes();
   const [updateSuccess, setUpdateSuccess] = useState<string>();
   const [updateError, setUpdateError] = useState<string>();
@@ -157,5 +158,82 @@ export default function System() {
         </Button>
       </CardFooter>
     </Card>
+  );
+}
+
+const useFetchMise = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
+  const [version, setVersion] = useState<string>();
+
+  useEffect(() => {
+    Api.fetch<{ version: string }>("/admin/system/mise")
+      .then(({ version }) => {
+        setVersion(version);
+      })
+      .catch(() => setError("Something went wrong while fetching mise version"))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { loading, error, version };
+};
+
+function Mise() {
+  const { error, loading, version } = useFetchMise();
+  const [updateSuccess, setUpdateSuccess] = useState<string>();
+  const [updateError, setUpdateError] = useState<string>();
+  const [updateLoading, setUpdateLoading] = useState(false);
+
+  return (
+    <Card
+      loading={loading}
+      error={error || updateError}
+      sx={{ mt: 4, backgroundColor: "container.transparent" }}
+      success={updateSuccess}
+      contentPadding={false}
+    >
+      <CardHeader
+        title="Mise"
+        subtitle="Stormkit relies on open-source mise for runtime management."
+        actions={
+          <Button
+            variant="contained"
+            color="secondary"
+            loading={updateLoading}
+            onClick={() => {
+              setUpdateLoading(true);
+
+              Api.post("/admin/system/mise")
+                .then(() => {
+                  setUpdateSuccess("Mise was upgraded successfully");
+                })
+                .catch(() => {
+                  setUpdateError("An error occurred while upgrading mise.");
+                })
+                .finally(() => {
+                  setUpdateLoading(false);
+                });
+            }}
+          >
+            Upgrade to latest
+          </Button>
+        }
+      />
+      <CardRow>
+        <Typography variant="h2" color="text.secondary" sx={{ mb: 0.5 }}>
+          Current version
+        </Typography>
+        <Typography>{version || "Unknown"}</Typography>
+      </CardRow>
+    </Card>
+  );
+}
+
+export default function System() {
+  return (
+    <Box>
+      <Runtimes />
+      <Mise />
+    </Box>
   );
 }

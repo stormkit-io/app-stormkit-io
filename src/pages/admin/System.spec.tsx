@@ -17,12 +17,20 @@ describe("~/pages/admin/System.tsx", () => {
       .reply(200, { runtimes, autoInstall: true });
   };
 
+  const fetchMiseVersionScope = () => {
+    return nock(process.env.API_DOMAIN || "")
+      .get("/admin/system/mise")
+      .reply(200, { version: "1.0.0" });
+  };
+
   beforeEach(async () => {
     const scope = fetchRuntimesScope(["node@24", "python@3"]);
+    const scopeVersion = fetchMiseVersionScope();
 
     createWrapper();
 
     await waitFor(() => {
+      expect(scopeVersion.isDone()).toBe(true);
       expect(scope.isDone()).toBe(true);
     });
   });
@@ -66,5 +74,34 @@ describe("~/pages/admin/System.tsx", () => {
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
     });
+  });
+
+  it("should fetch mise version", async () => {
+    expect(wrapper.getByText("Mise"));
+    expect(
+      wrapper.getByText(
+        "Stormkit relies on open-source mise for runtime management."
+      )
+    );
+    expect(wrapper.getByText("Upgrade to latest"));
+
+    await waitFor(() => {
+      expect(wrapper.getByText("Current version")).toBeTruthy();
+      expect(wrapper.getByText("1.0.0")).toBeTruthy();
+    });
+  });
+
+  it("should request an update for mise", async () => {
+    const scope = nock(process.env.API_DOMAIN || "")
+      .post("/admin/system/mise")
+      .reply(200, { ok: true });
+
+    fireEvent.click(wrapper.getByText("Upgrade to latest"));
+
+    await waitFor(() => {
+      expect(scope.isDone()).toBe(true);
+    });
+
+    expect(wrapper.getByText("Mise was upgraded successfully")).toBeTruthy();
   });
 });

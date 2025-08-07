@@ -20,7 +20,7 @@ export default function Subscription() {
         subtitle="Information about your Stormkit subscription"
       />
       <CardRow>
-        <Typography variant="h2" color="text.secondary">
+        <Typography variant="h2" color="text.secondary" sx={{ mb: 0.5 }}>
           Plan
         </Typography>
         <Typography>
@@ -29,7 +29,7 @@ export default function Subscription() {
       </CardRow>
       <CardRow>
         <Box sx={{ flex: 1 }}>
-          <Typography variant="h2" color="text.secondary">
+          <Typography variant="h2" color="text.secondary" sx={{ mb: 0.5 }}>
             Seats
           </Typography>
           <Typography>
@@ -39,7 +39,7 @@ export default function Subscription() {
       </CardRow>
       <CardRow>
         <Box sx={{ flex: 1 }}>
-          <Typography variant="h2" color="text.secondary">
+          <Typography variant="h2" color="text.secondary" sx={{ mb: 0.5 }}>
             Remaining seats
           </Typography>
           <Typography>
