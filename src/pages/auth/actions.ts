@@ -11,7 +11,6 @@ interface FetchUserReturnValue {
   user?: User;
   accounts: Array<ConnectedAccount>;
   setUser: (u: User) => void;
-  setError: SetError;
 }
 
 interface FetchUserResponse {
@@ -59,7 +58,7 @@ export const useFetchUser = (): FetchUserReturnValue => {
     };
   }, [api, token]);
 
-  return { error, user, accounts, loading, setError, setUser };
+  return { error, user, accounts, loading, setUser };
 };
 
 interface Providers {
@@ -97,7 +96,6 @@ export const logout = () => (): void => {
 
 interface LoginOauthProps {
   setUser: (u: User) => void;
-  setError: SetError;
 }
 
 export interface LoginOauthReturnValue {
@@ -109,9 +107,9 @@ export interface LoginOauthReturnValue {
 // This one returns a function that returns another function.
 // The first function is used to inject the api props. The second
 // function produces an oauthlogin function based on the provider.
-export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
+export const loginOauth = ({ setUser }: LoginOauthProps) => {
   return (provider: Provider): Promise<LoginOauthReturnValue> => {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       let url = api.baseurl + `/auth/${provider}`;
 
       const title = "oauthWindow";
@@ -146,21 +144,21 @@ export const loginOauth = ({ setUser, setError }: LoginOauthProps) => {
           });
         }
 
-        if (data?.success === false) {
+        if (!data?.success) {
           if (data.email === false) {
-            setError(
+            reject(
               "We could not fetch your primary verified email from the provider. Make sure your email is verified."
             );
           } else if (data.error === "seats-full") {
-            setError(
+            reject(
               "Your license does not allow more seats. Upgrade your plan to accept new users."
             );
           } else if (data.error === "account-too-new") {
-            setError(
+            reject(
               "Your provider account is newly created. We do not accept new accounts. Please wait a few days."
             );
           } else {
-            setError("An error occurred while authenticating. Please retry.");
+            reject("An error occurred while authenticating. Please retry.");
           }
         }
       };

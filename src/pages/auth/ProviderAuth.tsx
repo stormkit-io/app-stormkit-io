@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useContext } from "react";
 import Box from "@mui/material/Box";
 import * as buttons from "~/components/Buttons";
@@ -13,9 +14,10 @@ interface Props {
 
 export default function ProviderAuth({ providers }: Props) {
   const { loginOauth } = useContext(AuthContext);
+  const [error, setError] = useState<string>();
 
   return (
-    <Card sx={{ width: "100%" }}>
+    <Card sx={{ width: "100%" }} error={error}>
       <CardHeader
         title="Authentication"
         subtitle="Login with your provider"
@@ -33,17 +35,20 @@ export default function ProviderAuth({ providers }: Props) {
             sx={{
               mb: providers?.gitlab || providers.bitbucket ? 4 : 0,
             }}
-            onClick={() => loginOauth?.("github")}
+            onClick={() => loginOauth?.("github").catch(setError)}
           />
         )}
         {providers?.gitlab && (
           <GitlabButton
             sx={{ mb: providers?.bitbucket ? 4 : 0 }}
-            onClick={() => loginOauth?.("gitlab")}
+            onClick={() => loginOauth?.("gitlab").catch(setError)}
           />
         )}
         {providers?.bitbucket && (
-          <BitbucketButton onClick={() => loginOauth?.("bitbucket")} />
+          <BitbucketButton
+            sx={{ mb: error ? 4 : 0 }}
+            onClick={() => loginOauth?.("bitbucket").catch(setError)}
+          />
         )}
       </Box>
     </Card>
