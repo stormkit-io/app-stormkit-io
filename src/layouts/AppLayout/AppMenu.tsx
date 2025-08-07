@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import AppName from "~/components/AppName";

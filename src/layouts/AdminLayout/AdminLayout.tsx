@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Box from "@mui/material/Box";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import Error404 from "~/components/Errors/Error404";
 import Card from "~/components/Card";

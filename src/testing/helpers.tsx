@@ -19,11 +19,7 @@ export const renderWithRouter = ({
     },
   ]);
 
-  return render(
-    // <MemoryRouter initialEntries={initialEntries} initialIndex={0}>
-    <Stub initialEntries={initialEntries} initialIndex={0} />
-    // </MemoryRouter>
-  );
+  return render(<Stub initialEntries={initialEntries} initialIndex={0} />);
 };
 
 export const waitForPromises = () => new Promise(setImmediate);
