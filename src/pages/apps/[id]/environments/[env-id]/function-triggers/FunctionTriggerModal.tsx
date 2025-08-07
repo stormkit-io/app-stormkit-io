@@ -207,7 +207,6 @@ export default function TriggerFunctionModal({
                   valPlaceholder="application/json"
                   separator=":"
                   onChange={newVars => {
-                    console.log(newVars);
                     setHeaders(newVars);
                   }}
                   defaultValue={defaultHeaders}
