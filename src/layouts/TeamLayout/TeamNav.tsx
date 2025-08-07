@@ -1,5 +1,5 @@
 import { useMemo, useContext } from "react";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import MenuLink from "~/components/MenuLink";
