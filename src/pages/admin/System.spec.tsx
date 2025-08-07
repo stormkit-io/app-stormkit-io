@@ -14,7 +14,7 @@ describe("~/pages/admin/System.tsx", () => {
   const fetchRuntimesScope = (runtimes: string[]) => {
     return nock(process.env.API_DOMAIN || "")
       .get("/admin/system/runtimes")
-      .reply(200, { runtimes });
+      .reply(200, { runtimes, autoInstall: true });
   };
 
   beforeEach(async () => {
@@ -32,10 +32,10 @@ describe("~/pages/admin/System.tsx", () => {
   };
 
   it("renders the component", () => {
-    expect(wrapper.getByText("Runtimes installed")).toBeTruthy();
+    expect(wrapper.getByText("Installed runtimes")).toBeTruthy();
     expect(
       wrapper.getByText(
-        "Information about your runtimes installed on your Stormkit"
+        "Manage runtimes that are installed on your Stormkit instance."
       )
     ).toBeTruthy();
     expect(wrapper.getByText("Runtime name")).toBeTruthy();
@@ -45,11 +45,23 @@ describe("~/pages/admin/System.tsx", () => {
   it("should submit the form", async () => {
     const scope = nock(process.env.API_DOMAIN || "")
       .post("/admin/system/runtimes", {
+        autoInstall: false,
         runtimes: ["node@24", "python@3"],
       })
       .reply(200, { ok: true });
 
-    fireEvent.click(wrapper.getByText("Save"));
+    expect(
+      wrapper.getByText("Save").parentElement?.getAttribute("disabled")
+    ).toBe("");
+
+    // Turn off auto-install
+    await fireEvent.click(wrapper.getByLabelText("Auto install"));
+
+    expect(
+      wrapper.getByText("Save").parentElement?.getAttribute("disabled")
+    ).toBe(null);
+
+    await fireEvent.click(wrapper.getByText("Save"));
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
