@@ -28,6 +28,7 @@ export default function ProviderAuth({ providers }: Props) {
           display: "flex",
           flexDirection: "column",
           px: { xs: 0, md: 6 },
+          mb: error ? 4 : 0,
         }}
       >
         {providers?.github && (
@@ -40,13 +41,12 @@ export default function ProviderAuth({ providers }: Props) {
         )}
         {providers?.gitlab && (
           <GitlabButton
-            sx={{ mb: providers?.bitbucket ? 4 : 0 }}
+            sx={{ mb: providers?.bitbucket || error ? 4 : 0 }}
             onClick={() => loginOauth?.("gitlab").catch(setError)}
           />
         )}
         {providers?.bitbucket && (
           <BitbucketButton
-            sx={{ mb: error ? 4 : 0 }}
             onClick={() => loginOauth?.("bitbucket").catch(setError)}
           />
         )}
