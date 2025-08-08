@@ -62,6 +62,8 @@ export default function DotDotDot({ label, items }: Props) {
                   size="large"
                   sx={{
                     justifyContent: "flex-start",
+                    opacity: item.disabled ? 0.25 : 1,
+                    backgroundColor: "transparent !important",
                   }}
                   startIcon={
                     typeof item.icon === "string" ? (
