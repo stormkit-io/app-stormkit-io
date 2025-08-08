@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import Button from "@mui/material/Button";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { RootContext } from "~/pages/Root.context";
@@ -57,10 +58,22 @@ export default function UserMenu({ user, onClick }: Props) {
             mb: 2,
             borderBottom: "1px solid",
             borderColor: "container.transparent",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Typography>{user.fullName || user.displayName}</Typography>
-          <Typography sx={{ color: "text.secondary" }}>{user.email}</Typography>
+          <Box>
+            <Typography>{user.fullName || user.displayName}</Typography>
+            <Typography sx={{ color: "text.secondary" }}>
+              {user.email}
+            </Typography>
+          </Box>
+          {user.isAdmin && (
+            <Button variant="contained" color="secondary" href="/admin">
+              Admin
+            </Button>
+          )}
         </Box>
         <Box
           sx={{
