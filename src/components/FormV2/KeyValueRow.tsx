@@ -9,6 +9,8 @@ import Input from "./Input";
 
 interface KeyValueRowProps {
   index: number;
+  labelKey: string;
+  labelValue: string;
   inputKey: string;
   inputValue: string;
   inputName: string;
@@ -33,6 +35,8 @@ export default function KeyValueRow({
   keyPlaceholder,
   valPlaceholder,
   hideByDefault,
+  labelKey,
+  labelValue,
   setRows,
   setIsChanged,
 }: KeyValueRowProps) {
@@ -44,10 +48,16 @@ export default function KeyValueRow({
         <Input
           fullWidth
           placeholder={index === 0 ? keyPlaceholder : `KEY_${index + 1}`}
-          inputProps={{
-            "data-1p-ignore": "true",
-            "aria-label": `${inputName} key number ${index + 1}`,
+          slotProps={{
+            htmlInput: {
+              "data-1p-ignore": "true",
+              "aria-label": `${inputName} key number ${index + 1}`,
+            },
+            inputLabel: {
+              shrink: true,
+            },
           }}
+          label={labelKey}
           name={`${inputName}[key]`}
           onChange={e => {
             const copy = JSON.parse(JSON.stringify(rows));
@@ -62,13 +72,19 @@ export default function KeyValueRow({
         <Input
           fullWidth
           value={value}
+          label={labelValue}
           autoComplete="off"
           type={isValueVisible ? "text" : "password"}
           placeholder={index === 0 ? valPlaceholder : `VALUE_${index + 1}`}
           name={`${inputName}[value]`}
-          inputProps={{
-            "data-1p-ignore": "true",
-            "aria-label": `${inputName} value number ${index + 1}`,
+          slotProps={{
+            htmlInput: {
+              "data-1p-ignore": "true",
+              "aria-label": `${inputName} value number ${index + 1}`,
+            },
+            inputLabel: {
+              shrink: true,
+            },
           }}
           onChange={e => {
             const copy = JSON.parse(JSON.stringify(rows));

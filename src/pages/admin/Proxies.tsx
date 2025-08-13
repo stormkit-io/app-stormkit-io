@@ -222,7 +222,7 @@ export default function Proxies() {
           <>
             Configure reverse proxies for your 3rd party applications.
             <br />
-            Stormkit will issue TLS certifciates automatically for proxied these
+            Stormkit will issue TLS certificates automatically for these proxied
             domains.
           </>
         }
@@ -290,9 +290,7 @@ export default function Proxies() {
 
             api
               .put("/admin/system/proxies", {
-                proxies: {
-                  [proxyToBeDeleted]: undefined,
-                },
+                remove: [proxyToBeDeleted],
               })
               .then(() => {
                 setRefreshToken(Date.now());
@@ -306,8 +304,6 @@ export default function Proxies() {
                 setLoading(false);
                 setProxyToBeDeleted(undefined);
               });
-
-            return "";
           }}
         >
           This will delete the proxy rule. Previously configured domain may stop

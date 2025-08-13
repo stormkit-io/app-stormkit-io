@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
 import TableFooter from "@mui/material/TableFooter";
 import TableRow from "@mui/material/TableRow";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -11,7 +9,6 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import TextFieldModal from "./KeyValueTextFieldModal";
 import KeyValueRow from "./KeyValueRow";
-import { grey } from "@mui/material/colors";
 
 interface Props {
   inputName: string;
@@ -83,32 +80,17 @@ export default function KeyValue({
     }
   }, [rowsWithoutDeleted, isChanged]);
 
-  const borderBottom = "1px solid";
-  const borderColor = grey[300];
-
   return (
     <>
       <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell
-              sx={{ borderBottom, borderColor, color: "text.secondary" }}
-            >
-              {keyName}
-            </TableCell>
-            <TableCell
-              sx={{ borderBottom, borderColor, color: "text.secondary" }}
-            >
-              <Box sx={{ pl: 1.75 }}>{valName}</Box>
-            </TableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
           {rows.map(([key, value, isDeleted], index) =>
             isDeleted ? undefined : (
               <KeyValueRow
                 key={index}
                 rows={rows}
+                labelKey={keyName}
+                labelValue={valName}
                 inputKey={key}
                 inputValue={value}
                 inputName={inputName}

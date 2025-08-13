@@ -46,8 +46,6 @@ describe("~/pages/admin/System.tsx", () => {
         "Manage runtimes that are installed on your Stormkit instance."
       )
     ).toBeTruthy();
-    expect(wrapper.getByText("Runtime name")).toBeTruthy();
-    expect(wrapper.getByText("Runtime version")).toBeTruthy();
   });
 
   it("should submit the form", async () => {
