@@ -86,6 +86,13 @@ export default function AdminLayout({ children }: Props) {
                   isActive: pathname.includes("/admin/jobs"),
                 }}
               />
+              <MenuLink
+                item={{
+                  path: "/admin/proxies",
+                  text: "Proxies",
+                  isActive: pathname.includes("/admin/proxies"),
+                }}
+              />
             </Box>
             {pathname === "/admin" ? <System /> : children}
           </Card>

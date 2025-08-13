@@ -133,6 +133,10 @@ const routes: Array<RouteProps> = [
     element: Async(() => import("~/pages/admin/Subscription"), adminLayout),
   },
   {
+    path: "/admin/proxies",
+    element: Async(() => import("~/pages/admin/Proxies"), adminLayout),
+  },
+  {
     path: "/:team",
     element: Async(() => import("~/pages/apps"), teamLayout),
   },
