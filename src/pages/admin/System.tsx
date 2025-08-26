@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/lab/LoadingButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckIcon from "@mui/icons-material/Check";
+import TimesIcon from "@mui/icons-material/Close";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
@@ -12,25 +15,63 @@ import CardRow from "~/components/CardRow";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 
+type Status = "ok" | "sent" | "processing" | "error";
+
+interface PackageOutput {
+  version: string;
+  requested_version: string;
+  active: boolean;
+  installed: boolean;
+}
+
+type Installed = Record<string, PackageOutput[]>;
+
+interface FetchRuntimesResponse {
+  runtimes: string[];
+  installed: Installed;
+  autoInstall: boolean;
+  status: Status;
+}
+
 const useFetchRuntimes = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
   const [runtimes, setRuntimes] = useState<string[]>();
+  const [installed, setInstalled] = useState<Installed>();
   const [autoInstall, setAutoInstall] = useState(true);
+  const [status, setStatus] = useState<Status>();
+  const [refreshToken, setRefreshToken] = useState<number>();
+
+  let timeout: NodeJS.Timeout;
 
   useEffect(() => {
-    Api.fetch<{ runtimes: string[]; autoInstall: boolean }>(
-      "/admin/system/runtimes"
-    )
-      .then(({ runtimes, autoInstall }) => {
+    Api.fetch<FetchRuntimesResponse>("/admin/system/runtimes")
+      .then(({ runtimes, autoInstall, installed, status: s }) => {
         setRuntimes(runtimes);
         setAutoInstall(autoInstall);
+        setStatus(s);
+        setInstalled(installed);
+
+        if (s !== "ok" && s !== "error") {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            setRefreshToken(Date.now());
+          }, 2500);
+        }
       })
       .catch(() => setError("Something went wrong while fetching runtimes"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [refreshToken]);
 
-  return { loading, error, runtimes, autoInstall };
+  return {
+    loading,
+    error,
+    runtimes,
+    status,
+    installed,
+    autoInstall,
+    setRefreshToken,
+  };
 };
 
 export const mapRuntimes = (runtimes: string[]): Record<string, string> => {
@@ -54,16 +95,60 @@ export const mapRuntimes = (runtimes: string[]): Record<string, string> => {
   return result;
 };
 
+export const mapRuntimeStatus = (
+  status: Status,
+  installed: Installed,
+  runtimes: Record<string, string>
+): React.ReactNode | React.ReactNode[] => {
+  if (
+    status === "sent" ||
+    status === "processing" ||
+    !status ||
+    !installed ||
+    !runtimes
+  ) {
+    return <CircularProgress size={14} />;
+  }
+
+  return Object.keys(runtimes).map(runtime => {
+    const runtimeStatus = installed[runtime]?.find(
+      pkg => pkg.requested_version === runtimes[runtime]
+    );
+
+    // Placeholder icon
+    if (!runtimeStatus && status === "error" && runtimes[runtime]) {
+      return <TimesIcon key={runtime} color="error" sx={{ fontSize: 14 }} />;
+    }
+
+    if (runtimeStatus?.active) {
+      return <CheckIcon key={runtime} color="success" sx={{ fontSize: 14 }} />;
+    }
+
+    return (
+      <CheckIcon
+        key={runtime}
+        color="success"
+        sx={{ visibility: "hidden", fontSize: 14 }}
+      />
+    );
+  });
+};
+
 function Runtimes() {
-  const { error, loading, runtimes, autoInstall: auto } = useFetchRuntimes();
-  const [updateSuccess, setUpdateSuccess] = useState<string>();
+  const {
+    error,
+    loading,
+    runtimes,
+    status: installStatus,
+    installed,
+    autoInstall: auto,
+    setRefreshToken,
+  } = useFetchRuntimes();
+
   const [updateError, setUpdateError] = useState<string>();
   const [updateLoading, setUpdateLoading] = useState(false);
   const [kv, setKV] = useState<Record<string, string>>({});
   const [autoInstall, setAutoInstall] = useState(auto);
-  const disabled =
-    autoInstall === auto &&
-    JSON.stringify(kv) === JSON.stringify(mapRuntimes(runtimes || []));
 
   useEffect(() => {
     setKV(mapRuntimes(runtimes || []));
@@ -76,8 +161,12 @@ function Runtimes() {
   return (
     <Card
       loading={loading}
-      error={error || updateError}
-      success={updateSuccess}
+      error={
+        error ||
+        updateError ||
+        (installStatus === "error" &&
+          "An error occurred while installing runtimes. Check instance logs for more details.")
+      }
       sx={{ backgroundColor: "container.transparent" }}
       contentPadding={false}
     >
@@ -91,12 +180,12 @@ function Runtimes() {
           inputName="runtimes"
           keyName="Runtime name"
           valName="Runtime version"
+          keyIcons={mapRuntimeStatus(installStatus!, installed!, kv)}
           keyPlaceholder="node"
           valPlaceholder="24"
           modifyAsString={false}
           onChange={newVars => {
             setKV(newVars);
-            setUpdateSuccess(undefined);
             setUpdateError(undefined);
           }}
         />
@@ -140,19 +229,22 @@ function Runtimes() {
           variant="contained"
           color="secondary"
           type="submit"
-          disabled={disabled}
-          loading={updateLoading}
+          loading={
+            updateLoading ||
+            installStatus === "processing" ||
+            installStatus === "sent"
+          }
           onClick={() => {
             setUpdateLoading(true);
 
             Api.post("/admin/system/runtimes", {
               autoInstall,
               runtimes: Object.entries(kv).map(
-                ([key, value]) => `${key}@${value}`
+                ([key, value]) => `${key}@${value || "latest"}`
               ),
             })
               .then(() => {
-                setUpdateSuccess("Runtimes were installed successfully");
+                setRefreshToken(Date.now());
               })
               .catch(() => {
                 setUpdateError(
@@ -174,32 +266,44 @@ function Runtimes() {
 const useFetchMise = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
+  const [refreshToken, setRefreshToken] = useState(0);
   const [version, setVersion] = useState<string>();
+  const [status, setStatus] = useState<Status>();
+
+  let timeout: NodeJS.Timeout;
 
   useEffect(() => {
-    Api.fetch<{ version: string }>("/admin/system/mise")
-      .then(({ version }) => {
+    Api.fetch<{ version: string; status: Status }>("/admin/system/mise")
+      .then(({ version, status: s }) => {
         setVersion(version);
-      })
-      .catch(() => setError("Something went wrong while fetching mise version"))
-      .finally(() => setLoading(false));
-  }, []);
+        setLoading(s === "sent" || s === "processing");
+        setStatus(s);
 
-  return { loading, error, version, setVersion };
+        if (s !== "ok" && s !== "error") {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            setRefreshToken(Date.now());
+          }, 2500);
+        }
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching mise version");
+        setLoading(false);
+      });
+  }, [refreshToken]);
+
+  return { loading, error, version, status, setRefreshToken };
 };
 
 function Mise() {
-  const { error, loading, version, setVersion } = useFetchMise();
-  const [updateSuccess, setUpdateSuccess] = useState<string>();
+  const { error, loading, version, status, setRefreshToken } = useFetchMise();
   const [updateError, setUpdateError] = useState<string>();
   const [updateLoading, setUpdateLoading] = useState(false);
 
   return (
     <Card
-      loading={loading}
       error={error || updateError}
       sx={{ mt: 4, backgroundColor: "container.transparent" }}
-      success={updateSuccess}
       contentPadding={false}
     >
       <CardHeader
@@ -209,14 +313,15 @@ function Mise() {
           <Button
             variant="contained"
             color="secondary"
-            loading={updateLoading}
+            loading={
+              updateLoading || status === "processing" || status === "sent"
+            }
             onClick={() => {
               setUpdateLoading(true);
 
-              Api.post<{ version: string }>("/admin/system/mise")
-                .then(({ version }) => {
-                  setUpdateSuccess("Mise was upgraded successfully");
-                  setVersion(version);
+              Api.post("/admin/system/mise")
+                .then(() => {
+                  setRefreshToken(Date.now());
                 })
                 .catch(() => {
                   setUpdateError("An error occurred while upgrading mise.");
@@ -231,10 +336,17 @@ function Mise() {
         }
       />
       <CardRow>
-        <Typography variant="h2" color="text.secondary" sx={{ mb: 0.5 }}>
+        <Typography variant="h2" color="text.secondary" sx={{ mb: 1 }}>
           Current version
         </Typography>
-        <Typography>{version || "Unknown"}</Typography>
+        <Typography sx={{ display: "flex", alignItems: "center" }}>
+          {status === "ok" ? (
+            <CheckIcon color="success" sx={{ fontSize: 14, mr: 1 }} />
+          ) : (
+            loading && <CircularProgress size={14} sx={{ mr: 1 }} />
+          )}
+          {version || "Unknown"}
+        </Typography>
       </CardRow>
     </Card>
   );

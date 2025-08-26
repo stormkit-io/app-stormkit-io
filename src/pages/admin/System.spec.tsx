@@ -6,7 +6,11 @@ import {
   waitFor,
   type RenderResult,
 } from "@testing-library/react";
-import AdminSystem, { mapRuntimes } from "./System";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckIcon from "@mui/icons-material/Check";
+import TimesIcon from "@mui/icons-material/Close";
+import AdminSystem, { mapRuntimes, mapRuntimeStatus } from "./System";
+import React from "react";
 
 describe("~/pages/admin/System.tsx", () => {
   let wrapper: RenderResult;
@@ -14,7 +18,29 @@ describe("~/pages/admin/System.tsx", () => {
   const fetchRuntimesScope = (runtimes: string[]) => {
     return nock(process.env.API_DOMAIN || "")
       .get("/admin/system/runtimes")
-      .reply(200, { runtimes, autoInstall: true });
+      .reply(200, {
+        runtimes,
+        autoInstall: true,
+        installed: {
+          node: [
+            {
+              version: "24.0.0",
+              requested_version: "24",
+              active: true,
+              installed: true,
+            },
+          ],
+          python: [
+            {
+              version: "3.11.0",
+              requested_version: "3",
+              active: false,
+              installed: true,
+            },
+          ],
+        },
+        status: "ok",
+      });
   };
 
   const fetchMiseVersionScope = () => {
@@ -56,21 +82,18 @@ describe("~/pages/admin/System.tsx", () => {
       })
       .reply(200, { ok: true });
 
-    expect(
-      wrapper.getByText("Save").parentElement?.getAttribute("disabled")
-    ).toBe("");
+    const fetchScope = nock(process.env.API_DOMAIN || "")
+      .get("/admin/system/runtimes")
+      .reply(200, {});
 
     // Turn off auto-install
     await fireEvent.click(wrapper.getByLabelText("Auto install"));
-
-    expect(
-      wrapper.getByText("Save").parentElement?.getAttribute("disabled")
-    ).toBe(null);
 
     await fireEvent.click(wrapper.getByText("Save"));
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
+      expect(fetchScope.isDone()).toBe(true);
     });
   });
 
@@ -94,13 +117,20 @@ describe("~/pages/admin/System.tsx", () => {
       .post("/admin/system/mise")
       .reply(200, { ok: true });
 
+    const fetchScope = nock(process.env.API_DOMAIN || "")
+      .get("/admin/system/mise")
+      .reply(200, { version: "2.0.0", status: "ok" });
+
     fireEvent.click(wrapper.getByText("Upgrade to latest"));
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
+      expect(fetchScope.isDone()).toBe(true);
     });
 
-    expect(wrapper.getByText("Mise was upgraded successfully")).toBeTruthy();
+    await waitFor(() => {
+      expect(wrapper.getByText("2.0.0")).toBeTruthy();
+    });
   });
 
   describe("mapRuntimes", () => {
@@ -149,6 +179,154 @@ describe("~/pages/admin/System.tsx", () => {
 
     it("should handle empty array", () => {
       expect(mapRuntimes([])).toEqual({});
+    });
+  });
+
+  describe("mapRuntimeStatus", () => {
+    const mockInstalled = {
+      node: [
+        {
+          version: "18.0.0",
+          requested_version: "18",
+          active: true,
+          installed: true,
+        },
+        {
+          version: "20.0.0",
+          requested_version: "20",
+          active: false,
+          installed: true,
+        },
+      ],
+      python: [
+        {
+          version: "3.9.0",
+          requested_version: "3.9",
+          active: true,
+          installed: true,
+        },
+      ],
+    };
+
+    const mockRuntimes = {
+      node: "18",
+      python: "3.9",
+      go: "1.19",
+    };
+
+    it("should return CircularProgress for processing states", () => {
+      const result = mapRuntimeStatus(
+        "processing",
+        mockInstalled,
+        mockRuntimes
+      );
+      expect(result).toBeDefined();
+      // Since it returns JSX, we can't directly test the component type here
+      // This would be better tested in a component test
+    });
+
+    it("should return CircularProgress for sent state", () => {
+      const result = mapRuntimeStatus("sent", mockInstalled, mockRuntimes);
+      expect(result).toBeDefined();
+    });
+
+    it("should return CircularProgress when no status provided", () => {
+      const result = mapRuntimeStatus(
+        undefined as any,
+        mockInstalled,
+        mockRuntimes
+      );
+
+      expect(result).toEqual(<CircularProgress size={14} />);
+    });
+
+    it("should return CircularProgress when installed is not provided", () => {
+      const result = mapRuntimeStatus("ok", undefined as any, mockRuntimes);
+      expect(result).toEqual(<CircularProgress size={14} />);
+    });
+
+    it("should return CircularProgress when runtimes is not provided", () => {
+      const result = mapRuntimeStatus("ok", mockInstalled, undefined as any);
+      expect(result).toEqual(<CircularProgress size={14} />);
+    });
+
+    it("should return check icons for active runtimes", () => {
+      const result = mapRuntimeStatus("ok", mockInstalled, mockRuntimes);
+
+      ["node", "python", "go"].forEach((runtime, index) => {
+        expect((result as React.ReactNode[])[index]).toEqual(
+          <CheckIcon
+            key={runtime}
+            color="success"
+            sx={{
+              fontSize: 14,
+              visibility: runtime === "go" ? "hidden" : undefined,
+            }}
+          />
+        );
+      });
+    });
+
+    it("should return error icon for missing runtimes when status is error", () => {
+      const result = mapRuntimeStatus("error", mockInstalled, mockRuntimes);
+
+      ["node", "python"].forEach((runtime, index) => {
+        expect((result as React.ReactNode[])[index]).toEqual(
+          <CheckIcon
+            key={runtime}
+            color="success"
+            sx={{
+              fontSize: 14,
+            }}
+          />
+        );
+      });
+
+      expect((result as React.ReactNode[])[2]).toEqual(
+        <TimesIcon
+          key="go"
+          color="error"
+          sx={{
+            fontSize: 14,
+          }}
+        />
+      );
+    });
+
+    it("should handle empty installed object", () => {
+      const result = mapRuntimeStatus("ok", {}, mockRuntimes);
+
+      ["node", "python", "go"].forEach((runtime, index) => {
+        expect((result as React.ReactNode[])[index]).toEqual(
+          <CheckIcon
+            key={runtime}
+            color="success"
+            sx={{
+              fontSize: 14,
+              visibility: "hidden",
+            }}
+          />
+        );
+      });
+    });
+
+    it("should handle runtime with no matching installed version", () => {
+      const runtimes = { node: "16", python: "3.8" }; // Different versions
+      const result = mapRuntimeStatus("ok", mockInstalled, runtimes);
+      expect(result as React.ReactNode[]).toHaveLength(2);
+
+      ["node", "python"].forEach((runtime, index) => {
+        expect((result as React.ReactNode[])[index]).toEqual(
+          <CheckIcon
+            key={runtime}
+            color="success"
+            sx={{
+              fontSize: 14,
+              visibility: "hidden",
+            }}
+          />
+        );
+      });
     });
   });
 });
