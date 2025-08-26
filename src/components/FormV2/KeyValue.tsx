@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,6 +14,7 @@ interface Props {
   inputName: string;
   keyName: string;
   valName: string;
+  keyIcons?: React.ReactNode | React.ReactNode[];
   keyPlaceholder?: string;
   valPlaceholder?: string;
   defaultValue: Record<string, string>;
@@ -31,7 +32,10 @@ const rowsToMap = (rows: string[][]): Record<string, string> => {
   return rows
     .filter(row => !row[2])
     .reduce((obj, val) => {
-      obj[val[0]] = val[1];
+      if (typeof obj[val[0]] === "undefined") {
+        obj[val[0]] = val[1];
+      }
+
       return obj;
     }, {} as Record<string, string>);
 };
@@ -40,6 +44,7 @@ export default function KeyValue({
   inputName,
   keyName,
   valName,
+  keyIcons,
   keyPlaceholder,
   valPlaceholder,
   defaultValue,
@@ -89,6 +94,7 @@ export default function KeyValue({
               <KeyValueRow
                 key={index}
                 rows={rows}
+                keyIcon={Array.isArray(keyIcons) ? keyIcons[index] : keyIcons}
                 labelKey={keyName}
                 labelValue={valName}
                 inputKey={key}
