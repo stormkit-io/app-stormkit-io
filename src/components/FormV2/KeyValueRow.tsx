@@ -9,6 +9,7 @@ import Input from "./Input";
 
 interface KeyValueRowProps {
   index: number;
+  keyIcon?: React.ReactNode;
   labelKey: string;
   labelValue: string;
   inputKey: string;
@@ -28,6 +29,7 @@ const fontSize = 14;
 export default function KeyValueRow({
   index,
   rows,
+  keyIcon,
   inputKey: key,
   inputValue: value,
   inputName,
@@ -44,7 +46,7 @@ export default function KeyValueRow({
 
   return (
     <TableRow sx={{ "div[data-lastpass-icon-root]": { display: "none" } }}>
-      <TableCell sx={{ borderBottom: "none", pl: 0, pb: 0 }}>
+      <TableCell sx={{ borderBottom: "none", pl: 0, pb: 0, width: "50%" }}>
         <Input
           fullWidth
           placeholder={index === 0 ? keyPlaceholder : `KEY_${index + 1}`}
@@ -56,13 +58,26 @@ export default function KeyValueRow({
             inputLabel: {
               shrink: true,
             },
+            input: {
+              endAdornment: keyIcon,
+            },
           }}
           label={labelKey}
           name={`${inputName}[key]`}
           onChange={e => {
             const copy = JSON.parse(JSON.stringify(rows));
             copy[index] = [e.target.value, copy[index][1]];
+
+            const hasDuplicateKey = rows.find(
+              r => r[0] === e.target.value && r[2] !== "deleted"
+            );
+
             setRows(copy);
+
+            if (hasDuplicateKey) {
+              return;
+            }
+
             setIsChanged(true);
           }}
           value={key}
