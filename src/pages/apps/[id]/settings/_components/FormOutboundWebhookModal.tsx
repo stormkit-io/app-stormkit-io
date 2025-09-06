@@ -20,6 +20,7 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import { upsertOutboundWebhook } from "../_actions/outbound_webhook_actions";
+import Help from "~/components/Help/Help";
 
 interface Props {
   app: App;
@@ -283,10 +284,70 @@ export default function FormNewOutboundWebhookModal({
               After each failed deployment
             </Option>
             <Option value={"on_publish"}>After deployment is published</Option>
+            <Option value={"on_cache_purge"}>After cache is purged</Option>
           </Select>
         </FormControl>
 
-        <CardFooter>
+        <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Help
+            title="Outbound webhooks"
+            subtitle="Automate workflows by sending HTTP requests to external services when specific events occur in your application deployment lifecycle."
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1 }}>
+              Overview
+            </Typography>
+            <Typography color="text.secondary" sx={{ mb: 2 }}>
+              Outbound webhooks are HTTP requests that are triggered by specific
+              events in your application deployment lifecycle. You can configure
+              the request method, headers, and payload to suit your needs.
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1 }}>
+              Events
+            </Typography>
+
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1 }}>
+              1. After each successful deployment
+            </Typography>
+            <Typography color="text.secondary">
+              The webhook will be triggered after every successful deployment of
+              your application. A successful deployment means that your code has
+              been built and deployed without any errors. This event cycle
+              occurs before status checks are run.
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: "bold", mt: 2, mb: 1 }}
+            >
+              2. After each failed deployment
+            </Typography>
+            <Typography color="text.secondary">
+              The webhook will be triggered after every failed deployment. This
+              event cycle occurs before status checks are run.
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: "bold", mt: 2, mb: 1 }}
+            >
+              3.After a deployment is published
+            </Typography>
+            <Typography color="text.secondary">
+              The webhook will be triggered after a deployment is published.
+              This event cycle occurs after status checks are run.
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: "bold", mt: 2, mb: 1 }}
+            >
+              4.After a cache purge
+            </Typography>
+            <Typography color="text.secondary">
+              Cache is purged after the following events:
+              <br />
+              <br />- A deployment is published
+              <br />- Any operation to snippets
+              <br />- The environment configuration is updated
+            </Typography>
+          </Help>
           <Button
             variant="contained"
             color="secondary"

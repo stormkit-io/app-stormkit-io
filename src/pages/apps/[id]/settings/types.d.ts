@@ -18,7 +18,8 @@ export type AllowedMethod = "GET" | "POST" | "HEAD";
 export type TriggerWhen =
   | "on_deploy_success"
   | "on_deploy_failed"
-  | "on_publish";
+  | "on_publish"
+  | "on_cache_purge";
 
 export interface OutboundWebhook {
   id?: string;

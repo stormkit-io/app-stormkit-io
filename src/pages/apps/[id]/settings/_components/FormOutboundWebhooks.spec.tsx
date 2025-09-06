@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from "vitest";
 import type { OutboundWebhook } from "../types";
 import { fireEvent, RenderResult } from "@testing-library/react";
 import { waitFor, render } from "@testing-library/react";
@@ -35,13 +36,13 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhooks", () => {
     createWrapper({ app: currentApp });
   });
 
-  test("the button is at loading state initially", () => {
+  it("the button is at loading state initially", () => {
     expect(wrapper.getByLabelText("Add new webhook").innerHTML).toContain(
       "<svg"
     );
   });
 
-  test("the button is not at loading state when the query has loaded", async () => {
+  it("the button is not at loading state when the query has loaded", async () => {
     await waitFor(() => {
       expect(wrapper.getByLabelText("Add new webhook").innerHTML).not.toContain(
         "spinner"
@@ -49,7 +50,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhooks", () => {
     });
   });
 
-  test("should handle webhook deletion", async () => {
+  it("should handle webhook deletion", async () => {
     await waitFor(() => {
       expect(wrapper.getAllByLabelText("expand")).toHaveLength(2);
     });
@@ -80,7 +81,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhooks", () => {
     });
   });
 
-  test("clicking add new webhook opens a modal", async () => {
+  it("clicking add new webhook opens a modal", async () => {
     await waitFor(() => {
       expect(
         wrapper.getAllByText("Triggered after a deployment is published")
@@ -96,7 +97,7 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhooks", () => {
     });
   });
 
-  test.each`
+  it.each`
     description    | endpoint
     ${"short url"} | ${"https://discord.com/example/endpoint"}
     ${"long url"}  | ${"https://discord.com/api/webhooks/example/endpoint..."}

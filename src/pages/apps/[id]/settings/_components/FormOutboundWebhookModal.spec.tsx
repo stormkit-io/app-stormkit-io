@@ -36,6 +36,24 @@ describe("~/pages/apps/[id]/settings/_components/FormOutboundWebhookModal", () =
     );
   };
 
+  describe("always", () => {
+    beforeEach(() => {
+      currentApp = mockApp();
+      createWrapper({ app: currentApp });
+    });
+
+    it("should contain a help button which opens the help drawer", async () => {
+      expect(wrapper.getByText("Help")).toBeTruthy();
+      fireEvent.click(wrapper.getByText("Help"));
+
+      await waitFor(() => {
+        expect(
+          wrapper.getByText(/Outbound webhooks are HTTP requests/)
+        ).toBeTruthy();
+      });
+    });
+  });
+
   describe("create", () => {
     beforeEach(() => {
       currentApp = mockApp();

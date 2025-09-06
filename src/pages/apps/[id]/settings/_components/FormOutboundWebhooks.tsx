@@ -28,6 +28,7 @@ const messages: Record<TriggerWhen, string> = {
   on_deploy_success: "Triggered after each successful deployment",
   on_deploy_failed: "Triggered after each failed deployment",
   on_publish: "Triggered after a deployment is published",
+  on_cache_purge: "Triggered after a cache purge",
 };
 
 const FormOutboundWebhooks: React.FC<Props> = ({ app }): React.ReactElement => {
