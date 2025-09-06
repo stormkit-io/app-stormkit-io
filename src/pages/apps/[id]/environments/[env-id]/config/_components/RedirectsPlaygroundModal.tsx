@@ -15,7 +15,7 @@ import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import api from "~/utils/api/Api";
 import { grey } from "@mui/material/colors";
-import RedirectsEditor from "./RedirectsEditor";
+import RedirectsEditor from "./Editor";
 
 interface Props {
   env: Environment;
@@ -126,7 +126,11 @@ export default function RedirectsPlaygroundModal({
           <Typography sx={{ mb: 2, color: "text.secondary" }}>
             Redirects
           </Typography>
-          <RedirectsEditor value={redirects} onChange={setRedirects} />
+          <RedirectsEditor
+            value={redirects}
+            onChange={setRedirects}
+            docsLink="https://www.stormkit.io/docs/features/redirects-and-path-rewrites"
+          />
         </Box>
         {result &&
           (result.match ? (

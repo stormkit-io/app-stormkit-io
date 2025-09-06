@@ -17,6 +17,7 @@ const toRequestObject = (environment: Environment) => {
         statusChecks: environment.build.statusChecks,
         previewLinks: environment.build.previewLinks,
         apiFolder: environment.build.apiFolder,
+        headers: environment.build.headers || "",
         headersFile: environment.build.headersFile,
         errorFile: environment.build.errorFile,
         redirectsFile: environment.build.redirectsFile,

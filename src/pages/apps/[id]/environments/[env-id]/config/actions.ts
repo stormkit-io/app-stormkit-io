@@ -55,6 +55,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     serverCmd: values["build.serverCmd"]?.trim() || "",
     installCmd: values["build.installCmd"]?.trim() || "",
     distFolder: (values["build.distFolder"] || "").trim(),
+    headers: values["build.headers"]?.trim() || "",
     headersFile: values["build.headersFile"],
     redirectsFile: values["build.redirectsFile"],
     errorFile: values["build.errorFile"],
@@ -131,6 +132,7 @@ interface ControlledFormValues {
   autoPublish?: "on" | "off";
   "build.previewLinks"?: "on" | "off";
   "build.redirects"?: string;
+  "build.headers"?: string;
   "build.statusChecks"?: string;
 }
 
@@ -147,9 +149,10 @@ export interface FormValues {
   "build.serverCmd"?: string;
   "build.installCmd"?: string;
   "build.distFolder"?: string;
+  "build.headers"?: string;
   "build.headersFile"?: string;
-  "build.redirects"?: string;
   "build.errorFile"?: string;
+  "build.redirects"?: string;
   "build.redirectsFile"?: string;
   "build.apiFolder"?: string;
   "build.vars"?: string; // This is the textarea version
@@ -381,7 +384,7 @@ export const useSubmitHandler = ({
     );
 
     if (!validateRedirects(values["build.redirects"] || "", setError)) {
-      setSuccess("");
+      setError("Invalid redirects format.");
       return Promise.resolve();
     }
 

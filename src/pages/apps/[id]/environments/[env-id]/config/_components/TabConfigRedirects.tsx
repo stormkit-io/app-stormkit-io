@@ -11,7 +11,7 @@ import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import { useSubmitHandler } from "../actions";
 import RedirectsPlaygroundModal from "./RedirectsPlaygroundModal";
-import RedirectsEditor from "./RedirectsEditor";
+import RedirectsEditor from "./Editor";
 
 interface Props {
   app: App;
@@ -131,7 +131,11 @@ export default function TabConfigRedirects({
           <Typography sx={{ mb: 2, color: "text.secondary" }}>
             Redirects
           </Typography>
-          <RedirectsEditor value={redirects} onChange={setRedirects} />
+          <RedirectsEditor
+            value={redirects}
+            onChange={setRedirects}
+            docsLink="https://www.stormkit.io/docs/features/redirects-and-path-rewrites"
+          />
         </Box>
       )}
 

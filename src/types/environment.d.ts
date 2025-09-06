@@ -7,6 +7,7 @@ declare type StatusCheck = {
 declare type BuildConfig = {
   previewLinks?: boolean;
   apiFolder?: string;
+  headers?: string;
   headersFile?: string;
   redirectsFile?: string;
   redirects?: Redirect[];

@@ -48,7 +48,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/RedirectsPl
     ).toBeTruthy();
 
     expect(wrapper.getByText("docs").getAttribute("href")).toBe(
-      "https://stormkit.io/docs/features/redirects-and-path-rewrites"
+      "https://www.stormkit.io/docs/features/redirects-and-path-rewrites"
     );
   });
 
