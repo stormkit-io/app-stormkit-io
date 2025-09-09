@@ -2,7 +2,7 @@ import { useState, useContext, FormEventHandler } from "react";
 import { html } from "@codemirror/lang-html";
 import CodeMirror from "@uiw/react-codemirror";
 import Box from "@mui/material/Box";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Switch from "@mui/material/Switch";

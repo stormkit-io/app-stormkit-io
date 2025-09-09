@@ -1,7 +1,7 @@
 import type { FormValues } from "../actions";
 import { useState, useMemo } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/lab/LoadingButton";
+import Button from '@mui/material/Button';
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";

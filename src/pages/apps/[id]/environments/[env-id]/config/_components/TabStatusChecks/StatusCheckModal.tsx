@@ -1,6 +1,6 @@
 import type { FormValues } from "../../actions";
 import { useState } from "react";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import TextInput from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Modal from "~/components/Modal";

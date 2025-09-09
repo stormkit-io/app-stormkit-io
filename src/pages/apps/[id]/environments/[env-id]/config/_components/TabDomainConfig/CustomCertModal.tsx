@@ -1,5 +1,5 @@
 import { FormEventHandler, useState, useContext } from "react";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";

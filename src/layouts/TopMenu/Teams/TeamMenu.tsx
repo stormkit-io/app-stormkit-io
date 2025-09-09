@@ -8,7 +8,7 @@ import Add from "@mui/icons-material/Add";
 import Check from "@mui/icons-material/Check";
 import Settings from "@mui/icons-material/Settings";
 import GroupAdd from "@mui/icons-material/GroupAdd";
-import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 
 interface Props {
   selectedTeam?: Team;

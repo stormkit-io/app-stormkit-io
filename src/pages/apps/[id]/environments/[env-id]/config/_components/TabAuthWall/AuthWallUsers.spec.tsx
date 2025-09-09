@@ -94,11 +94,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAuthWall
         )
       ).toThrow();
 
-      expect(wrapper.getByText("Email")).toBeTruthy();
-      expect(wrapper.getByText("Last login")).toBeTruthy();
-      expect(wrapper.getByText("email-1@example.org")).toBeTruthy();
-      expect(wrapper.getByText("email-2@example.org")).toBeTruthy();
-      expect(wrapper.getByText("21.09.2022 - 21:30")).toBeTruthy();
+      await waitFor(() => {
+        expect(wrapper.getByText("Email")).toBeTruthy();
+        expect(wrapper.getByText("Last login")).toBeTruthy();
+        expect(wrapper.getByText("email-1@example.org")).toBeTruthy();
+        expect(wrapper.getByText("email-2@example.org")).toBeTruthy();
+        expect(wrapper.getByText("21.09.2022 - 21:30")).toBeTruthy();
+      });
     });
 
     it("should remove selected users", async () => {
@@ -110,6 +112,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAuthWall
 
       // The remove selected should be disabled initially
       expect(button.getAttribute("disabled")).toBe("");
+
+      await waitFor(() => {
+        expect(wrapper.getByLabelText("email-1@example.org")).toBeTruthy();
+      });
 
       fireEvent.click(wrapper.getByLabelText("email-1@example.org"));
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { AppContext } from "~/pages/apps/[id]/App.context";

@@ -1,7 +1,7 @@
 import type { FormValues } from "../../actions";
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";

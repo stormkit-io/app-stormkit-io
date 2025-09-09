@@ -42,19 +42,23 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
       });
     });
 
-    it("should list the email addresses", () => {
-      expect(wrapper.getByText("hello@example.org")).toBeTruthy();
-      expect(wrapper.getByText("hi@example.org")).toBeTruthy();
+    it("should list the email addresses", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("hello@example.org")).toBeTruthy();
+        expect(wrapper.getByText("hi@example.org")).toBeTruthy();
+      });
     });
 
-    it("should mark the Primary email", () => {
-      expect(wrapper.getByTestId("hello@example.org").innerHTML).toContain(
-        "Primary"
-      );
+    it("should mark the Primary email", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByTestId("hello@example.org").innerHTML).toContain(
+          "Primary"
+        );
 
-      expect(wrapper.getByTestId("hi@example.org").innerHTML).not.toContain(
-        "Primary"
-      );
+        expect(wrapper.getByTestId("hi@example.org").innerHTML).not.toContain(
+          "Primary"
+        );
+      });
     });
   });
 
@@ -90,14 +94,16 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
       expect(wrapper.getByText(human)).toBeTruthy();
     });
 
-    it("should display a set personal access token link", () => {
-      const parent = wrapper
-        .getByText(human)
-        .closest(`[data-testid=${provider}]`);
+    it("should display a set personal access token link", async () => {
+      await waitFor(() => {
+        const parent = wrapper
+          .getByText(human)
+          .closest(`[data-testid=${provider}]`);
 
-      expect(/Set personal access token/.test(parent?.innerHTML || "")).toBe(
-        hasPersonalAccessTokenSupport
-      );
+        expect(/Set personal access token/.test(parent?.innerHTML || "")).toBe(
+          hasPersonalAccessTokenSupport
+        );
+      });
     });
   });
 
@@ -110,8 +116,10 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
       });
     });
 
-    it("displays reset instead of set when hasPersonalAccessToken is true", () => {
-      expect(wrapper.getByText("Reset personal access token")).toBeTruthy();
+    it("displays reset instead of set when hasPersonalAccessToken is true", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("Reset personal access token")).toBeTruthy();
+      });
     });
 
     it("the link should toggle the modal", async () => {

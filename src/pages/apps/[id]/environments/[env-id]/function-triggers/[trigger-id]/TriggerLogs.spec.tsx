@@ -102,10 +102,13 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/[trigger-id]/Trigg
   it("should display a loader when fetching logs", async () => {
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
+      expect(
+        wrapper.getByText("https://api.example.com/trigger-1")
+      ).toBeTruthy();
+      expect(
+        wrapper.getByText("https://api.example.com/trigger-2")
+      ).toBeTruthy();
     });
-
-    expect(wrapper.getByText("https://api.example.com/trigger-1")).toBeTruthy();
-    expect(wrapper.getByText("https://api.example.com/trigger-2")).toBeTruthy();
   });
 
   it("should refetch the trigger logs when refresh button is clicked", async () => {

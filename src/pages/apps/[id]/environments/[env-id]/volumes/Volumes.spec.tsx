@@ -79,11 +79,13 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
       });
 
       it("should display an empty page with a configure button", async () => {
-        expect(
-          wrapper.getByText(
-            "Persist your files seamlessly using Stormkit Volumes"
-          )
-        ).toBeTruthy();
+        await waitFor(() => {
+          expect(
+            wrapper.getByText(
+              "Persist your files seamlessly using Stormkit Volumes"
+            )
+          ).toBeTruthy();
+        });
 
         fireEvent.click(wrapper.getByText("Configure"));
 
@@ -92,10 +94,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         });
       });
 
-      it("should display a learn more button", () => {
-        expect(wrapper.getByText("Learn more").getAttribute("href")).toBe(
-          "https://www.stormkit.io/docs/features/volumes"
-        );
+      it("should display a learn more button", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText("Learn more").getAttribute("href")).toBe(
+            "https://www.stormkit.io/docs/features/volumes"
+          );
+        });
       });
     });
 
@@ -113,16 +117,18 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         });
       });
 
-      it("should not display an empty page with a configure button", () => {
-        // This should no longer be rendered
-        expect(() =>
-          wrapper.getByText(
-            "Persist your files seamlessly using Stormkit Volumes"
-          )
-        ).toThrow();
+      it("should not display an empty page with a configure button", async () => {
+        await waitFor(() => {
+          // This should no longer be rendered
+          expect(() =>
+            wrapper.getByText(
+              "Persist your files seamlessly using Stormkit Volumes"
+            )
+          ).toThrow();
 
-        expect(() => {
-          expect(wrapper.getByText("No files uploaded yet")).toBeTruthy();
+          expect(() => {
+            expect(wrapper.getByText("No files uploaded yet")).toBeTruthy();
+          });
         });
       });
     });
@@ -191,9 +197,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
           )
         ).toThrow();
 
-        expect(wrapper.getByText("No files uploaded yet")).toBeTruthy();
-
         await waitFor(() => {
+          expect(wrapper.getByText("No files uploaded yet")).toBeTruthy();
           expect(fetchFilesScope.isDone()).toBe(true);
         });
       });

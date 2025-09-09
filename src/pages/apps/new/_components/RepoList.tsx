@@ -3,7 +3,7 @@ import { useState, useMemo, useContext } from "react";
 import { useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 import ArrowRightIcon from "@mui/icons-material/ArrowForwardIos";

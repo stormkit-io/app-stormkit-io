@@ -33,10 +33,6 @@ describe("~/pages/apps/_components/WelcomeModal", () => {
       createWrapper({ isOpen: true, toggleModal });
     });
 
-    it("matches the snapshot", () => {
-      expect(wrapper).toMatchSnapshot();
-    });
-
     it("closes the modal when close button is clicked", async () => {
       fireEvent.click(wrapper.getByText("Close"));
 

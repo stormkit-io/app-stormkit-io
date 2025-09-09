@@ -167,9 +167,8 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
     it("should load an empty list", async () => {
       await waitFor(() => {
         expect(fetchSnippetsScope.isDone()).toBe(true);
+        expect(wrapper.getByText(/It\'s quite empty in here\./)).toBeTruthy();
       });
-
-      expect(wrapper.getByText(/It\'s quite empty in here\./)).toBeTruthy();
     });
   });
 });

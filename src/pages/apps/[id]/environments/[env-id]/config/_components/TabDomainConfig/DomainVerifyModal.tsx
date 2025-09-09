@@ -2,7 +2,7 @@ import { useState } from "react";
 import { parse as parseUrl } from "tldts";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CardFooter from "~/components/CardFooter";
 import CardHeader from "~/components/CardHeader";

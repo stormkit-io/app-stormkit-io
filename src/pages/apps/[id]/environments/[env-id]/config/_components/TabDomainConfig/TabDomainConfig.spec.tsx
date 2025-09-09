@@ -1,5 +1,5 @@
 import type { RenderResult } from "@testing-library/react";
-import { describe, expect, beforeEach, it, vi, type Mock } from "vitest";
+import { describe, expect, beforeEach, it } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import mockApp from "~/testing/data/mock_app";
 import mockEnvironment from "~/testing/data/mock_environment";
@@ -17,21 +17,12 @@ interface Props {
 
 describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainConfig/TabDomainConfig.tsx", () => {
   let wrapper: RenderResult;
-  let setRefreshToken: Mock;
   let currentApp: App;
   let currentEnv: Environment;
   let domain: Domain;
 
   const createWrapper = ({ app, environment }: Props) => {
-    setRefreshToken = vi.fn();
-
-    wrapper = render(
-      <TabDomainConfig
-        app={app}
-        environment={environment}
-        setRefreshToken={setRefreshToken}
-      />
-    );
+    wrapper = render(<TabDomainConfig app={app} environment={environment} />);
   };
 
   describe("with no domain", () => {
@@ -60,13 +51,15 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
       });
     });
 
-    it("should display an informative text", () => {
-      expect(
-        wrapper.getByText("No custom domain configuration found.")
-      ).toBeTruthy();
-      expect(
-        wrapper.getByText("Add a domain to serve your app directly from it.")
-      ).toBeTruthy();
+    it("should display an informative text", async () => {
+      await waitFor(() => {
+        expect(
+          wrapper.getByText("No custom domain configuration found.")
+        ).toBeTruthy();
+        expect(
+          wrapper.getByText("Add a domain to serve your app directly from it.")
+        ).toBeTruthy();
+      });
     });
   });
 
@@ -124,30 +117,36 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     });
 
     it("should list domains", async () => {
-      expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
-      expect(wrapper.getByText("www.stormkit.io")).toBeTruthy();
-      expect(wrapper.getByText("api.stormkit.io")).toBeTruthy();
-      expect(wrapper.getByTestId("app.stormkit.io-status").textContent).toBe(
-        "Status: not yet pinged"
-      );
-      expect(wrapper.getByTestId("www.stormkit.io-status").textContent).toBe(
-        "Status: not yet verified"
-      );
-      expect(wrapper.getByTestId("api.stormkit.io-status").textContent).toBe(
-        "Status: 200"
-      );
+      await waitFor(() => {
+        expect(wrapper.getByText("app.stormkit.io")).toBeTruthy();
+        expect(wrapper.getByText("www.stormkit.io")).toBeTruthy();
+        expect(wrapper.getByText("api.stormkit.io")).toBeTruthy();
+        expect(wrapper.getByTestId("app.stormkit.io-status").textContent).toBe(
+          "Status: not yet pinged"
+        );
+        expect(wrapper.getByTestId("www.stormkit.io-status").textContent).toBe(
+          "Status: not yet verified"
+        );
+        expect(wrapper.getByTestId("api.stormkit.io-status").textContent).toBe(
+          "Status: 200"
+        );
+      });
     });
 
     it("should allow removing a domain", async () => {
-      fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
-      fireEvent.click(wrapper.getByText("Delete"));
-
       const scope = mockDeleteDomain({
         appId: currentApp.id,
         envId: currentEnv.id!,
         domainId: domain.id,
         response: { ok: true },
       });
+
+      await waitFor(() => {
+        expect(wrapper.getAllByLabelText("expand").at(0)).toBeTruthy();
+      });
+
+      fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
+      fireEvent.click(wrapper.getByText("Delete"));
 
       await waitFor(() => {
         expect(wrapper.getByText("Yes, continue")).toBeTruthy();

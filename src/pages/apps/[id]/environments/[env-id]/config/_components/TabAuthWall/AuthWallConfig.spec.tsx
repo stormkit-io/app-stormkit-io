@@ -41,11 +41,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAuthWall
 
       await waitFor(() => {
         expect(scope.isDone()).toBe(true);
+        expect(() => wrapper.getByTestId("card-loading")).toThrow();
+        expect(wrapper.getByText(selectedItem)).toBeTruthy();
+        expect(wrapper.getByText(expectedStatus)).toBeTruthy();
       });
-
-      expect(() => wrapper.getByTestId("card-loading")).toThrow();
-      expect(wrapper.getByText(selectedItem)).toBeTruthy();
-      expect(wrapper.getByText(expectedStatus)).toBeTruthy();
     }
   );
 

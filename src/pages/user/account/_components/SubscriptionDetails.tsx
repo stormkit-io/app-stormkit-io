@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";

@@ -161,6 +161,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/deployments/runtime-logs/Runti
 
       await waitFor(() => {
         expect(wrapper.getByText("Load more")).toBeTruthy();
+        expect(wrapper.getByText("Descending")).toBeTruthy();
       });
 
       const paginationScope = mockFetchDeploymentLogs({

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CardRow from "~/components/CardRow";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Api from "~/utils/api/Api";
 

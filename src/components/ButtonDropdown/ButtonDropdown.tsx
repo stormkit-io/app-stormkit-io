@@ -7,7 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 
 interface MenuItemProps {
   text: string;

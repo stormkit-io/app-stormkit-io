@@ -8,7 +8,7 @@ import Select from "@mui/material/Select";
 import Option from "@mui/material/MenuItem";
 import Alert from "@mui/material/Alert";
 import Link from "@mui/material/Link";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Modal from "~/components/Modal";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";

@@ -1,7 +1,7 @@
 import { FormEventHandler, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Modal from "~/components/Modal";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";

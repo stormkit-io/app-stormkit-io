@@ -1,6 +1,6 @@
 import React, { FormEventHandler, useState } from "react";
 import Alert from "@mui/material/Alert";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Card from "~/components/Card";
 import Typography from "@mui/material/Typography";

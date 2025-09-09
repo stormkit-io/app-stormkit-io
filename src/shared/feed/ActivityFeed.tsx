@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import { useSelectedTeam } from "~/layouts/TopMenu/Teams/actions";
 import { AuthContext } from "~/pages/auth/Auth.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";

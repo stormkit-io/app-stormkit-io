@@ -154,7 +154,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     });
 
     it("delete button is disabled", () => {
-      expect(wrapper.getByText("Delete").getAttribute("disabled")).toBe(null);
+      expect(wrapper.getByText("Delete").getAttribute("disabled")).toBe("");
     });
   });
 

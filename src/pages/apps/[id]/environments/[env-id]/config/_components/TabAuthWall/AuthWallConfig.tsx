@@ -1,7 +1,7 @@
 import type { AuthWallConfig } from "./actions";
 import { FormEventHandler, useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";

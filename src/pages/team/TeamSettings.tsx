@@ -1,7 +1,7 @@
 import { FormEventHandler, useState } from "react";
 import { useNavigate } from "react-router";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Card from "~/components/Card";
 import CardFooter from "~/components/CardFooter";
 import CardHeader from "~/components/CardHeader";

@@ -1,7 +1,7 @@
 import type { Log } from "./actions";
 import React, { useContext, useState } from "react";
 import { useParams, useLocation } from "react-router";
-import Button from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Switch from "@mui/material/Switch";
