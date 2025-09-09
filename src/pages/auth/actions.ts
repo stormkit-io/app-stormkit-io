@@ -135,7 +135,9 @@ export const loginOauth = ({ setUser }: LoginOauthProps) => {
             LocalStorage.set(LS_ACCESS_TOKEN, data.accessToken);
           }
 
-          LocalStorage.set(LS_PROVIDER, provider);
+          if (provider) {
+            LocalStorage.set(LS_PROVIDER, provider);
+          }
 
           resolve({
             user: data.user!,
