@@ -132,6 +132,7 @@ describe("~/apps/[id]/environments/[env-id]/function-triggers/[trigger-id]/Trigg
   it("should open a drawer when a row is clicked", async () => {
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
+      expect(wrapper.getAllByTestId("trigger-log")).toBeTruthy();
     });
 
     fireEvent.click(wrapper.getAllByTestId("trigger-log").at(0)!);

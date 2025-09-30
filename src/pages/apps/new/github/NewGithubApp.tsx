@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect, useMemo } from "react";
 import { AuthContext } from "~/pages/auth/Auth.context";
-import { useFetchInstanceDetails } from "~/pages/auth/actions";
+import { RootContext } from "~/pages/Root.context";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
@@ -14,7 +14,7 @@ import ConnectMoreRepos from "./ConnectMoreRepos";
 
 export default function NewGithubApp() {
   const { user } = useContext(AuthContext);
-  const { details, loading: detailsLoading } = useFetchInstanceDetails();
+  const { details, loading: detailsLoading } = useContext(RootContext);
   const { githubAccount, openPopupURL } = useMemo(() => {
     const githubAccount = details?.auth?.github;
     const openPopupURL = `https://github.com/apps/${githubAccount}/installations/new`;

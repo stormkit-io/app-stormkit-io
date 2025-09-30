@@ -72,6 +72,13 @@ export default function AdminLayout({ children }: Props) {
                     pathname.includes("/admin/system") || pathname === "/admin",
                 }}
               />
+              {/* <MenuLink
+                item={{
+                  path: "/admin/users",
+                  text: "Users",
+                  isActive: pathname.includes("/admin/users"),
+                }}
+              /> */}
               <MenuLink
                 item={{
                   path: "/admin/subscription",

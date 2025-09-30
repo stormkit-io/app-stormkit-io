@@ -329,6 +329,7 @@ export const useFetchTeamStats = ({ teamId }: FetchTeamStatsProps) => {
   const [stats, setTeamStats] = useState<TeamStats>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [paymentRequired, setPaymentRequired] = useState(false);
 
   useEffect(() => {
     if (!teamId) {
@@ -345,6 +346,11 @@ export const useFetchTeamStats = ({ teamId }: FetchTeamStatsProps) => {
         setTeamStats(res);
       })
       .catch(e => {
+        if (e.status === 402) {
+          setPaymentRequired(true);
+          return;
+        }
+
         setError(
           e?.message ||
             "Something went wrong while fetching stats. Please try again later."
@@ -355,5 +361,5 @@ export const useFetchTeamStats = ({ teamId }: FetchTeamStatsProps) => {
       });
   }, [teamId]);
 
-  return { stats, loading, error };
+  return { stats, loading, error, paymentRequired };
 };

@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Logo from "~/components/Logo";
 import UserButtons from "./UserButtons";
-import TeamsToggle from "./Teams/TeamToggle";
+import TeamToggle from "./Teams/TeamToggle";
 import { grey } from "@mui/material/colors";
 
 interface Props {
@@ -41,7 +41,7 @@ export default function TopMenu({ children, submenu, app, team }: Props) {
           <Link href={slug} sx={{ flex: "1", mr: 1 }}>
             <Logo iconSize={28} iconOnly />
           </Link>
-          <TeamsToggle app={app} />
+          <TeamToggle app={app} />
         </Box>
         <Box sx={{ flex: 1 }}>{children}</Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>

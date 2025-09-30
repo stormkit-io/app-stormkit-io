@@ -15,6 +15,7 @@ export const useFetchFunctionTriggers = ({
   const [triggers, setTriggers] = useState<FunctionTrigger[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [paymentRequired, setPaymentRequired] = useState(false);
 
   useEffect(() => {
     if (!appId || !environmentId) {
@@ -30,15 +31,19 @@ export const useFetchFunctionTriggers = ({
       .then(({ triggers }) => {
         setTriggers(triggers);
       })
-      .catch(() => {
-        setError("Something went wrong while fetching periodic triggers");
+      .catch(res => {
+        if (res.status === 402) {
+          setPaymentRequired(true);
+        } else {
+          setError("Something went wrong while fetching periodic triggers");
+        }
       })
       .finally(() => {
         setLoading(false);
       });
   }, [appId, environmentId, refreshToken]);
 
-  return { functionTriggers: triggers, loading, error };
+  return { functionTriggers: triggers, loading, error, paymentRequired };
 };
 
 interface DeleteFunctionTriggerProps {

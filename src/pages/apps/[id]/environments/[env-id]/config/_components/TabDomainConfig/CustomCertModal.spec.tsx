@@ -63,7 +63,6 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
         edition: "",
         id: "self-hosted",
         name: "Self-Hosted",
-        maxDeploymentsPerMonth: -1,
       };
 
       createWrapper({

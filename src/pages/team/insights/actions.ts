@@ -16,12 +16,14 @@ export const useFetchTopDomains = ({ teamId }: FetchTopDomainsProps) => {
   const [domains, setTopDomains] = useState<TopDomain[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [paymentRequired, setPaymentRequired] = useState(false);
 
   useEffect(() => {
     if (!teamId) {
       return;
     }
 
+    setPaymentRequired(false);
     setLoading(true);
     setError("");
 
@@ -30,7 +32,12 @@ export const useFetchTopDomains = ({ teamId }: FetchTopDomainsProps) => {
       .then(({ domains }) => {
         setTopDomains(domains);
       })
-      .catch(() => {
+      .catch(res => {
+        if (res.status === 402) {
+          setPaymentRequired(true);
+          return;
+        }
+
         setError(
           "Something went wrong while fetching domains. Please try again later."
         );
@@ -40,5 +47,5 @@ export const useFetchTopDomains = ({ teamId }: FetchTopDomainsProps) => {
       });
   }, [teamId]);
 
-  return { domains, loading, error };
+  return { domains, loading, error, paymentRequired };
 };

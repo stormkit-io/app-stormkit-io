@@ -123,7 +123,11 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
     });
 
     it("the link should toggle the modal", async () => {
-      await fireEvent.click(wrapper.getByText("Reset personal access token"));
+      await waitFor(() => {
+        wrapper.getByText("Reset personal access token");
+      });
+
+      fireEvent.click(wrapper.getByText("Reset personal access token"));
 
       await waitFor(() => {
         expect(

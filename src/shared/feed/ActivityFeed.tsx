@@ -17,11 +17,12 @@ export default function Audit() {
   const selectedTeam = useSelectedTeam({ teams });
   const [nextPage, loadNextPage] = useState(0);
 
-  const { audits, loading, error, hasNextPage } = useFetchAudits({
-    teamId: selectedTeam!.id,
-    appId: app?.id,
-    nextPage,
-  });
+  const { audits, loading, error, hasNextPage, paymentRequired } =
+    useFetchAudits({
+      teamId: selectedTeam!.id,
+      appId: app?.id,
+      nextPage,
+    });
 
   return (
     <Box maxWidth="lg" sx={{ width: "100%" }}>
@@ -37,7 +38,7 @@ export default function Audit() {
           ))}
         </Box>
         {!loading && !error && !audits.length && (
-          <EmptyPage>
+          <EmptyPage paymentRequired={paymentRequired}>
             Looks like nothing in here. <br />
             All actions made by your team members will be tracked here.
           </EmptyPage>

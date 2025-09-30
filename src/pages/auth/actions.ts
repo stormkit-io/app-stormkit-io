@@ -194,8 +194,20 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
       .then(teams => {
         setTeams(teams);
       })
-      .catch(() => {
-        setError("Something went wrong while fetching teams.");
+      .catch(res => {
+        if (res.status === 402) {
+          setTeams([
+            {
+              id: "personal",
+              name: "No teams",
+              isDefault: true,
+              slug: "personal",
+              currentUserRole: "owner",
+            },
+          ]);
+        } else {
+          setError("Something went wrong while fetching teams.");
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -205,91 +217,27 @@ export const useFetchTeams = ({ user, refreshToken }: FetchTeamsProps) => {
   return { teams, error, loading };
 };
 
-// instanceDetailsCache.ts
-type CacheState = {
-  details?: InstanceDetails;
-  loading: boolean;
-  subscribers: Set<
-    (data: { details?: InstanceDetails; loading: boolean }) => void
-  >;
-  fetchPromise: Promise<void> | null;
-};
-
-export const cache: CacheState = {
-  loading: true,
-  subscribers: new Set(),
-  fetchPromise: null,
-};
-
-const notifySubscribers = () => {
-  cache.subscribers.forEach(callback =>
-    callback({ details: cache.details, loading: cache.loading })
-  );
-};
-
-const fetchData = async () => {
-  if (cache.fetchPromise) return cache.fetchPromise;
-
-  cache.fetchPromise = api
-    .fetch<InstanceDetails>("/instance")
-    .then(d => {
-      cache.details = {
-        ...d,
-        update: {
-          api: d.latest?.apiVersion !== d.stormkit?.apiVersion,
-        },
-      };
-    })
-    .catch(() => {
-      cache.details = {
-        update: { api: true },
-        stormkit: { selfHosted: true, apiCommit: "", apiVersion: "" },
-      };
-    })
-    .finally(() => {
-      cache.loading = false;
-      notifySubscribers();
-    });
-
-  return cache.fetchPromise;
-};
-
 // Hook that uses the cache
-export const useFetchInstanceDetails = () => {
-  const [state, setState] = useState<{
-    details?: InstanceDetails;
-    loading: boolean;
-  }>({
-    details: cache.details,
-    loading: cache.loading,
-  });
+export const useFetchInstanceDetails = (refreshToken?: number) => {
+  const [details, setDetails] = useState<InstanceDetails>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
-    // If we already have data, use it
-    if (cache.details && !cache.loading) {
-      setState({ details: cache.details, loading: false });
-      return;
-    }
+    setError(undefined);
 
-    // Subscribe to updates
-    const callback = (data: {
-      details?: InstanceDetails;
-      loading: boolean;
-    }) => {
-      setState(data);
-    };
+    api
+      .fetch<InstanceDetails>("/instance")
+      .then(d => {
+        setDetails(d);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching instance details.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [refreshToken]);
 
-    cache.subscribers.add(callback);
-
-    // Start fetch if it hasn't started
-    if (!cache.fetchPromise) {
-      fetchData();
-    }
-
-    return () => {
-      cache.subscribers.delete(callback);
-    };
-  }, []);
-
-  return state;
+  return { details, loading, error };
 };

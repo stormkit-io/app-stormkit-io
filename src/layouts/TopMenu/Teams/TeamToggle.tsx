@@ -28,8 +28,10 @@ export default function TeamsToggle({ app }: Props) {
         arrow
         open={isMenuOpen}
         placement="bottom-start"
-        PopperProps={{
-          modifiers: [{ name: "offset", options: { offset: [0, 12] } }],
+        slotProps={{
+          popper: {
+            modifiers: [{ name: "offset", options: { offset: [0, 12] } }],
+          },
         }}
         title={
           <Box sx={{ p: 1 }}>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
@@ -11,6 +11,7 @@ import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import ConfirmModal from "~/components/ConfirmModal";
 import api from "~/utils/api/Api";
+import { RootContext } from "~/pages/Root.context";
 
 interface Props {
   app: App;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export default function FormMigrateApp({ app, teams }: Props) {
+  const { details } = useContext(RootContext);
   const [isConfirmModalOpen, toggleConfirmModal] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<Team | void>(
     teams?.find(t => t.id === app.teamId)
@@ -25,6 +27,10 @@ export default function FormMigrateApp({ app, teams }: Props) {
 
   const hasWriteAccess = (t: Team) =>
     t.currentUserRole === "admin" || t.currentUserRole == "owner";
+
+  if (details?.license?.edition === "community") {
+    return <></>;
+  }
 
   return (
     <Card sx={{ mb: 4 }}>

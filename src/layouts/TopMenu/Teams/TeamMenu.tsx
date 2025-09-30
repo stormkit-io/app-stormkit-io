@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
@@ -9,6 +10,8 @@ import Check from "@mui/icons-material/Check";
 import Settings from "@mui/icons-material/Settings";
 import GroupAdd from "@mui/icons-material/GroupAdd";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
+import { RootContext } from "~/pages/Root.context";
+import UpgradeButton from "~/components/UpgradeButton";
 
 interface Props {
   selectedTeam?: Team;
@@ -27,6 +30,8 @@ export default function TeamMenu({
   onCreateTeamButtonClicked,
   onClickAway,
 }: Props) {
+  const { details } = useContext(RootContext);
+
   return (
     <ClickAwayListener onClickAway={onClickAway}>
       <Box>
@@ -118,19 +123,23 @@ export default function TeamMenu({
               )}
             </Box>
           ))}
-          <Button
-            variant="contained"
-            color="secondary"
-            fullWidth
-            sx={{ mb: 1 }}
-            onClick={e => {
-              e.preventDefault();
-              onCreateTeamButtonClicked();
-            }}
-          >
-            <Add sx={{ mr: 0.25, fontSize: 16 }} />
-            Create team
-          </Button>
+          {details?.license?.edition === "community" ? (
+            <UpgradeButton />
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              fullWidth
+              sx={{ mb: 1 }}
+              startIcon={<Add sx={{ fontSize: 16 }} />}
+              onClick={e => {
+                e.preventDefault();
+                onCreateTeamButtonClicked();
+              }}
+            >
+              Create team
+            </Button>
+          )}
         </Box>
       </Box>
     </ClickAwayListener>

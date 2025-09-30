@@ -44,18 +44,18 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabAPIKey.t
 
     await waitFor(() => {
       expect(fetchScope.isDone()).toBe(true);
+
+      const subheader =
+        "This key will allow you to interact with our API and modify this environment.";
+
+      // Header
+      expect(wrapper.getByText("API Keys")).toBeTruthy();
+      expect(wrapper.getByText(subheader)).toBeTruthy();
+
+      // API Keys
+      expect(wrapper.getByText("Default")).toBeTruthy();
+      expect(wrapper.getByText("CI")).toBeTruthy();
     });
-
-    const subheader =
-      "This key will allow you to interact with our API and modify this environment.";
-
-    // Header
-    expect(wrapper.getByText("API Keys")).toBeTruthy();
-    expect(wrapper.getByText(subheader)).toBeTruthy();
-
-    // API Keys
-    expect(wrapper.getByText("Default")).toBeTruthy();
-    expect(wrapper.getByText("CI")).toBeTruthy();
   });
 
   it("should delete api key", async () => {

@@ -25,7 +25,5 @@ export const mockFetchRepositories = ({
     ...query,
   });
 
-  console.log(endpoint);
-
   return nock(endpoint).get(`/projects?${params}`).reply(status, response);
 };

@@ -51,7 +51,7 @@ export default function TeamModal({ onClose, reload }: Props) {
                 onClose();
                 navigate(`/${t.slug}`, { replace: true });
               })
-              .catch(e => {
+              .catch(() => {
                 setError("Something went wrong while saving the team.");
               })
               .finally(() => {

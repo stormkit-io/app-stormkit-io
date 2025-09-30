@@ -87,6 +87,8 @@ export default (mode: "dark" | "light") => {
             "&.Mui-disabled": {
               color: primaryColor,
               backgroundColor: isDark ? grey[800] : grey[400],
+              opacity: 0.25,
+              cursor: "not-allowed",
             },
           },
         },

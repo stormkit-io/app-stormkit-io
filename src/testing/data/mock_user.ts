@@ -11,14 +11,6 @@ const idToName: Record<SubscriptionName, string> = {
   "self-hosted": "Self-Hosted Edition",
 };
 
-const deploymentsPerMonth: Record<SubscriptionName, number> = {
-  free: 50,
-  starter: 100,
-  medium: 500,
-  enterprise: 1000,
-  "self-hosted": -1,
-};
-
 const defaultProps: UserProps = {
   isAdmin: false,
   packageId: "enterprise",
@@ -35,7 +27,6 @@ export default ({ isAdmin, packageId }: UserProps = defaultProps): User => ({
   package: {
     id: packageId,
     name: idToName[packageId],
-    maxDeploymentsPerMonth: deploymentsPerMonth[packageId],
     edition: packageId === "self-hosted" ? "limited" : "",
   },
 });

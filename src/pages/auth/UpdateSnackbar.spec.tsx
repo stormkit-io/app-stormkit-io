@@ -1,33 +1,33 @@
 import type { RenderResult } from "@testing-library/react";
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
-import type { Scope } from "nock";
 import { render } from "@testing-library/react";
-import { waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
-import { mockFetchInstanceDetails } from "~/testing/nocks/nock_user";
-import { cache } from "./actions";
+import { RootContext } from "../Root.context";
 import UpdateSnackbar from "./UpdateSnackbar";
 
 interface WrapperProps {
-  status?: number;
-  response?: InstanceDetails;
+  details?: InstanceDetails;
 }
 
 describe("pages/auth/UpdateSnackbar.tsx", () => {
   let wrapper: RenderResult;
-  let scope: Scope;
 
   const apiVersion = "v1.7.30";
   const apiCommit = "a4ee052";
 
-  const createWrapper = ({ status, response }: WrapperProps) => {
-    // Reset cache
-    cache.details = undefined;
-    cache.fetchPromise = null;
-    cache.loading = false;
-
-    scope = mockFetchInstanceDetails({ status, response });
-    wrapper = render(<UpdateSnackbar />);
+  const createWrapper = ({ details }: WrapperProps) => {
+    wrapper = render(
+      <RootContext.Provider
+        value={{
+          mode: "dark",
+          setMode: () => {},
+          details,
+          loading: false,
+        }}
+      >
+        <UpdateSnackbar />
+      </RootContext.Provider>
+    );
 
     return wrapper;
   };
@@ -39,23 +39,19 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
     });
 
     describe("when api needs an update", () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         LocalStorage.set("STORMKIT_UPDATE", "my-version");
 
-        await createWrapper({
-          status: 200,
-          response: {
+        createWrapper({
+          details: {
             latest: { apiVersion: "v1.8.35" },
             stormkit: { selfHosted: true, apiCommit, apiVersion },
+            update: { api: true },
           },
-        });
-
-        await waitFor(() => {
-          expect(scope.isDone()).toBe(true);
         });
       });
 
-      it("displays the snackbar", async () => {
+      it("displays the snackbar", () => {
         expect(wrapper.container.textContent).toBe(
           "Stormkit API has a newer version"
         );
@@ -63,19 +59,14 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
     });
 
     describe("when previously dismissed", () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         LocalStorage.set("STORMKIT_UPDATE", apiVersion);
 
-        await createWrapper({
-          status: 200,
-          response: {
+        createWrapper({
+          details: {
             latest: { apiVersion },
             stormkit: { selfHosted: true, apiCommit, apiVersion },
           },
-        });
-
-        await waitFor(() => {
-          expect(scope.isDone()).toBe(true);
         });
       });
 
@@ -92,16 +83,11 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
     });
 
     describe("when both api and ui needs an update", () => {
-      beforeEach(async () => {
-        await createWrapper({
-          status: 200,
-          response: {
+      beforeEach(() => {
+        createWrapper({
+          details: {
             stormkit: { selfHosted: false, apiCommit, apiVersion },
           },
-        });
-
-        await waitFor(() => {
-          expect(scope.isDone()).toBe(true);
         });
       });
 

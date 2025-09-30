@@ -10,6 +10,7 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
 import CardFooter from "~/components/CardFooter";
+import EmptyPage from "~/components/EmptyPage";
 import { formatNumber } from "~/utils/helpers/string";
 import { calculateChange } from "~/utils/helpers/stats";
 import { useFetchTopDomains } from "./actions";
@@ -17,7 +18,7 @@ import { useFetchTopDomains } from "./actions";
 export default function Insights() {
   const { teams } = useContext(AuthContext);
   const selectedTeam = useSelectedTeam({ teams });
-  const { domains, loading, error } = useFetchTopDomains({
+  const { domains, loading, error, paymentRequired } = useFetchTopDomains({
     teamId: selectedTeam?.id,
   });
 
@@ -31,6 +32,7 @@ export default function Insights() {
           !loading &&
           !error &&
           !domains?.length &&
+          !paymentRequired &&
           "No domains founds. Data is fetched daily."
         }
       >
@@ -44,23 +46,27 @@ export default function Insights() {
             </>
           }
           actions={
-            <Typography>
-              {new Date(
-                Date.now() - 30 * 24 * 60 * 60 * 1000
-              ).toLocaleDateString("en", {
-                year: "numeric",
-                month: "long",
-                day: "2-digit",
-              })}
-              {" - "}
-              {new Date().toLocaleDateString("en", {
-                year: "numeric",
-                month: "long",
-                day: "2-digit",
-              })}
-            </Typography>
+            !paymentRequired &&
+            !loading && (
+              <Typography>
+                {new Date(
+                  Date.now() - 30 * 24 * 60 * 60 * 1000
+                ).toLocaleDateString("en", {
+                  year: "numeric",
+                  month: "long",
+                  day: "2-digit",
+                })}
+                {" - "}
+                {new Date().toLocaleDateString("en", {
+                  year: "numeric",
+                  month: "long",
+                  day: "2-digit",
+                })}
+              </Typography>
+            )
           }
         />
+        {paymentRequired && <EmptyPage paymentRequired />}
         <Box sx={{ maxHeight: "450px", overflow: "auto" }}>
           {domains?.map((d, i) => {
             const change = calculateChange(d.current, d.previous);

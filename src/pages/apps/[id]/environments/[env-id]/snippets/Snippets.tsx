@@ -26,13 +26,14 @@ export default function Snippets() {
   const [toBeToggled, setToBeToggled] = useState<Snippet | undefined>();
   const [toBeModified, setToBeModified] = useState<Snippet | undefined>();
   const [hosts, setHosts] = useState<string>();
-  const { loading, error, snippets, hasNextPage } = useFetchSnippets({
-    app,
-    env,
-    refreshToken,
-    loadMoreToken,
-    hosts,
-  });
+  const { loading, error, snippets, hasNextPage, paymentRequired } =
+    useFetchSnippets({
+      app,
+      env,
+      refreshToken,
+      loadMoreToken,
+      hosts,
+    });
 
   const hasFilters = Boolean(hosts);
 
@@ -126,7 +127,7 @@ export default function Snippets() {
         ))}
       </Box>
       {!snippets?.length && (
-        <EmptyPage>
+        <EmptyPage paymentRequired={paymentRequired}>
           {hasFilters ? (
             "Your search produced no results."
           ) : (
@@ -152,16 +153,18 @@ export default function Snippets() {
             Load more
           </Button>
         )}
-        <Button
-          variant="contained"
-          color="secondary"
-          type="button"
-          onClick={() => {
-            setIsSnippetModalOpen(true);
-          }}
-        >
-          New Snippet
-        </Button>
+        {!paymentRequired && !loading && (
+          <Button
+            variant="contained"
+            color="secondary"
+            type="button"
+            onClick={() => {
+              setIsSnippetModalOpen(true);
+            }}
+          >
+            New Snippet
+          </Button>
+        )}
       </CardFooter>
       {isSnippetModalOpen && (
         <SnippetModal

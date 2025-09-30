@@ -111,7 +111,9 @@ export default function Volumes() {
   const { user } = useContext(AuthContext);
   const { app } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
-  const { config, loading, error } = useFetchConfig({ refreshToken });
+  const { config, loading, error, paymentRequired } = useFetchConfig({
+    refreshToken,
+  });
   const [uploadErr, setUploadErr] = useState<React.ReactNode>();
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState<string>();
@@ -124,6 +126,18 @@ export default function Volumes() {
     () => !loading && !error && Boolean(config),
     [config, loading, error]
   );
+
+  if (paymentRequired) {
+    return (
+      <Card sx={{ width: "100%" }}>
+        <CardHeader
+          title="Volumes"
+          subtitle="Manage persisted files across your application"
+        />
+        <EmptyPage paymentRequired />
+      </Card>
+    );
+  }
 
   return (
     <Card

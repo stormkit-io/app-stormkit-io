@@ -5,7 +5,7 @@ declare type SubscriptionName =
   | "enterprise"
   | "self-hosted";
 
-declare type Edition = "limited" | "premium";
+declare type Edition = "community" | "enterprise";
 
 declare interface User {
   id: string;
@@ -19,7 +19,6 @@ declare interface User {
   package: {
     id: SubscriptionName;
     name: string;
-    maxDeploymentsPerMonth: number;
     edition: Edition | "";
   };
 }
@@ -38,8 +37,7 @@ declare interface InstanceDetails {
   license?: {
     seats: number;
     remaining: number;
-    premium: boolean;
-    isFree: boolean;
+    edition: Edition;
   };
   stormkit?: {
     apiCommit: string;

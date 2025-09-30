@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Snackbar from "@mui/material/Snackbar";
-import { useFetchInstanceDetails } from "./actions";
+import { RootContext } from "../Root.context";
 
 const LS_UPDATE_KEY = "STORMKIT_UPDATE";
 
 export default function UpdateSnackbar() {
   const [isToasterOpen, setIsToasterOpen] = useState(false);
-  const { details } = useFetchInstanceDetails();
+  const { details } = useContext(RootContext);
 
   useEffect(() => {
     if (details?.update) {
