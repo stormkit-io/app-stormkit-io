@@ -79,6 +79,7 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabMailer.t
 
     await waitFor(() => {
       expect(fetchScope.isDone()).toBe(true);
+      expect(wrapper.getByLabelText("SMTP Host")).toBeTruthy();
     });
 
     await userEvent.type(wrapper.getByLabelText("SMTP Host"), smtpHost);

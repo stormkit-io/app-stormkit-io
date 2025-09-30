@@ -14,7 +14,7 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import CardRow from "~/components/CardRow";
-import EmptyList from "~/components/EmptyPage";
+import EmptyPage from "~/components/EmptyPage";
 import Span from "~/components/Span";
 import FunctionTriggerModal from "./FunctionTriggerModal";
 import * as actions from "./actions";
@@ -49,11 +49,12 @@ export default function FunctionTriggers() {
   const [toBeDeleted, setToBeDeleted] = useState<FunctionTrigger>();
   const [isFunctionTriggerModalOpen, setFunctionTriggerModal] = useState(false);
   const [refreshToken, setRefreshToken] = useState(0);
-  const { error, loading, functionTriggers } = useFetchFunctionTriggers({
-    appId: app.id,
-    environmentId: environment.id!,
-    refreshToken,
-  });
+  const { error, loading, functionTriggers, paymentRequired } =
+    useFetchFunctionTriggers({
+      appId: app.id,
+      environmentId: environment.id!,
+      refreshToken,
+    });
 
   const handleDelete = ({
     setError,
@@ -84,6 +85,23 @@ export default function FunctionTriggers() {
         setLoading(false);
       });
   };
+
+  if (paymentRequired) {
+    return (
+      <Card
+        sx={{ width: "100%" }}
+        loading={loading}
+        error={error}
+        contentPadding={false}
+      >
+        <CardHeader
+          title="Periodic Triggers"
+          subtitle="Send periodic requests to your endpoints."
+        />
+        <EmptyPage paymentRequired />
+      </Card>
+    );
+  }
 
   return (
     <Card
@@ -167,13 +185,13 @@ export default function FunctionTriggers() {
         </CardRow>
       ))}
       {!loading && !error && !functionTriggers?.length && (
-        <EmptyList>
+        <EmptyPage>
           <>
             It's quite empty in here.
             <br />
             Create a new trigger to call your functions periodically.
           </>
-        </EmptyList>
+        </EmptyPage>
       )}
       <CardFooter sx={{ textAlign: "center" }}>
         <Button

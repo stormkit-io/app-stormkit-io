@@ -10,6 +10,7 @@ import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import { formatNumber } from "~/utils/helpers/string";
 import { calculateChange } from "~/utils/helpers/stats";
 import { useFetchTeamStats } from "../actions";
+import UpgradeButton from "~/components/UpgradeButton";
 
 interface Props {
   teamId?: string;
@@ -145,7 +146,20 @@ const StatBox = ({
 };
 
 export default function TeamStats({ teamId }: Props) {
-  const { stats, loading, error } = useFetchTeamStats({ teamId });
+  const { stats, loading, error, paymentRequired } = useFetchTeamStats({
+    teamId,
+  });
+
+  if (paymentRequired) {
+    return (
+      <Alert severity="info" sx={{ mx: 4, mb: 2 }}>
+        <Typography>
+          Team stats are available on the Enterprise plan.{" "}
+          <UpgradeButton fullWidth={false} variant="text" /> to get access.
+        </Typography>
+      </Alert>
+    );
+  }
 
   const totalNewApps =
     (stats?.totalApps.new || 0) - (stats?.totalApps.deleted || 0);
@@ -183,12 +197,13 @@ export default function TeamStats({ teamId }: Props) {
           gap: 2,
           p: 4,
           pt: 0,
+          position: "relative",
         }}
       >
         <StatBox
           desc="Apps"
           tooltip="Number of total apps in this team."
-          header={stats?.totalApps.total}
+          header={stats?.totalApps.total || 0}
           change={totalNewApps}
           changeType="absolute"
           loading={loading}
@@ -196,7 +211,7 @@ export default function TeamStats({ teamId }: Props) {
         <StatBox
           desc="Deployments"
           tooltip="Total number of deployments in the last 30 days. Data is compared against previous 30 days."
-          header={stats?.totalDeployments.current}
+          header={stats?.totalDeployments.current || 0}
           change={deploymentChange}
           changeType="percentage"
           loading={loading}

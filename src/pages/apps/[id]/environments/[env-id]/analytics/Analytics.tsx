@@ -13,19 +13,22 @@ import Visitors from "./Visitors";
 import TopReferrers from "./TopReferrers";
 import TopPaths from "./TopPaths";
 import ByCountries from "./Countries";
+import { RootContext } from "~/pages/Root.context";
 
 export default function Analytics() {
+  const { details } = useContext(RootContext);
   const [timeSpan, setTimeSpan] = useState<TimeSpan>("24h");
   const [params, setParams] = useSearchParams();
   const [domain, setDomain] = useState<Domain>();
   const [hasDomains, setHasDomains] = useState<boolean>();
   const { environment } = useContext(EnvironmentContext);
+  const isCE = details?.license?.edition === "community";
 
-  if (hasDomains === false) {
+  if (hasDomains === false || isCE) {
     return (
       <Card sx={{ width: "100%" }}>
         <CardHeader title="Analytics" />
-        <EmptyPage>
+        <EmptyPage paymentRequired={isCE}>
           Analytics are collected only for custom domains. <br />
           <Button
             sx={{ mt: 2 }}

@@ -63,9 +63,13 @@ describe("~/pages/my/deployments/Deployments.tsx", () => {
 
   it("it displays an empty page when there are no deployments", async () => {
     await createWrapper({ deployments: [] });
-    expect(wrapper.getByText(/It's quite empty in here./)).toBeTruthy();
-    expect(wrapper.getByText(/Go back to your/)).toBeTruthy();
-    expect(wrapper.getByText("Apps").getAttribute("href")).toBe("/");
-    expect(wrapper.getByText(/to start deploying your website./)).toBeTruthy();
+    await waitFor(() => {
+      expect(wrapper.getByText(/It's quite empty in here./)).toBeTruthy();
+      expect(wrapper.getByText(/Go back to your/)).toBeTruthy();
+      expect(wrapper.getByText("Apps").getAttribute("href")).toBe("/");
+      expect(
+        wrapper.getByText(/to start deploying your website./)
+      ).toBeTruthy();
+    });
   });
 });

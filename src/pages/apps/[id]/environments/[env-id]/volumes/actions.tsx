@@ -10,8 +10,11 @@ export const useFetchConfig = ({ refreshToken }: UseFetchConfigProps) => {
   const [config, setConfig] = useState<VolumeConfig>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
+  const [paymentRequired, setPaymentRequired] = useState(false);
 
   useEffect(() => {
+    setPaymentRequired(false);
+
     api
       .fetch<{ config: VolumeConfig | boolean }>("/volumes/config")
       .then(({ config }) => {
@@ -24,6 +27,8 @@ export const useFetchConfig = ({ refreshToken }: UseFetchConfigProps) => {
       .catch(res => {
         if (res.status === 401) {
           setError("You are not authorized to perform this operation.");
+        } else if (res.status === 402) {
+          setPaymentRequired(true);
         } else {
           setError("Unknown error while fetching volume configuration.");
         }
@@ -33,7 +38,7 @@ export const useFetchConfig = ({ refreshToken }: UseFetchConfigProps) => {
       });
   }, [refreshToken]);
 
-  return { config, loading, error };
+  return { config, loading, error, paymentRequired };
 };
 
 interface UseFetchFilesProps {
@@ -67,7 +72,6 @@ export const useFetchFiles = ({
         setFiles(files);
       })
       .catch(e => {
-        console.log(e);
         setError("Unknown error while fetching files.");
       })
       .finally(() => {

@@ -9,30 +9,25 @@ interface FetchSnippetsProps {
   loadMoreToken?: number;
 }
 
-interface FetchSnippetsReturnValue {
-  loading: boolean;
-  error: string | null;
-  snippets?: Snippet[];
-  hasNextPage?: boolean;
-}
-
 export const useFetchSnippets = ({
   app,
   env,
   hosts,
   refreshToken,
   loadMoreToken,
-}: FetchSnippetsProps): FetchSnippetsReturnValue => {
+}: FetchSnippetsProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [afterId, setAfterId] = useState<string>();
+  const [paymentRequired, setPaymentRequired] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
 
     setError(null);
     setLoading(true);
+    setPaymentRequired(false);
 
     const qs = new URLSearchParams(
       JSON.parse(
@@ -58,6 +53,11 @@ export const useFetchSnippets = ({
         }
       })
       .catch(e => {
+        if (e.status === 402) {
+          setPaymentRequired(true);
+          return;
+        }
+
         if (!unmounted) {
           setError("Something went wrong on our side while fetching snippets.");
         }
@@ -73,7 +73,13 @@ export const useFetchSnippets = ({
     };
   }, [app.id, env.id, refreshToken, loadMoreToken, hosts]);
 
-  return { loading, error, snippets, hasNextPage: Boolean(afterId) };
+  return {
+    loading,
+    error,
+    snippets,
+    paymentRequired,
+    hasNextPage: Boolean(afterId),
+  };
 };
 
 interface UpsertSnippetsProps {

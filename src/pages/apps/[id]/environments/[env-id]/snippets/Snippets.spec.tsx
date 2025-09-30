@@ -86,6 +86,10 @@ describe("~/pages/apps/[id]/environments/[env-id]/snippets/Snippets.tsx", () => 
     });
 
     it("should have a new button which opens a modal", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("New Snippet")).toBeTruthy();
+      });
+
       fireEvent.click(wrapper.getByText("New Snippet"));
 
       const fetchDomainsScopeModal = mockFetchDomains({

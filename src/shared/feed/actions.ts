@@ -18,6 +18,7 @@ export const useFetchAudits = ({
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [beforeId, setBeforeId] = useState("");
+  const [paymentRequired, setPaymentRequired] = useState(false);
 
   const params = new URLSearchParams(
     JSON.parse(
@@ -38,6 +39,7 @@ export const useFetchAudits = ({
 
     setLoading(true);
     setError(undefined);
+    setPaymentRequired(false);
 
     api
       .fetch<{ audits: Audit[]; pagination: Pagination }>(
@@ -52,7 +54,12 @@ export const useFetchAudits = ({
           setBeforeId("");
         }
       })
-      .catch(() => {
+      .catch(res => {
+        if (res.status === 402) {
+          setPaymentRequired(true);
+          return;
+        }
+
         setError(
           "Something went wrong while fetching audits. Try again later."
         );
@@ -62,5 +69,11 @@ export const useFetchAudits = ({
       });
   }, [envId, appId, teamId, nextPage]);
 
-  return { audits, error, loading, hasNextPage: beforeId !== "" };
+  return {
+    audits,
+    error,
+    loading,
+    paymentRequired,
+    hasNextPage: beforeId !== "",
+  };
 };

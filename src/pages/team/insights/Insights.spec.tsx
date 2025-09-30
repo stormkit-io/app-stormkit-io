@@ -96,7 +96,7 @@ describe("~/pages/team/insights/Insights.tsx", () => {
       ).toBeTruthy();
     });
 
-    it("should render date range in header", () => {
+    it("should render date range in header", async () => {
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       const today = new Date();
 
@@ -111,8 +111,10 @@ describe("~/pages/team/insights/Insights.tsx", () => {
         day: "2-digit",
       });
 
-      expect(wrapper.getByText(new RegExp(expectedStart))).toBeTruthy();
-      expect(wrapper.getByText(new RegExp(expectedEnd))).toBeTruthy();
+      await waitFor(() => {
+        expect(wrapper.getByText(new RegExp(expectedStart))).toBeTruthy();
+        expect(wrapper.getByText(new RegExp(expectedEnd))).toBeTruthy();
+      });
     });
 
     it("should render all domains with correct data", async () => {

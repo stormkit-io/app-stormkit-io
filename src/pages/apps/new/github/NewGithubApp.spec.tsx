@@ -1,10 +1,9 @@
 import type { RenderResult } from "@testing-library/react";
-import { Scope } from "nock";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { fireEvent, waitFor, screen } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
+import { RootContext } from "~/pages/Root.context";
 import * as nocks from "~/testing/nocks/nock_github";
-import { mockFetchInstanceDetails } from "~/testing/nocks/nock_user";
 import { mockUser } from "~/testing/data";
 import NewGithubApp from "./NewGithubApp";
 import { renderWithRouter } from "~/testing/helpers";
@@ -18,45 +17,40 @@ interface Props {
 describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   let wrapper: RenderResult;
   let user: User;
-  let fetchInstanceDetailsScope: Scope;
 
   const findOption = (text: string) => screen.getByText(text);
 
-  const createWrapper = async (props?: Props) => {
-    if (!fetchInstanceDetailsScope) {
-      fetchInstanceDetailsScope = mockFetchInstanceDetails({
-        response: {
-          update: { api: false },
-          auth: { github: props?.github || "stormkit-dev" },
-        },
-      });
-    }
-
+  const createWrapper = (props?: Props) => {
     user = mockUser();
     wrapper = renderWithRouter({
       el: () => (
-        <AuthContext.Provider value={{ user }}>
-          <NewGithubApp />
-        </AuthContext.Provider>
+        <RootContext.Provider
+          value={{
+            details: { auth: { github: props?.github || "stormkit-dev" } },
+            loading: false,
+            mode: "dark",
+            setMode: vi.fn(),
+          }}
+        >
+          <AuthContext.Provider value={{ user }}>
+            <NewGithubApp />
+          </AuthContext.Provider>
+        </RootContext.Provider>
       ),
-    });
-
-    await waitFor(() => {
-      expect(fetchInstanceDetailsScope.isDone()).toBe(true);
     });
   };
 
   describe("github account", () => {
     const account = "my-stormkit-app";
 
-    beforeEach(async () => {
+    beforeEach(() => {
       mockFetchInstallations({
         response: {
           accounts: [],
         },
       });
 
-      await createWrapper({ github: account });
+      createWrapper({ github: account });
     });
 
     it("clicking connect more should open a popup so that the user can configure permissions", () => {
@@ -72,14 +66,14 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
   });
 
   describe("empty data", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       mockFetchInstallations({
         response: {
           accounts: [],
         },
       });
 
-      await createWrapper();
+      createWrapper();
     });
 
     it("no connected accounts should display a warning", async () => {
