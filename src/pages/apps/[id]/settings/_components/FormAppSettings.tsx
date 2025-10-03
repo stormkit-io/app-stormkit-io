@@ -2,28 +2,15 @@ import type { AppSettings } from "../types.d";
 import React, { useState, FormEventHandler } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
-import { isSelfHosted } from "~/utils/helpers/instance";
 import { updateAdditionalSettings } from "../actions";
 import { toRepoAddr } from "../helpers";
 
-const NodeJS22 = "nodejs22.x";
-const NodeJS20 = "nodejs20.x";
-const NodeJS18 = "nodejs18.x";
-const NodeJS16 = "nodejs16.x";
-const Bun1 = "bun1.x";
-
 const devDomain = process.env.SK_DEV_DOMAIN || "stormkit.dev";
-
-const isSelfHostedInstance = isSelfHosted();
 
 interface Props {
   app: App;
@@ -120,32 +107,6 @@ const FormAppSettings: React.FC<Props> = ({ app, additionalSettings }) => {
           </Typography>
         </Box>
       )}
-      <Box sx={{ mb: 4, display: isSelfHostedInstance ? "none" : undefined }}>
-        <FormControl variant="standard" fullWidth>
-          <InputLabel id="app-runtime-settings" sx={{ pl: 2, pt: 1 }}>
-            Runtime
-          </InputLabel>
-          <Select
-            labelId="app-runtime-settings"
-            variant="filled"
-            name="runtime"
-            defaultValue={additionalSettings.runtime}
-            sx={{ minWidth: 150 }}
-          >
-            <MenuItem value={NodeJS16} disabled>
-              NodeJS 16.x (deprecated)
-            </MenuItem>
-            <MenuItem value={NodeJS18}>NodeJS 18.x</MenuItem>
-            <MenuItem value={NodeJS20}>NodeJS 20.x</MenuItem>
-            <MenuItem value={NodeJS22}>NodeJS 22.x</MenuItem>
-            <MenuItem value={Bun1}>Bun 1.x</MenuItem>
-          </Select>
-        </FormControl>
-        <Typography sx={{ px: 1.25, pt: 2, opacity: 0.5 }}>
-          The application runtime for the CI and server side environment.
-          Changes to the runtime will be effective on new deployments.
-        </Typography>
-      </Box>
       <CardFooter>
         <Button
           loading={loading}

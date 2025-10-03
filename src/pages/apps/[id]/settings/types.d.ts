@@ -9,7 +9,6 @@ export type Runtime = "nodejs18.x" | "nodejs20.x" | "nodejs22.x";
 
 export interface AppSettings {
   envs: Array<string>;
-  runtime: Runtime;
   deployTrigger?: boolean;
 }
 

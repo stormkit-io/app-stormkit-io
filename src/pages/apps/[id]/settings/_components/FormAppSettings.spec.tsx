@@ -26,7 +26,7 @@ describe("~/pages/apps/[id]/settings/_components/FormAppSettings", () => {
       currentApp = mockApp();
       createWrapper({
         app: currentApp,
-        additionalSettings: { envs: [], runtime: "nodejs22.x" },
+        additionalSettings: { envs: [] },
       });
     });
 
@@ -38,7 +38,6 @@ describe("~/pages/apps/[id]/settings/_components/FormAppSettings", () => {
             "https://gitlab.com/stormkit-io/frontend.git"
           )
         ).toBeTruthy();
-        expect(wrapper.getByText("NodeJS 22.x")).toBeTruthy();
       });
     });
 
@@ -48,7 +47,6 @@ describe("~/pages/apps/[id]/settings/_components/FormAppSettings", () => {
           appId: currentApp.id,
           displayName: currentApp.displayName,
           repo: currentApp.repo,
-          runtime: "nodejs22.x",
         },
         response: { ok: true },
       });
@@ -68,7 +66,7 @@ describe("~/pages/apps/[id]/settings/_components/FormAppSettings", () => {
 
       createWrapper({
         app: currentApp,
-        additionalSettings: { envs: [], runtime: "nodejs22.x" },
+        additionalSettings: { envs: [] },
       });
     });
 

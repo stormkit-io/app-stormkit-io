@@ -1,7 +1,6 @@
 declare interface DiffFields {
   appName?: string;
   appRepo?: string;
-  appRuntime?: string;
   envId?: string;
   envName?: string;
   envBranch?: string;

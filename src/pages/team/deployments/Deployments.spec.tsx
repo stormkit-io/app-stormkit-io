@@ -45,20 +45,24 @@ describe("~/pages/my/deployments/Deployments.tsx", () => {
 
   it("it displays correct header and subheader", async () => {
     await createWrapper({});
-    expect(wrapper.getByText("Team Deployments")).toBeTruthy();
-    expect(
-      wrapper.getByText(
-        "Display all of your team's deployments in a single view"
-      )
-    ).toBeTruthy();
+    await waitFor(() => {
+      expect(wrapper.getByText("Team Deployments")).toBeTruthy();
+      expect(
+        wrapper.getByText(
+          "Display all of your team's deployments in a single view"
+        )
+      ).toBeTruthy();
+    });
   });
 
   it("it displays a list of deployments", async () => {
     await createWrapper({});
-    expect(wrapper.getByText("chore: update packages")).toBeTruthy();
-    expect(wrapper.getByText("fix: image size")).toBeTruthy();
-    expect(wrapper.getByText("by Joe Doe")).toBeTruthy();
-    expect(wrapper.getByText("by Sally Doe")).toBeTruthy();
+    await waitFor(() => {
+      expect(wrapper.getByText("chore: update packages")).toBeTruthy();
+      expect(wrapper.getByText("fix: image size")).toBeTruthy();
+      expect(wrapper.getByText("by Joe Doe")).toBeTruthy();
+      expect(wrapper.getByText("by Sally Doe")).toBeTruthy();
+    });
   });
 
   it("it displays an empty page when there are no deployments", async () => {

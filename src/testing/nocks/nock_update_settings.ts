@@ -7,7 +7,6 @@ interface UpdateSettingsProps {
     appId: string;
     displayName: string;
     repo: string;
-    runtime: string;
   };
   status?: number;
   response: { ok: boolean };
