@@ -1,6 +1,6 @@
 type autoDeploy = "pull_request" | "commit" | null;
 
-declare type App = {
+declare interface App {
   id: string;
   teamId: string;
   userId: string;
@@ -21,4 +21,4 @@ declare type App = {
     hasPackageJson: boolean;
     repoType: "nuxt" | "next" | "react" | "vue" | "angular" | "nest" | "-";
   };
-};
+}

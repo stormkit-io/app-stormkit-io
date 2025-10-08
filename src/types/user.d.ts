@@ -42,7 +42,7 @@ declare interface InstanceDetails {
   stormkit?: {
     apiCommit: string;
     apiVersion: string;
-    selfHosted: boolean;
+    edition: "development" | "self-hosted" | "cloud";
   };
   update?: {
     api: boolean;
