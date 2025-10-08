@@ -20,7 +20,11 @@ export default function UpdateSnackbar() {
     localStorage.getItem(LS_UPDATE_KEY)?.replace(/"/g, "") ===
     details?.latest?.apiVersion;
 
-  if (!details || !details.stormkit?.selfHosted || previouslyDismissed) {
+  if (
+    !details ||
+    details.stormkit?.edition !== "self-hosted" ||
+    previouslyDismissed
+  ) {
     return <></>;
   }
 

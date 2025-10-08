@@ -6,15 +6,17 @@ import Error404 from "~/components/Errors/Error404";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import MenuLink from "~/components/MenuLink";
+import System from "~/pages/admin/System";
+import { RootContext } from "~/pages/Root.context";
 import { useSelectedTeam } from "../TopMenu/Teams/actions";
 import TopMenu from "../TopMenu";
-import System from "~/pages/admin/System";
 
 interface Props {
   children: React.ReactNode;
 }
 
 export default function AdminLayout({ children }: Props) {
+  const { details } = useContext(RootContext);
   const { user, teams } = useContext(AuthContext);
   const selectedTeam = useSelectedTeam({ teams });
   const { pathname } = useLocation();
@@ -22,6 +24,8 @@ export default function AdminLayout({ children }: Props) {
   if (!user?.isAdmin) {
     return <Error404 />;
   }
+
+  const isCloud = details?.stormkit?.edition === "cloud";
 
   return (
     <Box
@@ -100,6 +104,15 @@ export default function AdminLayout({ children }: Props) {
                   isActive: pathname.includes("/admin/proxies"),
                 }}
               />
+              {isCloud && (
+                <MenuLink
+                  item={{
+                    path: "/admin/cloud/apps",
+                    text: "Apps",
+                    isActive: pathname.includes("/admin/cloud/apps"),
+                  }}
+                />
+              )}
             </Box>
             {pathname === "/admin" ? <System /> : children}
           </Card>

@@ -76,6 +76,14 @@ export default (mode: "dark" | "light") => {
           },
         },
       },
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            borderBottom: "1px solid",
+            borderColor: isDark ? grey[900] : grey[400],
+          },
+        },
+      },
       MuiButton: {
         styleOverrides: {
           root: {

@@ -51,12 +51,25 @@ export default function Root({ Router }: Props) {
           <Router>
             <AuthContext>
               <Routes>
-                {routes.map(route => (
-                  <Route
-                    {...route}
-                    key={Array.isArray(route.path) ? route.path[0] : route.path}
-                  />
-                ))}
+                {routes
+                  .map(route => {
+                    if (
+                      route.cloudOnly &&
+                      details?.stormkit?.edition !== "cloud"
+                    ) {
+                      return null;
+                    }
+
+                    return (
+                      <Route
+                        {...route}
+                        key={
+                          Array.isArray(route.path) ? route.path[0] : route.path
+                        }
+                      />
+                    );
+                  })
+                  .filter(i => i)}
               </Routes>
             </AuthContext>
           </Router>

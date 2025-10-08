@@ -5,6 +5,10 @@ import Async from "~/components/Async";
 import { LocalStorage } from "~/utils/storage";
 import { LS_PROVIDER } from "~/utils/api/Api";
 
+type ExtendedRouterProps = RouteProps & {
+  cloudOnly?: boolean;
+};
+
 function RedirectApps() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -51,7 +55,7 @@ const centerLayout = () => import("~/layouts/CenterLayout");
 const teamLayout = () => import("~/layouts/TeamLayout");
 const adminLayout = () => import("~/layouts/AdminLayout");
 
-const routes: Array<RouteProps> = [
+const routes: Array<ExtendedRouterProps> = [
   {
     path: "/",
     element: Async(() => import("~/pages/apps"), teamLayout),
@@ -135,6 +139,11 @@ const routes: Array<RouteProps> = [
   {
     path: "/admin/proxies",
     element: Async(() => import("~/pages/admin/Proxies"), adminLayout),
+  },
+  {
+    path: "/admin/cloud/apps",
+    element: Async(() => import("~/pages/admin/CloudApps"), adminLayout),
+    cloudOnly: true,
   },
   {
     path: "/:team",
