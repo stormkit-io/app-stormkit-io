@@ -4,7 +4,6 @@
     "module": "commonjs",
     "target": "es2019",
     "outDir": "./dist",
-    "baseUrl": "./",
     "skipLibCheck": true,
     "allowJs": true,
     "sourceMap": true,
@@ -14,7 +13,6 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "moduleResolution": "Node",
     "newLine": "lf",
     "jsx": "react-jsx",
     "types": ["react", "node", ],
@@ -22,5 +20,5 @@
       "~/*": ["./src/*"],
     }
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
