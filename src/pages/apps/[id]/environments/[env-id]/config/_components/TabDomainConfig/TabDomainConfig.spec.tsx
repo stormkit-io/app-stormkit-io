@@ -108,8 +108,20 @@ describe("~/pages/apps/[id]/environments/[env-id]/config/_components/TabDomainCo
     });
 
     it("should open the custom certificate modal", async () => {
-      fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
-      fireEvent.click(wrapper.getAllByText("Custom certificate").at(1)!);
+      await waitFor(() => {
+        const expandButton = wrapper.getAllByLabelText("expand").at(0);
+        expect(expandButton).toBeTruthy();
+        fireEvent.click(expandButton!);
+      });
+
+      await waitFor(() => {
+        const customCertButton = wrapper
+          .getAllByText("Custom certificate")
+          .at(1);
+
+        expect(customCertButton).toBeTruthy();
+        fireEvent.click(customCertButton!);
+      });
 
       await waitFor(() => {
         expect(wrapper.getByText("Configure custom certificate")).toBeTruthy();

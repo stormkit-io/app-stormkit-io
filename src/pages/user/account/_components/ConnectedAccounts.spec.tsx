@@ -90,8 +90,10 @@ describe("~/pages/user/account/_components/ConnectedAccounts", () => {
       });
     });
 
-    it("should display the provider as a connected account", () => {
-      expect(wrapper.getByText(human)).toBeTruthy();
+    it("should display the provider as a connected account", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText(human)).toBeTruthy();
+      });
     });
 
     it("should display a set personal access token link", async () => {

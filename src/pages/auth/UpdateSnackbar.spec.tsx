@@ -1,6 +1,6 @@
 import type { RenderResult } from "@testing-library/react";
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
 import { RootContext } from "../Root.context";
 import UpdateSnackbar from "./UpdateSnackbar";
@@ -45,16 +45,18 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
         createWrapper({
           details: {
             latest: { apiVersion: "v1.8.35" },
-            stormkit: { selfHosted: true, apiCommit, apiVersion },
+            stormkit: { edition: "self-hosted", apiCommit, apiVersion },
             update: { api: true },
           },
         });
       });
 
-      it("displays the snackbar", () => {
-        expect(wrapper.container.textContent).toBe(
-          "Stormkit API has a newer version"
-        );
+      it("displays the snackbar", async () => {
+        await waitFor(() => {
+          expect(wrapper.container.textContent).toBe(
+            "Stormkit API has a newer version"
+          );
+        });
       });
     });
 
@@ -65,7 +67,7 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
         createWrapper({
           details: {
             latest: { apiVersion },
-            stormkit: { selfHosted: true, apiCommit, apiVersion },
+            stormkit: { edition: "self-hosted", apiCommit, apiVersion },
           },
         });
       });
@@ -86,7 +88,7 @@ describe("pages/auth/UpdateSnackbar.tsx", () => {
       beforeEach(() => {
         createWrapper({
           details: {
-            stormkit: { selfHosted: false, apiCommit, apiVersion },
+            stormkit: { edition: "self-hosted", apiCommit, apiVersion },
           },
         });
       });
