@@ -15,7 +15,7 @@ import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import ConfirmModal from "~/components/ConfirmModal";
 import DotDotDot from "~/components/DotDotDotV2";
-import api, { LS_TOKEN_KEY } from "~/utils/api/Api";
+import api from "~/utils/api/Api";
 import { formatDate } from "~/utils/helpers/date";
 
 const useFetchCloudApp = (url: string) => {
@@ -154,8 +154,10 @@ export default function CloudApps() {
                               }
                             )
                             .then(({ token }) => {
-                              localStorage.setItem(LS_TOKEN_KEY, token);
-                              window.location.reload();
+                              if (token) {
+                                api.setAuthToken(token);
+                                window.location.assign("/");
+                              }
                             });
                         },
                       },
