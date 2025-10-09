@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import nock from "nock";
 import CloudApps from "./CloudApps";
+import { LS_TOKEN_KEY } from "~/utils/api/Api";
 
 describe("~/pages/admin/CloudApps.tsx", () => {
   let wrapper: RenderResult;
@@ -388,14 +389,14 @@ describe("~/pages/admin/CloudApps.tsx", () => {
 
     it("should call visit endpoint and reload page", async () => {
       nock(process.env.API_DOMAIN || "")
-        .post("/admin/cloud/visit", { userId: "user-999" })
-        .reply(200);
+        .post("/admin/cloud/impersonate", { userId: "user-999" })
+        .reply(200, { token: "impersonation-token" });
 
       // Mock window.location.reload
       const originalReload = window.location.reload;
       window.location = { reload: vi.fn() } as any;
 
-      openMenuAndClick("Visit");
+      openMenuAndClick("Impersonate");
 
       await waitFor(() => {
         expect(window.location.reload).toHaveBeenCalled();
@@ -403,6 +404,8 @@ describe("~/pages/admin/CloudApps.tsx", () => {
 
       // Restore original reload function
       window.location.reload = originalReload;
+
+      expect(localStorage.getItem(LS_TOKEN_KEY)).toBe("impersonation-token");
     });
   });
 });

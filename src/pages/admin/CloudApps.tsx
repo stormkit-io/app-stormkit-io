@@ -15,7 +15,7 @@ import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import ConfirmModal from "~/components/ConfirmModal";
 import DotDotDot from "~/components/DotDotDotV2";
-import api from "~/utils/api/Api";
+import api, { LS_TOKEN_KEY } from "~/utils/api/Api";
 import { formatDate } from "~/utils/helpers/date";
 
 const useFetchCloudApp = (url: string) => {
@@ -139,14 +139,22 @@ export default function CloudApps() {
                         onClick: () => setAppToBeDeleted(app),
                       },
                       {
-                        text: "Visit",
+                        // This is to impersonate the user and provide them support.
+                        // This implementation is temporary, as it provides opportunity for
+                        // abuse. A more robust implementation will be provided in the future,
+                        // where the user creates a token and passes that token to support.
+                        text: "Impersonate",
                         icon: <PersonSearchIcon />,
                         onClick: () => {
                           api
-                            .post("/admin/cloud/visit", {
-                              userId: user?.id,
-                            })
-                            .then(() => {
+                            .post<{ token: string }>(
+                              "/admin/cloud/impersonate",
+                              {
+                                userId: user?.id,
+                              }
+                            )
+                            .then(({ token }) => {
+                              localStorage.setItem(LS_TOKEN_KEY, token);
                               window.location.reload();
                             });
                         },
