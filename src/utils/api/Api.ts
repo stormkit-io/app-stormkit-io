@@ -24,10 +24,9 @@ interface FetchOptions extends Record<string, unknown> {
 
 export const LS_ACCESS_TOKEN = "skit_access_token";
 export const LS_PROVIDER = "skit_provider";
+export const LS_TOKEN_KEY = "skit_token";
 
 class Api {
-  static STORAGE_TOKEN_KEY = "skit_token";
-
   static isAbsolute(url: string): boolean {
     return url?.match(/^(https?|\/\/)/) !== null;
   }
@@ -42,7 +41,7 @@ class Api {
       "Content-Type": "application/json",
     };
 
-    const token = LocalStorage.get<string>(Api.STORAGE_TOKEN_KEY);
+    const token = LocalStorage.get<string>(LS_TOKEN_KEY);
 
     if (token) {
       this.setAuthToken(token);
@@ -50,16 +49,16 @@ class Api {
   }
 
   setAuthToken(token: string): void {
-    LocalStorage.set(Api.STORAGE_TOKEN_KEY, token);
+    LocalStorage.set(LS_TOKEN_KEY, token);
     this.headers.Authorization = "Bearer " + token;
   }
 
   getAuthToken(): string | undefined {
-    return LocalStorage.get(Api.STORAGE_TOKEN_KEY);
+    return LocalStorage.get(LS_TOKEN_KEY);
   }
 
   removeAuthToken(): void {
-    LocalStorage.del(Api.STORAGE_TOKEN_KEY);
+    LocalStorage.del(LS_TOKEN_KEY);
     delete this.headers.Authorization;
   }
 
