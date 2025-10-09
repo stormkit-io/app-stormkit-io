@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import SearchIcon from "@mui/icons-material/Search";
 import TrashIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Table from "@mui/material/Table";
@@ -14,6 +14,7 @@ import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
 import ConfirmModal from "~/components/ConfirmModal";
+import DotDotDot from "~/components/DotDotDotV2";
 import api from "~/utils/api/Api";
 import { formatDate } from "~/utils/helpers/date";
 
@@ -129,12 +130,29 @@ export default function CloudApps() {
                 <Td>{user?.displayName}</Td>
                 <Td>{user?.email}</Td>
                 <Td sx={{ textAlign: "right", pr: 0 }}>
-                  <IconButton
-                    onClick={() => setAppToBeDeleted(app)}
-                    data-testid="delete-btn"
-                  >
-                    <TrashIcon />
-                  </IconButton>
+                  <DotDotDot
+                    label="expand"
+                    items={[
+                      {
+                        text: "Delete",
+                        icon: <TrashIcon />,
+                        onClick: () => setAppToBeDeleted(app),
+                      },
+                      {
+                        text: "Visit",
+                        icon: <PersonSearchIcon />,
+                        onClick: () => {
+                          api
+                            .post("/admin/cloud/app/visit", {
+                              userId: user?.id,
+                            })
+                            .then(() => {
+                              window.location.reload();
+                            });
+                        },
+                      },
+                    ]}
+                  />
                 </Td>
               </Tr>
             </Body>

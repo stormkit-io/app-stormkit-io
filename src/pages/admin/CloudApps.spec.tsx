@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   render,
   waitFor,
@@ -19,6 +19,11 @@ describe("~/pages/admin/CloudApps.tsx", () => {
   afterEach(() => {
     nock.cleanAll();
   });
+
+  const openMenuAndClick = (label: string) => {
+    fireEvent.click(wrapper.getAllByLabelText("expand").at(0)!);
+    fireEvent.click(wrapper.getByText(label));
+  };
 
   it("should render the component with search input", () => {
     expect(wrapper.getByLabelText("Search")).toBeTruthy();
@@ -184,7 +189,7 @@ describe("~/pages/admin/CloudApps.tsx", () => {
     });
 
     it("should open confirm modal when delete button is clicked", async () => {
-      fireEvent.click(wrapper.getByTestId("delete-btn"));
+      openMenuAndClick("Delete");
 
       await waitFor(() => {
         expect(
@@ -200,7 +205,7 @@ describe("~/pages/admin/CloudApps.tsx", () => {
         .delete("/admin/cloud/app?appId=456")
         .reply(200);
 
-      fireEvent.click(wrapper.getByTestId("delete-btn"));
+      openMenuAndClick("Delete");
 
       await waitFor(() => {
         expect(
@@ -228,7 +233,7 @@ describe("~/pages/admin/CloudApps.tsx", () => {
         .delete("/admin/cloud/app?appId=456")
         .reply(500);
 
-      fireEvent.click(wrapper.getByTestId("delete-btn"));
+      openMenuAndClick("Delete");
 
       await waitFor(() => {
         expect(
@@ -254,7 +259,7 @@ describe("~/pages/admin/CloudApps.tsx", () => {
     });
 
     it("should close modal when cancel is clicked", async () => {
-      fireEvent.click(wrapper.getByTestId("delete-btn"));
+      openMenuAndClick("Delete");
 
       await waitFor(() => {
         expect(
@@ -347,6 +352,57 @@ describe("~/pages/admin/CloudApps.tsx", () => {
           "There is no application based on your search criteria."
         )
       ).toBeTruthy();
+    });
+  });
+
+  describe("Visit user action", () => {
+    beforeEach(async () => {
+      const mockApp = {
+        id: "999",
+        displayName: "App to Visit",
+        createdAt: "2024-01-01T00:00:00Z",
+      };
+
+      const mockUser = {
+        id: "user-999",
+        displayName: "Visit User",
+        email: "visit@example.com",
+      };
+
+      nock(process.env.API_DOMAIN || "")
+        .get("/admin/cloud/app?url=999")
+        .reply(200, {
+          app: mockApp,
+          user: mockUser,
+        });
+
+      const searchInput = wrapper.getByLabelText("Search");
+
+      fireEvent.change(searchInput, { target: { value: "999" } });
+      fireEvent.keyUp(searchInput, { key: "Enter" });
+
+      await waitFor(() => {
+        expect(wrapper.getByText("App to Visit")).toBeTruthy();
+      });
+    });
+
+    it("should call visit endpoint and reload page", async () => {
+      nock(process.env.API_DOMAIN || "")
+        .post("/admin/cloud/app/visit", { userId: "user-999" })
+        .reply(200);
+
+      // Mock window.location.reload
+      const originalReload = window.location.reload;
+      window.location = { reload: vi.fn() } as any;
+
+      openMenuAndClick("Visit");
+
+      await waitFor(() => {
+        expect(window.location.reload).toHaveBeenCalled();
+      });
+
+      // Restore original reload function
+      window.location.reload = originalReload;
     });
   });
 });
