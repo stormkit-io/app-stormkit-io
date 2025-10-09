@@ -34,7 +34,7 @@ export const useSelectedTeam = ({
     const teamId = localStorage.getItem("teamId");
 
     if (teamId) {
-      return teams?.find(t => t.id === teamId);
+      return teams?.find(t => t.id === teamId) || findDefaultTeam();
     }
 
     return findDefaultTeam();
