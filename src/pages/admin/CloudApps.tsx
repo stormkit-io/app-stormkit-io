@@ -114,6 +114,7 @@ export default function CloudApps() {
                 <Td>ID</Td>
                 <Td>Display name</Td>
                 <Td>Created at</Td>
+                <Td>User id</Td>
                 <Td>User display</Td>
                 <Td>Email</Td>
                 <Td></Td>
@@ -124,6 +125,7 @@ export default function CloudApps() {
                 <Td>{app.id}</Td>
                 <Td>{app.displayName}</Td>
                 <Td>{formatDate(app.createdAt)}</Td>
+                <Td>{user?.id}</Td>
                 <Td>{user?.displayName}</Td>
                 <Td>{user?.email}</Td>
                 <Td sx={{ textAlign: "right", pr: 0 }}>
