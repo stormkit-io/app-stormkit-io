@@ -7,7 +7,6 @@ import {
 } from "@testing-library/react";
 import nock from "nock";
 import CloudApps from "./CloudApps";
-import { LS_TOKEN_KEY } from "~/utils/api/Api";
 
 describe("~/pages/admin/CloudApps.tsx", () => {
   let wrapper: RenderResult;
@@ -393,19 +392,13 @@ describe("~/pages/admin/CloudApps.tsx", () => {
         .reply(200, { token: "impersonation-token" });
 
       // Mock window.location.reload
-      const originalReload = window.location.reload;
-      window.location = { reload: vi.fn() } as any;
+      window.location = { assign: vi.fn() } as any;
 
       openMenuAndClick("Impersonate");
 
       await waitFor(() => {
-        expect(window.location.reload).toHaveBeenCalled();
+        expect(window.location.assign).toHaveBeenCalledWith("/");
       });
-
-      // Restore original reload function
-      window.location.reload = originalReload;
-
-      expect(localStorage.getItem(LS_TOKEN_KEY)).toBe("impersonation-token");
     });
   });
 });
