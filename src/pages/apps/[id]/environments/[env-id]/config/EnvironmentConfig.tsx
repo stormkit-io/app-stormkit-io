@@ -5,9 +5,9 @@ import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
+import { RootContext } from "~/pages/Root.context";
 import { AppContext } from "~/pages/apps/[id]/App.context";
 import { EnvironmentContext } from "~/pages/apps/[id]/environments/Environment.context";
-import { isSelfHosted } from "~/utils/helpers/instance";
 import TabDomainConfig from "./_components/TabDomainConfig/TabDomainConfig";
 import TabConfigEnvVars from "./_components/TabConfigEnvVars";
 import TabConfigGeneral from "./_components/TabConfigGeneral";
@@ -21,8 +21,6 @@ import TabAPIKey from "./_components/TabAPIKey";
 import TabMailer from "./_components/TabMailer";
 import TabAuthWall from "./_components/TabAuthWall";
 
-const selfHosted = isSelfHosted();
-
 interface NavItem {
   path: string;
   text: string;
@@ -34,13 +32,16 @@ interface NavItemParent {
   children: NavItem[];
 }
 
-const generateListItems = (app: App): NavItemParent[] => [
+const generateListItems = (
+  app: App,
+  edition?: "self-hosted" | "cloud" | "development"
+): NavItemParent[] => [
   {
     title: "Deployment settings",
     children: [
       { path: "#general", text: "General" },
       { path: "#build", text: "Build", visible: !app.isBare },
-      { path: "#server", text: "Server", visible: selfHosted },
+      { path: "#server", text: "Server", visible: edition === "self-hosted" },
       { path: "#env-vars", text: "Environment variables" },
       { path: "#status-checks", text: "Status checks", visible: !app.isBare },
     ].filter(i => i.visible !== false),
@@ -71,12 +72,13 @@ interface TabProps {
 }
 
 export default function EnvironmentConfig() {
+  const { details } = useContext(RootContext);
   const [selectedItem, setSelectedItem] = useState<string>("");
   const { app, setRefreshToken } = useContext(AppContext);
   const { environment } = useContext(EnvironmentContext);
   const { hash } = useLocation();
   const listItems = useMemo(() => {
-    return generateListItems(app);
+    return generateListItems(app, details?.stormkit?.edition);
   }, [app]);
   const navigate = useNavigate();
 
@@ -118,7 +120,7 @@ export default function EnvironmentConfig() {
                 setRefreshToken={setRefreshToken}
               />
             )}
-            {selfHosted && (
+            {details?.stormkit?.edition === "self-hosted" && (
               <TabConfigServer
                 app={app}
                 environment={environment}
