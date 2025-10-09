@@ -388,7 +388,7 @@ describe("~/pages/admin/CloudApps.tsx", () => {
 
     it("should call visit endpoint and reload page", async () => {
       nock(process.env.API_DOMAIN || "")
-        .post("/admin/cloud/app/visit", { userId: "user-999" })
+        .post("/admin/cloud/visit", { userId: "user-999" })
         .reply(200);
 
       // Mock window.location.reload

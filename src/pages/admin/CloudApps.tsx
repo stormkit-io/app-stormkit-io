@@ -143,7 +143,7 @@ export default function CloudApps() {
                         icon: <PersonSearchIcon />,
                         onClick: () => {
                           api
-                            .post("/admin/cloud/app/visit", {
+                            .post("/admin/cloud/visit", {
                               userId: user?.id,
                             })
                             .then(() => {
