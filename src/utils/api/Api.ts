@@ -31,7 +31,6 @@ class Api {
     return url?.match(/^(https?|\/\/)/) !== null;
   }
 
-  url = "https://api.stormkit.io";
   baseurl = "";
   headers: Record<string, string> = {};
 
@@ -117,6 +116,7 @@ class Api {
       headers.delete("Content-Type");
     }
 
+    // @ts-ignore
     const request = new Request(url, { ...opts, headers });
 
     try {
