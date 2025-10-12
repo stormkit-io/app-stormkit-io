@@ -104,6 +104,13 @@ export default function AdminLayout({ children }: Props) {
                   isActive: pathname.includes("/admin/proxies"),
                 }}
               />
+              <MenuLink
+                item={{
+                  path: "/admin/git",
+                  text: "Git",
+                  isActive: pathname.includes("/admin/git"),
+                }}
+              />
               {isCloud && (
                 <MenuLink
                   item={{

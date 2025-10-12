@@ -146,6 +146,10 @@ const routes: Array<ExtendedRouterProps> = [
     cloudOnly: true,
   },
   {
+    path: "/admin/git",
+    element: Async(() => import("~/pages/admin/Git"), adminLayout),
+  },
+  {
     path: "/:team",
     element: Async(() => import("~/pages/apps"), teamLayout),
   },
