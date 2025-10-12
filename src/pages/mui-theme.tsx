@@ -134,7 +134,7 @@ export default (mode: "dark" | "light") => {
             color: "#ffffff",
           },
           standardSuccess: {
-            backgroundColor: isDark ? "#003801" : "#ffffff",
+            backgroundColor: isDark ? "#0db6102e" : "#ffffff",
             border: isDark ? "" : "1px solid #289c13",
             color: isDark ? "#ffffff" : "#289c13",
           },
@@ -272,7 +272,7 @@ export default (mode: "dark" | "light") => {
               paper: "#090518",
               border: "#111111",
               borderContrast: "#e2e2e2",
-              transparent: "rgba(255,255,255,0.05)",
+              transparent: "rgba(255,255,255,0.01)",
             },
             info: {
               main: "#0d84bf",
