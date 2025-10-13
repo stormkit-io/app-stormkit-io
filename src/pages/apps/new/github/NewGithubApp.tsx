@@ -73,7 +73,7 @@ export default function NewGithubApp() {
             <>
               <Typography>No connected accounts found</Typography>
               <Typography>
-                Click on "Connect More Repositories" to import from GitHub.
+                Click on "Connect More Repositories" to import from GitHub
               </Typography>
             </>
           ) : (
