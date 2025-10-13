@@ -61,6 +61,7 @@ export default function NewGithubApp() {
   }, [accounts, user?.displayName]);
 
   const loading = faLoading || frLoading;
+  const hasAnyAccount = accounts && accounts.length > 0;
 
   return (
     <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
@@ -68,7 +69,7 @@ export default function NewGithubApp() {
         sx={{ width: "100%", mb: 4 }}
         loading={faLoading}
         info={
-          accounts?.length === 0 ? (
+          !hasAnyAccount ? (
             <>
               <Typography>No connected accounts found</Typography>
               <Typography>
@@ -85,7 +86,7 @@ export default function NewGithubApp() {
           )
         }
         error={
-          !githubAccount && !detailsLoading ? (
+          !hasAnyAccount ? undefined : !githubAccount && !detailsLoading ? (
             <>
               You don't seem to have a{" "}
               <Box component="code">GITHUB_APP_NAME</Box> configured.{" "}
