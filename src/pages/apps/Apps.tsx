@@ -74,7 +74,7 @@ export default function Apps() {
           <EmptyList
             primaryActionText="Configure provider"
             primaryDesc="Configure provider to import from private repositories"
-            primaryLink="https://www.stormkit.io/docs/self-hosting/authentication"
+            primaryLink="/admin/git"
             secondaryLink="/apps/new/url"
             secondaryActionText="Import from URL"
             secondaryDesc="Start importing immediately by providing a public repository URL"
