@@ -65,9 +65,10 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
     });
   });
 
-  describe("empty data", () => {
+  describe("no authentication", () => {
     beforeEach(() => {
       mockFetchInstallations({
+        status: 401,
         response: {
           accounts: [],
         },
@@ -78,7 +79,9 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
 
     it("no connected accounts should display a warning", async () => {
       await waitFor(() => {
-        expect(wrapper.getByText("No connected accounts found")).toBeTruthy();
+        expect(
+          wrapper.getByRole("button", { name: "Authenticate" })
+        ).toBeTruthy();
       });
     });
   });

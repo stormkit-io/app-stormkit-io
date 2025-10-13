@@ -17,7 +17,7 @@ export const useFetchRepos = ({
   search = "",
   page = 1,
 }: UseFetchRepoProps) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(true);
   const [error, setError] = useState<string>();
   const [repos, setRepos] = useState<Repo[]>([]);
@@ -25,7 +25,6 @@ export const useFetchRepos = ({
 
   useEffect(() => {
     if (!installationId) {
-      setLoading(false);
       return;
     }
 
@@ -67,22 +66,15 @@ export const useFetchRepos = ({
   };
 };
 
-interface FetchAccountsReturnValue {
-  error?: string;
-  loading: boolean;
-  accounts: Account[];
-}
-
 interface FetchAccountProps {
   refreshToken?: number;
 }
 
-export const useFetchAccounts = ({
-  refreshToken,
-}: FetchAccountProps): FetchAccountsReturnValue => {
+export const useFetchAccounts = ({ refreshToken }: FetchAccountProps) => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [needsAuth, setNeedsAuth] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -92,8 +84,12 @@ export const useFetchAccounts = ({
       .then(({ accounts }) => {
         setAccounts(accounts);
       })
-      .catch(e => {
-        console.log(e);
+      .catch(res => {
+        if (res.status === 401) {
+          setNeedsAuth(true);
+          return;
+        }
+
         setError(errorMessage);
       })
       .finally(() => {
@@ -101,5 +97,5 @@ export const useFetchAccounts = ({
       });
   }, [refreshToken]);
 
-  return { error, loading, accounts };
+  return { error, loading, accounts, needsAuth };
 };

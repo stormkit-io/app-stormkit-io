@@ -5,12 +5,40 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import ArrowBack from "@mui/icons-material/ArrowBack";
+import Button from "@mui/material/Button";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
 import RepoList from "../_components/RepoList";
 import Accounts from "../_components/Accounts";
 import { useFetchAccounts, useFetchRepos } from "./actions";
 import ConnectMoreRepos from "./ConnectMoreRepos";
+
+function NeedsAuth() {
+  const { loginOauth } = useContext(AuthContext);
+
+  return (
+    <Typography
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 1,
+      }}
+    >
+      <Box sx={{ flexGrow: 1 }} component="span">
+        You need to authenticate to proceed.
+      </Box>
+      <Button
+        variant="contained"
+        color="secondary"
+        type="button"
+        onClick={() => loginOauth?.("github")}
+      >
+        Authenticate
+      </Button>
+    </Typography>
+  );
+}
 
 export default function NewGithubApp() {
   const { user } = useContext(AuthContext);
@@ -28,6 +56,7 @@ export default function NewGithubApp() {
     accounts,
     error: faError,
     loading: faLoading,
+    needsAuth,
   } = useFetchAccounts({ refreshToken });
 
   const {
@@ -60,8 +89,8 @@ export default function NewGithubApp() {
     }
   }, [accounts, user?.displayName]);
 
-  const loading = faLoading || frLoading;
   const hasAnyAccount = accounts && accounts.length > 0;
+  const showNoRepo = frLoading === false && !repos?.length;
 
   return (
     <Box maxWidth="md" sx={{ width: "100%", margin: "0 auto" }}>
@@ -69,48 +98,27 @@ export default function NewGithubApp() {
         sx={{ width: "100%", mb: 4 }}
         loading={faLoading}
         info={
-          !hasAnyAccount ? (
-            <>
-              <Typography>No connected accounts found</Typography>
-              <Typography>
-                Click on "Connect More Repositories" to import from GitHub
-              </Typography>
-            </>
+          needsAuth ? (
+            <NeedsAuth />
           ) : (
-            repos?.length === 0 &&
-            !loading && (
+            showNoRepo && (
               <Typography>
                 No repositories found. Try connecting more repositories.
               </Typography>
             )
           )
         }
-        error={
-          !hasAnyAccount ? undefined : !githubAccount && !detailsLoading ? (
-            <>
-              You don't seem to have a{" "}
-              <Box component="code">GITHUB_APP_NAME</Box> configured.{" "}
-              <Link
-                href="https://www.stormkit.io/docs/self-hosting/authentication"
-                rel="noreferrer noopener"
-                target="_blank"
-              >
-                Learn more
-              </Link>
-              .
-            </>
-          ) : (
-            faError || frError
-          )
-        }
+        error={!hasAnyAccount ? undefined : faError || frError}
       >
         <CardHeader
           actions={
-            <ConnectMoreRepos
-              setInstallationId={setInstallationId}
-              setRefreshToken={setRefreshToken}
-              openPopupURL={openPopupURL}
-            />
+            !needsAuth && (
+              <ConnectMoreRepos
+                setInstallationId={setInstallationId}
+                setRefreshToken={setRefreshToken}
+                openPopupURL={openPopupURL}
+              />
+            )
           }
         >
           <Typography>
@@ -124,7 +132,7 @@ export default function NewGithubApp() {
           </Typography>
         </CardHeader>
         <Box>
-          {accounts?.length > 0 && (
+          {!needsAuth && accounts?.length > 0 && (
             <Box>
               <Accounts
                 accounts={accounts}
@@ -138,20 +146,26 @@ export default function NewGithubApp() {
             </Box>
           )}
 
-          <Box sx={{ mb: !githubAccount ? 4 : 0 }}>
-            <RepoList
-              repositories={repos}
-              provider="github"
-              isLoadingList={loading}
-              isLoadingMore={isLoadingMore}
-              hasNextPage={hasNextPage}
-              onNextPage={() => setPage(page + 1)}
-              onSearch={term => {
-                setSearch(term);
-                setRepos([]);
+          {!needsAuth && (
+            <Box
+              sx={{
+                mb: !githubAccount ? 4 : 0,
               }}
-            />
-          </Box>
+            >
+              <RepoList
+                repositories={repos}
+                provider="github"
+                isLoadingList={frLoading === true}
+                isLoadingMore={isLoadingMore}
+                hasNextPage={hasNextPage}
+                onNextPage={() => setPage(page + 1)}
+                onSearch={term => {
+                  setSearch(term);
+                  setRepos([]);
+                }}
+              />
+            </Box>
+          )}
         </Box>
       </Card>
     </Box>
