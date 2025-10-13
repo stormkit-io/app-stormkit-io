@@ -139,12 +139,14 @@ function Card({
             color="info"
             icon={<ReportIcon />}
             sx={{
+              display: "flex",
+              alignItems: "center",
               mb: footer ? p : 0,
               px: p,
               mx: p,
             }}
           >
-            <Box>{info}</Box>
+            {info}
           </Alert>
         )}
         {footer && (
