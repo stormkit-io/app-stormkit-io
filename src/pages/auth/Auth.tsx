@@ -10,15 +10,13 @@ import Typography from "@mui/material/Typography";
 import Card from "~/components/Card";
 import Logo from "~/components/Logo";
 import { AuthContext } from "./Auth.context";
-import { useFetchActiveProviders } from "./actions";
 import BasicAuthRegister from "./BasicAuthRegister";
 import BasicAuthLogin from "./BasicAuthLogin";
 import ProviderAuth from "./ProviderAuth";
 import { Link } from "@mui/material";
 
 export default function Auth() {
-  const { user } = useContext(AuthContext);
-  const { providers, loading } = useFetchActiveProviders();
+  const { user, providers } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -44,6 +42,8 @@ export default function Auth() {
 
   const isBasicAuth =
     !providers?.github && !providers?.gitlab && !providers?.bitbucket;
+
+  const loading = false;
 
   return (
     <Box

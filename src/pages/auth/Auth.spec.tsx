@@ -1,9 +1,7 @@
-import type { Scope } from "nock";
 import { describe, expect, beforeEach, it, vi } from "vitest";
 import { mockUser } from "~/testing/data";
 import { waitFor, RenderResult } from "@testing-library/react";
 import { AuthContext, AuthContextProps } from "./Auth.context";
-import { mockFetchAuthProviders } from "~/testing/nocks/nock_auth";
 import { renderWithRouter } from "~/testing/helpers";
 import Auth from "./Auth";
 
@@ -18,7 +16,10 @@ interface Props {
 
 describe("~/pages/auth/Auth.tsx", () => {
   let wrapper: RenderResult;
-  let scope: Scope;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   const createWrapper = ({ context, path }: Props = {}) => {
     wrapper = renderWithRouter({
@@ -59,14 +60,14 @@ describe("~/pages/auth/Auth.tsx", () => {
     let loginOauthSpy;
 
     beforeEach(() => {
-      scope = mockFetchAuthProviders({
-        response: { gitlab: true, bitbucket: true, github: true },
-      });
-
       loginOauthSpy = vi.fn();
 
       createWrapper({
-        context: { user: undefined, loginOauth: loginOauthSpy },
+        context: {
+          user: undefined,
+          loginOauth: loginOauthSpy,
+          providers: { gitlab: true, bitbucket: true, github: true },
+        },
       });
     });
 
@@ -84,18 +85,18 @@ describe("~/pages/auth/Auth.tsx", () => {
         expect(wrapper.getByText("Bitbucket")).toBeTruthy();
         expect(wrapper.getByText("GitLab")).toBeTruthy();
       });
-
-      expect(scope.isDone()).toBe(true);
     });
   });
 
   describe("when user is not logged in and some providers are not configured", () => {
     beforeEach(() => {
-      scope = mockFetchAuthProviders({
-        response: { gitlab: true, bitbucket: false, github: false },
+      createWrapper({
+        context: {
+          user: undefined,
+          loginOauth: vi.fn(),
+          providers: { gitlab: true, bitbucket: false, github: false },
+        },
       });
-
-      createWrapper({ context: { user: undefined, loginOauth: vi.fn() } });
     });
 
     it("displays one button", async () => {
@@ -105,19 +106,16 @@ describe("~/pages/auth/Auth.tsx", () => {
 
       expect(() => wrapper.getByText("GitHub")).toThrow();
       expect(() => wrapper.getByText("Bitbucket")).toThrow();
-
-      expect(scope.isDone()).toBe(true);
     });
   });
 
   describe("when the user is self-hosted and is visiting for the first time", () => {
     beforeEach(() => {
-      scope = mockFetchAuthProviders({
-        response: { gitlab: false, bitbucket: false, github: false },
-      });
-
       createWrapper({
-        context: { user: undefined },
+        context: {
+          user: undefined,
+          providers: { github: false, gitlab: false, bitbucket: false },
+        },
       });
     });
 
@@ -131,17 +129,16 @@ describe("~/pages/auth/Auth.tsx", () => {
 
   describe("when the user is self-hosted and is already registered", () => {
     beforeEach(() => {
-      scope = mockFetchAuthProviders({
-        response: {
-          gitlab: false,
-          bitbucket: false,
-          github: false,
-          basicAuth: "enabled",
-        },
-      });
-
       createWrapper({
-        context: { user: undefined },
+        context: {
+          user: undefined,
+          providers: {
+            gitlab: false,
+            bitbucket: false,
+            github: false,
+            basicAuth: "enabled",
+          },
+        },
       });
     });
 

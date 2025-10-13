@@ -1,6 +1,6 @@
 import React from "react";
 import { createTheme } from "@mui/material/styles";
-import { green, grey, purple, red } from "@mui/material/colors";
+import { yellow, green, grey, purple, red } from "@mui/material/colors";
 import { Link as RLink, LinkProps as RLinkProps } from "react-router-dom";
 import { LinkProps } from "@mui/material/Link";
 
@@ -63,7 +63,7 @@ export default (mode: "dark" | "light") => {
           tooltip: {
             border: "1px solid",
             color: primaryColor,
-            backgroundColor: isDark ? "#1f1c3b" : "#e9e9e9",
+            backgroundColor: isDark ? "#0d112fff" : "#e9e9e9",
             borderColor: isDark ? grey[900] : grey[600],
             fontSize: 14,
           },
@@ -160,6 +160,7 @@ export default (mode: "dark" | "light") => {
           },
         },
         variants: [
+          { props: { color: "warning" }, style: { color: yellow[600] } },
           { props: { color: "success" }, style: { color: green[600] } },
           { props: { color: "error" }, style: { color: red[600] } },
           {
@@ -280,7 +281,7 @@ export default (mode: "dark" | "light") => {
               dark: "#f9f9f9",
             },
             warning: {
-              main: "#ffffff",
+              main: "#d7cd13",
             },
             error: {
               main: "#d32f2f",

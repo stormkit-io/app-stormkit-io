@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUp from "@mui/icons-material/ArrowDropUp";
@@ -12,6 +13,7 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 interface MenuItemProps {
   text: string;
   icon?: React.ReactNode;
+  endIcon?: React.ReactNode;
   href?: string;
   onClick?: React.MouseEventHandler;
 }
@@ -57,7 +59,10 @@ export default function ButtonDropdown({ buttonText, children, items }: Props) {
                         }}
                       >
                         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-                        {item.text}
+                        <Box component="span" sx={{ flexGrow: 1 }}>
+                          {item.text}
+                        </Box>
+                        {item.endIcon}
                       </Link>
                     </MenuItem>
                   );

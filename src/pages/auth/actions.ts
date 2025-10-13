@@ -61,7 +61,7 @@ export const useFetchUser = (): FetchUserReturnValue => {
   return { error, user, accounts, loading, setUser };
 };
 
-interface Providers {
+export interface Providers {
   github: boolean;
   gitlab: boolean;
   bitbucket: boolean;

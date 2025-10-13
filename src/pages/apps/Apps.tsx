@@ -23,13 +23,14 @@ import { providerToText } from "~/utils/helpers/string";
 import { useFetchAppList, createApp } from "./actions";
 import { WelcomeModal, EmptyList } from "./_components";
 import TeamStats from "./_components/TeamStats";
+import ActionRequired from "~/components/ActionRequired";
 
 let timeout: NodeJS.Timeout;
 const limit = 20;
 const welcomeModalId = "welcome_modal";
 
 export default function Apps() {
-  const { teams } = useContext(AuthContext);
+  const { teams, providers } = useContext(AuthContext);
   const [from, setFrom] = useState(0);
   const [filter, setFilter] = useState("");
   const selectedTeam = useSelectedTeam({ teams });
@@ -45,7 +46,11 @@ export default function Apps() {
     LocalStorage.get(welcomeModalId) !== "shown"
   );
 
-  const provider = LocalStorage.get<Provider>(LS_PROVIDER);
+  let provider = LocalStorage.get<Provider>(LS_PROVIDER);
+
+  if (!providers?.[provider as Provider]) {
+    provider = undefined;
+  }
 
   if (loading && !filter) {
     return (
@@ -67,10 +72,8 @@ export default function Apps() {
       <Box sx={{ width: "100%" }} maxWidth="lg">
         <Card sx={{ px: { xs: 1, md: 4 } }}>
           <EmptyList
-            primaryActionText="Configure authentication"
-            primaryDesc="Configure authentication to import from private repositories
-
-"
+            primaryActionText="Configure provider"
+            primaryDesc="Configure provider to import from private repositories"
             primaryLink="https://www.stormkit.io/docs/self-hosting/authentication"
             secondaryLink="/apps/new/url"
             secondaryActionText="Import from URL"
@@ -84,11 +87,9 @@ export default function Apps() {
 
   const importFromProvider = provider
     ? `Import from ${providerToText[provider]}`
-    : "Configure authentication";
+    : "Configure provider";
 
-  const newAppHref = provider
-    ? `/apps/new/${provider}`
-    : "https://www.stormkit.io/docs/self-hosting/authentication";
+  const newAppHref = provider ? `/apps/new/${provider}` : "/admin/git";
 
   if (apps.length === 0 && !filter) {
     return (
@@ -131,6 +132,13 @@ export default function Apps() {
               items={[
                 {
                   icon: <ImportExport />,
+                  endIcon: provider ? undefined : (
+                    <ActionRequired
+                      placement="bottom"
+                      subtitle="Configure provider to import from private repositories"
+                      title="Action required"
+                    />
+                  ),
                   text: importFromProvider,
                   href: newAppHref,
                 },
@@ -164,8 +172,8 @@ export default function Apps() {
                 setFilter(e.target.value);
               }, 250);
             }}
-            InputProps={{
-              endAdornment: <SearchIcon sx={{ fontSize: 16 }} />,
+            slotProps={{
+              input: { endAdornment: <SearchIcon sx={{ fontSize: 16 }} /> },
             }}
           />
         </Box>

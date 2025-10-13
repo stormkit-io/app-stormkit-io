@@ -35,7 +35,18 @@ describe("~/pages/apps/Apps.tsx", () => {
       {
         path: "*",
         element: (
-          <AuthContext.Provider value={{ user: mockUser(), teams }}>
+          <AuthContext.Provider
+            value={{
+              user: mockUser(),
+              teams,
+              providers: {
+                github: false,
+                gitlab: false,
+                bitbucket: false,
+                [provider as Provider]: true,
+              },
+            }}
+          >
             <Apps />
           </AuthContext.Provider>
         ),
@@ -87,9 +98,11 @@ describe("~/pages/apps/Apps.tsx", () => {
       fireEvent.click(button!);
 
       await waitFor(() => {
-        expect(wrapper.getByText("Import from URL").getAttribute("href")).toBe(
-          "/apps/new/url"
-        );
+        expect(
+          wrapper
+            .getByRole("link", { name: "Import from URL" })
+            .getAttribute("href")
+        ).toBe("/apps/new/url");
       });
     });
 
@@ -186,7 +199,7 @@ describe("~/pages/apps/Apps.tsx", () => {
       await waitFor(() => {
         expect(
           wrapper.getByText(
-            "Configure authentication to import from private repositories"
+            "Configure provider to import from private repositories"
           )
         ).toBeTruthy();
       });

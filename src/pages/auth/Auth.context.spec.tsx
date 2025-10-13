@@ -1,6 +1,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { AuthContextProps } from "~/pages/auth/Auth.context";
 import type { Scope } from "nock";
+import nock from "nock";
 import { describe, expect, beforeEach, afterEach, it, vi } from "vitest";
 import { waitFor } from "@testing-library/react";
 import { LocalStorage } from "~/utils/storage";
@@ -21,7 +22,28 @@ describe("pages/auth/Auth.context", () => {
   let scope: Scope;
   let context: AuthContextProps;
 
+  const mockFetchAuthProviders = ({
+    status,
+    response,
+  }: {
+    status: number;
+    response: {
+      github: boolean;
+      gitlab: boolean;
+      bitbucket: boolean;
+      basicAuth?: "enabled";
+    };
+  }) =>
+    nock(process.env.API_DOMAIN || "")
+      .get(`/auth/providers`)
+      .reply(status, response);
+
   const createWrapper = () => {
+    mockFetchAuthProviders({
+      status: 200,
+      response: { github: true, gitlab: true, bitbucket: true },
+    });
+
     wrapper = renderWithRouter({
       initialEntries: ["/apps/1231231?my-query=1"],
       el: () => (
@@ -111,11 +133,16 @@ describe("pages/auth/Auth.context", () => {
               displayName: "stormkit",
             },
           ],
-          authError: null,
+          authError: undefined,
           loginOauth: expect.any(Function),
           logout: expect.any(Function),
           reloadTeams: expect.any(Function),
           teams: undefined,
+          providers: {
+            github: true,
+            gitlab: true,
+            bitbucket: true,
+          },
         });
       });
     });
