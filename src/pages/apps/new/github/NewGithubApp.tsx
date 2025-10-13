@@ -112,6 +112,7 @@ export default function NewGithubApp() {
       >
         <CardHeader
           actions={
+            !faLoading &&
             !needsAuth && (
               <ConnectMoreRepos
                 setInstallationId={setInstallationId}
