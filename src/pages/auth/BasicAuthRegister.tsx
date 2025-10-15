@@ -37,12 +37,15 @@ export default function BasicAuthRegister() {
         setError(undefined);
 
         api
-          .post("/auth/admin/register", {
+          .post<{ user: User; sessionToken: string }>("/auth/admin/register", {
             email: data.email,
             password: data.password,
           })
-          .then(() => {
-            window.location.reload();
+          .then(({ sessionToken }) => {
+            if (sessionToken) {
+              api.setAuthToken(sessionToken); // adds it to local storage
+              window.location.reload();
+            }
           })
           .catch(() => {
             setError("Something went wrong, try again.");

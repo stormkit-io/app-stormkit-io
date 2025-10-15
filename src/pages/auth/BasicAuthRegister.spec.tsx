@@ -47,7 +47,7 @@ describe("pages/auth/BasicAuthRegister", () => {
     const submit = wrapper.getByRole("button", { name: "Create account" });
     const scope = mockAdminRegister({
       payload: { email: "my-email@example.org", password: "my-password" },
-      response: { ok: true },
+      response: { sessionToken: "my-session-token" },
     });
 
     await userEvent.type(email, "my-email@example.org");
@@ -57,6 +57,7 @@ describe("pages/auth/BasicAuthRegister", () => {
 
     await waitFor(() => {
       expect(scope.isDone()).toBeTruthy();
+      expect(api.getAuthToken()).toBe("my-session-token");
       expect(window.location.reload).toHaveBeenCalled();
     });
   });

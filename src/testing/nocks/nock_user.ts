@@ -87,7 +87,7 @@ export const mockAdminLogin = ({
 interface MockAdminRegisterProps {
   status?: number;
   payload: { email: string; password: string };
-  response?: { ok: boolean };
+  response?: { user?: User; sessionToken?: string };
 }
 
 export const mockAdminRegister = ({
