@@ -49,7 +49,9 @@ export default function EmptyList({
             backgroundColor: "container.paper",
             mr: { xs: 0, md: 2 },
             mb: { xs: 2, md: 0 },
-            maxWidth: { xs: "auto", md: 340 },
+            ml: 0,
+            width: { xs: "100%", md: "auto" },
+            maxWidth: { xs: "none", md: 340 },
             borderRadius: 1,
             flex: 1,
           }}
@@ -71,7 +73,8 @@ export default function EmptyList({
             ml: { xs: 0, md: 2 },
             mr: { md: onBareAppClick ? 2 : undefined },
             mt: { xs: 2, md: 0 },
-            maxWidth: { xs: "auto", md: 340 },
+            width: { xs: "100%", md: "auto" },
+            maxWidth: { xs: "none", md: 340 },
             borderRadius: 1,
             flex: 1,
           }}
@@ -94,7 +97,8 @@ export default function EmptyList({
                 backgroundColor: "container.paper",
                 ml: { xs: 0, md: 2 },
                 mt: { xs: 2, md: 0 },
-                maxWidth: { xs: "auto", md: 340 },
+                maxWidth: { xs: "none", md: 340 },
+                width: { xs: "100%", md: "auto" },
                 borderRadius: 1,
                 flex: 1,
               }}
