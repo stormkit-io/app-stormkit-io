@@ -53,10 +53,18 @@ describe("~/pages/apps/new/github/NewGithubApp.tsx", () => {
       createWrapper({ github: account });
     });
 
-    it("clicking connect more should open a popup so that the user can configure permissions", () => {
+    it("clicking connect more should open a popup so that the user can configure permissions", async () => {
       window.open = vi.fn();
-      const button = wrapper.getByText("Connect more repositories");
-      fireEvent.click(button);
+      let button;
+
+      await waitFor(() => {
+        button = wrapper.getByRole("button", {
+          name: /Connect more repositories/,
+        });
+      });
+
+      fireEvent.click(button!);
+
       expect(window.open).toHaveBeenCalledWith(
         `https://github.com/apps/${account}/installations/new`,
         "Add repository",

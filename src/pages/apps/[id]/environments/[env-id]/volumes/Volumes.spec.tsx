@@ -168,10 +168,12 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         expect(() => wrapper.getByText("Configure")).toThrow();
       });
 
-      it("should display a learn more button", () => {
-        expect(wrapper.getByText("Learn more").getAttribute("href")).toBe(
-          "https://www.stormkit.io/docs/features/volumes"
-        );
+      it("should display a learn more button", async () => {
+        await waitFor(() => {
+          expect(wrapper.getByText("Learn more").getAttribute("href")).toBe(
+            "https://www.stormkit.io/docs/features/volumes"
+          );
+        });
       });
     });
 
