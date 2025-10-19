@@ -40,6 +40,7 @@ export default function TabConfigGeneral({
         title="Serverless functions"
         subtitle="Configure your application's serverless settings."
       />
+
       <Box sx={{ mb: 4 }}>
         <TextField
           label="API folder"
@@ -48,11 +49,30 @@ export default function TabConfigGeneral({
           defaultValue={env?.build.apiFolder || "/api"}
           name="build.apiFolder"
           fullWidth
-          InputLabelProps={{
-            shrink: true,
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
           }}
           placeholder="/api"
-          helperText={`The path to the \`api\` folder where your serverless functions reside. The request path for the API functions will match the same name.`}
+          sx={{ mb: 4 }}
+          helperText={`The path to the \`api\` folder where your serverless functions reside.`}
+        />
+
+        <TextField
+          label="API path prefix"
+          variant="filled"
+          autoComplete="off"
+          defaultValue={env?.build.apiPathPrefix || "/api"}
+          name="build.apiPathPrefix"
+          fullWidth
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+          placeholder="/api"
+          helperText={"The URL prefix for accessing your serverless functions."}
         />
       </Box>
 

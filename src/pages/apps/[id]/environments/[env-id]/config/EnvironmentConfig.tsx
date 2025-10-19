@@ -41,7 +41,11 @@ const generateListItems = (
     children: [
       { path: "#general", text: "General" },
       { path: "#build", text: "Build", visible: !app.isBare },
-      { path: "#server", text: "Server", visible: edition === "self-hosted" },
+      {
+        path: "#server",
+        text: "Server",
+        visible: edition !== "cloud",
+      },
       { path: "#env-vars", text: "Environment variables" },
       { path: "#status-checks", text: "Status checks", visible: !app.isBare },
     ].filter(i => i.visible !== false),
@@ -120,7 +124,7 @@ export default function EnvironmentConfig() {
                 setRefreshToken={setRefreshToken}
               />
             )}
-            {details?.stormkit?.edition === "self-hosted" && (
+            {details?.stormkit?.edition !== "cloud" && (
               <TabConfigServer
                 app={app}
                 environment={environment}

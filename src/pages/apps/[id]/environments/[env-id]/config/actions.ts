@@ -60,6 +60,7 @@ export const prepareBuildObject = (values: FormValues): BuildConfig => {
     redirectsFile: values["build.redirectsFile"],
     errorFile: values["build.errorFile"],
     apiFolder: values["build.apiFolder"],
+    apiPathPrefix: values["build.apiPathPrefix"],
     previewLinks: values["build.previewLinks"] === "on",
     statusChecks,
     redirects,
@@ -113,6 +114,7 @@ export const buildFormValues = (
     "build.headersFile": env.build.headersFile,
     "build.redirectsFile": env.build.redirectsFile,
     "build.apiFolder": env.build.apiFolder,
+    "build.apiPathPrefix": env.build.apiPathPrefix,
     "build.buildCmd": env.build.buildCmd,
     "build.serverCmd": env.build.serverCmd,
     "build.installCmd": env.build.installCmd,
@@ -155,6 +157,7 @@ export interface FormValues {
   "build.redirects"?: string;
   "build.redirectsFile"?: string;
   "build.apiFolder"?: string;
+  "build.apiPathPrefix"?: string;
   "build.vars"?: string; // This is the textarea version
   "build.vars[key]"?: string; // This is the key value version
   "build.vars[value]"?: string; // This is the key value version
