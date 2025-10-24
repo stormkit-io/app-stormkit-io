@@ -32,18 +32,17 @@ export default function ConnectedAccounts({ accounts }: Props) {
         title="Connected Accounts"
         subtitle={
           <>
-            List of connected emails and providers.
-            <br /> We combine providers using shared email addresses.
+            List of connected emails and providers
+            <br /> We combine providers using shared email addresses
           </>
         }
       />
       <Box>
         <Typography sx={{ mb: 2, px: 4 }}>Providers</Typography>
-        {accounts.map(({ provider, hasPersonalAccessToken }, i) => (
+        {accounts.map(({ provider, hasPersonalAccessToken }) => (
           <CardRow
             key={provider}
             data-testid={provider}
-            sx={{ ml: 2 }}
             actions={
               showPersonalAccessButton(provider) ? (
                 <>
@@ -70,19 +69,17 @@ export default function ConnectedAccounts({ accounts }: Props) {
             }
           >
             <Typography sx={{ color: "text.secondary" }}>
-              <span className={`text-ml mr-2 fab fa-${provider}`} />
               {texts[provider]}
             </Typography>
           </CardRow>
         ))}
-        <Typography sx={{ my: 2, px: 4 }}>Emails</Typography>
+        <Typography sx={{ mt: 2, px: 4 }}>Emails</Typography>
         {emails?.map(email => (
           <CardRow
             key={email.address}
             data-testid={email.address}
             chipLabel={email.primary ? "Primary" : undefined}
             chipColor={email.primary ? "success" : undefined}
-            sx={{ ml: 2 }}
           >
             <Typography sx={{ color: "text.secondary" }}>
               {email.address}

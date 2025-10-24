@@ -154,16 +154,20 @@ describe("~/pages/apps/[id]/environments/[env-id]/volumes/Volumes.tsx", () => {
         });
       });
 
-      it("should display an empty page", () => {
-        expect(
-          wrapper.getByText(
-            /Volumes is not configured for this Stormkit instance\./
-          )
-        ).toBeTruthy();
+      it("should display an empty page", async () => {
+        await waitFor(() => {
+          expect(
+            wrapper.getByText(
+              /Volumes is not configured for this Stormkit instance\./
+            )
+          ).toBeTruthy();
 
-        expect(
-          wrapper.getByText(/Contact your administrator for more information\./)
-        ).toBeTruthy();
+          expect(
+            wrapper.getByText(
+              /Contact your administrator for more information\./
+            )
+          ).toBeTruthy();
+        });
 
         expect(() => wrapper.getByText("Configure")).toThrow();
       });

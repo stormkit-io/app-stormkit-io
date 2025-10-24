@@ -7,7 +7,7 @@ interface FetchLicenseProps {
 }
 
 interface License {
-  premium: boolean;
+  enterpise: boolean;
   seats: number;
   raw: string;
 }
@@ -21,7 +21,7 @@ export const useFetchLicense = ({
   const [error, setError] = useState<string>();
 
   useEffect(() => {
-    if (user.package.id !== "self-hosted" || isSelfHostedInstance) {
+    if (isSelfHostedInstance) {
       setLoading(false);
       return;
     }
@@ -35,7 +35,7 @@ export const useFetchLicense = ({
         setLicense(license);
       })
       .catch(() => {
-        setError("Something went wrong while fetching license.");
+        setError("Something went wrong while fetching license");
       })
       .finally(() => {
         setLoading(false);
