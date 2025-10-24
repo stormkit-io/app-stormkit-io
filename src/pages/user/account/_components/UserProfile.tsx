@@ -128,6 +128,10 @@ export default function UserProfile({ user, metrics }: Props) {
 
   const [delAccountConfirm, toggleDelAccountConfirm] = useState(false);
 
+  if (!user) {
+    return <></>;
+  }
+
   return (
     <Card contentPadding={false}>
       <CardHeader title="Account settings">
@@ -143,7 +147,7 @@ export default function UserProfile({ user, metrics }: Props) {
             sx={{ width: "7rem", height: "7rem", margin: "0 auto", mb: 2 }}
           />
           <Typography sx={{ mb: 4 }}>
-            {user.fullName.trim() || user.displayName}
+            {user.fullName?.trim() || user.displayName}
             <br />
             {user.email}
             <br />
