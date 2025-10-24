@@ -25,23 +25,6 @@ describe("~/pages/user/account/Account", () => {
     });
   };
 
-  describe("when user free trial is ended", () => {
-    const user = mockUser();
-
-    it("should display a message if payment is  required", () => {
-      user.isPaymentRequired = true;
-
-      createWrapper({
-        user,
-      });
-
-      expect(wrapper.getByText(/Upgrade required/)).toBeTruthy();
-      expect(
-        wrapper.getByText(/Stormkit Cloud is a paid service\./)
-      ).toBeTruthy();
-    });
-  });
-
   it("should load connected accounts", () => {
     createWrapper({
       user: mockUser(),
@@ -49,15 +32,7 @@ describe("~/pages/user/account/Account", () => {
 
     expect(wrapper.getByText("Connected Accounts")).toBeTruthy();
     expect(
-      wrapper.getByText(/List of connected emails and providers\./)
+      wrapper.getByText(/List of connected emails and providers/)
     ).toBeTruthy();
-  });
-
-  it("should subscription details", () => {
-    createWrapper({
-      user: mockUser(),
-    });
-
-    expect(wrapper.getByText("Subscription Details")).toBeTruthy();
   });
 });

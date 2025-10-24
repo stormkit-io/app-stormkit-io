@@ -18,6 +18,7 @@ export interface AuthContextProps {
   user?: User;
   authError?: string | null;
   accounts?: Array<ConnectedAccount>;
+  metrics?: UserMetrics;
   providers?: Providers;
   logout?: () => void;
   loginOauth?: (p: Provider) => Promise<LoginOauthReturnValue>;
@@ -35,7 +36,7 @@ export default function ContextProvider({ children }: Props) {
   const navigate = useNavigate();
   const [refreshToken, setTeamsRefreshToken] = useState(0);
   const { pathname, search } = useLocation();
-  const { error, loading, user, accounts, ...fns } = useFetchUser();
+  const { error, loading, user, metrics, accounts, ...fns } = useFetchUser();
   const {
     providers,
     loading: pLoading,
@@ -55,12 +56,6 @@ export default function ContextProvider({ children }: Props) {
       navigate(`/auth${encoded ? `?redirect=${encoded}` : ""}`);
     }
   }, [shouldRedirect]);
-
-  useEffect(() => {
-    if (user?.isPaymentRequired) {
-      navigate("/user/account?expired=true");
-    }
-  }, [user?.isPaymentRequired, pathname]);
 
   if (loading || tLoading || pLoading) {
     return (
@@ -90,6 +85,7 @@ export default function ContextProvider({ children }: Props) {
         authError: error || pError,
         teams,
         providers,
+        metrics,
         reloadTeams: () => setTeamsRefreshToken(Date.now()),
         logout: logout(), // This function can be removed, it's no longer being injected something.
         loginOauth: loginOauth({ ...fns }),

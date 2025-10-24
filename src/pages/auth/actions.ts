@@ -5,60 +5,47 @@ import gitlabApi from "~/utils/api/Gitlab";
 import openPopup, { DataMessage } from "~/utils/helpers/popup";
 import { LocalStorage } from "~/utils/storage";
 
-interface FetchUserReturnValue {
-  error: string | null;
-  loading: boolean;
-  user?: User;
-  accounts: Array<ConnectedAccount>;
-  setUser: (u: User) => void;
-}
-
 interface FetchUserResponse {
   accounts: Array<ConnectedAccount>;
   user: User;
-  paymentRequired?: boolean;
-  ok: boolean;
+  metrics?: UserMetrics;
 }
 
-export const useFetchUser = (): FetchUserReturnValue => {
+export const useFetchUser = () => {
   const token = api.getAuthToken();
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User>();
   const [accounts, setAccounts] = useState<Array<ConnectedAccount>>([]);
+  const [metrics, setMetrics] = useState<UserMetrics>();
   const [loading, setLoading] = useState<boolean>(!!token);
 
   useEffect(() => {
-    let unmounted: boolean;
-
-    if (token) {
-      setLoading(true);
-      api.setAuthToken(token);
-      api
-        .fetch<FetchUserResponse>("/user")
-        .then(({ user, ok, accounts }) => {
-          if (ok && !unmounted) {
-            setUser(user);
-            setAccounts(accounts);
-          }
-        })
-        .catch(e => {
-          if (!unmounted && e.status !== 401) {
-            setError("Something went wrong, log in again.");
-          }
-        })
-        .finally(() => {
-          if (!unmounted) {
-            setLoading(false);
-          }
-        });
+    if (!token) {
+      return;
     }
 
-    return () => {
-      unmounted = true;
-    };
+    setLoading(true);
+    api.setAuthToken(token);
+    api
+      .fetch<FetchUserResponse>("/user")
+      .then(({ user, accounts, metrics }) => {
+        if (user) {
+          setUser(user);
+          setAccounts(accounts);
+          setMetrics(metrics);
+        }
+      })
+      .catch(e => {
+        if (e.status !== 401) {
+          setError("Something went wrong, log in again.");
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [api, token]);
 
-  return { error, user, accounts, loading, setUser };
+  return { error, user, accounts, metrics, loading, setUser };
 };
 
 export interface Providers {

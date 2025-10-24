@@ -1,12 +1,5 @@
 import React from "react";
 
-export const deployNow = (e: React.MouseEvent | React.KeyboardEvent) => {
-  // @ts-ignore
-  if (!e.key || e.key === "Enter") {
-    document.getElementById("deploy-now")?.click();
-  }
-};
-
 /**
  * Formats a date.
  *

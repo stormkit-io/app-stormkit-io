@@ -1,10 +1,4 @@
-declare type SubscriptionName =
-  | "free"
-  | "starter"
-  | "medium"
-  | "enterprise"
-  | "self-hosted";
-
+declare type SubscriptionName = "free" | "premium" | "ultimate";
 declare type Edition = "community" | "enterprise";
 
 declare interface User {
@@ -15,7 +9,6 @@ declare interface User {
   displayName: string;
   memberSince: number;
   isAdmin?: boolean;
-  isPaymentRequired?: boolean;
   package: {
     id: SubscriptionName;
     name: string;
@@ -49,5 +42,20 @@ declare interface InstanceDetails {
   };
   auth?: {
     github?: string; // The github account name
+  };
+}
+
+declare interface UserMetrics {
+  max: {
+    bandwidthInBytes: number;
+    buildMinutes: number;
+    functionInvocations: number;
+    storageInBytes: number;
+  };
+  used: {
+    bandwidthInBytes: number;
+    buildMinutes: number;
+    functionInvocations: number;
+    storageInBytes: number;
   };
 }
