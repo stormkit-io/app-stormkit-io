@@ -1,4 +1,4 @@
-import { describe, expect, beforeEach, it, vi, Mock } from "vitest";
+import { describe, expect, beforeEach, it } from "vitest";
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import { AuthContext } from "~/pages/auth/Auth.context";
@@ -14,11 +14,8 @@ interface Props {
 
 describe("~/pages/user/account/_components/UserProfile", () => {
   let wrapper: RenderResult;
-  let logout: Mock;
 
   const createWrapper = ({ edition, user = mockUser(), metrics }: Props) => {
-    logout = vi.fn();
-
     wrapper = render(
       <RootContext.Provider
         value={{

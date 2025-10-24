@@ -10,7 +10,7 @@ import Check from "@mui/icons-material/Check";
 import Settings from "@mui/icons-material/Settings";
 import GroupAdd from "@mui/icons-material/GroupAdd";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-import { RootContext } from "~/pages/Root.context";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import UpgradeButton from "~/components/UpgradeButton";
 
 interface Props {
@@ -30,7 +30,7 @@ export default function TeamMenu({
   onCreateTeamButtonClicked,
   onClickAway,
 }: Props) {
-  const { details } = useContext(RootContext);
+  const { user } = useContext(AuthContext);
 
   return (
     <ClickAwayListener onClickAway={onClickAway}>
@@ -123,7 +123,7 @@ export default function TeamMenu({
               )}
             </Box>
           ))}
-          {details?.license?.edition === "community" ? (
+          {user?.package?.id === "free" ? (
             <UpgradeButton />
           ) : (
             <Button

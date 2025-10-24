@@ -110,6 +110,11 @@ const portalLink = {
   prod: "https://billing.stripe.com/p/login/9AQ7sKfcx2Or41ibII",
 }[process.env.NODE_ENV === "development" ? "dev" : "prod"];
 
+const paymentLink = {
+  premium: "https://buy.stripe.com/7sY3cwebC1TEesO8qXbAs06",
+  ultimate: "https://buy.stripe.com/eVacOwbDc3dW2IgdQU",
+};
+
 const formatNumber = (num: number) => {
   return num.toLocaleString("en-US");
 };
@@ -172,7 +177,9 @@ export default function UserProfile({ user, metrics }: Props) {
             endIcon={<LaunchIcon />}
             variant="contained"
             color="secondary"
-            href={portalLink}
+            href={
+              user?.package.id === "free" ? paymentLink.premium : portalLink
+            }
             target="_blank"
             rel="noopener noreferrer"
           >
