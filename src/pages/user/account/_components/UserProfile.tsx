@@ -187,7 +187,7 @@ export default function UserProfile({ user, metrics }: Props) {
           </Button>
         </Box>
         {details?.stormkit?.edition !== "cloud" ? (
-          <Alert color="warning">
+          <Alert color="warning" sx={{ mx: 4, mb: 4 }}>
             <Typography>
               Visit your Cloud Account on{" "}
               <Link href="https://app.stormkit.io" target="_blank">
