@@ -49,15 +49,29 @@ describe("~/pages/admin/System.tsx", () => {
       .reply(200, { version: "1.0.0" });
   };
 
+  const fetchDomainsScope = () => {
+    return nock(process.env.API_DOMAIN || "")
+      .get("/admin/domains")
+      .reply(200, {
+        domains: {
+          dev: "https://dev.example.org",
+          api: "https://api.example.org",
+          app: "https://app.example.org",
+        },
+      });
+  };
+
   beforeEach(async () => {
     const scope = fetchRuntimesScope(["node@24", "python@3"]);
     const scopeVersion = fetchMiseVersionScope();
+    const scopeDomains = fetchDomainsScope();
 
     createWrapper();
 
     await waitFor(() => {
       expect(scopeVersion.isDone()).toBe(true);
       expect(scope.isDone()).toBe(true);
+      expect(scopeDomains.isDone()).toBe(true);
     });
   });
 
@@ -69,8 +83,12 @@ describe("~/pages/admin/System.tsx", () => {
     expect(wrapper.getByText("Installed runtimes")).toBeTruthy();
     expect(
       wrapper.getByText(
-        "Manage runtimes that are installed on your Stormkit instance."
+        "Manage runtimes that are installed on your Stormkit instance"
       )
+    ).toBeTruthy();
+    expect(wrapper.getByText("Domains")).toBeTruthy();
+    expect(
+      wrapper.getByText("Configure custom domains for your Stormkit instance")
     ).toBeTruthy();
   });
 
@@ -89,7 +107,9 @@ describe("~/pages/admin/System.tsx", () => {
     // Turn off auto-install
     await fireEvent.click(wrapper.getByLabelText("Auto install"));
 
-    await fireEvent.click(wrapper.getByText("Save"));
+    // Find the save button in the runtimes section specifically
+    const saveButtons = wrapper.getAllByText("Save");
+    await fireEvent.click(saveButtons[0]); // First save button is for runtimes
 
     await waitFor(() => {
       expect(scope.isDone()).toBe(true);
@@ -101,7 +121,7 @@ describe("~/pages/admin/System.tsx", () => {
     expect(wrapper.getByText("Mise"));
     expect(
       wrapper.getByText(
-        "Stormkit relies on open-source mise for runtime management."
+        "Stormkit relies on open-source mise for runtime management"
       )
     );
     expect(wrapper.getByText("Upgrade to latest"));
@@ -326,6 +346,144 @@ describe("~/pages/admin/System.tsx", () => {
             }}
           />
         );
+      });
+    });
+  });
+
+  describe("Domains", () => {
+    it("should render domain configuration form", async () => {
+      await waitFor(() => {
+        expect(wrapper.getByText("Domains")).toBeTruthy();
+        expect(
+          wrapper.getByText(
+            "Configure custom domains for your Stormkit instance"
+          )
+        ).toBeTruthy();
+        expect(wrapper.getByLabelText("API Domain")).toBeTruthy();
+        expect(wrapper.getByLabelText("App Domain")).toBeTruthy();
+        expect(wrapper.getByLabelText("Dev Domain")).toBeTruthy();
+      });
+    });
+
+    it("should display fetched domain values", async () => {
+      await waitFor(() => {
+        const apiField = wrapper.getByDisplayValue("https://api.example.org");
+        const appField = wrapper.getByDisplayValue("https://app.example.org");
+        const devField = wrapper.getByDisplayValue("https://dev.example.org");
+
+        expect(apiField).toBeTruthy();
+        expect(appField).toBeTruthy();
+        expect(devField).toBeTruthy();
+      });
+    });
+
+    it("should display helper texts for domain fields", async () => {
+      await waitFor(() => {
+        expect(
+          wrapper.getByText("API requests will be served from this domain")
+        ).toBeTruthy();
+        expect(
+          wrapper.getByText(
+            "This domain will be used to access your Stormkit dashboard"
+          )
+        ).toBeTruthy();
+        expect(
+          wrapper.getByText(
+            "Deployment previews will be displayed using subdomains of this domain"
+          )
+        ).toBeTruthy();
+      });
+    });
+
+    it("should handle domain fetch error", async () => {
+      // Create a new wrapper with error response
+      const errorScope = nock(process.env.API_DOMAIN || "")
+        .get("/admin/system/runtimes")
+        .reply(200, {
+          runtimes: [],
+          autoInstall: true,
+          installed: {},
+          status: "ok",
+        });
+
+      const errorMiseScope = nock(process.env.API_DOMAIN || "")
+        .get("/admin/system/mise")
+        .reply(200, { version: "1.0.0" });
+
+      const errorDomainsScope = nock(process.env.API_DOMAIN || "")
+        .get("/admin/domains")
+        .reply(500, { error: "Internal server error" });
+
+      const errorWrapper = render(<AdminSystem />);
+
+      await waitFor(() => {
+        expect(errorScope.isDone()).toBe(true);
+        expect(errorMiseScope.isDone()).toBe(true);
+        expect(errorDomainsScope.isDone()).toBe(true);
+      });
+
+      await waitFor(() => {
+        expect(
+          errorWrapper.getByText("Something went wrong while fetching domains")
+        ).toBeTruthy();
+      });
+    });
+
+    it("should submit domain configuration successfully", async () => {
+      const postScope = nock(process.env.API_DOMAIN || "")
+        .post("/admin/domains", {
+          api: "https://new-api.example.org",
+          app: "https://new-app.example.org",
+          dev: "https://new-dev.example.org",
+        })
+        .reply(200, { ok: true });
+
+      await waitFor(() => {
+        const apiField = wrapper.getByDisplayValue("https://api.example.org");
+        const appField = wrapper.getByDisplayValue("https://app.example.org");
+        const devField = wrapper.getByDisplayValue("https://dev.example.org");
+
+        fireEvent.change(apiField, {
+          target: { value: "https://new-api.example.org" },
+        });
+        fireEvent.change(appField, {
+          target: { value: "https://new-app.example.org" },
+        });
+        fireEvent.change(devField, {
+          target: { value: "https://new-dev.example.org" },
+        });
+      });
+
+      // Find the save button in the domains section specifically (second save button)
+      const saveButtons = wrapper.getAllByText("Save");
+      fireEvent.click(saveButtons[1]); // Second save button is for domains
+
+      await waitFor(() => {
+        expect(postScope.isDone()).toBe(true);
+      });
+    });
+
+    it("should handle domain update error", async () => {
+      const postScope = nock(process.env.API_DOMAIN || "")
+        .post("/admin/domains")
+        .reply(400, { error: "Invalid domain" });
+
+      await waitFor(() => {
+        const apiField = wrapper.getByDisplayValue("https://api.example.org");
+        fireEvent.change(apiField, { target: { value: "invalid-domain" } });
+      });
+
+      // Find the save button in the domains section specifically (second save button)
+      const saveButtons = wrapper.getAllByText("Save");
+      fireEvent.click(saveButtons[1]); // Second save button is for domains
+
+      await waitFor(() => {
+        expect(postScope.isDone()).toBe(true);
+        expect(
+          wrapper.getByText(
+            "An error occurred while updating domains. Make sure specified domains are valid."
+          )
+        ).toBeTruthy();
       });
     });
   });
