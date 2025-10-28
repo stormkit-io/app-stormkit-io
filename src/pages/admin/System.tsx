@@ -402,43 +402,37 @@ function Domains() {
         subtitle="Configure custom domains for your Stormkit instance"
       />
       <CardRow>
-        <Typography sx={{ display: "flex", alignItems: "center" }}>
-          <TextField
-            label="API Domain"
-            variant="filled"
-            name="api"
-            defaultValue={domains.api}
-            slotProps={{ inputLabel: { shrink: true } }}
-            helperText="API requests will be served from this domain"
-            fullWidth
-          />
-        </Typography>
+        <TextField
+          label="API Domain"
+          variant="filled"
+          name="api"
+          defaultValue={domains.api}
+          slotProps={{ inputLabel: { shrink: true } }}
+          helperText="API requests will be served from this domain"
+          fullWidth
+        />
       </CardRow>
       <CardRow>
-        <Typography sx={{ display: "flex", alignItems: "center" }}>
-          <TextField
-            label="App Domain"
-            name="app"
-            defaultValue={domains.app}
-            variant="filled"
-            slotProps={{ inputLabel: { shrink: true } }}
-            helperText="This domain will be used to access your Stormkit dashboard"
-            fullWidth
-          />
-        </Typography>
+        <TextField
+          label="App Domain"
+          name="app"
+          defaultValue={domains.app}
+          variant="filled"
+          slotProps={{ inputLabel: { shrink: true } }}
+          helperText="This domain will be used to access your Stormkit dashboard"
+          fullWidth
+        />
       </CardRow>
       <CardRow>
-        <Typography sx={{ display: "flex", alignItems: "center" }}>
-          <TextField
-            label="Dev Domain"
-            name="dev"
-            defaultValue={domains.dev}
-            variant="filled"
-            slotProps={{ inputLabel: { shrink: true } }}
-            helperText="Deployment previews will be displayed using subdomains of this domain"
-            fullWidth
-          />
-        </Typography>
+        <TextField
+          label="Dev Domain"
+          name="dev"
+          defaultValue={domains.dev}
+          variant="filled"
+          slotProps={{ inputLabel: { shrink: true } }}
+          helperText="Deployment previews will be displayed using subdomains of this domain"
+          fullWidth
+        />
       </CardRow>
       <CardFooter>
         <Button

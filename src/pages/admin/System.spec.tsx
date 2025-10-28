@@ -1,5 +1,5 @@
 import nock from "nock";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   render,
   fireEvent,
@@ -14,6 +14,10 @@ import React from "react";
 
 describe("~/pages/admin/System.tsx", () => {
   let wrapper: RenderResult;
+
+  beforeEach(() => {
+    window.location = { assign: vi.fn(), reload: vi.fn() } as any;
+  });
 
   const fetchRuntimesScope = (runtimes: string[]) => {
     return nock(process.env.API_DOMAIN || "")
