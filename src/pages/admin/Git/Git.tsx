@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import CheckIcon from "@mui/icons-material/Check";
 import Card from "~/components/Card";
 import CardHeader from "~/components/CardHeader";
+import { AuthContext } from "~/pages/auth/Auth.context";
 import * as buttons from "~/components/Buttons";
 import api from "~/utils/api/Api";
 import GitHubModal from "./GitHubModal";
@@ -35,12 +37,20 @@ const useFetchGitDetails = () => {
 };
 
 export default function Git() {
+  const { logout } = useContext(AuthContext);
+  const [params, _] = useSearchParams();
   const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
   const [isGitLabModalOpen, setIsGitLabModalOpen] = useState(false);
   const [isBitbucketModalOpen, setIsBitbucketModalOpen] = useState(false);
   const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>();
   const { details, loading, error: fetchError } = useFetchGitDetails();
+
+  useEffect(() => {
+    if (params.get("success") === "github_app_created") {
+      logout?.();
+    }
+  }, [params]);
 
   return (
     <Card
