@@ -287,6 +287,12 @@ const useFetchMise = () => {
             setRefreshToken(Date.now());
           }, 2500);
         }
+
+        if (s === "error") {
+          setError(
+            "An error occurred while installing or upgrading mise. Check instance logs for more details."
+          );
+        }
       })
       .catch(() => {
         setError("Something went wrong while fetching mise version");
@@ -327,6 +333,8 @@ function Mise() {
                     setUpdateError(
                       "An error occurred while upgrading mise. Check instance logs for more details."
                     );
+
+                    return;
                   }
 
                   setRefreshToken(Date.now());
