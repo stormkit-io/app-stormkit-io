@@ -15,6 +15,7 @@ import Card from "~/components/Card";
 import CardRow from "~/components/CardRow";
 import CardHeader from "~/components/CardHeader";
 import CardFooter from "~/components/CardFooter";
+import { stat } from "fs";
 
 type Status = "ok" | "sent" | "processing" | "error";
 
@@ -320,8 +321,14 @@ function Mise() {
             onClick={() => {
               setUpdateLoading(true);
 
-              Api.post("/admin/system/mise")
-                .then(() => {
+              Api.post<{ status: "error" | "ok" }>("/admin/system/mise")
+                .then(({ status }) => {
+                  if (status === "error") {
+                    setUpdateError(
+                      "An error occurred while upgrading mise. Check instance logs for more details."
+                    );
+                  }
+
                   setRefreshToken(Date.now());
                 })
                 .catch(() => {
