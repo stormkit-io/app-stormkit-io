@@ -6,6 +6,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import CheckIcon from "@mui/icons-material/Check";
 import TimesIcon from "@mui/icons-material/Close";
 import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Api from "~/utils/api/Api";
@@ -172,7 +173,7 @@ function Runtimes() {
     >
       <CardHeader
         title="Installed runtimes"
-        subtitle="Manage runtimes that are installed on your Stormkit instance."
+        subtitle="Manage runtimes that are installed on your Stormkit instance"
       />
       <Box sx={{ px: 4 }}>
         <KeyValue
@@ -308,7 +309,7 @@ function Mise() {
     >
       <CardHeader
         title="Mise"
-        subtitle="Stormkit relies on open-source mise for runtime management."
+        subtitle="Stormkit relies on open-source mise for runtime management"
         actions={
           <Button
             variant="contained"
@@ -352,11 +353,138 @@ function Mise() {
   );
 }
 
+interface DomainsConfig {
+  dev: string;
+  api: string;
+  app: string;
+}
+
+const useFetchDomains = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
+  const [domains, setDomains] = useState<DomainsConfig>({
+    dev: "",
+    api: "",
+    app: "",
+  });
+
+  useEffect(() => {
+    Api.fetch<{ domains: DomainsConfig }>("/admin/domains")
+      .then(({ domains }) => {
+        setDomains(domains);
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching domains");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  return { loading, error, domains };
+};
+
+function Domains() {
+  const { error, loading, domains } = useFetchDomains();
+  const [updateError, setUpdateError] = useState<string>();
+  const [updateLoading, setUpdateLoading] = useState(false);
+
+  return (
+    <Card
+      error={error || updateError}
+      loading={loading}
+      sx={{ mt: 4, backgroundColor: "container.transparent" }}
+      contentPadding={false}
+      component="form"
+    >
+      <CardHeader
+        title="Domains"
+        subtitle="Configure custom domains for your Stormkit instance"
+      />
+      <CardRow>
+        <Typography sx={{ display: "flex", alignItems: "center" }}>
+          <TextField
+            label="API Domain"
+            variant="filled"
+            name="api"
+            defaultValue={domains.api}
+            slotProps={{ inputLabel: { shrink: true } }}
+            helperText="API requests will be served from this domain"
+            fullWidth
+          />
+        </Typography>
+      </CardRow>
+      <CardRow>
+        <Typography sx={{ display: "flex", alignItems: "center" }}>
+          <TextField
+            label="App Domain"
+            name="app"
+            defaultValue={domains.app}
+            variant="filled"
+            slotProps={{ inputLabel: { shrink: true } }}
+            helperText="This domain will be used to access your Stormkit dashboard"
+            fullWidth
+          />
+        </Typography>
+      </CardRow>
+      <CardRow>
+        <Typography sx={{ display: "flex", alignItems: "center" }}>
+          <TextField
+            label="Dev Domain"
+            name="dev"
+            defaultValue={domains.dev}
+            variant="filled"
+            slotProps={{ inputLabel: { shrink: true } }}
+            helperText="Deployment previews will be displayed using subdomains of this domain"
+            fullWidth
+          />
+        </Typography>
+      </CardRow>
+      <CardFooter>
+        <Button
+          variant="contained"
+          color="secondary"
+          type="submit"
+          loading={updateLoading}
+          onClick={e => {
+            e.preventDefault();
+            setUpdateLoading(true);
+
+            const form = e.currentTarget.form as HTMLFormElement;
+            const formData = new FormData(form);
+            const payload = {
+              api: formData.get("api") as string,
+              app: formData.get("app") as string,
+              dev: formData.get("dev") as string,
+            };
+
+            Api.post<DomainsConfig>("/admin/domains", payload)
+              .then(() => {
+                window.location.reload();
+              })
+              .catch(() => {
+                setUpdateError(
+                  "An error occurred while updating domains. Make sure specified domains are valid."
+                );
+              })
+              .finally(() => {
+                setUpdateLoading(false);
+              });
+          }}
+        >
+          Save
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
 export default function System() {
   return (
     <Box>
       <Runtimes />
       <Mise />
+      <Domains />
     </Box>
   );
 }
