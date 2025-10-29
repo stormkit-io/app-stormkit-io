@@ -12,8 +12,13 @@ declare interface User {
   package: {
     id: SubscriptionName;
     name: string;
-    edition: Edition | "";
   };
+}
+
+declare interface License {
+  enterpise: boolean;
+  seats: number;
+  raw: string;
 }
 
 declare interface ConnectedAccount {
