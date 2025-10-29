@@ -1,6 +1,14 @@
 import React from "react";
 import { createTheme } from "@mui/material/styles";
-import { yellow, green, grey, purple, red } from "@mui/material/colors";
+import {
+  yellow,
+  green,
+  grey,
+  purple,
+  red,
+  orange,
+  blue,
+} from "@mui/material/colors";
 import { Link as RLink, LinkProps as RLinkProps } from "react-router-dom";
 import { LinkProps } from "@mui/material/Link";
 
@@ -107,7 +115,14 @@ export default (mode: "dark" | "light") => {
           },
           {
             props: { variant: "contained", color: "secondary" },
-            style: { color: "white", ":hover": { color: "white" } },
+            style: {
+              color: "white",
+              ":hover": { color: "white" },
+
+              "& .MuiSvgIcon-root": {
+                color: "white",
+              },
+            },
           },
         ],
       },
@@ -120,17 +135,22 @@ export default (mode: "dark" | "light") => {
       },
       MuiAlert: {
         styleOverrides: {
+          root: {
+            "& .MuiSvgIcon-root": {
+              color: "#ffffff",
+            },
+          },
           standardInfo: {
-            backgroundColor: isDark ? "#0f4c64" : "#ffffff",
+            backgroundColor: isDark ? "#0f4c64" : blue[200],
             border: isDark ? "" : "1px solid #0f4c64",
             color: isDark ? "#ffffff" : "#0f4c64",
           },
           standardError: {
-            backgroundColor: "#460e0e",
+            backgroundColor: "#801212ff",
             color: "#ffffff",
           },
           standardWarning: {
-            backgroundColor: "#b75c22",
+            backgroundColor: orange[700],
             color: "#ffffff",
           },
           standardSuccess: {
@@ -156,7 +176,7 @@ export default (mode: "dark" | "light") => {
       MuiSvgIcon: {
         styleOverrides: {
           root: {
-            color: primaryColor,
+            color: isDark ? "white" : "black",
           },
         },
         variants: [
@@ -173,7 +193,7 @@ export default (mode: "dark" | "light") => {
         styleOverrides: {
           root: {
             color: primaryColor,
-            backgroundColor: isDark ? "#090518" : "#ffffff",
+            backgroundColor: isDark ? "#090518" : grey[100],
             "&:hover": {
               backgroundColor: isDark ? "#090614" : grey[300],
             },
