@@ -229,11 +229,12 @@ const useFetchLicense = ({
   refreshToken,
 }: UseFetchLicenseProps) => {
   const [license, setLicense] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
 
   useEffect(() => {
     if (edition !== "cloud" || user?.package.id === "free") {
+      setLoading(false);
       return;
     }
 
@@ -250,7 +251,7 @@ const useFetchLicense = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [refreshToken]);
+  }, [refreshToken, edition, user?.package?.id]);
 
   return { license, error, loading };
 };
@@ -262,6 +263,7 @@ function License({ edition, user }: SubscriptionDetailsProps) {
   const { license, loading, error } = useFetchLicense({
     edition,
     refreshToken,
+    user,
   });
 
   if (edition !== "cloud") {
