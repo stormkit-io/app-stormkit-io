@@ -72,7 +72,7 @@ const FormTriggerDeploys: React.FC<Props> = ({
               <Box key={env.id} sx={{ mb: 4 }}>
                 <Typography sx={{ mb: 1 }}>{env.name}</Typography>
                 <CopyBox
-                  value={`${api.url}/hooks/app/${app.id}/deploy/${additionalSettings.deployTrigger}/${env.id}`}
+                  value={`${api.baseurl}/hooks/app/${app.id}/deploy/${additionalSettings.deployTrigger}/${env.id}`}
                 />
               </Box>
             ))}
