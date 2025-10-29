@@ -69,8 +69,10 @@ export default function DomainVerifyModal({
               </Typography>
               <CopyBox
                 value={parseUrl(info.dns.txt.lookup).subdomain}
-                InputProps={{
-                  readOnly: true,
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                  },
                 }}
                 fullWidth
                 label="Txt Host"
