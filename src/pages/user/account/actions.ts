@@ -6,12 +6,6 @@ interface FetchLicenseProps {
   isSelfHostedInstance: boolean;
 }
 
-interface License {
-  enterpise: boolean;
-  seats: number;
-  raw: string;
-}
-
 export const useFetchLicense = ({
   user,
   isSelfHostedInstance,
