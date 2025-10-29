@@ -4,16 +4,14 @@ interface UserProps {
 }
 
 const idToName: Record<SubscriptionName, string> = {
-  free: "Free Trial",
-  starter: "Starter",
-  medium: "Medium",
-  enterprise: "Enterprise",
-  "self-hosted": "Self-Hosted Edition",
+  free: "Free",
+  premium: "Premium",
+  ultimate: "Ultimate",
 };
 
 const defaultProps: UserProps = {
   isAdmin: false,
-  packageId: "enterprise",
+  packageId: "premium",
 };
 
 export default ({ isAdmin, packageId }: UserProps = defaultProps): User => ({
@@ -27,6 +25,5 @@ export default ({ isAdmin, packageId }: UserProps = defaultProps): User => ({
   package: {
     id: packageId,
     name: idToName[packageId],
-    edition: packageId === "self-hosted" ? "limited" : "",
   },
 });
