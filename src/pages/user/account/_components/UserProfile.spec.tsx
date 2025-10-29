@@ -1,4 +1,4 @@
-import { describe, expect, beforeEach, afterEach, it, vi } from "vitest";
+import { describe, expect, beforeEach, afterEach, it } from "vitest";
 import type { RenderResult } from "@testing-library/react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import nock from "nock";
