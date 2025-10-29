@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
@@ -18,6 +18,8 @@ import CardHeader from "~/components/CardHeader";
 import CardRow from "~/components/CardRow";
 import CardFooter from "~/components/CardFooter";
 import UserAvatar from "~/components/UserAvatar";
+import CopyBox from "~/components/CopyBox";
+import api from "~/utils/api/Api";
 import { deleteUser } from "../actions";
 
 function CircularProgressWithLabel(
@@ -119,6 +121,222 @@ const formatNumber = (num: number) => {
   return num.toLocaleString("en-US");
 };
 
+interface SubscriptionDetailsProps {
+  edition?: "cloud" | "self-hosted" | "development";
+  metrics?: UserMetrics;
+  user?: User;
+}
+
+function SubscriptionDetails({
+  edition,
+  metrics,
+  user,
+}: SubscriptionDetailsProps) {
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          p: 4,
+        }}
+      >
+        <Typography variant="h2" sx={{ fontSize: 20, flex: 1 }}>
+          Subscription details
+        </Typography>
+        <Button
+          endIcon={<LaunchIcon />}
+          variant="contained"
+          color="secondary"
+          href={user?.package.id === "free" ? paymentLink.premium : portalLink}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Manage subscription
+        </Button>
+      </Box>
+      {edition !== "cloud" ? (
+        <Alert color="warning" sx={{ mx: 4, mb: 4 }}>
+          <Typography>
+            Visit your Cloud Account on{" "}
+            <Link href="https://app.stormkit.io" target="_blank">
+              app.stormkit.io
+            </Link>{" "}
+            to manage your subscription.
+          </Typography>
+        </Alert>
+      ) : metrics ? (
+        <>
+          <UsageRow
+            label="Build minutes"
+            color="success.main"
+            used={formatNumber(metrics.used.buildMinutes)}
+            max={formatNumber(metrics.max.buildMinutes)}
+            progress={
+              (metrics.used.buildMinutes / metrics.max.buildMinutes) * 100
+            }
+          />
+
+          <UsageRow
+            label="Bandwidth"
+            color="info.main"
+            used={formattedBytes(metrics.used.bandwidthInBytes, { si: true })}
+            max={formattedBytes(metrics.max.bandwidthInBytes, { si: true })}
+            progress={
+              (metrics.used.bandwidthInBytes / metrics.max.bandwidthInBytes) *
+              100
+            }
+          />
+
+          <UsageRow
+            label="Function invocations"
+            color="warning.main"
+            used={formatNumber(metrics.used.functionInvocations)}
+            max={formatNumber(metrics.max.functionInvocations)}
+            progress={
+              (metrics.used.functionInvocations /
+                metrics.max.functionInvocations) *
+              100
+            }
+          />
+
+          <UsageRow
+            label="Storage"
+            color={orange[500]}
+            used={formattedBytes(metrics.used.storageInBytes, { si: true })}
+            max={formattedBytes(metrics.max.storageInBytes, { si: true })}
+            progress={
+              (metrics.used.storageInBytes / metrics.max.storageInBytes) * 100
+            }
+          />
+        </>
+      ) : (
+        ""
+      )}
+    </Box>
+  );
+}
+
+interface UseFetchLicenseProps {
+  edition?: "cloud" | "self-hosted" | "development";
+  user?: User;
+  refreshToken: number;
+}
+
+const useFetchLicense = ({
+  edition,
+  user,
+  refreshToken,
+}: UseFetchLicenseProps) => {
+  const [license, setLicense] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    if (edition !== "cloud" || user?.package.id === "free") {
+      return;
+    }
+
+    api
+      .fetch<{ license: License | null }>("/user/license")
+      .then(({ license }) => {
+        if (license) {
+          setLicense(license.raw);
+        }
+      })
+      .catch(() => {
+        setError("Something went wrong while fetching license");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [refreshToken]);
+
+  return { license, error, loading };
+};
+
+function License({ edition, user }: SubscriptionDetailsProps) {
+  const [generateError, setGenerateError] = useState<string>();
+  const [generateLoading, setGenerateLoading] = useState(false);
+  const [refreshToken, setRefreshToken] = useState(0);
+  const { license, loading, error } = useFetchLicense({
+    edition,
+    refreshToken,
+  });
+
+  if (edition !== "cloud") {
+    return;
+  }
+
+  return (
+    <Box>
+      <Typography variant="h2" sx={{ fontSize: 20, flex: 1, p: 4 }}>
+        Self-Hosted License
+      </Typography>
+      {error || generateError ? (
+        <Alert color="error" sx={{ mx: 4, mb: 4 }}>
+          <Typography>{error || generateError}</Typography>
+        </Alert>
+      ) : user?.package.id === "free" ? (
+        <Alert color="warning" sx={{ mx: 4, mb: 4 }}>
+          <Typography>
+            Upgrade your package to issue a Self-Hosted License.
+          </Typography>
+        </Alert>
+      ) : !license && !loading ? (
+        <Alert
+          color="info"
+          sx={{ mx: 4, mb: 4, display: "flex", alignItems: "center" }}
+        >
+          <Typography>
+            No Self-Hosted License found.{" "}
+            <Button
+              variant="text"
+              color="secondary"
+              size="small"
+              loading={generateLoading}
+              sx={{ m: 0 }}
+              onClick={() => {
+                setGenerateLoading(true);
+                setGenerateError(undefined);
+
+                api
+                  .post<{ key?: string; error?: string }>("/user/license")
+                  .then(({ key, error }) => {
+                    if (key) {
+                      setRefreshToken(Date.now());
+                    } else if (error) {
+                      setGenerateError(error);
+                    }
+                  })
+                  .catch(() => {
+                    setGenerateError(
+                      "Something went wrong while issuing license"
+                    );
+                  })
+                  .finally(() => {
+                    setGenerateLoading(false);
+                  });
+              }}
+            >
+              Click here to issue one.
+            </Button>
+          </Typography>
+        </Alert>
+      ) : (
+        <Box sx={{ mx: 4, mb: 4 }}>
+          <CopyBox
+            type="password"
+            variant="filled"
+            label="License Key"
+            value={license}
+          />
+        </Box>
+      )}
+    </Box>
+  );
+}
+
 export default function UserProfile({ user, metrics }: Props) {
   const { details } = useContext(RootContext);
   const memberSince = useMemo(() => {
@@ -162,89 +380,12 @@ export default function UserProfile({ user, metrics }: Props) {
           </Typography>
         </Box>
       </CardHeader>
-      <Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            p: 4,
-          }}
-        >
-          <Typography variant="h2" sx={{ fontSize: 20, flex: 1 }}>
-            Subscription details
-          </Typography>
-          <Button
-            endIcon={<LaunchIcon />}
-            variant="contained"
-            color="secondary"
-            href={
-              user?.package.id === "free" ? paymentLink.premium : portalLink
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Manage subscription
-          </Button>
-        </Box>
-        {details?.stormkit?.edition !== "cloud" ? (
-          <Alert color="warning" sx={{ mx: 4, mb: 4 }}>
-            <Typography>
-              Visit your Cloud Account on{" "}
-              <Link href="https://app.stormkit.io" target="_blank">
-                app.stormkit.io
-              </Link>{" "}
-              to manage your subscription.
-            </Typography>
-          </Alert>
-        ) : metrics ? (
-          <>
-            <UsageRow
-              label="Build minutes"
-              color="success.main"
-              used={formatNumber(metrics.used.buildMinutes)}
-              max={formatNumber(metrics.max.buildMinutes)}
-              progress={
-                (metrics.used.buildMinutes / metrics.max.buildMinutes) * 100
-              }
-            />
-
-            <UsageRow
-              label="Bandwidth"
-              color="info.main"
-              used={formattedBytes(metrics.used.bandwidthInBytes, { si: true })}
-              max={formattedBytes(metrics.max.bandwidthInBytes, { si: true })}
-              progress={
-                (metrics.used.bandwidthInBytes / metrics.max.bandwidthInBytes) *
-                100
-              }
-            />
-
-            <UsageRow
-              label="Function invocations"
-              color="warning.main"
-              used={formatNumber(metrics.used.functionInvocations)}
-              max={formatNumber(metrics.max.functionInvocations)}
-              progress={
-                (metrics.used.functionInvocations /
-                  metrics.max.functionInvocations) *
-                100
-              }
-            />
-
-            <UsageRow
-              label="Storage"
-              color={orange[500]}
-              used={formattedBytes(metrics.used.storageInBytes, { si: true })}
-              max={formattedBytes(metrics.max.storageInBytes, { si: true })}
-              progress={
-                (metrics.used.storageInBytes / metrics.max.storageInBytes) * 100
-              }
-            />
-          </>
-        ) : (
-          ""
-        )}
-      </Box>
+      <SubscriptionDetails
+        user={user}
+        metrics={metrics}
+        edition={details?.stormkit?.edition}
+      />
+      <License user={user} edition={details?.stormkit?.edition} />
       <CardFooter>
         <Button
           variant="outlined"
