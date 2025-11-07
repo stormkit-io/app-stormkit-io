@@ -1,3 +1,9 @@
+## This repository has been archived.
+
+Visit [https://github.com/stormkit-io/stormkit-io](https://github.com/stormkit-io/stormkit-io) instead. It contains the backend and frontend logic together.
+
+<hr />
+
 <p align="center">
   <img src="./src/assets/logos/stormkit-logo-text-h-white.svg?raw=true" height="90"/>
 </p>
